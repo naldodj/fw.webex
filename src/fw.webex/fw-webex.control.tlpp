@@ -84,20 +84,22 @@ method ToHtml() class WebExControl
         ::jAttrs["id"]:=::cID
     endif
 
+    cLowerType:=Lower(::cType)
+
     cHTML:="<"+::cType
 
-        aAttrs:=::jAttrs:GetNames()
-        nAttrs:=Len(aAttrs)
-        for nAttr:=1 to nAttrs
-            cKey:=aAttrs[nAttr]
-            xVal:=::jAttrs[cKey]
-            if (valType(xVal)!="C")
-                xVal:=cValToChar(xVal)
-            endif
-            cHTML+=" "+cKey+'="'+xVal+'"'
-        next nAttr
-
-    cLowerType:=Lower(::cType)
+        if (cLowerType!="!--")
+            aAttrs:=::jAttrs:GetNames()
+            nAttrs:=Len(aAttrs)
+            for nAttr:=1 to nAttrs
+                cKey:=aAttrs[nAttr]
+                xVal:=::jAttrs[cKey]
+                if (valType(xVal)!="C")
+                    xVal:=cValToChar(xVal)
+                endif
+                cHTML+=" "+cKey+'="'+xVal+'"'
+            next nAttr
+        endif
 
     if (aScan(__aVoidTags,{|cType|(cType==cLowerType)})>0)
 

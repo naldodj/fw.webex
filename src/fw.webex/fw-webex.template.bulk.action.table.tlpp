@@ -214,6 +214,7 @@ method ToHtml() class WebExTemplateBulkActionTable
 
     WITH WEBEXOBJECT oObj CLASS WebExControl TYPE script
         beginContent var cScript
+
             let rowToDelete = null;
             function setRowToDelete(button) {
             rowToDelete = button.closest("tr");
@@ -230,6 +231,7 @@ method ToHtml() class WebExTemplateBulkActionTable
             const checkboxes = document.querySelectorAll(".row-select");
             checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
             }
+
         endContent
         .:SetContent(cScript)
         cHTML+=oObj:ToHTML()

@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-21 10:17 UTC naldodj (fw.webex.example.002.tlpp)
+  * src/fw.webex/fw-webex.control.tlpp
+  * src/fw.webex/fw-webex.template.bulk.action.table.tlpp
+
 2025-06-21 10:02 UTC naldodj (fw.webex.example.002.tlpp)
   + src/fw.webex/fw-webex.webapp.tools.tlpp
   + src/fw.webex.examples/fw.webex.example.002.tlpp
