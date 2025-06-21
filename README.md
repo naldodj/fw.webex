@@ -91,9 +91,8 @@ return
 ## 📦 Como usar
 
 1. Clone o repositório
-2. Copie os arquivos `.tlpp` para seu projeto
-3. Use o `FWPage():Render()` como entrada principal
-4. Adicione seus próprios componentes ou estenda os existentes
+2. Compile
+3. Use
 
 ---
 
