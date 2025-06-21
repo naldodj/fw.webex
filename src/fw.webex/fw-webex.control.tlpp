@@ -1,0 +1,127 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+static __aVoidTags:={"area","base","br","col","embed","hr","img","input","link","meta","source","track","wbr"} as array
+
+#include "fw.webex.th"
+
+#include "totvs.ch"
+#include "parmtype.ch"
+#include "tlpp-core.th"
+
+class WebExControl
+
+   public data cID as character
+   public data cType as character
+   public data cContent as character
+
+   public data jAttrs as json
+   public data jChildren as json
+
+   public method New(cType as character) as object
+   public method SetAttr(cKey as character,uValue as variant) as object
+   public method SetContent(cContent as character) as object
+   public method AddChild(oChild as object) as object
+   public method ToHtml() as character
+
+endclass
+
+method New(cType) class WebExControl
+    paramtype 1 var cType as character optional default "div"
+    ::cID:=(Lower(GetClassName(self))+"_"+ UUIDRandom())
+    ::cType:=cType
+    ::cContent:="__NULL__"
+    ::jAttrs:=JSONObject():New()
+    ::jChildren:=JSONObject():New()
+return(self)
+
+method SetAttr(cKey,uValue) class WebExControl
+   ::jAttrs[cKey]:=uValue
+return(self)
+
+method SetContent(cContent) class WebExControl
+   ::cContent:=cContent
+return(self)
+
+method AddChild(oChild) class WebExControl
+   ::jChildren[oChild:cID]:=oChild
+return(self)
+
+method ToHtml() class WebExControl
+
+    local aAttrs as array
+    local aChildren as array
+
+    local cKey as character
+    local cHTML as character
+    local cLowerType as character
+
+    local nAttr as numeric
+    local nAttrs as numeric
+
+    local nChild as numeric
+    local nChilds as numeric
+
+    local xVal as variant
+
+    // Garante que tenha um ID unico
+    if (!::jAttrs:HasProperty("id"))
+        ::jAttrs["id"]:=::cID
+    endif
+
+    cHTML:="<"+::cType
+
+        aAttrs:=::jAttrs:GetNames()
+        nAttrs:=Len(aAttrs)
+        for nAttr:=1 to nAttrs
+            cKey:=aAttrs[nAttr]
+            xVal:=::jAttrs[cKey]
+            if (valType(xVal)!="C")
+                xVal:=cValToChar(xVal)
+            endif
+            cHTML+=" "+cKey+'="'+xVal+'"'
+        next nAttr
+
+    cLowerType:=Lower(::cType)
+
+    if (aScan(__aVoidTags,{|cType|(cType==cLowerType)})>0)
+
+        cHTML+="/>"
+
+    else
+
+        if (cLowerType!="!--")
+            cHTML+=">"
+        endif
+
+        aChildren:=::jChildren:GetNames()
+        nChilds:=Len(aChildren)
+        if (nChilds>0)
+            for nChild:=1 to nChilds
+                cKey:=aChildren[nChild]
+                oChild:=::jChildren[cKey]
+                cHTML+=oChild:ToHtml()
+            next nChild
+        elseif (::cContent!="__NULL__")
+            cHTML+=::cContent
+        endif
+
+        if (cLowerType!="!--")
+            cHTML+="</"+::cType+">"
+        else
+            cHTML+="-->"
+        endif
+
+    endif
+
+return(cHTML)

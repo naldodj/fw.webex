@@ -1,0 +1,39 @@
+/* Encoding: UTF-8 (No BOM)  Notation (in 5th column):
+     * Change  ! Fix  % Optimize  + Add  - Remove  ; Comment
+   Entries may not always be in chronological/commit order.
+   See license at the end of file. */
+
+2025-06-20 23:15 UTC naldodj (Initial Commit)
+  + bin/3rdpatch.hb
+  + bin/check.hb
+  + bin/commit.hb
+  + bin/findnoasciicharacters.ps1
+  + bin/harbour/advapi32.dll
+  + bin/harbour/gdi32.dll
+  + bin/harbour/gdi32full.dll
+  + bin/harbour/harbour-32-x64.dll
+  + bin/harbour/hbrun.exe
+  + bin/harbour/iphlpapi.dll
+  + bin/harbour/kernel32.dll
+  + bin/harbour/kernelbase.dll
+  + bin/harbour/msvcp_win.dll
+  + bin/harbour/msvcrt.dll
+  + bin/harbour/ntdll.dll
+  + bin/harbour/rpcrt4.dll
+  + bin/harbour/sechost.dll
+  + bin/harbour/ucrtbase.dll
+  + bin/harbour/usrr32.dll
+  + bin/harbour/win32u.dll
+  + bin/harbour/winmm.dll
+  + bin/harbour/ws2_32.dll
+  + bin/harbour.ucf
+  + bin/tolower.ps1
+  + ChangeLog.txt
+  + include/fw.webex.th
+  + LICENSE
+  + src/fw.webex/fw-webex.context.tlpp
+  + src/fw.webex/fw-webex.page.tlpp
+  + src/fw.webex.examples/fw.webex.example.001.tlpp
+  + README.md
+  + src/fw.webex/fw-webex.control.tlpp
+  + src/fw.webex/fw-webex.template.bulk.action.table.tlpp

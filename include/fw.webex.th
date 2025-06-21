@@ -1,0 +1,21 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+#IFNDEF _FW_WEB_EX_TH
+
+    #DEFINE _FW_WEB_EX_TH
+
+    #xcommand WITH WEBEXOBJECT [<obj>] CLASS <class> [TYPE <*type*>] => [<obj>:=] WebExContext():ObjBegin(<class>():New([<(type)>]))
+    #xcommand WITH WEBEXOBJECT [<obj>] CLASS <class> [<arg: ARG, ARGS> <Args,...>] => [<obj>:=] WebExContext():ObjBegin(<class>():New([<Args>]))
+    #xcommand END WEBEXOBJECT => (WebExContext():ObjEnd(),if(Type("__oWebExContextObj__")=="O",(__oWebExContextObj__:=nil),nil))
+
+    #xtranslate .:<method> => (__oWebExContextObj__:=WebExContext():ObjGet(),__oWebExContextObj__:<method>)
+
+#ENDIF

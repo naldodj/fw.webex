@@ -1,0 +1,1 @@
+Get-ChildItem -Path .\* -Recurse | Where-Object { !$_.PSIsContainer } | ForEach-Object { git mv $_.FullName $(Join-Path $_.DirectoryName $_.Name.ToLower()) }

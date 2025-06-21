@@ -1,0 +1,48 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+#include "fw.webex.th"
+
+#include "tbiconn.ch"
+
+using namespace FWWebEx
+
+procedure u_FWWebExExample_001()
+    PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01"
+        FWWebExExample_001()
+    RESET ENVIRONMENT
+return
+
+static procedure FWWebExExample_001()
+
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+
+    local oFWWebExPage as object
+
+    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
+        WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName
+            .:FromSQL("SELECT TOP 10 * FROM SX5990")
+        END WEBEXOBJECT
+        cHTML:=oFWWebExPage:Render()
+    END WEBEXOBJECT
+
+    FreeObj(@oFWWebExPage)
+
+    cHTML:=EncodeUTF8(cHTML)
+    cHTMLFile:="c:\tmp\"+Lower(ProcName())+".html"
+
+    MemoWrite(cHTMLFile,cHTML)
+
+    ShellExecute("open",cHTMLFile,"","",1)
+
+return

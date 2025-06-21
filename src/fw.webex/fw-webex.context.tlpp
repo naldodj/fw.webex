@@ -1,0 +1,56 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+static __aWithStack:=Array(0) as array
+
+#include "fw.webex.th"
+
+#include "totvs.ch"
+#include "parmtype.ch"
+#include "tlpp-core.th"
+
+class WebExContext
+
+    static method ObjBegin(oObject as object) as object
+    static method ObjEnd() as variant
+    static method ObjGet() as object
+
+end class
+
+method ObjBegin(oObject) class WebExContext
+   aAdd(__aWithStack,oObject)
+return(oObject)
+
+method ObjEnd() class WebExContext
+    local nLen:=Len(__aWithStack) as numeric
+    local oChild as object
+    local oParent as object
+    if (nLen>0)
+        oChild:=__aWithStack[nLen]
+        aDel(__aWithStack,nLen)
+        aSize(__aWithStack,--nLen)
+        if (nLen>0)
+            oParent:=__aWithStack[nLen]
+            oParent:AddChild(oChild)
+        endif
+        oChild:=nil
+    endif
+return(oParent)
+
+method ObjGet() class WebExContext
+    local nLen:=Len(__aWithStack) as numeric
+    local oObj as object
+    if (nLen>0)
+        oObj:=__aWithStack[nLen]
+    endif
+return(oObj)
