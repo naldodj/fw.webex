@@ -74,6 +74,7 @@ static procedure FWWebExExample_001()
 
 return
 ````
+![image](https://github.com/user-attachments/assets/65c4706b-420e-40c4-a0dc-8b9412cd186f)
 
 ---
 
