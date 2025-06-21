@@ -25,13 +25,15 @@ class WebExTemplateBulkActionTable from WebExControl
     public data jColumns as json
     public data jItems as json
 
-    public method New() as object
+    public method New(cTitle as character) as object
+
     public method FromSQL(cSQL as character) as object
     public method ToHtml() as character
 
 endclass
 
 method New(cTitle) class WebExTemplateBulkActionTable
+    paramtype 1 var cTitle as character optional default ""
     _Super:New()
     ::cTitle:=cTitle
     ::jColumns:=JSONObject():New()

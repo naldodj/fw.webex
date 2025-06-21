@@ -28,6 +28,7 @@ class WebExContext
 end class
 
 method ObjBegin(oObject) class WebExContext
+   paramtype 1 var oObject as object
    aAdd(__aWithStack,oObject)
 return(oObject)
 
@@ -37,6 +38,7 @@ method ObjEnd() class WebExContext
     local oParent as object
     if (nLen>0)
         oChild:=__aWithStack[nLen]
+        __aWithStack[nLen]:=nil
         aDel(__aWithStack,nLen)
         aSize(__aWithStack,--nLen)
         if (nLen>0)

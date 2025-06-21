@@ -18,12 +18,17 @@ namespace FWWebEx
 #include "tlpp-core.th"
 
 class WebExPage from WebExControl
+
     public data cTitle as character
+
     public method New(cTitle as character) as object
+
     public method Render() as character
+
 endclass
 
 method New(cTitle) class WebExPage
+   paramtype 1 var cTitle as character
    _Super:New()
    ::cTitle:=cTitle
 return(self)

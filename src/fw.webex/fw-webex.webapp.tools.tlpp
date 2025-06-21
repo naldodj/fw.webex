@@ -1,0 +1,32 @@
+/*
+
+                 _                              _                  _
+__      __  ___ | |__    __ _  _ __   _ __     | |_   ___    ___  | | ___
+\ \ /\ / / / _ \| '_ \  / _` || '_ \ | '_ \    | __| / _ \  / _ \ | |/ __|
+ \ V  V / |  __/| |_) || (_| || |_) || |_) | _ | |_ | (_) || (_) || |\__ \
+  \_/\_/   \___||_.__/  \__,_|| .__/ | .__/ (_) \__| \___/  \___/ |_||___/
+                              |_|    |_|
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "parmtype.ch"
+#include "tlpp-core.th"
+
+class WebApp
+    static method ThemeIsDark() as logical
+    static method WebAgentIsConnected() as logical
+end class
+
+static method ThemeIsDark() class WebApp
+    local cTheme:=Upper(allTrim(totvs.framework.css.getNewWebAppTheme())) as character
+    local lIsDark:=(!Empty(cTheme).and.(cTheme=="DARK")) as logical
+return(lIsDark)
+
+static method WebAgentIsConnected() class WebApp
+    local aWebAgentInfo:=GetWebAgentInfo() as array
+    local lWebAgentIsConnected as logical
+    lWebAgentIsConnected:=((Len(aWebAgentInfo)>=2).and.(!Empty(aWebAgentInfo[1])))
+return(lWebAgentIsConnected)

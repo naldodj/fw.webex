@@ -21,18 +21,19 @@ static __aVoidTags:={"area","base","br","col","embed","hr","img","input","link",
 
 class WebExControl
 
-   public data cID as character
-   public data cType as character
-   public data cContent as character
+    public data cID as character
+    public data cType as character
+    public data cContent as character
 
-   public data jAttrs as json
-   public data jChildren as json
+    public data jAttrs as json
+    public data jChildren as json
 
-   public method New(cType as character) as object
-   public method SetAttr(cKey as character,uValue as variant) as object
-   public method SetContent(cContent as character) as object
-   public method AddChild(oChild as object) as object
-   public method ToHtml() as character
+    public method New(cType as character) as object
+
+    public method SetAttr(cKey as character,uValue as variant) as object
+    public method SetContent(cContent as character) as object
+    public method AddChild(oChild as object) as object
+    public method ToHtml() as character
 
 endclass
 
@@ -46,14 +47,18 @@ method New(cType) class WebExControl
 return(self)
 
 method SetAttr(cKey,uValue) class WebExControl
+   paramtype 1 var cKey as character
+   paramtype 2 var uValue as array,character,date,logical,numeric,json
    ::jAttrs[cKey]:=uValue
 return(self)
 
 method SetContent(cContent) class WebExControl
+   paramtype 1 var cContent as character
    ::cContent:=cContent
 return(self)
 
 method AddChild(oChild) class WebExControl
+   paramtype 1 var oChild as object /*class WebExControl*/
    ::jChildren[oChild:cID]:=oChild
 return(self)
 

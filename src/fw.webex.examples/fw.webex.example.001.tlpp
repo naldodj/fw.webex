@@ -39,7 +39,7 @@ static procedure FWWebExExample_001()
     FreeObj(@oFWWebExPage)
 
     cHTML:=EncodeUTF8(cHTML)
-    cHTMLFile:="c:\tmp\"+Lower(ProcName())+".html"
+    cHTMLFile:="c:\tmp\"+Lower(cProcName)+".html"
 
     MemoWrite(cHTMLFile,cHTML)
 
