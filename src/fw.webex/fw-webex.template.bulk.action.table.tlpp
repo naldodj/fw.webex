@@ -126,7 +126,7 @@ method ToHtml() class WebExTemplateBulkActionTable
                                 END WEBEXOBJECT
                             next i
                             WITH WEBEXOBJECT CLASS WebExControl TYPE th
-                                .:SetContent("A&ccdil;&atilde;o")
+                                .:SetContent("A&ccedil;&atilde;o")
                             END WEBEXOBJECT
                         END WEBEXOBJECT
                     END WEBEXOBJECT
