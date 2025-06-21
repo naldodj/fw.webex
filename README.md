@@ -36,14 +36,43 @@ Só que agora... **na web.**
 ## 💡 Exemplo de uso
 
 ```advpl
-WithObject(FWPage():New("Cadastro"))
-   SetAttr("class", "container")
+#include "fw.webex.th"
 
-   WithObject(FWTable():FromSQL("SELECT * FROM TABELA"))
-      SetAttr("class", "table-striped")
-   EndWith()
+#include "tbiconn.ch"
 
-EndWith()
+using namespace FWWebEx
+
+procedure u_FWWebExExample_001()
+    PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01"
+        FWWebExExample_001()
+    RESET ENVIRONMENT
+return
+
+static procedure FWWebExExample_001()
+
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+
+    local oFWWebExPage as object
+
+    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
+        WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName
+            .:FromSQL("SELECT TOP 10 * FROM SX5990")
+        END WEBEXOBJECT
+        cHTML:=oFWWebExPage:Render()
+    END WEBEXOBJECT
+
+    FreeObj(@oFWWebExPage)
+
+    cHTML:=EncodeUTF8(cHTML)
+    cHTMLFile:="c:\tmp\"+Lower(cProcName)+".html"
+
+    MemoWrite(cHTMLFile,cHTML)
+
+    ShellExecute("open",cHTMLFile,"","",1)
+
+return
 ````
 
 ---
