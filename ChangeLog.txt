@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-23 17:41 UTC naldodj (main -> div)
+  * src/fw.webex/fw.webex.template.bulk.action.table.tlpp
+
 2025-06-23 17:33 UTC naldodj (code cleanup)
   - Legacy stub file
     + src/__rpo-legacy-cleanup/fw-webex.context.tlpp

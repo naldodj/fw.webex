@@ -34,7 +34,7 @@ endclass
 
 method New(cTitle) class WebExTemplateBulkActionTable
     paramtype 1 var cTitle as character optional default ""
-    _Super:New("main")
+    _Super:New("div")
     ::SetAttr("style","overflow-x:auto")
     ::cTitle:=cTitle
     ::jColumns:=JSONObject():New()
