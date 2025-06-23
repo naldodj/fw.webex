@@ -29,6 +29,7 @@ class WebExControl
     public data jChildren as json
 
     public method New(cType as character) as object
+    public method NewID() as character
 
     public method SetAttr(cKey as character,uValue as variant) as object
     public method SetContent(cContent as character) as object
@@ -39,12 +40,15 @@ endclass
 
 method New(cType) class WebExControl
     paramtype 1 var cType as character optional default "div"
-    ::cID:=(Lower(GetClassName(self))+"_"+ UUIDRandom())
+    ::cID:=self:NewID()
     ::cType:=cType
     ::cContent:="__NULL__"
     ::jAttrs:=JSONObject():New()
     ::jChildren:=JSONObject():New()
 return(self)
+
+method NewID() class WebExControl
+return((Lower(GetClassName(self))+"_"+UUIDRandom()))
 
 method SetAttr(cKey,uValue) class WebExControl
    paramtype 1 var cKey as character

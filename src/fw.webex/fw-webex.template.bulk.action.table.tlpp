@@ -91,6 +91,7 @@ method ToHtml() class WebExTemplateBulkActionTable
 
     local cHTML:="" as character
     local cScript as character
+    local cIDModal:=self:NewID() as character
 
     local i as numeric
     local j as numeric
@@ -150,7 +151,7 @@ method ToHtml() class WebExTemplateBulkActionTable
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE button
                                     .:SetAttr("class","btn btn-sm btn-danger")
                                     .:SetAttr("data-bs-toggle","modal")
-                                    .:SetAttr("data-bs-target","#confirmModal")
+                                    .:SetAttr("data-bs-target","#"+cIDModal)
                                     .:SetAttr("onclick","setRowToDelete(this)")
                                     .:SetContent("Excluir")
                                 END WEBEXOBJECT
@@ -167,7 +168,8 @@ method ToHtml() class WebExTemplateBulkActionTable
 
     // Modal + JS
     WITH WEBEXOBJECT oObj CLASS WebExControl TYPE div
-        .:SetAttr("id","confirmModal")
+        oObj:cID:=cIDModal
+        .:SetAttr("id",oObj:cID)
         .:SetAttr("class","modal fade")
         .:SetAttr("tabindex","-1")
         .:SetAttr("aria-hidden","true")
@@ -224,7 +226,7 @@ method ToHtml() class WebExTemplateBulkActionTable
                 rowToDelete.remove();
                 rowToDelete = null;
             }
-            const modal = bootstrap.Modal.getInstance(document.getElementById("confirmModal"));
+            const modal = bootstrap.Modal.getInstance(document.getElementById("cIDModal"));
             modal.hide();
             }
             function toggleAll(masterCheckbox) {
@@ -233,6 +235,7 @@ method ToHtml() class WebExTemplateBulkActionTable
             }
 
         endContent
+        cSCript:=StrTran(cScript,"cIDModal",cIDModal)
         .:SetContent(cScript)
         cHTML+=oObj:ToHTML()
     END WEBEXOBJECT
