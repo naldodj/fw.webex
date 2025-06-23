@@ -52,7 +52,7 @@ return((StrTran(Lower(GetClassName(self)),".","_")+"_"+UUIDRandom()))
 
 method SetAttr(cKey,uValue) class WebExControl
    paramtype 1 var cKey as character
-   paramtype 2 var uValue as array,character,date,logical,numeric,json
+   paramtype 2 var uValue as array,character,date,json,logical,numeric
    ::jAttrs[cKey]:=uValue
 return(self)
 
@@ -97,11 +97,13 @@ method ToHtml() class WebExControl
             nAttrs:=Len(aAttrs)
             for nAttr:=1 to nAttrs
                 cKey:=aAttrs[nAttr]
-                xVal:=::jAttrs[cKey]
-                if (valType(xVal)!="C")
-                    xVal:=cValToChar(xVal)
+                if (::jAttrs:HasProperty(cKey))
+                    xVal:=::jAttrs[cKey]
+                    if (valType(xVal)!="C")
+                        xVal:=cValToChar(xVal)
+                    endif
+                    cHTML+=" "+cKey+'="'+xVal+'"'
                 endif
-                cHTML+=" "+cKey+'="'+xVal+'"'
             next nAttr
         endif
 
@@ -120,8 +122,12 @@ method ToHtml() class WebExControl
         if (nChilds>0)
             for nChild:=1 to nChilds
                 cKey:=aChildren[nChild]
-                oChild:=::jChildren[cKey]
-                cHTML+=oChild:ToHtml()
+                if (::jChildren:HasProperty(cKey))
+                    oChild:=::jChildren[cKey]
+                    if (valType(oChild)=="O")
+                        cHTML+=oChild:ToHtml()
+                    endif
+                endif
             next nChild
         elseif (::cContent!="__NULL__")
             cHTML+=::cContent

@@ -29,7 +29,7 @@ endclass
 
 method New(cTitle) class WebExPage
    paramtype 1 var cTitle as character
-   _Super:New()
+   _Super:New("main")
    ::cTitle:=cTitle
 return(self)
 

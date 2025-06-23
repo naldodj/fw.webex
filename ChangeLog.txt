@@ -3,6 +3,28 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-23 17:33 UTC naldodj (code cleanup)
+  - Legacy stub file
+    + src/__rpo-legacy-cleanup/fw-webex.context.tlpp
+    + src/__rpo-legacy-cleanup/fw-webex.control.tlpp
+    + src/__rpo-legacy-cleanup/fw-webex.page.tlpp
+    + src/__rpo-legacy-cleanup/fw-webex.template.bulk.action.table.tlpp
+    + src/__rpo-legacy-cleanup/fw-webex.webapp.tools.tlpp
+  ; Legacy files were moved to allow safe RPO cleanup.
+  ; These stub files maintain compatibility for environments
+  ; that still reference old filenames.
+
+  ; New Features
+    + src/fw.webex/fw.webex.template.bulk.action.table.tlpp
+  - Removed old version after rename
+    - src/fw.webex/fw-webex.template.bulk.action.table.tlpp
+  * Updated references to match new naming convention
+    * include/fw.webex.th
+    * src/fw.webex/fw-webex.context.tlpp -> src/fw.webex/fw.webex.context.tlpp
+    * src/fw.webex/fw-webex.control.tlpp -> src/fw.webex/fw.webex.control.tlpp
+    * src/fw.webex/fw-webex.page.tlpp -> src/fw.webex/fw.webex.page.tlpp
+    * src/fw.webex/fw-webex.webapp.tools.tlpp -> src/fw.webex/fw.webex.webapp.tools.tlpp
+
 2025-06-23 15:50 UTC naldodj (Fix)
   ! fix ID
     * src/fw.webex/fw-webex.control.tlpp

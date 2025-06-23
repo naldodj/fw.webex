@@ -12,6 +12,7 @@ Released to Public Domain.
 
     #DEFINE _FW_WEB_EX_TH
 
+    #xcommand WITH WEBEXOBJECT [<obj>] => [<obj>:=] WebExContext():ObjBegin([<obj>])
     #xcommand WITH WEBEXOBJECT [<obj>] CLASS <class> [TYPE <*type*>] => [<obj>:=] WebExContext():ObjBegin(<class>():New([<(type)>]))
     #xcommand WITH WEBEXOBJECT [<obj>] CLASS <class> [<arg: ARG, ARGS> <Args,...>] => [<obj>:=] WebExContext():ObjBegin(<class>():New([<Args>]))
     #xcommand END WEBEXOBJECT => (WebExContext():ObjEnd(),if(Type("__oWebExContextObj__")=="O",(__oWebExContextObj__:=nil),nil))

@@ -1,0 +1,9 @@
+/*
+    Legacy stub file
+    This file exists only to allow safe RPO cleanup.
+    Please remove after confirming all environments migrated.
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------*/
+static procedure __Dummy()
+return

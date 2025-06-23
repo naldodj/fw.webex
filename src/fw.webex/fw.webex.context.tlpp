@@ -44,6 +44,8 @@ method ObjEnd() class WebExContext
         if (nLen>0)
             oParent:=__aWithStack[nLen]
             oParent:AddChild(oChild)
+        else
+            oParent:=oChild
         endif
         oChild:=nil
     endif
