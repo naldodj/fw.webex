@@ -35,6 +35,7 @@ endclass
 method New(cTitle) class WebExTemplateBulkActionTable
     paramtype 1 var cTitle as character optional default ""
     _Super:New()
+    ::SetAttr("style","overflow-x:auto")
     ::cTitle:=cTitle
     ::jColumns:=JSONObject():New()
     ::jItems:=JSONObject():New()
@@ -91,7 +92,10 @@ method ToHtml() class WebExTemplateBulkActionTable
 
     local cHTML:="" as character
     local cScript as character
+
+    local cIDTable as character
     local cIDModal:=self:NewID() as character
+    local cIDWrapper:=self:cID as character
 
     local i as numeric
     local j as numeric
@@ -109,6 +113,7 @@ method ToHtml() class WebExTemplateBulkActionTable
         WITH WEBEXOBJECT CLASS WebExControl TYPE div
             .:SetAttr("class","table-responsive")
             WITH WEBEXOBJECT CLASS WebExControl TYPE table
+                cIDTable:=.:cID
                 .:SetAttr("class","table table-hover po-table po-striped")
                 // Cabecalho
                 WITH WEBEXOBJECT CLASS WebExControl TYPE thead
@@ -118,7 +123,7 @@ method ToHtml() class WebExTemplateBulkActionTable
                             .:SetAttr("class","table-light")
                             WITH WEBEXOBJECT CLASS WebExControl TYPE input
                                 .:SetAttr("type","checkbox")
-                                .:SetAttr("onclick","toggleAll(this)")
+                                .:SetAttr("onclick",cIDTable+"_toggleAll(this)")
                             END WEBEXOBJECT
                             for i:=1 To Len(::jColumns)
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE th
@@ -152,7 +157,7 @@ method ToHtml() class WebExTemplateBulkActionTable
                                     .:SetAttr("class","btn btn-sm btn-danger")
                                     .:SetAttr("data-bs-toggle","modal")
                                     .:SetAttr("data-bs-target","#"+cIDModal)
-                                    .:SetAttr("onclick","setRowToDelete(this)")
+                                    .:SetAttr("onclick",cIDTable+"_setRowToDelete(this)")
                                     .:SetContent("Excluir")
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
@@ -203,7 +208,7 @@ method ToHtml() class WebExTemplateBulkActionTable
                     WITH WEBEXOBJECT CLASS WebExControl TYPE button
                         .:SetAttr("type","button")
                         .:SetAttr("class","btn btn-danger")
-                        .:SetAttr("onclick","confirmDelete()")
+                        .:SetAttr("onclick",cIDTable+"_confirmDelete()")
                         .:SetContent("Excluir")
                     END WEBEXOBJECT
                 END WEBEXOBJECT
@@ -215,29 +220,55 @@ method ToHtml() class WebExTemplateBulkActionTable
     FreeObj(@oObj)
 
     WITH WEBEXOBJECT oObj CLASS WebExControl TYPE script
+
         beginContent var cScript
 
-            let rowToDelete = null;
-            function setRowToDelete(button) {
-            rowToDelete = button.closest("tr");
-            }
-            function confirmDelete() {
-            if (rowToDelete) {
-                rowToDelete.remove();
-                rowToDelete = null;
-            }
-            const modal = bootstrap.Modal.getInstance(document.getElementById("cIDModal"));
-            modal.hide();
-            }
-            function toggleAll(masterCheckbox) {
-            const checkboxes = document.querySelectorAll(".row-select");
-            checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+            let rowToDelete_FUNCID = null;
+
+            function FUNCID_setRowToDelete(button) {
+                rowToDelete_FUNCID = button.closest("tr");
             }
 
+            function FUNCID_confirmDelete() {
+                if (rowToDelete_FUNCID) {
+                    rowToDelete_FUNCID.remove();
+                    rowToDelete_FUNCID = null;
+                }
+                    const modal = bootstrap.Modal.getInstance(document.getElementById("cIDModal"));
+                    modal.hide();
+            }
+
+            function FUNCID_toggleAll(masterCheckbox) {
+                const checkboxes = document.querySelectorAll(".row-select");
+                checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+            }
+
+            function FUNCID_autoScaleTable() {
+                const wrapper = document.getElementById("cIDWrapper");
+                const table = document.getElementById("cIDTable");
+                if (table.scrollWidth > wrapper.clientWidth) {
+                    const scale = wrapper.clientWidth / table.scrollWidth;
+                    table.style.transform = "scale(" + scale + ")";
+                    table.style.transformOrigin = "top left";
+                } else {
+                    table.style.transform = "scale(1)";
+                }
+            }
+
+            window.addEventListener("load", FUNCID_autoScaleTable);
+            window.addEventListener("resize", FUNCID_autoScaleTable);
+
         endContent
-        cSCript:=StrTran(cScript,"cIDModal",cIDModal)
+
+        cScript:=StrTran(cScript,"FUNCID",cIDTable)
+        cScript:=StrTran(cScript,"cIDTable",cIDTable)
+        cScript:=StrTran(cScript,"cIDModal",cIDModal)
+        cScript:=StrTran(cScript,"cIDWrapper",cIDWrapper)
+
         .:SetContent(cScript)
+
         cHTML+=oObj:ToHTML()
+
     END WEBEXOBJECT
 
     FreeObj(@oObj)

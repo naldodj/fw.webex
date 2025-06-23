@@ -48,7 +48,7 @@ method New(cType) class WebExControl
 return(self)
 
 method NewID() class WebExControl
-return((Lower(GetClassName(self))+"_"+UUIDRandom()))
+return((StrTran(Lower(GetClassName(self)),".","_")+"_"+UUIDRandom()))
 
 method SetAttr(cKey,uValue) class WebExControl
    paramtype 1 var cKey as character

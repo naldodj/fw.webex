@@ -3,6 +3,14 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-23 15:50 UTC naldodj (Fix)
+  ! fix ID
+    * src/fw.webex/fw-webex.control.tlpp
+  ! fix names
+    * src/fw.webex/fw-webex.page.tlpp
+  ! fix: buttons mind their own table now
+    * src/fw.webex/fw-webex.template.bulk.action.table.tlpp
+
 2025-06-23 14:57 UTC naldodj (NewID and cIDModal)
   * src/fw.webex/fw-webex.control.tlpp
   * src/fw.webex/fw-webex.template.bulk.action.table.tlpp
