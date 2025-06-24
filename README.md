@@ -33,7 +33,7 @@ Só que agora... **na web.**
 
 ---
 
-## 💡 Exemplo de uso
+## 💡 Exemplo de uso (1)
 
 ```advpl
 #include "fw.webex.th"
@@ -75,6 +75,101 @@ static procedure FWWebExExample_001()
 return
 ````
 ![image](https://github.com/user-attachments/assets/65c4706b-420e-40c4-a0dc-8b9412cd186f)
+---
+## 💡 Exemplo de uso (2)
+
+```advpl
+#include "fw.webex.th"
+
+#include "shell.ch"
+#include "totvs.ch"
+#include "fileio.ch"
+#include "tbiconn.ch"
+
+using namespace FWWebEx
+
+procedure u_FWWebExExample_003()
+    PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01"
+        FWWebExExample_003()
+    RESET ENVIRONMENT
+return
+
+static procedure FWWebExExample_003()
+
+    local cHTML as character
+    local cHTMLFile as character
+
+    local cScript as character
+    local cProcName:=ProcName() as character
+
+    local oFWWebExPage as object
+
+    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
+        WITH WEBEXOBJECT CLASS WebExForm ARGS "Consulta CEP"
+            .:SetMethod("get")
+            .:SetAction("javascript:buscarCEP()")
+            .:AddField("CEP","cep","text","Digite o CEP")
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExControl TYPE script
+            beginContent var cScript
+
+                function buscarCEP() {
+
+                const cep = document.querySelector("input[name='cep']").value.trim();
+                const url = `https://viacep.com.br/ws/${cep}/json/`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                    if (data.erro) {
+                        document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>CEP n&atilde;o encontrado.</div>";
+                    } else {
+                        document.getElementById("resultadoCEP").innerHTML = `
+                        <div class='card'>
+                            <div class='card-body'>
+                            <h5 class='card-title'>Endere&ccedil;o</h5>
+                            <p class='card-text'>
+                                <strong>Logradouro:</strong> ${data.logradouro}<br>
+                                <strong>Bairro:</strong> ${data.bairro}<br>
+                                <strong>Cidade:</strong> ${data.localidade} - ${data.uf}<br>
+                                <strong>CEP:</strong> ${data.cep}
+                            </p>
+                            </div>
+                        </div>
+                        `;
+                    }
+                    })
+                    .catch(() => {
+                    document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>Erro ao consultar o CEP.</div>";
+                    });
+                }
+
+            endContent
+            .:SetContent(cScript)
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExControl TYPE div
+            .:SetAttr("id","resultadoCEP")
+            .:SetAttr("class","mt-4")
+        END WEBEXOBJECT
+        cHTML:=oFWWebExPage:Render()
+    END WEBEXOBJECT
+
+    FreeObj(@oFWWebExPage)
+
+    cHTML:=EncodeUTF8(cHTML)
+    if (!lIsDir("\web\tmp\"))
+        FWMakeDir("\web\tmp\",.F.)
+    endif
+    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
+    MemoWrite(cHTMLFile,cHTML)
+
+    htmlFileShow(cHTML,cProcName,cHTMLFile)
+
+    fErase(cHTMLFile)
+
+return
+````
+![WebExForm](https://github.com/user-attachments/assets/fcf7609f-a2be-43b4-b63e-af5aa2718d58)
 
 ---
 
