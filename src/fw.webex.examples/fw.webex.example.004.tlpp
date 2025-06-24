@@ -43,7 +43,9 @@ static procedure FWWebExExample_004()
         // CARD COM TEXTO ENCORPADO
         WITH WEBEXOBJECT CLASS WebExCard ARGS "Cliente Encontrado",""
             WITH WEBEXOBJECT CLASS WebExControl TYPE p
-                .:SetAttr("class","card-text")
+                .:AddClass("card-text teste")
+                .:AddClass("teste")
+                .:RemoveClass("teste")
                 WITH WEBEXOBJECT CLASS WebExStrong ARGS "&nbsp;&nbsp;&nbsp;Nome:"
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExControl TYPE span

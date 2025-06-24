@@ -41,6 +41,8 @@ class WebExControl
     public method ToHtml() as character
 
     public method AddClass(cNewClass as character) as object
+    public method HasClass(/*[@]*/cClass as character,/*@*/aClasses as array) as logical
+    public method RemoveClass(cClassRemove as character) as object
 
 endclass
 
@@ -168,4 +170,45 @@ method AddClass(cNewClass) class WebExControl
    else
       ::SetAttr("class",cClass+" "+cNewClass)
    endif
+return(self)
+
+method HasClass(cClass,aClasses) class WebExControl
+    local aClasses as array
+    local lHasClass as logical
+    local nATClass as numeric
+    paramtype 1 var cClass as character
+    paramtype 2 var aClasses as array optional
+    aClasses:=StrTokArr2(Lower(AllTrim(::GetAttr("class")))," ")
+    cClass:=Lower(AllTrim(cClass))
+    nATClass:=aScan(aClasses,{|cToken as character|(cToken==cClass)})
+    lHasClass:=(nATClass>0)
+return(lHasClass)
+
+method RemoveClass(cClassRemove) class WebExControl
+
+    local aClasses as array
+
+    local cClass as character
+    local cNewClass as character
+
+    local oForEach as object
+
+    paramtype 1 var cClass as character
+
+    if (::HasClass(@cClassRemove,@aClasses))
+        cNewClass:=""
+        oForEach:=ForEach():New(aClasses,{|k as numeric,v as character,i as numeric|;
+            cNewClass+=if(!(v==cClassRemove),v,""),;
+            cNewClass+=if(!oForEach:__enumIsLast()," ","");
+            },;
+            .F.;
+        )
+        oForEach:Eval()
+        FreeObj(@oForEach)
+        cNewClass:=AllTrim(cNewClass)
+        ::SetAttr("class",cNewClass)
+    endif
+
+    FWFreeArray(@aClasses)
+
 return(self)
