@@ -59,10 +59,19 @@ static procedure FWWebExExample_003()
                             <div class='card-body'>
                             <h5 class='card-title'>Endere&ccedil;o</h5>
                             <p class='card-text'>
-                                <strong>Logradouro:</strong> ${data.logradouro}<br>
-                                <strong>Bairro:</strong> ${data.bairro}<br>
-                                <strong>Cidade:</strong> ${data.localidade} - ${data.uf}<br>
-                                <strong>CEP:</strong> ${data.cep}
+                                <strong>CEP:</strong> ${data.cep}<br>
+                                <strong>Logradouro:</strong> ${data.logradouro} -
+                                <strong>Complemento:</strong> ${data.complemento} -
+                                <strong>Unidade:</strong> ${data.unidade}<br>
+                                <strong>Bairro:</strong> ${data.bairro} -
+                                <strong>Localidade:</strong> ${data.localidade}<br>
+                                <strong>UF:</strong> ${data.uf} -
+                                <strong>Estado:</strong> ${data.estado}<br>
+                                <strong>Regi&atilde;o:</strong> ${data.regiao} -
+                                <strong>IBGE:</strong> ${data.ibge}<br>
+                                <strong>GIA:</strong> ${data.gia} -
+                                <strong>DDD:</strong> ${data.ddd}<br>
+                                <strong>SIAFI:</strong> ${data.siafi}<br>
                             </p>
                             </div>
                         </div>

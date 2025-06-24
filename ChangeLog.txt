@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-24 17:50 UTC naldodj (CEP Detail)
+  * src/fw.webex.examples/fw.webex.example.003.tlpp
+
 2025-06-24 17:08 UTC naldodj (AddClass)
   * src/fw.webex/control/fw.webex.control.tlpp
 
