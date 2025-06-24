@@ -168,4 +168,4 @@ method AddClass(cNewClass) class WebExControl
    else
       ::SetAttr("class",cClass+" "+cNewClass)
    endif
-return self
+return(self)

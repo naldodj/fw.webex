@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-24 17:08 UTC naldodj (AddClass)
+  * src/fw.webex/control/fw.webex.control.tlpp
+
 2025-06-24 17:01 UTC naldodj (New Features)
   + src/fw.webex/web/fw.webex.alert.tlpp
   + src/fw.webex/web/fw.webex.card.tlpp
