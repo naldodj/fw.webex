@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-24 14:56 UTC naldodj (new tools)
+  + src/tools/for.each.tlpp
+  + src/tools/switch.tlpp
+
 2025-06-24 10:16 UTC naldodj (refactor: reorganized folder structure to improve modularity and clarity)
   * src/fw.webex/fw.webex.button.tlpp -> src/fw.webex/web/fw.webex.button.tlpp
   * src/fw.webex/fw.webex.context.tlpp -> src/fw.webex/tools/fw.webex.context.tlpp

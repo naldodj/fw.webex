@@ -1,0 +1,316 @@
+/*
+  __                                  _
+ / _|  ___   _ __   ___   __ _   ___ | |__
+| |_  / _ \ | '__| / _ \ / _` | / __|| '_ \
+|  _|| (_) || |   |  __/| (_| || (__ | | | |
+|_|   \___/ |_|    \___| \__,_| \___||_| |_|
+
+ForEach - Emulation of for/each logic for TL++
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+#include "totvs.ch"
+#include "parmtype.ch"
+
+#IFNDEF _THASH_CH
+
+    #DEFINE _THASH_CH
+
+    #DEFINE HASH_SECTION_POSITION  1
+    #DEFINE HASH_PROPERTY_POSITION 2
+
+    #DEFINE HASH_PROPERTY_KEY      1
+    #DEFINE HASH_PROPERTY_VALUE    2
+    #DEFINE HASH_PROPERTY_FILE     3
+    #DEFINE HASH_PROPERTY_TYPE     4
+    #DEFINE HASH_PROPERTY_CLSNAME  5
+
+    #DEFINE HASH_PROPERTY_ELEMENTS 5
+
+    #DEFINE SECTION_POSITION       HASH_SECTION_POSITION
+    #DEFINE PROPERTY_POSITION      HASH_PROPERTY_POSITION
+
+    #DEFINE PROPERTY_KEY           HASH_PROPERTY_KEY
+    #DEFINE PROPERTY_VALUE         HASH_PROPERTY_VALUE
+    #DEFINE PROPERTY_FILE          HASH_PROPERTY_FILE
+    #DEFINE PROPERTY_TYPE          HASH_PROPERTY_TYPE
+    #DEFINE PROPERTY_CLSNAME       HASH_PROPERTY_CLSNAME
+
+    #DEFINE PROPERTY_ELEMENTS      HASH_PROPERTY_ELEMENTS
+
+    #DEFINE HASH_KEY_POS        1
+    #DEFINE HASH_KEY_INDEX      2
+    #DEFINE HASH_KEY_ELEMENTS   2
+
+    #DEFINE HASH_KEY_SIZE       6
+
+    #ifndef __CLS_NAME_THASH
+        #define __CLS_NAME_THASH
+        #define CLS_NAME_THASH "|DNA.TECH.JSONHASH|DNA.TECH.JSONARRAY|DNA.TECH.THASH|DNA.TECH.TFINI|DNA.TECH.THASH_TFINI|"
+    #endif
+
+#ENDIF
+
+class ForEach
+
+    private data aKeys as array
+
+    private data bCallback as codeblock
+
+    private data cType as character
+    private data c__ClassName as character
+
+    private data lDescend as logical
+
+    private data nBeg as numeric
+    private data nEnd as numeric
+    private data nStep as numeric
+
+    private data nIndex as numeric
+
+    private data xKey as variant
+    private data xValue as variant
+    private data xTarget as variant
+
+    public method New(xTarget as variant,bCallback as codeblock,lDescend as logical)
+
+    public method Eval() as variant
+
+    //the hash key value of traversed hash item pair
+    public method __enumKey() as variant
+
+    //the value of variable
+    public method __enumValue() as variant
+
+    //is it the first enumerated item?
+    public method __enumIsFirst() as logical
+
+    //is it the last enumerated item?
+    public method __enumIsLast() as logical
+
+    //the loop counter for variable
+    public method __enumIndex() as numeric
+
+    //the value that is being traversed
+    public method __enumBase()
+
+end class
+
+method New(xTarget,bCallback,lDescend) class ForEach
+    paramtype 1 var xTarget as array,character,json,object
+    paramtype 2 var bCallback as block
+    paramtype 3 var lDescend as logical optional default .F.
+    ::bCallback:=bCallback
+    ::nIndex:=0
+    ::xTarget:=xTarget
+    ::cType:=ValType(::xTarget)
+    ::c__ClassName:=""
+    if (::cType=="A")
+        ::aKeys:=::xTarget
+    elseif (::cType=="C")
+        ::aKeys:=Array(Len(::xTarget))
+    elseif (::cType=="J")
+        ::aKeys:=::xTarget:GetNames()
+    elseif (::cType=="O")
+        ::c__ClassName:=GetClassName(::xTarget)
+        if (::c__ClassName=="THASHMAP")
+            ::xTarget:List(@::aKeys)
+        else
+            if (::c__ClassName$CLS_NAME_THASH)
+                if (::c__ClassName=="DNA.TECH.JSONARRAY")
+                    ::aKeys:=::xTarget:GetNames()
+                elseif (::c__ClassName=="DNA.TECH.THASH|DNA.TECH.TFINI|DNA.TECH.THASH_TFINI")
+                    ::aKeys:=::xTarget:GetAllProperties()
+                else
+                    ::aKeys:=Array(0)
+                endif
+            else
+                ::aKeys:=Array(0)
+            endif
+        endif
+    else
+        ::aKeys:=Array(0)
+    endif
+
+    ::nBeg:=if(lDescend,Len(::aKeys),1)
+    ::nEnd:=if(lDescend,1,Len(::aKeys))
+    ::nStep:=if(lDescend,(-1),1)
+
+return(self)
+
+method Eval() class ForEach
+
+    local i as numeric
+
+    do case
+    case (::cType=="A")
+        for i:=::nBeg to ::nEnd step ::nStep
+            ::xKey:=i
+            ::xValue:=::aKeys[i]
+            ::nIndex:=i
+            Eval(::bCallback,::xKey,::xValue,::nIndex)
+        next i
+    case (::cType=="C")
+        for i:=::nBeg to ::nEnd step ::nStep
+            ::xKey:=i
+            ::aKeys[::xKey]:=SubStr(::xTarget,::xKey,1)
+            ::xValue:=::aKeys[::xKey]
+            ::nIndex:=i
+            Eval(::bCallback,::xKey,::xValue,::nIndex)
+        next i
+    case (::cType=="J")
+        for i:=::nBeg to ::nEnd step ::nStep
+            ::xKey:=::aKeys[i]
+            ::xValue:=::xTarget[::xKey]
+            ::nIndex:=i
+            Eval(::bCallback,::xKey,::xValue,::nIndex)
+        next i
+    case (::cType=="O")
+        if (::c__ClassName=="THASHMAP")
+            for i:=::nBeg to ::nEnd step ::nStep
+                ::xKey:=::aKeys[i][1]
+                ::xValue:=::aKeys[i][2]
+                ::nIndex:=i
+                Eval(::bCallback,::xKey,::xValue,::nIndex)
+            next i
+        elseif (::c__ClassName$CLS_NAME_THASH)
+            if (::c__ClassName=="DNA.TECH.JSONARRAY")
+                for i:=::nBeg to ::nEnd step ::nStep
+                    ::xKey:=::aKeys[i]
+                    ::xValue:=::xTarget:Get(::xKey)
+                    ::nIndex:=i
+                    Eval(::bCallback,::xKey,::xValue,::nIndex)
+                next i
+            elseif (::c__ClassName=="DNA.TECH.THASH|DNA.TECH.TFINI|DNA.TECH.THASH_TFINI")
+                //TODO
+            endif
+        endif
+    otherwise
+        // non-iterable
+    endcase
+
+return
+
+//the hash key value of traversed hash item pair
+method __enumKey() class ForEach
+return(::xKey)
+
+//the value of variable
+method __enumValue() class ForEach
+return(::xValue)
+
+//is it the first enumerated item?
+method __enumIsFirst() class ForEach
+return(::nIndex==::nBeg)
+
+//is it the last enumerated item?
+method __enumIsLast() class ForEach
+return(::nIndex==::nEnd)
+
+//the loop counter for variable
+method __enumIndex() class ForEach
+return(::nIndex)
+
+//the value that is being traversed
+method __enumBase() class ForEach
+return(::xTarget)
+
+****************************************************************************************************************
+procedure u_ForEachTst()
+
+    local oForEach as object
+    local oTHashMap as object
+    local oJSONArray as object
+
+    ConOut("ForEach Begin",Replicate("-",80),"")
+
+    oForEach:=ForEach():New({"a","b","c"},{|k,v,i|;
+        ConOut(;
+            "Array :: Key: "+cValToChar(k);
+           +", __enumIndex: "+LTrim(Str(oForEach:__enumIndex()));
+           +", Valor: "+cValToChar(v);
+           +", Index i: "+LTrim(Str(i));
+        );
+    },.T.)
+
+    oForEach:Eval()
+    FreeObj(@oForEach)
+
+    ConOut(Replicate("-",80))
+
+    oForEach:=ForEach():New({"a":"a","b":"b","c":"c"},{|k,v,i|;
+        ConOut(;
+            "JSON :: Key: "+cValToChar(k);
+           +", __enumIndex: "+LTrim(Str(oForEach:__enumIndex()));
+           +", Valor: "+cValToChar(v);
+           +", Index i: "+LTrim(Str(i));
+        );
+    })
+
+    oForEach:Eval()
+    FreeObj(@oForEach)
+
+    ConOut(Replicate("-",80))
+
+    oTHashMap:=THASHMAP():New()
+    oTHashMap:Set("a","A")
+    oTHashMap:Set("b","B")
+    oTHashMap:Set("c","C")
+    oTHashMap:Set("D","D")
+    oForEach:=ForEach():New(oTHashMap,{|k,v,i|;
+        ConOut(;
+            "HASHMAP :: Key: "+cValToChar(k);
+           +", __enumIndex: "+LTrim(Str(oForEach:__enumIndex()));
+           +", Valor: "+cValToChar(v);
+           +", Index i: "+LTrim(Str(i));
+        );
+    })
+
+    oForEach:Eval()
+    FreeObj(@oForEach)
+    FreeObj(@oTHashMap)
+
+    ConOut(Replicate("-",80))
+
+    if (FindClass("DNA.TECH.JSONARRAY"))
+
+        oJSONArray:=DNA.TECH.JSONARRAY():New()
+        oJSONArray:Set("a","A")
+        oJSONArray:Set("b","B")
+        oJSONArray:Set("c","C")
+        oJSONArray:Set("D","D")
+        oForEach:=ForEach():New(oJSONArray,{|k,v,i|;
+            ConOut(;
+                "JSONARRAY :: Key: "+cValToChar(k);
+                +", __enumIndex: "+LTrim(Str(oForEach:__enumIndex()));
+                +", Valor: "+cValToChar(v);
+                +", Index i: "+LTrim(Str(i));
+            );
+        })
+
+        oForEach:Eval()
+
+        FreeObj(@oForEach)
+        FreeObj(@oJSONArray)
+
+    endif
+
+    ConOut(Replicate("-",80))
+
+    oForEach:=ForEach():New("ForEach",{|k,v,i|;
+        ConOut(;
+            "STRING :: Key: "+cValToChar(k);
+            +", __enumIndex: "+LTrim(Str(oForEach:__enumIndex()));
+            +", Valor: "+cValToChar(v);
+            +", Index i: "+LTrim(Str(i));
+        );
+    })
+
+    oForEach:Eval()
+    FreeObj(@oForEach)
+
+    ConOut(Replicate("-",80),"ForEach End","")
+
+return
