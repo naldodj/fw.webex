@@ -1,0 +1,32 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+#include "totvs.ch"
+#include "dbstruct.ch"
+#include "parmtype.ch"
+#include "tlpp-core.th"
+
+class WebExLabel from WebExControl
+    public method New(cFor as character,cText as character) as object
+endclass
+
+method New(cFor,cText) class WebExLabel
+    paramtype 1 var cFor as character
+    paramtype 2 var cText as character
+    _Super:New("label")
+    ::SetAttr("for",cFor)
+    ::SetAttr("class","form-label")
+    ::SetContent(cText)
+return(self)

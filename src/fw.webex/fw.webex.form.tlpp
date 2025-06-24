@@ -1,0 +1,92 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+#include "totvs.ch"
+#include "dbstruct.ch"
+#include "parmtype.ch"
+#include "tlpp-core.th"
+
+class WebExForm from WebExControl
+
+    public data cTitle as character
+    public data cMethod as character
+    public data cAction as character
+
+    public data jFields as json
+
+    public method New(cTitle as character) as object
+    public method SetMethod(cMethod as character) as object
+    public method SetAction(cAction as character) as object
+    public method AddField(cLabel as character,cName as character,cType as character,cPlaceholder as character) as object
+    public method ToHtml() as character
+
+endclass
+
+method New(cTitle) class WebExForm
+    paramtype 1 var cTitle as character
+    _Super:New("form")
+    ::cTitle:=cTitle
+    ::SetMethod("get")
+    ::SetAction("#")
+    ::jFields:=JSONObject():New()
+return(self)
+
+method SetMethod(cMethod) class WebExForm
+   paramtype 1 var cMethod as character
+   ::cMethod:=Lower(AllTrim(cMethod))
+return(self)
+
+method SetAction(cAction) class WebExForm
+   paramtype 1 var cAction as character
+   ::cAction:=AllTrim(cAction)
+return(self)
+
+method AddField(cLabel,cName,cType,cPlaceholder) class WebExForm
+   local oField as object
+   paramtype 1 var cLabel as character
+   paramtype 2 var cName as character
+   paramtype 3 var cType as character
+   paramtype 4 var cPlaceholder as character
+   oField:=WebExField():New(cLabel,cName,cType,cPlaceholder)
+   ::jFields[oField:cID]:=oField
+return(self)
+
+method ToHtml() class WebExForm
+
+    local aNames as array
+
+    local nName as numeric
+    local nNames as numeric
+
+    local oField as object
+    local oFieldSet:=WebExFieldSet():New(::cTitle) as object
+
+    ::SetAttr("method",::cMethod)
+    ::SetAttr("action",::cAction)
+    ::SetAttr("class","p-3 border rounded bg-light text-dark")
+
+    aNames:=::jFields:GetNames()
+    nNames:=Len(aNames)
+    for nName:=1 to nNames
+        cName:=aNames[nName]
+        oField:=::jFields[cName]
+        oFieldSet:AddChild(oField)
+    next nName
+
+    oFieldSet:AddChild(WebExButton():New("Buscar"))
+
+    ::AddChild(oFieldSet)
+
+return(_Super:ToHtml())

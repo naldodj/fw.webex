@@ -1,0 +1,32 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+#include "totvs.ch"
+#include "dbstruct.ch"
+#include "parmtype.ch"
+#include "tlpp-core.th"
+
+class WebExButton from WebExControl
+    public method New(cLabel as character, cType as character) as object
+endclass
+
+method New(cLabel,cType) class WebExButton
+    paramtype 1 var cLabel as character
+    paramtype 2 var cType as character optional default "submit"
+    _Super:New("button")
+    ::SetAttr("type",cType)
+    ::SetAttr("class","btn btn-primary")
+    ::SetContent(cLabel)
+return(self)

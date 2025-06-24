@@ -1,0 +1,29 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+#include "totvs.ch"
+#include "dbstruct.ch"
+#include "parmtype.ch"
+#include "tlpp-core.th"
+
+class WebExFieldSet from WebExControl
+   public method New(cLegend as character) as object
+endclass
+
+method New(cLegend) class WebExFieldSet
+   paramtype 1 var cLegend as character
+   _Super:New("fieldset")
+   ::AddChild(WebExLegend():New(cLegend))
+return(self)

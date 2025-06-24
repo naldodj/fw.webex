@@ -1,0 +1,34 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+#include "totvs.ch"
+#include "dbstruct.ch"
+#include "parmtype.ch"
+#include "tlpp-core.th"
+
+class WebExInput from WebExControl
+    public method New(cName as character,cType as character,cPlaceholder as character) as object
+endclass
+
+method New(cName,cType,cPlaceholder) class WebExInput
+    paramtype 1 var cName as character
+    paramtype 2 var cType as character
+    paramtype 3 var cPlaceholder as character
+    _Super:New("input")
+    ::SetAttr("name",cName)
+    ::SetAttr("type",cType)
+    ::SetAttr("placeholder",cPlaceholder)
+    ::SetAttr("class","form-control")
+return(self)
