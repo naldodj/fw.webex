@@ -3,6 +3,13 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-24 17:01 UTC naldodj (New Features)
+  + src/fw.webex/web/fw.webex.alert.tlpp
+  + src/fw.webex/web/fw.webex.card.tlpp
+  + src/fw.webex/web/fw.webex.strong.tlpp
+  + src/fw.webex.examples/fw.webex.example.004.tlpp
+  * src/fw.webex/control/fw.webex.control.tlpp
+
 2025-06-24 14:56 UTC naldodj (new tools)
   + src/tools/for.each.tlpp
   + src/tools/switch.tlpp

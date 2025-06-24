@@ -1,0 +1,45 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+#include "totvs.ch"
+#include "dbstruct.ch"
+#include "parmtype.ch"
+#include "tlpp-core.th"
+
+class WebExCard from WebExControl
+    public method New(cTitle as character,cBody as character) as object
+endclass
+
+method New(cTitle,cBody) class WebExCard
+    paramtype 1 var cTitle as character
+    paramtype 2 var cBody as character optional default ""
+    _Super:New("div")
+    WITH WEBEXOBJECT self
+        .:SetAttr("class","card")
+        WITH WEBEXOBJECT CLASS WebExControl TYPE div
+            .:SetAttr("class","card-body")
+            WITH WEBEXOBJECT CLASS WebExControl TYPE h5
+                .:SetAttr("class","card-title")
+                .:SetContent(cTitle)
+            END WEBEXOBJECT
+            if (!Empty(cBody))
+                WITH WEBEXOBJECT CLASS WebExControl TYPE p
+                    .:SetAttr("class","card-text")
+                    .:SetContent(cBody)
+                END WEBEXOBJECT
+            endif
+        END WEBEXOBJECT
+    END WEBEXOBJECT
+return(self)

@@ -32,9 +32,15 @@ class WebExControl
     public method NewID() as character
 
     public method SetAttr(cKey as character,uValue as variant) as object
+    public method GetAttr(cAttr) as character
+
     public method SetContent(cContent as character) as object
+
     public method AddChild(oChild as object) as object
+
     public method ToHtml() as character
+
+    public method AddClass(cNewClass as character) as object
 
 endclass
 
@@ -55,6 +61,16 @@ method SetAttr(cKey,uValue) class WebExControl
    paramtype 2 var uValue as array,character,date,json,logical,numeric
    ::jAttrs[cKey]:=uValue
 return(self)
+
+method GetAttr(cAttr) class WebExControl
+    local cGetAttr as character
+    paramtype 1 var cAttr as character
+    if (::jAttrs:HasProperty(cAttr))
+        cGetAttr:=::jAttrs[cAttr]
+    else
+        cGetAttr:=""
+    endif
+return(cGetAttr)
 
 method SetContent(cContent) class WebExControl
    paramtype 1 var cContent as character
@@ -142,3 +158,14 @@ method ToHtml() class WebExControl
     endif
 
 return(cHTML)
+
+method AddClass(cNewClass) class WebExControl
+   local cClass as character
+   paramtype 1 var cNewClass as character
+   cClass:=AllTrim(::GetAttr("class"))
+   if (Empty(cClass))
+      ::SetAttr("class",cNewClass)
+   else
+      ::SetAttr("class",cClass+" "+cNewClass)
+   endif
+return self
