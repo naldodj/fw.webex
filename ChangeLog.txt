@@ -3,6 +3,20 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-24 10:16 UTC naldodj (refactor: reorganized folder structure to improve modularity and clarity)
+  * src/fw.webex/fw.webex.button.tlpp -> src/fw.webex/web/fw.webex.button.tlpp
+  * src/fw.webex/fw.webex.context.tlpp -> src/fw.webex/tools/fw.webex.context.tlpp
+  * src/fw.webex/fw.webex.control.tlpp -> src/fw.webex/control/fw.webex.control.tlpp
+  * src/fw.webex/fw.webex.field.tlpp -> src/fw.webex/web/fw.webex.field.tlpp
+  * src/fw.webex/fw.webex.fieldset.tlpp -> src/fw.webex/web/fw.webex.fieldset.tlpp
+  * src/fw.webex/fw.webex.form.tlpp -> src/fw.webex/web/fw.webex.form.tlpp
+  * src/fw.webex/fw.webex.input.tlpp -> src/fw.webex/web/fw.webex.input.tlpp
+  * src/fw.webex/fw.webex.label.tlpp -> src/fw.webex/web/fw.webex.label.tlpp
+  * src/fw.webex/fw.webex.legend.tlpp -> src/fw.webex/web/fw.webex.legend.tlpp
+  * src/fw.webex/fw.webex.page.tlpp -> src/fw.webex/web/fw.webex.page.tlpp
+  * src/fw.webex/fw.webex.template.bulk.action.table.tlpp -> src/fw.webex/web/fw.webex.template.bulk.action.table.tlpp
+  * src/fw.webex/fw.webex.webapp.tools.tlpp -> src/fw.webex/tools/fw.webex.webapp.tools.tlpp
+
 2025-06-24 10:00 UTC naldodj (New Features)
   + src/fw.webex/fw.webex.button.tlpp
   + src/fw.webex/fw.webex.field.tlpp
