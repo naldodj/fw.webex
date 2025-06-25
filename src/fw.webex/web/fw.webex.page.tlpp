@@ -38,10 +38,15 @@ method Render() class WebExPage
     local cHTML:="<!DOCTYPE html>" as character
     local cBody:=::ToHtml() as character
 
+    local lIsDark:=WebApp():ThemeIsDark() as logical
+
     local oObj as object
 
     WITH WEBEXOBJECT oObj CLASS WebExControl TYPE html
         .:SetAttr("lang","pt-br")
+        if (lIsDark)
+            .:SetAttr("data-bs-theme","dark")
+        endif
         WITH WEBEXOBJECT CLASS WebExControl TYPE head
             WITH WEBEXOBJECT CLASS WebExControl TYPE meta
                 .:SetAttr("charset","UTF-8")

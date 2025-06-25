@@ -16,7 +16,7 @@ Released to Public Domain.
 
 using namespace FWWebEx
 
-procedure u_FWWebExExample_003()
+procedure u_FWWebExExample_005()
 
     local lMainWnd:=(Type("oMainWnd")=="O") as logical
 
@@ -26,16 +26,16 @@ procedure u_FWWebExExample_003()
         private oMainWnd as object
         lRedefineBottom:=.T.
         DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
-        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_003(),oMainWnd:End())
+        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_005(),oMainWnd:End())
         FreeObj(@oMainWnd)
     else
         lRedefineBottom:=.F.
-        FWWebExExample_003()
+        FWWebExExample_005()
     endif
 
 return
 
-static procedure FWWebExExample_003()
+static procedure FWWebExExample_005()
 
     local cHTML as character
     local cHTMLFile as character
@@ -43,69 +43,73 @@ static procedure FWWebExExample_003()
     local cScript as character
     local cProcName:=ProcName() as character
 
-    local oFWWebExPage as object
+    local oDiv as object
+    local oPage := WebExPage():New("Exemplo 005 - Formul&aacute;rio ViaCEP") as object
+    local oForm := WebExForm():New("Consulta de CEP") as object
+    local oScript := WebExControl():New("script") as object
+    local oButton as object
 
-    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
-        WITH WEBEXOBJECT CLASS WebExForm ARGS "Consulta CEP"
-            .:SetMethod("get")
-            .:SetAction("javascript:buscarCEP()")
-            .:AddField("CEP","cep","text","Digite o CEP")
-            .:AddButton(WebExButton():New("Buscar CEP"))
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExControl TYPE script
-            beginContent var cScript
+    oForm:SetMethod("get")
+    oForm:SetAction("#")
 
-                function buscarCEP() {
+    // Campo de busca
+    oForm:AddField("CEP", "cep", "text", "Digite o CEP")
 
-                const cep = document.querySelector("input[name='cep']").value.trim();
-                const url = `https://viacep.com.br/ws/${cep}/json/`;
+    // Campos que serao atualizados via Ajax (ja definidos)
+    oForm:AddField("Logradouro", "logradouro", "text", "")
+    oForm:AddField("Bairro", "bairro", "text", "")
+    oForm:AddField("Cidade", "localidade", "text", "")
+    oForm:AddField("UF", "uf", "text", "")
+    oForm:AddField("C&oacute;digo IBGE", "ibge", "text", "")
 
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                    if (data.erro) {
-                        document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>CEP n&atilde;o encontrado.</div>";
-                    } else {
-                        document.getElementById("resultadoCEP").innerHTML = `
-                        <div class='card'>
-                            <div class='card-body'>
-                            <h5 class='card-title'>Endere&ccedil;o</h5>
-                            <p class='card-text'>
-                                <strong>CEP:</strong> ${data.cep}<br>
-                                <strong>Logradouro:</strong> ${data.logradouro} -
-                                <strong>Complemento:</strong> ${data.complemento} -
-                                <strong>Unidade:</strong> ${data.unidade}<br>
-                                <strong>Bairro:</strong> ${data.bairro} -
-                                <strong>Localidade:</strong> ${data.localidade}<br>
-                                <strong>UF:</strong> ${data.uf} -
-                                <strong>Estado:</strong> ${data.estado}<br>
-                                <strong>Regi&atilde;o:</strong> ${data.regiao} -
-                                <strong>IBGE:</strong> ${data.ibge}<br>
-                                <strong>GIA:</strong> ${data.gia} -
-                                <strong>DDD:</strong> ${data.ddd}<br>
-                                <strong>SIAFI:</strong> ${data.siafi}<br>
-                            </p>
-                            </div>
-                        </div>
-                        `;
-                    }
-                    })
-                    .catch(() => {
-                    document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>Erro ao consultar o CEP.</div>";
-                    });
+    oDiv:=WebExControl():New("div")
+    oDiv:SetAttr("id", "resultadoCEP")
+
+    oButton:=WebExButton():New("Buscar")
+    oButton:SetAttr("onclick", "buscarCEP(); return false;")
+
+    oForm:AddChild(oDiv)
+    oForm:AddChild(oButton)
+
+    oPage:AddChild(oForm)
+
+    // Adiciona o script para consulta Ajax do ViaCEP
+    beginContent var cScript
+        function buscarCEP() {
+            const cep = document.getElementsByName('cep')[0].value.replace(/[^0-9]/g, '');
+            if (cep.length !== 8) {
+                document.getElementById('resultadoCEP').innerHTML = '<div class=\"alert alert-danger\">CEP inv&aacute;lido.</div>';
+                return;
+            }
+            fetch('https://viacep.com.br/ws/' + cep + '/json/')
+                .then(response => response.json())
+                .then(data => {
+                if (data.erro) {
+                    document.getElementById('resultadoCEP').innerHTML = '<div class=\"alert alert-danger\">CEP n&atilde;o encontrado.</div>';
+                } else {
+                    document.getElementsByName('logradouro')[0].value = data.logradouro || '';
+                    document.getElementsByName('bairro')[0].value = data.bairro || '';
+                    document.getElementsByName('localidade')[0].value = data.localidade || '';
+                    document.getElementsByName('uf')[0].value = data.uf || '';
+                    document.getElementsByName('ibge')[0].value = data.ibge || '';
+                    document.getElementById('resultadoCEP').innerHTML = '';
                 }
+            }).catch(() => {
+                document.getElementById('resultadoCEP').innerHTML = '<div class=\"alert alert-danger\">Erro ao consultar o CEP.</div>';
+            });
+        }
+    endContent
 
-            endContent
-            .:SetContent(cScript)
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExControl TYPE div
-            .:SetAttr("id","resultadoCEP")
-            .:SetAttr("class","mt-4")
-        END WEBEXOBJECT
-        cHTML:=oFWWebExPage:Render()
-    END WEBEXOBJECT
+    oScript:SetContent(cScript)
 
-    FreeObj(@oFWWebExPage)
+    oPage:AddChild(oScript)
+    cHTML:=oPage:Render()
+
+    FreeObj(@oDiv)
+    FreeObj(@oPage)
+    FreeObj(@oForm)
+    FreeObj(@oScript)
+    FreeObj(@oButton)
 
     cHTML:=EncodeUTF8(cHTML)
     if (!lIsDir("\web\tmp\"))

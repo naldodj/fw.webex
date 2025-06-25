@@ -25,11 +25,14 @@ class WebExForm from WebExControl
     public data cAction as character
 
     public data jFields as json
+    public data jButtons as json
 
     public method New(cTitle as character) as object
     public method SetMethod(cMethod as character) as object
     public method SetAction(cAction as character) as object
     public method AddField(cLabel as character,cName as character,cType as character,cPlaceholder as character) as object
+    public method AddButton(oButton as object) as object
+
     public method ToHtml() as character
 
 endclass
@@ -41,6 +44,7 @@ method New(cTitle) class WebExForm
     ::SetMethod("get")
     ::SetAction("#")
     ::jFields:=JSONObject():New()
+    ::jButtons:=JSONObject():New()
 return(self)
 
 method SetMethod(cMethod) class WebExForm
@@ -63,6 +67,11 @@ method AddField(cLabel,cName,cType,cPlaceholder) class WebExForm
    ::jFields[oField:cID]:=oField
 return(self)
 
+method AddButton(oButton) class WebExForm
+   paramtype 1 var oButton as object
+   ::jButtons[oButton:cID]:=oButton
+return(self)
+
 method ToHtml() class WebExForm
 
     local aNames as array
@@ -71,6 +80,7 @@ method ToHtml() class WebExForm
     local nNames as numeric
 
     local oField as object
+    local oButton as object
     local oFieldSet:=WebExFieldSet():New(::cTitle) as object
 
     ::SetAttr("method",::cMethod)
@@ -85,7 +95,15 @@ method ToHtml() class WebExForm
         oFieldSet:AddChild(oField)
     next nName
 
-    oFieldSet:AddChild(WebExButton():New("Buscar"))
+    FWFreeArray(@aNames)
+
+    aNames:=::jButtons:GetNames()
+    nNames:=Len(aNames)
+    for nName:=1 to nNames
+        cName:=aNames[nName]
+        oButton:=::jButtons[cName]
+        oFieldSet:AddChild(oButton)
+    next nName
 
     ::AddChild(oFieldSet)
 

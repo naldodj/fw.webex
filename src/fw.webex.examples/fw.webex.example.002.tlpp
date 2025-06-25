@@ -11,15 +11,29 @@ Released to Public Domain.
 
 #include "fw.webex.th"
 
+#include "shell.ch"
 #include "totvs.ch"
 #include "tbiconn.ch"
 
 using namespace FWWebEx
 
 procedure u_FWWebExExample_002()
-    PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01"
+
+    local lMainWnd:=(Type("oMainWnd")=="O") as logical
+
+    private lRedefineBottom as logical
+
+    if (!lMainWnd)
+        private oMainWnd as object
+        lRedefineBottom:=.T.
+        DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
+        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_002(),oMainWnd:End())
+        FreeObj(@oMainWnd)
+    else
+        lRedefineBottom:=.F.
         FWWebExExample_002()
-    RESET ENVIRONMENT
+    endif
+
 return
 
 static procedure FWWebExExample_002()
@@ -71,7 +85,7 @@ static procedure htmlFileShow(cHTML as character,cTitle as character,cHTMLFile a
 
     local lAbrir as logical
     local lIsDark:=WebApp():ThemeIsDark() as logical
-    local lRedefineBottom:=.F. as logical
+    local lHasTheme as logical
 
     local nTop as numeric
     local nLeft as numeric
@@ -81,7 +95,8 @@ static procedure htmlFileShow(cHTML as character,cTitle as character,cHTMLFile a
     local oDlg as object
     local oGrp as object
 
-    local oTheme:=totvs.framework.css.ProtheusTheme():New() as object
+    local oError as object
+    local oTheme as object
 
     local oTWebEngine as object
     local oTWebChannel as object
@@ -206,16 +221,32 @@ static procedure htmlFileShow(cHTML as character,cTitle as character,cHTMLFile a
             nTop+=1
             nRight+=5
 
+            try
+                oTheme:=totvs.framework.css.ProtheusTheme():New()
+                lHasTheme:=.T.
+            catch oError
+                lHasTheme:=.F.
+                FreeObj(@oError)
+            endtry
+
             //Botoes (da direita pra a esquerda)
             @ nTop,(nRight)-((50*1)+06) BUTTON jButtons["1"] PROMPT aButtons[1][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[1][2]) PIXEL
-            jButtons["1"]:SetCSS(oTheme:getPrimaryButtonCSS())
+            if (lHasTheme)
+                jButtons["1"]:SetCSS(oTheme:getPrimaryButtonCSS())
+            endif
             @ nTop,(nRight)-((50*2)+09) BUTTON jButtons["2"] PROMPT aButtons[2][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[2][2]) PIXEL
-            jButtons["2"]:SetCSS(oTheme:getPrimaryButtonCSS())
+            if (lHasTheme)
+                jButtons["2"]:SetCSS(oTheme:getPrimaryButtonCSS())
+            endif
             @ nTop,(nRight)-((50*3)+12) BUTTON jButtons["3"] PROMPT aButtons[3][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[3][2]) PIXEL
-            jButtons["3"]:SetCSS(oTheme:getPrimaryButtonCSS())
+            if (lHasTheme)
+                jButtons["3"]:SetCSS(oTheme:getPrimaryButtonCSS())
+            endif
             if (lAbrir)
                 @ nTop,(nRight)-((50*4)+15) BUTTON jButtons["4"] PROMPT aButtons[4][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[4][2]) PIXEL
-                jButtons["4"]:SetCSS(oTheme:getPrimaryButtonCSS())
+                if (lHasTheme)
+                    jButtons["4"]:SetCSS(oTheme:getPrimaryButtonCSS())
+                endif
             endif
 
             oDlg:lEscClose:=.F.

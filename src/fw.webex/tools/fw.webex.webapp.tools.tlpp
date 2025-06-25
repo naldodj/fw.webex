@@ -21,8 +21,20 @@ class WebApp
 end class
 
 static method ThemeIsDark() class WebApp
-    local cTheme:=Upper(allTrim(totvs.framework.css.getNewWebAppTheme())) as character
-    local lIsDark:=(!Empty(cTheme).and.(cTheme=="DARK")) as logical
+
+    local cTheme as character
+    local lIsDark as logical
+
+    local oError as object
+
+    try
+        cTheme:=Upper(allTrim(totvs.framework.css.getNewWebAppTheme()))
+        lIsDark:=(!Empty(cTheme).and.(cTheme=="DARK"))
+    catch oError
+        lIsDark:=.F.
+        FreeObj(@oError)
+    endtry
+
 return(lIsDark)
 
 static method WebAgentIsConnected() class WebApp
