@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-25 19:00 UTC naldodj (Fix protocol)
+  !* src/fw.webex.examples/006/fw.webex.example.006.tlpp
+
 2025-06-25 18:40 UTC naldodj (DataTable: Portuguese-Brasil translation)
   * src/fw.webex.examples/006/fw.webex.example.006.tlpp
 
