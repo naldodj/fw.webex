@@ -28,7 +28,7 @@ static procedure FWWebExExample_001()
         cHTML:=oFWWebExPage:Render()
     END WEBEXOBJECT
 
-    FreeObj(@oFWWebExPage)
+    WEBEXOBJECT CLEAN
 
     cHTML:=EncodeUTF8(cHTML)
     cHTMLFile:="c:\tmp\"+Lower(cProcName)+".html"
