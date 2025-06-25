@@ -63,7 +63,7 @@ static procedure FWWebExExample_001()
         cHTML:=oFWWebExPage:Render()
     END WEBEXOBJECT
 
-    FreeObj(@oFWWebExPage)
+    WEBEXOBJECT CLEAN
 
     cHTML:=EncodeUTF8(cHTML)
     cHTMLFile:="c:\tmp\"+Lower(cProcName)+".html"
@@ -74,24 +74,38 @@ static procedure FWWebExExample_001()
 
 return
 ````
+
 ![image](https://github.com/user-attachments/assets/65c4706b-420e-40c4-a0dc-8b9412cd186f)
+
 ---
-## 💡 Exemplo de uso (2)
+
+## 💡 Exemplo de uso (3)
 
 ```advpl
 #include "fw.webex.th"
 
 #include "shell.ch"
 #include "totvs.ch"
-#include "fileio.ch"
-#include "tbiconn.ch"
 
 using namespace FWWebEx
 
 procedure u_FWWebExExample_003()
-    PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01"
+
+    local lMainWnd:=(Type("oMainWnd")=="O") as logical
+
+    private lRedefineBottom as logical
+
+    if (!lMainWnd)
+        private oMainWnd as object
+        lRedefineBottom:=.T.
+        DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
+        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_003(),oMainWnd:End())
+        FreeObj(@oMainWnd)
+    else
+        lRedefineBottom:=.F.
         FWWebExExample_003()
-    RESET ENVIRONMENT
+    endif
+
 return
 
 static procedure FWWebExExample_003()
@@ -109,6 +123,7 @@ static procedure FWWebExExample_003()
             .:SetMethod("get")
             .:SetAction("javascript:buscarCEP()")
             .:AddField("CEP","cep","text","Digite o CEP")
+            .:AddButton(WebExButton():New("Buscar CEP"))
         END WEBEXOBJECT
         WITH WEBEXOBJECT CLASS WebExControl TYPE script
             beginContent var cScript
@@ -129,10 +144,19 @@ static procedure FWWebExExample_003()
                             <div class='card-body'>
                             <h5 class='card-title'>Endere&ccedil;o</h5>
                             <p class='card-text'>
-                                <strong>Logradouro:</strong> ${data.logradouro}<br>
-                                <strong>Bairro:</strong> ${data.bairro}<br>
-                                <strong>Cidade:</strong> ${data.localidade} - ${data.uf}<br>
-                                <strong>CEP:</strong> ${data.cep}
+                                <strong>CEP:</strong> ${data.cep}<br>
+                                <strong>Logradouro:</strong> ${data.logradouro} -
+                                <strong>Complemento:</strong> ${data.complemento} -
+                                <strong>Unidade:</strong> ${data.unidade}<br>
+                                <strong>Bairro:</strong> ${data.bairro} -
+                                <strong>Localidade:</strong> ${data.localidade}<br>
+                                <strong>UF:</strong> ${data.uf} -
+                                <strong>Estado:</strong> ${data.estado}<br>
+                                <strong>Regi&atilde;o:</strong> ${data.regiao} -
+                                <strong>IBGE:</strong> ${data.ibge}<br>
+                                <strong>GIA:</strong> ${data.gia} -
+                                <strong>DDD:</strong> ${data.ddd}<br>
+                                <strong>SIAFI:</strong> ${data.siafi}<br>
                             </p>
                             </div>
                         </div>
@@ -154,7 +178,7 @@ static procedure FWWebExExample_003()
         cHTML:=oFWWebExPage:Render()
     END WEBEXOBJECT
 
-    FreeObj(@oFWWebExPage)
+    WEBEXOBJECT CLEAN
 
     cHTML:=EncodeUTF8(cHTML)
     if (!lIsDir("\web\tmp\"))
