@@ -85,7 +85,7 @@ method ToHtml() class WebExForm
 
     ::SetAttr("method",::cMethod)
     ::SetAttr("action",::cAction)
-    ::SetAttr("class","p-3 border rounded bg-light text-dark")
+    ::SetAttr("class","p-3 border rounded")
 
     aNames:=::jFields:GetNames()
     nNames:=Len(aNames)

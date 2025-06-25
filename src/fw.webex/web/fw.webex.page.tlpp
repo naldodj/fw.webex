@@ -80,7 +80,7 @@ method Render() class WebExPage
             END WEBEXOBJECT
         END WEBEXOBJECT
         WITH WEBEXOBJECT CLASS WebExControl TYPE body
-            .:SetAttr("class","p-4 bg-dark text-light")
+            .:SetAttr("class","p-4")
             .:SetContent(cBody)
         END WEBEXOBJECT
         cHTML+=oObj:ToHTML()

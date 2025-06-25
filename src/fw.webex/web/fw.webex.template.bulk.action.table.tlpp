@@ -105,7 +105,7 @@ method ToHtml() class WebExTemplateBulkActionTable
     WITH WEBEXOBJECT self
 
         WITH WEBEXOBJECT CLASS WebExControl TYPE div
-            .:SetAttr("class","container bg-white text-dark rounded shadow p-3")
+            .:SetAttr("class","container rounded shadow p-3")
             if (!Empty(::cTitle))
                 WITH WEBEXOBJECT CLASS WebExControl TYPE h3
                     .:SetAttr("class","mb-3")
@@ -119,10 +119,8 @@ method ToHtml() class WebExTemplateBulkActionTable
                     .:SetAttr("class","table table-hover po-table po-striped")
                     // Cabecalho
                     WITH WEBEXOBJECT CLASS WebExControl TYPE thead
-                        .:SetAttr("class","table-light")
                         WITH WEBEXOBJECT CLASS WebExControl TYPE tr
                             WITH WEBEXOBJECT CLASS WebExControl TYPE th
-                                .:SetAttr("class","table-light")
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE input
                                     .:SetAttr("type","checkbox")
                                     .:SetAttr("onclick",cIDTable+"_toggleAll(this)")
@@ -180,7 +178,7 @@ method ToHtml() class WebExTemplateBulkActionTable
             WITH WEBEXOBJECT CLASS WebExControl TYPE div
                 .:SetAttr("class","modal-dialog")
                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                    .:SetAttr("class","modal-content bg-light text-dark")
+                    .:SetAttr("class","modal-content")
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
                         .:SetAttr("class","modal-header")
                         WITH WEBEXOBJECT CLASS WebExControl TYPE h5
@@ -194,7 +192,7 @@ method ToHtml() class WebExTemplateBulkActionTable
                         END WEBEXOBJECT
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("class","modal-body text-dark")
+                        .:SetAttr("class","modal-body")
                         .:SetContent("Deseja realmente excluir esta linha?")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
