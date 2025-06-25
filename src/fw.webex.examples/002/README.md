@@ -59,4 +59,4 @@ static procedure FWWebExExample_002()
 return
 ````
 
-![WebExForm](https://github.com/user-attachments/assets/fcf7609f-a2be-43b4-b63e-af5aa2718d58)
+![image](https://github.com/user-attachments/assets/dba13e70-a014-42db-81e7-83e8a8307d20)
