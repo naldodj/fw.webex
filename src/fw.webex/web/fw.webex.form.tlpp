@@ -27,7 +27,9 @@ class WebExForm from WebExControl
     public data jFields as json
     public data jButtons as json
 
-    public method New(cTitle as character) as object
+    public data lButtonsFirst as logical
+
+    public method New(cTitle as character,lButtonsFirst as logical) as object
     public method SetMethod(cMethod as character) as object
     public method SetAction(cAction as character) as object
     public method AddField(cLabel as character,cName as character,cType as character,cPlaceholder as character) as object
@@ -37,10 +39,12 @@ class WebExForm from WebExControl
 
 endclass
 
-method New(cTitle) class WebExForm
+method New(cTitle,lButtonsFirst) class WebExForm
     paramtype 1 var cTitle as character
+    paramtype 2 var lButtonsFirst as logical optional default .F.
     _Super:New("form")
     ::cTitle:=cTitle
+    ::lButtonsFirst:=lButtonsFirst
     ::SetMethod("get")
     ::SetAction("#")
     ::jFields:=JSONObject():New()
@@ -79,30 +83,36 @@ method ToHtml() class WebExForm
     local nName as numeric
     local nNames as numeric
 
-    local oField as object
-    local oButton as object
-    local oFieldSet:=WebExFieldSet():New(::cTitle) as object
+    local jChilds as json
+
+    local oChild as object
+    local oFieldSet as object
 
     ::SetAttr("method",::cMethod)
     ::SetAttr("action",::cAction)
     ::SetAttr("class","p-3 border rounded")
 
-    aNames:=::jFields:GetNames()
+    oFieldSet:=WebExFieldSet():New(::cTitle)
+
+    jChilds:=if(::lButtonsFirst,::jButtons,::jFields)
+
+    aNames:=jChilds:GetNames()
     nNames:=Len(aNames)
     for nName:=1 to nNames
         cName:=aNames[nName]
-        oField:=::jFields[cName]
-        oFieldSet:AddChild(oField)
+        oChild:=jChilds[cName]
+        oFieldSet:AddChild(oChild)
     next nName
 
     FWFreeArray(@aNames)
 
-    aNames:=::jButtons:GetNames()
+    jChilds:=if(::lButtonsFirst,::jFields,::jButtons)
+    aNames:=jChilds:GetNames()
     nNames:=Len(aNames)
     for nName:=1 to nNames
         cName:=aNames[nName]
-        oButton:=::jButtons[cName]
-        oFieldSet:AddChild(oButton)
+        oChild:=jChilds[cName]
+        oFieldSet:AddChild(oChild)
     next nName
 
     ::AddChild(oFieldSet)

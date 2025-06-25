@@ -12,6 +12,7 @@ Released to Public Domain.
 namespace FWWebEx
 
 static __aWithStack:=Array(0) as array
+static __aFreeStack:=Array(0) as array
 
 #include "fw.webex.th"
 
@@ -24,12 +25,14 @@ class WebExContext
     static method ObjBegin(oObject as object) as object
     static method ObjEnd() as variant
     static method ObjGet() as object
+    static method ObjClean() as variant
 
 end class
 
 method ObjBegin(oObject) class WebExContext
    paramtype 1 var oObject as object
    aAdd(__aWithStack,oObject)
+   aAdd(__aFreeStack,oObject)
 return(oObject)
 
 method ObjEnd() class WebExContext
@@ -58,3 +61,8 @@ method ObjGet() class WebExContext
         oObj:=__aWithStack[nLen]
     endif
 return(oObj)
+
+static method ObjClean() class WebExContext
+    aEval(__aFreeStack,{|o|FreeObj(@o)})
+    aSize(__aFreeStack,0)
+return

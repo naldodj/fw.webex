@@ -17,6 +17,8 @@ Released to Public Domain.
     #xcommand WITH WEBEXOBJECT [<obj>] CLASS <class> [<arg: ARG, ARGS> <Args,...>] => [<obj>:=] WebExContext():ObjBegin(<class>():New([<Args>]))
     #xcommand END WEBEXOBJECT => (WebExContext():ObjEnd(),if(Type("__oWebExContextObj__")=="O",(__oWebExContextObj__:=nil),nil))
 
+    #xcommand WEBEXOBJECT CLEAN => WebExContext():ObjClean()
+
     #xtranslate .:<method> => (__oWebExContextObj__:=WebExContext():ObjGet(),__oWebExContextObj__:<method>)
 
 #ENDIF

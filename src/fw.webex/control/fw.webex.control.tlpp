@@ -60,7 +60,7 @@ return((StrTran(Lower(GetClassName(self)),".","_")+"_"+UUIDRandom()))
 
 method SetAttr(cKey,uValue) class WebExControl
    paramtype 1 var cKey as character
-   paramtype 2 var uValue as array,character,date,json,logical,numeric
+   paramtype 2 var uValue as array,character,date,json,logical,numeric optional default cKey
    ::jAttrs[cKey]:=uValue
 return(self)
 
@@ -120,7 +120,11 @@ method ToHtml() class WebExControl
                     if (valType(xVal)!="C")
                         xVal:=cValToChar(xVal)
                     endif
-                    cHTML+=" "+cKey+'="'+xVal+'"'
+                    if (cKey==xVal)
+                        cHTML+=" "+cKey
+                    else
+                        cHTML+=" "+cKey+'="'+xVal+'"'
+                    endif
                 endif
             next nAttr
         endif

@@ -78,7 +78,7 @@ static procedure FWWebExExample_004()
         cHTML:=oFWWebExPage:Render()
     END WEBEXOBJECT
 
-    FreeObj(@oFWWebExPage)
+    WEBEXOBJECT CLEAN
 
     cHTML:=EncodeUTF8(cHTML)
     if (!lIsDir("\web\tmp\"))

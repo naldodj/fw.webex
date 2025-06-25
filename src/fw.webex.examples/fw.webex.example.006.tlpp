@@ -13,11 +13,10 @@ Released to Public Domain.
 
 #include "shell.ch"
 #include "totvs.ch"
-#include "tbiconn.ch"
 
 using namespace FWWebEx
 
-procedure u_FWWebExExample_002()
+procedure u_FWWebExExample_006()
 
     local lMainWnd:=(Type("oMainWnd")=="O") as logical
 
@@ -27,31 +26,82 @@ procedure u_FWWebExExample_002()
         private oMainWnd as object
         lRedefineBottom:=.T.
         DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
-        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_002(),oMainWnd:End())
+        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_006(),oMainWnd:End())
         FreeObj(@oMainWnd)
     else
         lRedefineBottom:=.F.
-        FWWebExExample_002()
+        FWWebExExample_006()
     endif
 
 return
 
-static procedure FWWebExExample_002()
+static procedure FWWebExExample_006()
 
     local cHTML as character
     local cHTMLFile as character
+
+    local cScript as character
     local cProcName:=ProcName() as character
 
-    local oFWWebExPage as object
+    local oPage:=WebExPage():New("Exemplo 006 - ViaCEP em DataTable")
+    local oForm:=WebExForm():New("Buscar CEP")
+    local oButton:=WebExButton():New("Buscar")
+    local oScript:=WebExControl():New("script")
+    local oDivTable:=WebExControl():New("div")
 
-    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
-        WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName
-            .:FromSQL("SELECT TOP 10 * FROM SX5990")
-        END WEBEXOBJECT
-        cHTML:=oFWWebExPage:Render()
-    END WEBEXOBJECT
+    //Campo para a Pesquisa do CEP
+    oForm:AddField("CEP","cep","text","Digite o CEP")
 
-    WEBEXOBJECT CLEAN
+    oButton:SetAttr("onclick","buscarCEP(); return false;")
+    oForm:AddChild(oButton)
+
+    // Tabela que sera preenchida
+    oPage:AddChild(oForm)
+
+    oDivTable:SetAttr("id","tableResult")
+    oPage:AddChild(oDivTable)
+
+    // Script para requisitar ViaCEP e preencher a tabela com DataTables
+    beginContent var cScript
+        function buscarCEP() {
+            const cep = document.getElementsByName('cep')[0].value.replace(/[^0-9]/g,'');
+            if (cep.length !== 8) {
+                document.getElementById('tableResult').innerHTML = '<div class=\"alert alert-danger\">CEP inv&aacute;lido.</div>';
+                return;
+            }
+            fetch('https://viacep.com.br/ws/' + cep + '/json/')
+                .then(response => response.json())
+                .then(data => {
+                if (data.erro) {
+                    document.getElementById('tableResult').innerHTML = '<div class=\"alert alert-danger\">CEP n&atilde;o encontrado.</div>';
+                } else {
+                    let html = '<table id=\"example\" class=\"table table-striped table-hover mt-3\">';
+                    html += '<thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody>';
+                    for (let key in data) {
+                        html += '<tr><td><strong>' + key + '</strong></td><td>' + data[key] + '</td></tr>';
+                    }
+                    html += '</tbody></table>';
+                    document.getElementById('tableResult').innerHTML = html;
+                    new DataTable('#example');
+                }
+                })
+                .catch(() => {
+                document.getElementById('tableResult').innerHTML = '<div class=\"alert alert-danger\">Erro ao consultar o CEP.</div>';
+            });
+        }
+    endContent
+
+    oScript:SetContent(cScript)
+
+    oPage:AddChild(oScript)
+
+    cHTML:=oPage:Render()
+
+    FreeObj(@oPage)
+    FreeObj(@oForm)
+    FreeObj(@oButton)
+    FreeObj(@oScript)
+    FreeObj(@oDivTable)
 
     cHTML:=EncodeUTF8(cHTML)
     if (!lIsDir("\web\tmp\"))

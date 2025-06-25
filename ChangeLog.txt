@@ -3,6 +3,23 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-25 17:19 UTC naldodj (DataTable)
+  * ObjClean
+    * include/fw.webex.th
+    * src/fw.webex/tools/fw.webex.context.tlpp
+    * src/fw.webex.examples/fw.webex.example.001.tlpp
+    * src/fw.webex.examples/fw.webex.example.002.tlpp
+    * src/fw.webex.examples/fw.webex.example.003.tlpp
+    * src/fw.webex.examples/fw.webex.example.004.tlpp
+  + DataTable
+    + src/fw.webex.examples/fw.webex.example.006.tlpp
+  ! Bolean Attribute
+    * src/fw.webex/control/fw.webex.control.tlpp
+  * lButtonsFirst
+    * src/fw.webex/web/fw.webex.form.tlpp
+  * New Features
+    * src/fw.webex/web/fw.webex.page.tlpp
+
 2025-06-25 14:01 UTC naldodj (Dark Theme)
   * src/fw.webex/web/fw.webex.form.tlpp
   * src/fw.webex/web/fw.webex.page.tlpp
