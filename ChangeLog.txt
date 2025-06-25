@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-25 18:40 UTC naldodj (DataTable: Portuguese-Brasil translation)
+  * src/fw.webex.examples/006/fw.webex.example.006.tlpp
+
 2025-06-25 17:38 UTC naldodj (refactor: reorganized folder structure to improve modularity and clarity)
   + src/fw.webex.examples/001/README.md
   + src/fw.webex.examples/002/README.md
