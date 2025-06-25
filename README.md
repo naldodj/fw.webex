@@ -202,7 +202,7 @@ return
 * Nenhuma no backend (ADVPL puro)
 * Frontend usa:
 
-  * [Bootstrap 5.3](https://getbootstrap.com)
+  * [Bootstrap 5.n](https://getbootstrap.com)
   * (opcional) [PO UI CSS](https://po-ui.io)
 
 ---
