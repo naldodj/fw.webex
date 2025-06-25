@@ -1,0 +1,62 @@
+# 💡 Exemplo de uso (3)
+
+```advpl
+#include "fw.webex.th"
+
+#include "shell.ch"
+#include "totvs.ch"
+#include "tbiconn.ch"
+
+using namespace FWWebEx
+
+procedure u_FWWebExExample_002()
+
+    local lMainWnd:=(Type("oMainWnd")=="O") as logical
+
+    private lRedefineBottom as logical
+
+    if (!lMainWnd)
+        private oMainWnd as object
+        lRedefineBottom:=.T.
+        DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
+        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_002(),oMainWnd:End())
+        FreeObj(@oMainWnd)
+    else
+        lRedefineBottom:=.F.
+        FWWebExExample_002()
+    endif
+
+return
+
+static procedure FWWebExExample_002()
+
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+
+    local oFWWebExPage as object
+
+    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
+        WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName
+            .:FromSQL("SELECT TOP 10 * FROM SX5990")
+        END WEBEXOBJECT
+        cHTML:=oFWWebExPage:Render()
+    END WEBEXOBJECT
+
+    WEBEXOBJECT CLEAN
+
+    cHTML:=EncodeUTF8(cHTML)
+    if (!lIsDir("\web\tmp\"))
+        FWMakeDir("\web\tmp\",.F.)
+    endif
+    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
+    MemoWrite(cHTMLFile,cHTML)
+
+    htmlFileShow(cHTML,cProcName,cHTMLFile)
+
+    fErase(cHTMLFile)
+
+return
+````
+
+![WebExForm](https://github.com/user-attachments/assets/fcf7609f-a2be-43b4-b63e-af5aa2718d58)
