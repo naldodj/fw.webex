@@ -5,11 +5,10 @@
 
 #include "shell.ch"
 #include "totvs.ch"
-#include "tbiconn.ch"
 
 using namespace FWWebEx
 
-procedure u_FWWebExExample_002()
+procedure u_FWWebExExample_004()
 
     local lMainWnd:=(Type("oMainWnd")=="O") as logical
 
@@ -19,26 +18,54 @@ procedure u_FWWebExExample_002()
         private oMainWnd as object
         lRedefineBottom:=.T.
         DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
-        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_002(),oMainWnd:End())
+        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_004(),oMainWnd:End())
         FreeObj(@oMainWnd)
     else
         lRedefineBottom:=.F.
-        FWWebExExample_002()
+        FWWebExExample_004()
     endif
 
 return
 
-static procedure FWWebExExample_002()
+static procedure FWWebExExample_004()
 
     local cHTML as character
     local cHTMLFile as character
+
     local cProcName:=ProcName() as character
 
     local oFWWebExPage as object
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
-        WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName
-            .:FromSQL("SELECT TOP 10 * FROM SX5990")
+        // ALERTA DE ERRO
+        WITH WEBEXOBJECT CLASS WebExAlert ARGS "Erro ao carregar os dados do cliente.","danger"
+        END WEBEXOBJECT
+        // ALERTA DE SUCESSO
+        WITH WEBEXOBJECT CLASS WebExAlert ARGS "Opera&ccedil;&atilde;o realizada com sucesso!","success"
+        END WEBEXOBJECT
+        // CARD COM TEXTO ENCORPADO
+        WITH WEBEXOBJECT CLASS WebExCard ARGS "Cliente Encontrado",""
+            WITH WEBEXOBJECT CLASS WebExControl TYPE p
+                .:AddClass("card-text teste")
+                .:AddClass("teste")
+                .:RemoveClass("teste")
+                WITH WEBEXOBJECT CLASS WebExStrong ARGS "&nbsp;&nbsp;&nbsp;Nome:"
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExControl TYPE span
+                    .:SetContent("&nbsp;Jo&atilde;o da Silva")
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExControl TYPE p
+                .:SetAttr("class","card-text")
+                WITH WEBEXOBJECT CLASS WebExStrong ARGS "&nbsp;&nbsp;&nbsp;Cidade:"
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExControl TYPE span
+                    .:SetContent("&nbsp;Vit&oacute;ria - ES")
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+        // CARD COM BODY
+        WITH WEBEXOBJECT CLASS WebExCard ARGS "TITLE","BODY"
         END WEBEXOBJECT
         cHTML:=oFWWebExPage:Render()
     END WEBEXOBJECT
@@ -59,4 +86,4 @@ static procedure FWWebExExample_002()
 return
 ````
 
-![WebExForm](https://github.com/user-attachments/assets/fcf7609f-a2be-43b4-b63e-af5aa2718d58)
+![image](https://github.com/user-attachments/assets/3de7731a-e9a4-4e3c-8854-c736c7460590)
