@@ -44,29 +44,30 @@ static procedure FWWebExExample_005()
     local cProcName:=ProcName() as character
 
     local oDiv as object
-    local oPage := WebExPage():New("Exemplo 005 - Formul&aacute;rio ViaCEP") as object
-    local oForm := WebExForm():New("Consulta de CEP") as object
-    local oScript := WebExControl():New("script") as object
     local oButton as object
+
+    local oPage:=WebExPage():New("Exemplo 005 - Formul&aacute;rio ViaCEP") as object
+    local oForm:=WebExForm():New("Consulta de CEP") as object
+    local oScript:=WebExControl():New("script") as object
 
     oForm:SetMethod("get")
     oForm:SetAction("#")
 
     // Campo de busca
-    oForm:AddField("CEP", "cep", "text", "Digite o CEP")
+    oForm:AddField("CEP","cep","text","Digite o CEP")
 
     // Campos que serao atualizados via Ajax (ja definidos)
-    oForm:AddField("Logradouro", "logradouro", "text", "")
-    oForm:AddField("Bairro", "bairro", "text", "")
-    oForm:AddField("Cidade", "localidade", "text", "")
-    oForm:AddField("UF", "uf", "text", "")
-    oForm:AddField("C&oacute;digo IBGE", "ibge", "text", "")
+    oForm:AddField("Logradouro","logradouro","text","")
+    oForm:AddField("Bairro","bairro","text","")
+    oForm:AddField("Cidade","localidade","text","")
+    oForm:AddField("UF","uf","text","")
+    oForm:AddField("C&oacute;digo IBGE","ibge","text","")
 
     oDiv:=WebExControl():New("div")
-    oDiv:SetAttr("id", "resultadoCEP")
+    oDiv:SetAttr("id","resultadoCEP")
 
     oButton:=WebExButton():New("Buscar")
-    oButton:SetAttr("onclick", "buscarCEP(); return false;")
+    oButton:SetAttr("onclick","buscarCEP(); return false;")
 
     oForm:AddChild(oDiv)
     oForm:AddChild(oButton)
@@ -76,7 +77,7 @@ static procedure FWWebExExample_005()
     // Adiciona o script para consulta Ajax do ViaCEP
     beginContent var cScript
         function buscarCEP() {
-            const cep = document.getElementsByName('cep')[0].value.replace(/[^0-9]/g, '');
+            const cep = document.getElementsByName('cep')[0].value.replace(/[^0-9]/g,'');
             if (cep.length !== 8) {
                 document.getElementById('resultadoCEP').innerHTML = '<div class=\"alert alert-danger\">CEP inv&aacute;lido.</div>';
                 return;
