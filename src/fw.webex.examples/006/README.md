@@ -74,7 +74,13 @@ static procedure FWWebExExample_006()
                     }
                     html += '</tbody></table>';
                     document.getElementById('tableResult').innerHTML = html;
-                    new DataTable('#example');
+                    //Portuguese-Brasil translation
+                    //https://datatables.net/plug-ins/i18n/Portuguese-Brasil.html
+                    var table = new DataTable('#example', {
+                        language: {
+                            url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/pt-BR.json',
+                        },
+                    });
                 }
                 })
                 .catch(() => {
