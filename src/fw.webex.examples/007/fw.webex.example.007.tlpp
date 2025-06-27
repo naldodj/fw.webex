@@ -53,6 +53,7 @@ static procedure FWWebExExample_007()
     local cScript as character
     local cProcName:=ProcName() as character
     local cBasicAuth as character
+    local cDNATechAuth as character
 
     local oPage as object
     local oScript as object
@@ -148,7 +149,7 @@ static procedure FWWebExExample_007()
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': basicAuth,
-                            'X-DNATech-Auth-Token': 'dG9rZW46QTA0NEM1M0FCRjlBRTZCNUM5MjhENTBDRkY0OEY0RjVBRDYwNTA3QjI5RTkyNkE4RDY4QUMwRTIzQQ=='
+                            'X-DNATech-Auth-Token': 'DNATechAuth'
                         },
                         body: JSON.stringify({
                             ClassName: 'userRestCrudTLPPCoreFunction',
@@ -198,6 +199,10 @@ static procedure FWWebExExample_007()
         //Considerando que callProcRestCrudTLPP depende de DNA.TECH.USERRESTCRUDTLPP
         //u_callProcRestCrudTLPP atuara como um mock da callProcRestCrudTLPP.
         cScript:=StrTran(cScript,"callProcRestCrudTLPP","u_callProcRestCrudTLPP")
+    else
+        cDNATechAuth:=MemoRead("\dna.tech\authentication\authentication.aut")
+        cDNATechAuth:=Encode64("token:"+cDNATechAuth)
+        cScript:=StrTran(cScript,"DNATechAuth",cDNATechAuth)
     endif
     cScript:=StrTran(cScript,"basicAuth","'"+cBasicAuth+"'")
     cScript:=StrTran(cScript,"http://localhost:9898/rest/",aParamRet[3])
