@@ -292,6 +292,8 @@ static procedure FWWebExExample_007()
 return
 ````
 
+![image](https://github.com/user-attachments/assets/291e4ed2-33be-4d82-b580-8e65199dfd33)
+
 ![image](https://github.com/user-attachments/assets/929a5909-5b08-4582-a06e-d98c2ad5aec7)
 
 ---
