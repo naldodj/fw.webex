@@ -108,7 +108,8 @@ static procedure FWWebExExample_006()
                         document.getElementById('tableResult').innerHTML = html;
                         var table = new DataTable('#example', {
                             dom: 'Blfrtip',
-                            lengthMenu: [10,25,50,100,-1],
+                            lengthMenu: [1,2,3,4,5,6,7,8,9,10,25,50,100,-1],
+                            pageLength: 6,//DEFAULT
                             buttons: [
                                 'copy',
                                 'csv',
@@ -131,6 +132,18 @@ static procedure FWWebExExample_006()
                                 url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/pt-BR.json',
                                 lengthLabels: {
                                     '-1': 'Todos' //https://datatables.net/reference/option/lengthMenu
+                                }
+                            },
+                            "drawCallback": function(settings) {
+                                // This drawCallback ensures consistent table height across pages.
+                                // It calculates how many empty rows are needed to fill the remaining space,
+                                // and appends them to the table so all pages have the same visual height.
+                                const api = this.api();
+                                const rows = api.rows({ page: 'current' }).count();
+                                const pageSize = api.page.len();
+                                const emptyRows = pageSize - rows;
+                                for (let i = 0; i < emptyRows; i++) {
+                                    $('#example tbody').append('<tr class="empty-row"><td colspan="999">&nbsp;</td></tr>');
                                 }
                             }
                         });
