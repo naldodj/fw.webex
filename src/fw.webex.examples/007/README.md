@@ -45,6 +45,7 @@ static procedure FWWebExExample_007()
     local cScript as character
     local cProcName:=ProcName() as character
     local cBasicAuth as character
+    local cDNATechAuth as character
 
     local oPage as object
     local oScript as object
@@ -74,14 +75,27 @@ static procedure FWWebExExample_007()
         table.dataTable.compact tbody td {
             padding: 4px 8px !important;
         }
+        #custom-loader {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 4px !important;
+        background: linear-gradient(270deg, #0dcaf0, #0d6efd) !important;
+        animation: progressbar-stripes 1s linear infinite !important;
+        }
+        @keyframes progressbar-stripes {
+        0% { background-position: 1rem 0; }
+        100% { background-position: 0 0; }
+        }
     endContent
     oTableStyle:SetContent(cTableStyle)
     oPage:AddChild(oTableStyle)
 
     oScript:=WebExControl():New("script")
-    oDivTable:=WebExControl():New("div")
 
     // Adiciona container de tabela
+    oDivTable:=WebExControl():New("div")
     oDivTable:SetAttr("id","tableResult")
     oPage:AddChild(oDivTable)
 
@@ -101,12 +115,34 @@ static procedure FWWebExExample_007()
     // Script com server-side pagination ativado
     beginContent var cScript
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('tableResult').innerHTML = '<table id=\"example\" class=\"table table-striped table-hover display compact nowrap\"><thead><tr><th>Filial</th><th>Matr&iacute;cula</th><th>Apelido</th><th>Centro de Custo</th><th>Sal&aacute;rio</th><th>Adt.Servi&ccedil;o</th><th>Cat.Func.</th><th>Sexo</th></tr></thead></table>';
-            new DataTable('#example', {
+            document.getElementById('tableResult').innerHTML = `
+                <div id="custom-loader" style="display:none; width: 100%;">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 100%">
+                            Carregando...
+                        </div>
+                    </div>
+                </div>
+                <table id="example" class="table table-striped table-hover display compact nowrap">
+                    <thead>
+                        <tr>
+                            <th>Filial</th>
+                            <th>Matr&iacute;cula</th>
+                            <th>Apelido</th>
+                            <th>Centro de Custo</th>
+                            <th>Sal&aacute;rio</th>
+                            <th>Adt.Servi&ccedil;o</th>
+                            <th>Cat.Func.</th>
+                            <th>Sexo</th>
+                        </tr>
+                    </thead>
+                </table>`;
+            const table = new DataTable('#example', {
                 serverSide: true,
-                processing: true,
+                processing: false,
                 dom: 'Blfrtip',
-                lengthMenu: [10,25,50,100,-1],
+                lengthMenu: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,30,35,40,45,50,100,-1],
+                pageLength: 13,//DEFAULT
                 buttons: [
                     'copy',
                     'csv',
@@ -131,6 +167,22 @@ static procedure FWWebExExample_007()
                         '-1': 'Todos' //https://datatables.net/reference/option/lengthMenu
                     }
                 },
+                "preDrawCallback": function(settings) {
+                    $('#custom-loader').show();
+                },
+                "drawCallback": function(settings) {
+                    $('#custom-loader').hide();
+                    // This drawCallback ensures consistent table height across pages.
+                    // It calculates how many empty rows are needed to fill the remaining space,
+                    // and appends them to the table so all pages have the same visual height.
+                    const api = this.api();
+                    const rows = api.rows({ page: 'current' }).count();
+                    const pageSize = api.page.len();
+                    const emptyRows = pageSize - rows;
+                    for (let i = 0; i < emptyRows; i++) {
+                        $('#example tbody').append('<tr class="empty-row"><td colspan="999">&nbsp;</td></tr>');
+                    }
+                },
                 ajax: function (data, callback) {
                     const pageNumber = Math.floor(data.start / data.length) + 1;
                     const rowsPerPage = data.length === -1 ? 999999 : data.length;
@@ -140,7 +192,7 @@ static procedure FWWebExExample_007()
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': basicAuth,
-                            'X-DNATech-Auth-Token': 'dG9rZW46QTA0NEM1M0FCRjlBRTZCNUM5MjhENTBDRkY0OEY0RjVBRDYwNTA3QjI5RTkyNkE4RDY4QUMwRTIzQQ=='
+                            'X-DNATech-Auth-Token': 'DNATechAuth'
                         },
                         body: JSON.stringify({
                             ClassName: 'userRestCrudTLPPCoreFunction',
@@ -171,7 +223,17 @@ static procedure FWWebExExample_007()
                         if (!json.table || !json.table.items) throw new Error('JSON incompleto');
                         const rows = json.table.items.map(row => {
                             const i = row.detail.items;
-                            return [i.RA_FILIAL, i.RA_MAT, i.RA_APELIDO, i.RA_CC, i.RA_SALARIO, i.RA_ADTPOSE, i.RA_CATFUNC, i.RA_DEPIR, i.RA_SEXO];
+                            return [
+                                        i.RA_FILIAL || '',
+                                        i.RA_MAT || '',
+                                        i.RA_APELIDO || '',
+                                        i.RA_CC || '',
+                                        i.RA_SALARIO || '',
+                                        i.RA_ADTPOSE || '',
+                                        i.RA_CATFUNC || '',
+                                        i.RA_DEPIR || '',
+                                        i.RA_SEXO || ''
+                                    ];
                         });
                         callback({
                             data: rows,
@@ -182,7 +244,14 @@ static procedure FWWebExExample_007()
                     .catch(err => console.error('Erro ao carregar dados:', err));
                 }
             });
-
+             //captura do evento de processamento
+            table.on('processing.dt', function (e, settings, processing) {
+                if (processing) {
+                    $('#custom-loader').show();
+                } else {
+                    $('#custom-loader').hide();
+                }
+            });
         });
     endContent
 
@@ -190,6 +259,10 @@ static procedure FWWebExExample_007()
         //Considerando que callProcRestCrudTLPP depende de DNA.TECH.USERRESTCRUDTLPP
         //u_callProcRestCrudTLPP atuara como um mock da callProcRestCrudTLPP.
         cScript:=StrTran(cScript,"callProcRestCrudTLPP","u_callProcRestCrudTLPP")
+    else
+        cDNATechAuth:=MemoRead("\dna.tech\authentication\authentication.aut")
+        cDNATechAuth:=Encode64("token:"+cDNATechAuth)
+        cScript:=StrTran(cScript,"DNATechAuth",cDNATechAuth)
     endif
     cScript:=StrTran(cScript,"basicAuth","'"+cBasicAuth+"'")
     cScript:=StrTran(cScript,"http://localhost:9898/rest/",aParamRet[3])
@@ -220,3 +293,7 @@ return
 ````
 
 ![image](https://github.com/user-attachments/assets/929a5909-5b08-4582-a06e-d98c2ad5aec7)
+
+---
+
+https://github.com/user-attachments/assets/6a432b89-e127-4936-a3cc-463f79c9d9c8
