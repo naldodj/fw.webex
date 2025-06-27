@@ -9,7 +9,7 @@
 
 ## 🚀 Por que FW.WebEX?
 
-A TOTVS está indo para o web. Mas o desenvolvedor ADVPL não precisa reaprender Angular ou TypeScript só pra fazer uma tela de cadastro ou uma tabela com ação.
+A TOTVS está indo para o web. Mas o desenvolvedor ADVPL não precisa (re)aprender Angular ou TypeScript só pra fazer uma tela de cadastro ou uma tabela com ação.
 
 **FW.WebEX** nasceu da ideia de manter o espírito do desenvolvimento no Protheus:
 - Rápido
