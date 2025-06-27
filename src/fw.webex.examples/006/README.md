@@ -115,4 +115,5 @@ static procedure FWWebExExample_006()
 return
 ````
 
-![image](https://github.com/user-attachments/assets/25187906-f6d7-4142-a036-954158d5e1dc)
+![image](https://github.com/user-attachments/assets/efacbddb-895b-40d6-9c39-18822cbfbf03)
+
