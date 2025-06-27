@@ -138,7 +138,7 @@ static procedure FWWebExExample_007()
                             <th>Matr&iacute;cula</th>
                             <th>Apelido</th>
                             <th>Centro de Custo</th>
-                            <th>Sal&atilde;rio</th>
+                            <th>Sal&aacute;rio</th>
                             <th>Adt.Servi&ccedil;o</th>
                             <th>Cat.Func.</th>
                             <th>Sexo</th>
