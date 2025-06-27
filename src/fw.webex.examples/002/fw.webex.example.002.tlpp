@@ -19,10 +19,11 @@ using namespace FWWebEx
 
 procedure u_FWWebExExample_002()
 
-    local lMainWnd:=(Type("oMainWnd")=="O") as logical
+    local lMainWnd as logical
 
     private lRedefineBottom as logical
 
+    lMainWnd:=(Type("oMainWnd")=="O")
     if (!lMainWnd)
         private oMainWnd as object
         lRedefineBottom:=.T.
@@ -176,7 +177,7 @@ static procedure htmlFileShow(cHTML as character,cTitle as character,cHTMLFile a
         endif
 
         if (lRedefineBottom)
-            nBottom-=50
+            nBottom-=15
         endif
 
         DEFINE MSDIALOG oDlg TITLE cTitle FROM nTop,nLeft TO nBottom,nRight OF GetWndDefault() STATUS PIXEL
@@ -218,7 +219,7 @@ static procedure htmlFileShow(cHTML as character,cTitle as character,cHTMLFile a
                 @ nTop,03 GROUP oGrp TO nBottom+2,nRight PROMPT "" OF oDlg COLOR 0,16777215 PIXEL
             endif
 
-            nTop+=1
+            nTop+=15
             nRight+=5
 
             try

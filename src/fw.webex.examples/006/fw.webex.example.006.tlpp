@@ -48,6 +48,15 @@ static procedure FWWebExExample_006()
     local oButton:=WebExButton():New("Buscar")
     local oScript:=WebExControl():New("script")
     local oDivTable:=WebExControl():New("div")
+    local oTableStyle:=WebExControl():New("style")
+
+    beginContent var cTableStyle
+        table.dataTable.compact tbody td {
+            padding: 4px 8px !important;
+        }
+    endContent
+    oTableStyle:SetContent(cTableStyle)
+    oPage:AddChild(oTableStyle)
 
     //Campo para a Pesquisa do CEP
     oForm:AddField("CEP","cep","text","Digite o CEP")
@@ -62,6 +71,21 @@ static procedure FWWebExExample_006()
     oPage:AddChild(oDivTable)
 
     // Script para requisitar ViaCEP e preencher a tabela com DataTables
+    //Portuguese-Brasil translation
+    //https://datatables.net/plug-ins/i18n/Portuguese-Brasil.html
+    /*
+        Tabela do DOM (so pra referencia)
+        https://datatables.net/reference/option/dom
+        | Letra | Elemento que aparece           |
+        | ----- | ------------------------------ |
+        | **B** | Botoes (exportacao etc.)       |
+        | **l** | Seletor de "linhas por pagina" |
+        | **f** | Campo de busca (filtro)        |
+        | **r** | Texto "processing..."          |
+        | **t** | Tabela                         |
+        | **i** | Info de "Mostrando x a y de z" |
+        | **p** | Paginacao                      |
+    */
     beginContent var cScript
         function buscarCEP() {
             const cep = document.getElementsByName('cep')[0].value.replace(/[^0-9]/g,'');
@@ -72,24 +96,45 @@ static procedure FWWebExExample_006()
             fetch('https://viacep.com.br/ws/' + cep + '/json/')
                 .then(response => response.json())
                 .then(data => {
-                if (data.erro) {
-                    document.getElementById('tableResult').innerHTML = '<div class=\"alert alert-danger\">CEP n&atilde;o encontrado.</div>';
-                } else {
-                    let html = '<table id=\"example\" class=\"table table-striped table-hover mt-3\">';
-                    html += '<thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody>';
-                    for (let key in data) {
-                        html += '<tr><td><strong>' + key + '</strong></td><td>' + data[key] + '</td></tr>';
+                    if (data.erro) {
+                        document.getElementById('tableResult').innerHTML = '<div class=\"alert alert-danger\">CEP n&atilde;o encontrado.</div>';
+                    } else {
+                        let html = '<table id=\"example\" class=\"table table-striped table-hover mt-3 display compact nowrap\">';
+                        html += '<thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody>';
+                        for (let key in data) {
+                            html += '<tr><td><strong>' + key + '</strong></td><td>' + data[key] + '</td></tr>';
+                        }
+                        html += '</tbody></table>';
+                        document.getElementById('tableResult').innerHTML = html;
+                        var table = new DataTable('#example', {
+                            dom: 'Blfrtip',
+                            lengthMenu: [10,25,50,100,-1],
+                            buttons: [
+                                'copy',
+                                'csv',
+                                'print',
+                                {
+                                    extend: 'excelHtml5',
+                                    title: 'u_FWWebExExample_006',
+                                    filename: 'relatorio_excel',
+                                    autoFilter: true
+                                },
+                                {
+                                    extend: 'pdf',
+                                    title: 'u_FWWebExExample_006',
+                                    filename: 'relatorio_pdf'
+                                }
+                            ],
+                            responsive: true,
+                            className: 'compact',
+                            language: {
+                                url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/pt-BR.json',
+                                lengthLabels: {
+                                    '-1': 'Todos' //https://datatables.net/reference/option/lengthMenu
+                                }
+                            }
+                        });
                     }
-                    html += '</tbody></table>';
-                    document.getElementById('tableResult').innerHTML = html;
-                    //Portuguese-Brasil translation
-                    //https://datatables.net/plug-ins/i18n/Portuguese-Brasil.html
-                    var table = new DataTable('#example', {
-                        language: {
-                            url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/pt-BR.json',
-                        },
-                    });
-                }
                 })
                 .catch(() => {
                 document.getElementById('tableResult').innerHTML = '<div class=\"alert alert-danger\">Erro ao consultar o CEP.</div>';
@@ -108,6 +153,7 @@ static procedure FWWebExExample_006()
     FreeObj(@oButton)
     FreeObj(@oScript)
     FreeObj(@oDivTable)
+    FreeObj(@oTableStyle)
 
     cHTML:=EncodeUTF8(cHTML)
     if (!lIsDir("\web\tmp\"))
@@ -232,7 +278,7 @@ static procedure htmlFileShow(cHTML as character,cTitle as character,cHTMLFile a
         endif
 
         if (lRedefineBottom)
-            nBottom-=50
+            nBottom-=15
         endif
 
         DEFINE MSDIALOG oDlg TITLE cTitle FROM nTop,nLeft TO nBottom,nRight OF GetWndDefault() STATUS PIXEL
@@ -274,7 +320,7 @@ static procedure htmlFileShow(cHTML as character,cTitle as character,cHTMLFile a
                 @ nTop,03 GROUP oGrp TO nBottom+2,nRight PROMPT "" OF oDlg COLOR 0,16777215 PIXEL
             endif
 
-            nTop+=1
+            nTop+=15
             nRight+=5
 
             try

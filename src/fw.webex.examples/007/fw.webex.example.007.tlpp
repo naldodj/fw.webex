@@ -1,0 +1,674 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+#include "fw.webex.th"
+
+#include "shell.ch"
+#include "totvs.ch"
+#include "tbiconn.ch"
+
+#include "tlpp-core.th"
+#include "tlpp-rest.th"
+
+using namespace FWWebEx
+
+procedure u_FWWebExExample_007()
+
+    local lMainWnd as logical
+
+    private lRedefineBottom as logical
+
+    lMainWnd:=(Type("oMainWnd")=="O")
+    if (!lMainWnd)
+        PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01"
+            private oMainWnd as object
+            lRedefineBottom:=.T.
+            DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
+            ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_007(),oMainWnd:End())
+            FreeObj(@oMainWnd)
+        RESET ENVIRONMENT
+    else
+        lRedefineBottom:=.F.
+        FWWebExExample_007()
+    endif
+
+return
+
+static procedure FWWebExExample_007()
+
+    local aParamBox:=Array(0) as array
+    local aParamRet:=Array(0) as array
+
+    local cHTML as character
+    local cHTMLFile as character
+
+    local cScript as character
+    local cProcName:=ProcName() as character
+    local cBasicAuth as character
+
+    local oPage as object
+    local oScript as object
+    local oDivTable as object
+    local oTableStyle as object
+
+    aAdd(aParamBox,{1,"Usuario",Space(100),"@","NaoVazio()","","AllWaysTrue()",100,.T.})
+    aAdd(aParamBox,{1,"Senha",Space(100),"@","NaoVazio()","","AllWaysTrue()",100,.T.})
+    aAdd(aParamBox,{1,"URL REST",Space(200),"@","NaoVazio()","","AllWaysTrue()",200,.T.})
+    if (!ParamBox(@aParamBox,"Selecione os Parametros",@aParamRet,nil,nil,.T.,nil,nil,nil,nil,.T.,.T.))
+        return
+    endif
+
+    aParamRet[1]:=AllTrim(aParamRet[1])
+    aParamRet[2]:=AllTrim(aParamRet[2])
+    aParamRet[3]:=AllTrim(aParamRet[3])
+    if (Right(aParamRet[3],1)!="/")
+        aParamRet[3]+="/"
+    endif
+
+    cBasicAuth:="Basic "+Encode64(aParamRet[1]+":"+aParamRet[1])
+
+    oPage:=WebExPage():New("Exemplo 007 - Funcionarios (REST + DataTable)")
+    oTableStyle:=WebExControl():New("style")
+
+    beginContent var cTableStyle
+        table.dataTable.compact tbody td {
+            padding: 4px 8px !important;
+        }
+    endContent
+    oTableStyle:SetContent(cTableStyle)
+    oPage:AddChild(oTableStyle)
+
+    oScript:=WebExControl():New("script")
+    oDivTable:=WebExControl():New("div")
+
+    // Adiciona container de tabela
+    oDivTable:SetAttr("id","tableResult")
+    oPage:AddChild(oDivTable)
+
+    /*
+        Tabela do DOM (so pra referencia)
+        https://datatables.net/reference/option/dom
+        | Letra | Elemento que aparece           |
+        | ----- | ------------------------------ |
+        | **B** | Botoes (exportacao etc.)       |
+        | **l** | Seletor de "linhas por pagina" |
+        | **f** | Campo de busca (filtro)        |
+        | **r** | Texto "processing..."          |
+        | **t** | Tabela                         |
+        | **i** | Info de "Mostrando x a y de z" |
+        | **p** | Paginacao                      |
+    */
+    // Script com server-side pagination ativado
+    beginContent var cScript
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('tableResult').innerHTML = '<table id=\"example\" class=\"table table-striped table-hover display compact nowrap\"><thead><tr><th>Filial</th><th>Matr&iacute;cula</th><th>Apelido</th><th>Centro de Custo</th><th>Sal&aacute;rio</th><th>Adt.Servi&ccedil;o</th><th>Cat.Func.</th><th>Sexo</th></tr></thead></table>';
+            new DataTable('#example', {
+                serverSide: true,
+                processing: true,
+                dom: 'Blfrtip',
+                lengthMenu: [10,25,50,100,-1],
+                buttons: [
+                    'copy',
+                    'csv',
+                    'print',
+                    {
+                        extend: 'excelHtml5',
+                        title: 'u_FWWebExExample_007',
+                        filename: 'relatorio_excel',
+                        autoFilter: true
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'u_FWWebExExample_007',
+                        filename: 'relatorio_pdf'
+                    }
+                ],
+                responsive: true,
+                className: 'compact',
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/pt-BR.json',
+                    lengthLabels: {
+                        '-1': 'Todos' //https://datatables.net/reference/option/lengthMenu
+                    }
+                },
+                ajax: function (data, callback) {
+                    const pageNumber = Math.floor(data.start / data.length) + 1;
+                    const rowsPerPage = data.length === -1 ? 999999 : data.length;
+                    //const basicAuth = 'Basic ' + btoa('admin:admin');
+                    fetch('http://localhost:9898/rest/callProcRestCrudTLPP/post/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': basicAuth,
+                            'X-DNATech-Auth-Token': 'dG9rZW46QTA0NEM1M0FCRjlBRTZCNUM5MjhENTBDRkY0OEY0RjVBRDYwNTA3QjI5RTkyNkE4RDY4QUMwRTIzQQ=='
+                        },
+                        body: JSON.stringify({
+                            ClassName: 'userRestCrudTLPPCoreFunction',
+                            FunctionName: 'dna.tech.codAliasPost',
+                            codAlias: 'SRA',
+                            yesFields: 'RA_FILIAL,RA_MAT,RA_APELIDO,RA_CC,RA_SALARIO,RA_ADTPOSE,RA_CATFUNC,RA_DEPIR,RA_SEXO',
+                            Filter: {
+                                RA_SEXO: 'M'
+                            },
+                            PageNumber: pageNumber,
+                            RowspPage: rowsPerPage,
+                            cEmp: '99',
+                            cFil: '01',
+                            lChkPrepEnv: false,
+                            lHTTPCTLen: true,
+                            lFWHTTpEncode: true,
+                            cHTTPCTType: 'application/json; charset=UTF-8',
+                            lHTTPCTType: true
+                        })
+                    })
+                    .then(res => {
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.text();
+                    })
+                    .then(text => {
+                        console.log('RAW response:', text);
+                        const json = JSON.parse(text);
+                        if (!json.table || !json.table.items) throw new Error('JSON incompleto');
+                        const rows = json.table.items.map(row => {
+                            const i = row.detail.items;
+                            return [i.RA_FILIAL, i.RA_MAT, i.RA_APELIDO, i.RA_CC, i.RA_SALARIO, i.RA_ADTPOSE, i.RA_CATFUNC, i.RA_DEPIR, i.RA_SEXO];
+                        });
+                        callback({
+                            data: rows,
+                            recordsTotal: json.TotalRows,
+                            recordsFiltered: json.TotalRows
+                        });
+                    })
+                    .catch(err => console.error('Erro ao carregar dados:', err));
+                }
+            });
+
+        });
+    endContent
+
+    if (!FindClass("DNA.TECH.USERRESTCRUDTLPP"))
+        //Considerando que callProcRestCrudTLPP depende de DNA.TECH.USERRESTCRUDTLPP
+        //u_callProcRestCrudTLPP atuara como um mock da callProcRestCrudTLPP.
+        cScript:=StrTran(cScript,"callProcRestCrudTLPP","u_callProcRestCrudTLPP")
+    endif
+    cScript:=StrTran(cScript,"basicAuth","'"+cBasicAuth+"'")
+    cScript:=StrTran(cScript,"http://localhost:9898/rest/",aParamRet[3])
+
+    oScript:SetContent(cScript)
+    oPage:AddChild(oScript)
+    *oPage:SetAttr("style","min-height:100vh;padding:1rem;box-sizing:border-box;overflow:auto;")
+
+    cHTML:=oPage:Render()
+
+    FreeObj(@oPage)
+    FreeObj(@oScript)
+    FreeObj(@oDivTable)
+    FreeObj(@oTableStyle)
+
+    cHTML:=EncodeUTF8(cHTML)
+    if (!lIsDir("\web\tmp\"))
+        FWMakeDir("\web\tmp\",.F.)
+    endif
+    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
+    MemoWrite(cHTMLFile,cHTML)
+
+    htmlFileShow(cHTML,cProcName,cHTMLFile)
+
+    fErase(cHTMLFile)
+
+return
+
+static procedure htmlFileShow(cHTML as character,cTitle as character,cHTMLFile as character)
+
+    local aButtons as array
+
+    local bErrorBlock as codeblock
+
+    local cHTMLFileTmpFile as character
+    local cHTMLFileServer as character
+    local cHTMLFileNavigate as character
+
+    local cSPPDrive as character
+    local cSPPPath as character
+    local cSPPFile as character
+    local cSPPExt as character
+
+    local jButtons as json
+
+    local lAbrir as logical
+    local lIsDark:=WebApp():ThemeIsDark() as logical
+    local lHasTheme as logical
+
+    local nTop as numeric
+    local nLeft as numeric
+    local nBottom as numeric
+    local nRight as numeric
+
+    local oDlg as object
+    local oGrp as object
+
+    local oError as object
+    local oTheme as object
+
+    local oTWebEngine as object
+    local oTWebChannel as object
+
+    local oFWDefSize as object
+
+    begin sequence
+
+        jButtons:=JSONObject():New()
+
+        aButtons:=array(0)
+        aAdd(aButtons,{"&Sair",{||oDlg:End()},OemToAnsi("Sair"),OemtoAnsi("Sair")})
+        aAdd(aButtons,{"&Print",{||oTWebEngine:Print()},OemToAnsi("Print"),OemtoAnsi("Print")})
+        aAdd(aButtons,{"Print PD&F",{||oTWebEngine:PrintPDF()},OemToAnsi("Print PDF"),OemtoAnsi("Print PDF")})
+
+        lAbrir:=file(cHTMLFile)
+
+        if (lAbrir)
+            if (WebApp():WebAgentIsConnected())
+                bErrorBlock:=ErrorBlock({|oError|Break(oError)})
+                begin sequence
+                    //CpyF2Web(<cOrigem>,[lIsUserDiskDir],[lCompactCopy],[lChangeCase],[lUnZipFile])
+                    cHTMLFileNavigate:=CpyF2Web(cHTMLFile,.T.,.T.,.F.,.F.)
+                recover
+                    begin sequence
+                        //CpyF2Web(<cOrigem>,[lIsUserDiskDir],[lCompactCopy],[lChangeCase],[lUnZipFile])
+                        cHTMLFileNavigate:=CpyF2Web(cHTMLFile,.F.,.T.,.F.,.F.)
+                    end sequence
+                end sequence
+                ErrorBlock(bErrorBlock)
+                if ((Empty(cHTMLFileNavigate)).and.(lIsDir("\web\tmp\")))
+                    splitPath(cHTMLFile,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
+                    cHTMLFileServer:="\web\tmp\"
+                    cHTMLFileServer+=cSPPFile
+                    cHTMLFileServer+=cSPPExt
+                    cHTMLFileNavigate:=cHTMLFileServer
+                    bErrorBlock:=ErrorBlock({|oError|Break(oError)})
+                    begin sequence
+                        //CpyF2Web(<cOrigem>,[lIsUserDiskDir],[lCompactCopy],[lChangeCase],[lUnZipFile])
+                        cHTMLFileNavigate:=CpyF2Web(cHTMLFileNavigate,.T.,.T.,.F.,.F.)
+                    recover
+                        begin sequence
+                            //CpyF2Web(<cOrigem>,[lIsUserDiskDir],[lCompactCopy],[lChangeCase],[lUnZipFile])
+                            cHTMLFileNavigate:=CpyF2Web(cHTMLFileNavigate,.F.,.T.,.F.,.F.)
+                        recover
+                            cHTMLFileNavigate:=cHTMLFileServer
+                        end sequence
+                    end sequence
+                    ErrorBlock(bErrorBlock)
+                endif
+                splitPath(cHTMLFile,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
+                cHTMLFileTmpFile:=GetTempPath()
+                cHTMLFileTmpFile+=cSPPFile
+                cHTMLFileTmpFile+=cSPPExt
+                __CopyFile(cHTMLFile,cHTMLFileTmpFile)
+                aAdd(aButtons,{"&Abrir",{||ShellExecute("open",cHTMLFileTmpFile,"","",SW_SHOWMAXIMIZED)},OemToAnsi("Abir"),OemtoAnsi("Abir")})
+            endif
+        endif
+
+        oFWDefSize:=FWDefSize():New(.F.,.F.)
+        oFWDefSize:lLateral:=.F.
+        oFWDefSize:AddObject("TWebEngine",100,95,.T.,.T.)
+        oFWDefSize:AddObject("ButtonActions",100,05,.F.,.F.)
+
+        oFWDefSize:Process()
+
+        if (oFWDefSize:aWindSize[3]==0)
+            nTop:=0
+            nLeft:=0
+            nBottom:=530
+            nRight:=1330
+        else
+            nTop:=oFWDefSize:aWindSize[1]
+            nLeft:=oFWDefSize:aWindSize[2]
+            nBottom:=oFWDefSize:aWindSize[3]
+            nRight:=oFWDefSize:aWindSize[4]
+        endif
+
+        if (lRedefineBottom)
+            nBottom-=15
+        endif
+
+        DEFINE MSDIALOG oDlg TITLE cTitle FROM nTop,nLeft TO nBottom,nRight OF GetWndDefault() STATUS PIXEL
+
+            if (oFWDefSize:aWindSize[3]>0)
+                nTop:=oFWDefSize:GetDimension("TWebEngine","LININI")
+                nLeft:=oFWDefSize:GetDimension("TWebEngine","COLINI")
+                nBottom:=oFWDefSize:GetDimension("TWebEngine","LINEND")
+                nRight:=oFWDefSize:GetDimension("TWebEngine","COLEND")
+                nTop-=5
+                nBottom+=1
+                nRight-=5
+                if (lRedefineBottom)
+                    nBottom-=25
+                endif
+            endif
+
+            oTWebChannel:=TWebChannel():New()
+            oTWebChannel:Connect()
+
+            oTWebEngine:=TWebEngine():New(oDlg,nTop,nLeft,nRight,nBottom,/*cURL*/,oTWebChannel:nPort)
+            oTWebEngine:Align:=CONTROL_ALIGN_ALLCLIENT
+
+            nTop:=oFWDefSize:GetDimension("ButtonActions","LININI")
+            nBottom:=oFWDefSize:GetDimension("ButtonActions","LINEND")
+
+            if (oFWDefSize:aWindSize[3]>0)
+                if (lRedefineBottom)
+                    nTop-=25
+                    nBottom-=25
+                endif
+                nTop-=3
+                nRight+=3
+            endif
+
+            if (lIsDark)
+                @ nTop,03 GROUP oGrp TO nBottom+2,nRight PROMPT "" OF oDlg PIXEL
+            else
+                @ nTop,03 GROUP oGrp TO nBottom+2,nRight PROMPT "" OF oDlg COLOR 0,16777215 PIXEL
+            endif
+
+            nTop+=15
+            nRight+=5
+
+            try
+                oTheme:=totvs.framework.css.ProtheusTheme():New()
+                lHasTheme:=.T.
+            catch oError
+                lHasTheme:=.F.
+                FreeObj(@oError)
+            endtry
+
+            //Botoes (da direita pra a esquerda)
+            @ nTop,(nRight)-((50*1)+06) BUTTON jButtons["1"] PROMPT aButtons[1][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[1][2]) PIXEL
+            if (lHasTheme)
+                jButtons["1"]:SetCSS(oTheme:getPrimaryButtonCSS())
+            endif
+            @ nTop,(nRight)-((50*2)+09) BUTTON jButtons["2"] PROMPT aButtons[2][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[2][2]) PIXEL
+            if (lHasTheme)
+                jButtons["2"]:SetCSS(oTheme:getPrimaryButtonCSS())
+            endif
+            @ nTop,(nRight)-((50*3)+12) BUTTON jButtons["3"] PROMPT aButtons[3][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[3][2]) PIXEL
+            if (lHasTheme)
+                jButtons["3"]:SetCSS(oTheme:getPrimaryButtonCSS())
+            endif
+            if (lAbrir)
+                @ nTop,(nRight)-((50*4)+15) BUTTON jButtons["4"] PROMPT aButtons[4][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[4][2]) PIXEL
+                if (lHasTheme)
+                    jButtons["4"]:SetCSS(oTheme:getPrimaryButtonCSS())
+                endif
+            endif
+
+            oDlg:lEscClose:=.F.
+
+            oTWebEngine:Navigate(cHTMLFileNavigate)
+
+            oDlg:lCentered:=(!lRedefineBottom)
+
+        ACTIVATE MSDIALOG oDlg
+
+        if (valType(oTWebChannel)=="O")
+            oTWebChannel:Disconnect()
+        endif
+
+        if ((!Empty(cHTMLFile)).and.(File(cHTMLFile)))
+            fErase(cHTMLFile)
+        endif
+
+        if ((!Empty(cHTMLFileNavigate)).and.(File(cHTMLFileNavigate)))
+            fErase(cHTMLFileNavigate)
+        endif
+
+        if ((!Empty(cHTMLFileServer)).and.(File(cHTMLFileServer)))
+            fErase(cHTMLFileServer)
+        endif
+
+        if ((!Empty(cHTMLFileTmpFile)).and.(File(cHTMLFileTmpFile)))
+            fErase(cHTMLFileTmpFile)
+        endif
+
+    end sequence
+
+    FWFreeArray(@aButtons)
+
+    FreeObj(@oGrp)
+    FreeObj(@oDlg)
+    FreeObj(@oTheme)
+    FreeObj(@jButtons)
+    FreeObj(@oFWDefSize)
+
+    FreeObj(@oTWebEngine)
+    FreeObj(@oTWebChannel)
+
+    DelClassIntF()
+
+return
+
+//Considerando que callProcRestCrudTLPP depende de DNA.TECH.USERRESTCRUDTLPP
+//u_callProcRestCrudTLPP atuara como um mock da callProcRestCrudTLPP.
+@Post(endpoint="/u_callProcRestCrudTLPP/post/",description="callProc ClassName,FunctionName,FunctionParameters,cEmp,cFil,lChkPrepEnv")
+function u_callProcRestCrudTLPP()
+
+    local cJSON as character
+
+    local jHeader as json
+
+    beginContent var cJSON
+{
+    "method": "get",
+    "path": "/userRestCrudADVPL/codAlias/",
+    "PageNumber": 1,
+    "RowspPage": 10,
+    "table": {
+        "alias": "SRA",
+        "name": "SRA990",
+        "description": "Funcionarios",
+        "index": "RA_FILIAL+RA_MAT",
+        "items": [
+            {
+                "detail": {
+                    "row": 1,
+                    "key": "01000004",
+                    "recNo": 4,
+                    "items": {
+                        "RA_FILIAL": "01",
+                        "RA_MAT": "000004",
+                        "RA_SEXO": "M",
+                        "RA_APELIDO": "ANDREI",
+                        "RA_CC": "10206001",
+                        "RA_DEPIR": "02",
+                        "RA_CATFUNC": "M",
+                        "RA_SALARIO": 6433.57,
+                        "RA_ADTPOSE": "***N**"
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 2,
+                    "key": "01000007",
+                    "recNo": 7,
+                    "items": {
+                        "RA_FILIAL": "01",
+                        "RA_MAT": "000007",
+                        "RA_SEXO": "M",
+                        "RA_APELIDO": "CLAUDINEI",
+                        "RA_CC": "10203001",
+                        "RA_DEPIR": "03",
+                        "RA_CATFUNC": "M",
+                        "RA_SALARIO": 3045.6,
+                        "RA_ADTPOSE": "***N**"
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 3,
+                    "key": "01000008",
+                    "recNo": 8,
+                    "items": {
+                        "RA_FILIAL": "01",
+                        "RA_MAT": "000008",
+                        "RA_SEXO": "M",
+                        "RA_APELIDO": "FABIO",
+                        "RA_CC": "10303017",
+                        "RA_DEPIR": "01",
+                        "RA_CATFUNC": "M",
+                        "RA_SALARIO": 8216,
+                        "RA_ADTPOSE": "***N**"
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 4,
+                    "key": "01000010",
+                    "recNo": 10,
+                    "items": {
+                        "RA_FILIAL": "01",
+                        "RA_MAT": "000010",
+                        "RA_SEXO": "M",
+                        "RA_APELIDO": "LEONARDO",
+                        "RA_CC": "10303017",
+                        "RA_DEPIR": "01",
+                        "RA_CATFUNC": "M",
+                        "RA_SALARIO": 12498.29,
+                        "RA_ADTPOSE": "***N**"
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 5,
+                    "key": "01000012",
+                    "recNo": 12,
+                    "items": {
+                        "RA_FILIAL": "01",
+                        "RA_MAT": "000012",
+                        "RA_SEXO": "M",
+                        "RA_APELIDO": "EDVALDO ALVES",
+                        "RA_CC": "10304033",
+                        "RA_DEPIR": "00",
+                        "RA_CATFUNC": "M",
+                        "RA_SALARIO": 2998.82,
+                        "RA_ADTPOSE": "***N**"
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 6,
+                    "key": "01000013",
+                    "recNo": 13,
+                    "items": {
+                        "RA_FILIAL": "01",
+                        "RA_MAT": "000013",
+                        "RA_SEXO": "M",
+                        "RA_APELIDO": "MARCOS",
+                        "RA_CC": "10201008",
+                        "RA_DEPIR": "03",
+                        "RA_CATFUNC": "M",
+                        "RA_SALARIO": 10560.44,
+                        "RA_ADTPOSE": "***N**"
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 7,
+                    "key": "01000014",
+                    "recNo": 14,
+                    "items": {
+                        "RA_FILIAL": "01",
+                        "RA_MAT": "000014",
+                        "RA_SEXO": "M",
+                        "RA_APELIDO": "WERICLES ARAUJO",
+                        "RA_CC": "10304033",
+                        "RA_DEPIR": "02",
+                        "RA_CATFUNC": "M",
+                        "RA_SALARIO": 2998.82,
+                        "RA_ADTPOSE": "***N**"
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 8,
+                    "key": "01000015",
+                    "recNo": 15,
+                    "items": {
+                        "RA_FILIAL": "01",
+                        "RA_MAT": "000015",
+                        "RA_SEXO": "M",
+                        "RA_APELIDO": "CARLOS EDUARDO",
+                        "RA_CC": "10206001",
+                        "RA_DEPIR": "00",
+                        "RA_CATFUNC": "M",
+                        "RA_SALARIO": 6047.78,
+                        "RA_ADTPOSE": "***N**"
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 9,
+                    "key": "01000016",
+                    "recNo": 16,
+                    "items": {
+                        "RA_FILIAL": "01",
+                        "RA_MAT": "000016",
+                        "RA_SEXO": "M",
+                        "RA_APELIDO": "FELIPE CHAVES",
+                        "RA_CC": "10304032",
+                        "RA_DEPIR": "00",
+                        "RA_CATFUNC": "M",
+                        "RA_SALARIO": 2370.4,
+                        "RA_ADTPOSE": "***N**"
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 10,
+                    "key": "01000018",
+                    "recNo": 18,
+                    "items": {
+                        "RA_FILIAL": "01",
+                        "RA_MAT": "000018",
+                        "RA_SEXO": "M",
+                        "RA_APELIDO": "WAGNER CERQUEIR",
+                        "RA_CC": "10304032",
+                        "RA_DEPIR": "01",
+                        "RA_CATFUNC": "M",
+                        "RA_SALARIO": 2370.4,
+                        "RA_ADTPOSE": "***N**"
+                    }
+                }
+            }
+        ]
+    },
+    "hasNextPage": false,
+    "TotalRows": 10,
+    "TotalPages": 1
+}
+    endContent
+
+    jHeader:=JSONObject():New()
+    jHeader["Content-Type"]:="application/json; charset=utf-8"
+
+    oRest:setHeaderResponse(jHeader)
+    oRest:SetResponse(cJSON)
+
+    FreeObj(@jHeader)
+
+return(.T.)

@@ -3,6 +3,18 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-27 04:23 UTC naldodj (example.007)
+  + src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  + src/fw.webex.examples/007/README.md
+  * .gitignore
+  * src/fw.webex/web/fw.webex.page.tlpp
+  * src/fw.webex/web/fw.webex.template.bulk.action.table.tlpp
+  * src/fw.webex.examples/002/fw.webex.example.002.tlpp
+  * src/fw.webex.examples/003/fw.webex.example.003.tlpp
+  * src/fw.webex.examples/004/fw.webex.example.004.tlpp
+  * src/fw.webex.examples/005/fw.webex.example.005.tlpp
+  * src/fw.webex.examples/006/fw.webex.example.006.tlpp
+
 2025-06-25 19:00 UTC naldodj (Fix protocol)
   !* src/fw.webex.examples/006/fw.webex.example.006.tlpp
 

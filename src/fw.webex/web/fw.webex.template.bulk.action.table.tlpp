@@ -116,7 +116,7 @@ method ToHtml() class WebExTemplateBulkActionTable
                 .:SetAttr("class","table-responsive")
                 WITH WEBEXOBJECT CLASS WebExControl TYPE table
                     cIDTable:=.:cID
-                    .:SetAttr("class","table table-hover po-table po-striped")
+                    .:SetAttr("class","table table-striped table-hover align-middle small")
                     // Cabecalho
                     WITH WEBEXOBJECT CLASS WebExControl TYPE thead
                         WITH WEBEXOBJECT CLASS WebExControl TYPE tr

@@ -139,6 +139,30 @@ method Render() class WebExPage
                 WITH WEBEXOBJECT CLASS WebExControl TYPE !--
                     .:SetContent("Extensions")
                 END WEBEXOBJECT
+                //Excel
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                        .:SetContent("Excel : https://cdnjs.com/libraries/jszip")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE script
+                        .:SetAttr("src","https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js")
+                        .:SetAttr("defer")
+                    END WEBEXOBJECT
+                //Excel
+***************************************************************************************************************************
+                //PDF
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                        .:SetContent("PDF : https://cdnjs.com/libraries/pdfmake")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE script
+                        .:SetAttr("src","https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/pdfmake.min.js")
+                        .:SetAttr("defer")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE script
+                        .:SetAttr("src","https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/vfs_fonts.js")
+                        .:SetAttr("defer")
+                    END WEBEXOBJECT
+                //PDF
+***************************************************************************************************************************
                 //AutoFill
                     WITH WEBEXOBJECT CLASS WebExControl TYPE !--
                         .:SetContent("AutoFill")
