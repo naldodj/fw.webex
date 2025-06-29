@@ -20,6 +20,7 @@ return
 
 static procedure FWWebExExample_000()
 
+    local cRight as character
     local cExample:="" as character
 
     local jExamples:=JSONObject():New() as json
@@ -39,9 +40,21 @@ static procedure FWWebExExample_000()
     local oFWDefSize as object
     local oWNDDefault as object
 
+    jExamples["Forms"]:=JSONObject():New()
+    jExamples["Tables"]:=JSONObject():New()
+    jExamples["UIComponents"]:=JSONObject():New()
+
     for nExample:=1 to nExamples
         cExample:="u_FWWebExExample_"+StrZero(nExample,3)
-        jExamples[cExample]:=&("{||"+cExample+"()}")
+        cRight:=Right(cExample,3)
+        do case
+        case (cRight$"003|005")
+            jExamples["Forms"][cExample]:=&("{||"+cExample+"()}")
+        case (cRight$"001|002|006|007|008|009")
+            jExamples["Tables"][cExample]:=&("{||"+cExample+"()}")
+        case (cRight$"004")
+            jExamples["UIComponents"][cExample]:=&("{||"+cExample+"()}")
+        endcase
     next nExample
 
     oWNDDefault:=GetWNDDefault()
@@ -102,29 +115,43 @@ return
 static function LoadMenu(oTDlg as object,jExamples as json) as object
 
     local aNames as array
+    local aCategories as array
 
     local bTMenuAction as codeblock
 
     local cName as character
+    local cCategory as character
 
     local nName as numeric
     local nNames as numeric
 
+    local nCategory as numeric
+    local nCategories as numeric
+
     local oTMenu as object
     local oTMenuItem as object
 
-    aNames:=aClone(jExamples:GetNames())
-    nNames:=Len(aNames)
+    aCategories:=aClone(jExamples:GetNames())
+    nCategories:=Len(aCategories)
 
     MENU oTMenu IMAGE "" OF oTDlg
         MENUITEM oTMenuItem PROMPT cCadastro
         MENU
-            for nName:=1 to nNames
-                cName:=aNames[nName]
-                bTMenuAction:=jExamples[cName]
-                MENUITEM oTMenuItem PROMPT cName
-                oTMenuItem:bAction:=bTMenuAction
-            next nName
+            for nCategory:=1 to nCategories
+                cCategory:=aCategories[nCategory]
+                MENUITEM oTMenuItem PROMPT cCategory
+                MENU
+                    aNames:=aClone(jExamples[cCategory]:GetNames())
+                    nNames:=Len(aNames)
+                    for nName:=1 to nNames
+                        cName:=aNames[nName]
+                        bTMenuAction:=jExamples[cCategory][cName]
+                        MENUITEM oTMenuItem PROMPT cName
+                        oTMenuItem:bAction:=bTMenuAction
+                    next nName
+                    FWFreeArray(@aNames)
+                ENDMENU
+            next nCategory
         ENDMENU
         MENU
             MENUITEM oTMenuItem PROMPT "Exit" ACTION if(ApMsgNoYes("Deseja sair?"),oTDlg:End(),.F.)
@@ -134,5 +161,6 @@ static function LoadMenu(oTDlg as object,jExamples as json) as object
     oTMenu:align:=CONTROL_ALIGN_ALLCLIENT
 
     FWFreeArray(@aNames)
+    FWFreeArray(@aCategories)
 
 return(oTMenu)
