@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-29 11:20 UTC naldodj (Fix AddColumnHeader and AddCell return)
+  ! Fix AddColumnHeader and AddCell return
+    * src/fw.webex/web/fw.webex.table.tlpp
+
 2025-06-29 10:53 UTC naldodj (refactor)
   + src/fw.webex.examples/000/fw.webex.example.tools.tlpp
   + src/resource/dna_tech_logo_black_panter_2.png
