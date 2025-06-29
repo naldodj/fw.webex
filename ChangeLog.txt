@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-29 12:52 UTC naldodj (Example of Examples: README)
+  + src/fw.webex.examples/000/README.md
+
 2025-06-29 12:48 UTC naldodj (Example of Examples)
   + src/fw.webex.examples/000/fw.webex.example.000.tlpp
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
