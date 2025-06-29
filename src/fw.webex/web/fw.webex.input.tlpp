@@ -13,11 +13,6 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-#include "totvs.ch"
-#include "dbstruct.ch"
-#include "parmtype.ch"
-#include "tlpp-core.th"
-
 class WebExInput from WebExControl
     public method New(cName as character,cType as character,cPlaceholder as character) as object
 endclass

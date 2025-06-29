@@ -15,9 +15,7 @@ static __aVoidTags:={"area","base","br","col","embed","hr","img","input","link",
 
 #include "fw.webex.th"
 
-#include "totvs.ch"
 #include "parmtype.ch"
-#include "tlpp-core.th"
 
 class WebExControl
 
@@ -38,7 +36,7 @@ class WebExControl
 
     public method AddChild(oChild as object) as object
 
-    public method ToHtml() as character
+    public method RenderHTML() as character
 
     public method AddClass(cNewClass as character) as object
     public method HasClass(/*[@]*/cClass as character,/*@*/aClasses as array) as logical
@@ -84,7 +82,7 @@ method AddChild(oChild) class WebExControl
    ::jChildren[oChild:cID]:=oChild
 return(self)
 
-method ToHtml() class WebExControl
+method RenderHTML() class WebExControl
 
     local aAttrs as array
     local aChildren as array
@@ -147,7 +145,7 @@ method ToHtml() class WebExControl
                 if (::jChildren:HasProperty(cKey))
                     oChild:=::jChildren[cKey]
                     if (valType(oChild)=="O")
-                        cHTML+=oChild:ToHtml()
+                        cHTML+=oChild:RenderHTML()
                     endif
                 endif
             next nChild

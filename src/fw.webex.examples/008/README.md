@@ -4,7 +4,6 @@
 #include "fw.webex.th"
 
 #include "shell.ch"
-#include "totvs.ch"
 #include "tbiconn.ch"
 
 #include "tlpp-core.th"
@@ -292,7 +291,7 @@ static procedure FWWebExExample_008()
             .:SetContent(cScript)
         END WEBEXOBJECT
         *oFWWebExPage:SetAttr("style","min-height:100vh;padding:1rem;box-sizing:border-box;overflow:auto;")
-        cHTML:=oFWWebExPage:Render()
+        cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT
 
     WEBEXOBJECT CLEAN

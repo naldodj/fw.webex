@@ -21,4 +21,13 @@ Released to Public Domain.
 
     #xtranslate .:<method> => (__oWebExContextObj__:=WebExContext():ObjGet(),__oWebExContextObj__:<method>)
 
+    #IFNDEF _PROTHEUS_CH
+        #include "totvs.ch"
+    #ENDIF
+
+    #IFNDEF _PARMTYPE_CH
+        #DEFINE _PARMTYPE_CH
+        #include "parmtype.ch"
+    #ENDIF
+
 #ENDIF

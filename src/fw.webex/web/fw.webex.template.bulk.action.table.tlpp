@@ -13,10 +13,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-#include "totvs.ch"
 #include "dbstruct.ch"
-#include "parmtype.ch"
-#include "tlpp-core.th"
 
 class WebExTemplateBulkActionTable from WebExControl
 
@@ -28,7 +25,7 @@ class WebExTemplateBulkActionTable from WebExControl
     public method New(cTitle as character) as object
 
     public method FromSQL(cSQL as character) as object
-    public method ToHtml() as character
+    public method RenderHTML() as character
 
 endclass
 
@@ -90,7 +87,7 @@ method FromSQL(cSQL) class WebExTemplateBulkActionTable
 
 return(self)
 
-method ToHtml() class WebExTemplateBulkActionTable
+method RenderHTML() class WebExTemplateBulkActionTable
 
     local cHTML as character
     local cScript as character
@@ -302,6 +299,6 @@ method ToHtml() class WebExTemplateBulkActionTable
 
     END WEBEXOBJECT
 
-    cHtml:=_Super:ToHTML()
+    cHtml:=_Super:RenderHTML()
 
 return(cHtml)

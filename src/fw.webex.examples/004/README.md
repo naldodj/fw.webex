@@ -4,7 +4,6 @@
 #include "fw.webex.th"
 
 #include "shell.ch"
-#include "totvs.ch"
 
 using namespace FWWebEx
 
@@ -67,7 +66,7 @@ static procedure FWWebExExample_004()
         // CARD COM BODY
         WITH WEBEXOBJECT CLASS WebExCard ARGS "TITLE","BODY"
         END WEBEXOBJECT
-        cHTML:=oFWWebExPage:Render()
+        cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT
 
     WEBEXOBJECT CLEAN

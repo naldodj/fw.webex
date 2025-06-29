@@ -13,11 +13,6 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-#include "totvs.ch"
-#include "dbstruct.ch"
-#include "parmtype.ch"
-#include "tlpp-core.th"
-
 class WebExLabel from WebExControl
     public method New(cFor as character,cText as character) as object
 endclass

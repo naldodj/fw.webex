@@ -25,7 +25,7 @@ static procedure FWWebExExample_001()
         WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName
             .:FromSQL("SELECT TOP 10 * FROM SX5990")
         END WEBEXOBJECT
-        cHTML:=oFWWebExPage:Render()
+        cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT
 
     WEBEXOBJECT CLEAN
@@ -45,4 +45,3 @@ return
 ---
 
 ![image](https://github.com/user-attachments/assets/a897b5f4-2977-4c98-9701-7019bc278b89)
-

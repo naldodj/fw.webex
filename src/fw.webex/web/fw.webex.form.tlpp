@@ -13,11 +13,6 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-#include "totvs.ch"
-#include "dbstruct.ch"
-#include "parmtype.ch"
-#include "tlpp-core.th"
-
 class WebExForm from WebExControl
 
     public data cTitle as character
@@ -35,7 +30,7 @@ class WebExForm from WebExControl
     public method AddField(cLabel as character,cName as character,cType as character,cPlaceholder as character) as object
     public method AddButton(oButton as object) as object
 
-    public method ToHtml() as character
+    public method RenderHTML() as character
 
 endclass
 
@@ -76,7 +71,7 @@ method AddButton(oButton) class WebExForm
    ::jButtons[oButton:cID]:=oButton
 return(self)
 
-method ToHtml() class WebExForm
+method RenderHTML() class WebExForm
 
     local aNames as array
 
@@ -117,4 +112,4 @@ method ToHtml() class WebExForm
 
     ::AddChild(oFieldSet)
 
-return(_Super:ToHtml())
+return(_Super:RenderHTML())

@@ -16,10 +16,6 @@ static __aFreeStack:=Array(0) as array
 
 #include "fw.webex.th"
 
-#include "totvs.ch"
-#include "parmtype.ch"
-#include "tlpp-core.th"
-
 class WebExContext
 
     static method ObjBegin(oObject as object) as object

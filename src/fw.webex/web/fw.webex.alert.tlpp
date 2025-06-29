@@ -13,11 +13,6 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-#include "totvs.ch"
-#include "dbstruct.ch"
-#include "parmtype.ch"
-#include "tlpp-core.th"
-
 class WebExAlert from WebExControl
     public method New(cText as character,cType as character) as object
 endclass

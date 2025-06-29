@@ -4,7 +4,6 @@
 #include "fw.webex.th"
 
 #include "shell.ch"
-#include "totvs.ch"
 #include "tbiconn.ch"
 
 #include "tlpp-core.th"
@@ -271,7 +270,7 @@ static procedure FWWebExExample_007()
     oPage:AddChild(oScript)
     *oPage:SetAttr("style","min-height:100vh;padding:1rem;box-sizing:border-box;overflow:auto;")
 
-    cHTML:=oPage:Render()
+    cHTML:=oPage:RenderHTML()
 
     FreeObj(@oPage)
     FreeObj(@oScript)

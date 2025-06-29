@@ -4,7 +4,6 @@
 #include "fw.webex.th"
 
 #include "shell.ch"
-#include "totvs.ch"
 
 using namespace FWWebEx
 
@@ -94,7 +93,7 @@ static procedure FWWebExExample_003()
             .:SetAttr("id","resultadoCEP")
             .:SetAttr("class","mt-4")
         END WEBEXOBJECT
-        cHTML:=oFWWebExPage:Render()
+        cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT
 
     WEBEXOBJECT CLEAN

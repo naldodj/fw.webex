@@ -4,7 +4,6 @@
 #include "fw.webex.th"
 
 #include "shell.ch"
-#include "totvs.ch"
 
 using namespace FWWebEx
 
@@ -93,7 +92,7 @@ static procedure FWWebExExample_006()
 
     oPage:AddChild(oScript)
 
-    cHTML:=oPage:Render()
+    cHTML:=oPage:RenderHTML()
 
     FreeObj(@oPage)
     FreeObj(@oForm)

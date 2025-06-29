@@ -4,7 +4,6 @@
 #include "fw.webex.th"
 
 #include "shell.ch"
-#include "totvs.ch"
 #include "tbiconn.ch"
 
 using namespace FWWebEx
@@ -40,7 +39,7 @@ static procedure FWWebExExample_002()
         WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName
             .:FromSQL("SELECT TOP 10 * FROM SX5990")
         END WEBEXOBJECT
-        cHTML:=oFWWebExPage:Render()
+        cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT
 
     WEBEXOBJECT CLEAN

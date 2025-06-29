@@ -1,0 +1,57 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+static cCHR10:=CHR(10) as character
+static cCHR13:=CHR(13) as character
+
+class WebExHelper
+
+    static method EscapeAll(cValue as character) as character
+
+    static method EscapeHTMLScript(cHTML as character) as character
+    static method EscapeJavaScript(cCode as character) as character
+    static method EscapeHTMLAttribute(cValue as character) as character
+
+end class
+
+static method EscapeAll(cValue) class WebExHelper
+    paramtype 1 var cValue as character
+    cValue:=WebExHelper():EscapeHTMLScript(cValue)
+    cValue:=WebExHelper():EscapeHTMLAttribute(cValue)
+    cValue:=WebExHelper():EscapeJavaScript(cValue)
+return(cValue)
+
+static method EscapeHTMLScript(cHTML) class WebExHelper
+    paramtype 1 var cHTML as character
+    cHTML:=AllTrim(cHTML)
+    cHTML:=StrTran(cHTML,"'","\\'")
+    cHTML:=StrTran(cHTML,cCHR13,"")
+    cHTML:=StrTran(cHTML,cCHR10,"")
+return(cHTML)
+
+static method EscapeJavaScript(cCode) class WebExHelper
+    paramtype 1 var cCode as character
+    cCode:=StrTran(cCode,"\\","\\\\")
+    cCode:=StrTran(cCode,"'","\\'")
+    cCode:=StrTran(cCode,'"','\\\"')
+    cCode:=StrTran(cCode,cCHR13,"")
+    cCode:=StrTran(cCode,cCHR10,"")
+return(cCode)
+
+static method EscapeHTMLAttribute(cValue) class WebExHelper
+    paramtype 1 var cValue as character
+    cValue:=StrTran(cValue,'"',"&quot;")
+    cValue:=StrTran(cValue,"'","&#39;")
+return(cValue)

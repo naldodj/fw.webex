@@ -13,11 +13,6 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-#include "totvs.ch"
-#include "dbstruct.ch"
-#include "parmtype.ch"
-#include "tlpp-core.th"
-
 class WebExButton from WebExControl
     public method New(cLabel as character, cType as character) as object
 endclass

@@ -13,17 +13,13 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-#include "totvs.ch"
-#include "parmtype.ch"
-#include "tlpp-core.th"
-
 class WebExPage from WebExControl
 
     public data cTitle as character
 
     public method New(cTitle as character) as object
 
-    public method Render() as character
+    public method RenderHTML() as character
 
 endclass
 
@@ -33,10 +29,10 @@ method New(cTitle) class WebExPage
    ::cTitle:=cTitle
 return(self)
 
-method Render() class WebExPage
+method RenderHTML() class WebExPage
 
     local cHTML:="<!DOCTYPE html>" as character
-    local cBody:=::ToHtml() as character
+    local cBody:=_Super:RenderHTML() as character
 
     local lIsDark:=WebApp():ThemeIsDark() as logical
 
@@ -437,7 +433,7 @@ method Render() class WebExPage
             .:SetAttr("class","p-4")
             .:SetContent(cBody)
         END WEBEXOBJECT
-        cHTML+=oObj:ToHTML()
+        cHTML+=oObj:RenderHTML()
     END WEBEXOBJECT
 
     FreeObj(@oObj)

@@ -12,7 +12,6 @@ Released to Public Domain.
 #include "fw.webex.th"
 
 #include "shell.ch"
-#include "totvs.ch"
 #include "tbiconn.ch"
 
 #include "tlpp-core.th"
@@ -50,28 +49,35 @@ static procedure FWWebExExample_008()
     local cHTML as character
     local cHTMLFile as character
 
+    local cUSR as character
+    local cPDW as character
     local cScript as character
+    local cRESTURL as character
     local cProcName:=ProcName() as character
     local cBasicAuth as character
     local cDNATechAuth as character
 
     local oFWWebExPage as object
 
-    aAdd(aParamBox,{1,"Usuario",Space(100),"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-    aAdd(aParamBox,{1,"Senha",Space(100),"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-    aAdd(aParamBox,{1,"URL REST",Space(200),"@","NaoVazio()","","AllWaysTrue()",200,.T.})
+    cUSR:="admin"
+    cPDW:="admin"
+    cRESTURL:="https://"+GetServerIP()+":"+LTrim(Str(GetServerPort()))+"/app-root/"
+
+    aAdd(aParamBox,{1,"Usuario",cUSR,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
+    aAdd(aParamBox,{1,"Senha",cPDW,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
+    aAdd(aParamBox,{1,"URL REST",cRESTURL,"@","NaoVazio()","","AllWaysTrue()",200,.T.})
     if (!ParamBox(@aParamBox,"Selecione os Parametros",@aParamRet,nil,nil,.T.,nil,nil,nil,nil,.T.,.T.))
         return
     endif
 
-    aParamRet[1]:=AllTrim(aParamRet[1])
-    aParamRet[2]:=AllTrim(aParamRet[2])
-    aParamRet[3]:=AllTrim(aParamRet[3])
-    if (Right(aParamRet[3],1)!="/")
-        aParamRet[3]+="/"
+    cUSR:=AllTrim(aParamRet[1])
+    cPDW:=AllTrim(aParamRet[2])
+    cRESTURL:=AllTrim(aParamRet[3])
+    if (Right(cRESTURL,1)!="/")
+        cRESTURL+="/"
     endif
 
-    cBasicAuth:="Basic "+Encode64(aParamRet[1]+":"+aParamRet[1])
+    cBasicAuth:="Basic "+Encode64(cUSR+":"+cPDW)
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName+" (REST + DataTable)"
         WITH WEBEXOBJECT CLASS WebExControl TYPE style
@@ -219,7 +225,7 @@ static procedure FWWebExExample_008()
                         ajax: function (data, callback) {
                             const pageNumber = Math.floor(data.start / data.length) + 1;
                             const rowsPerPage = data.length === -1 ? 999999 : data.length;
-                            fetch('http://localhost:9898/rest/callProcRestCrudTLPP/post/', {
+                            fetch('https://localhost:9898/rest/callProcRestCrudTLPP/post/', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -296,11 +302,11 @@ static procedure FWWebExExample_008()
                 cScript:=StrTran(cScript,"<DNATechAuth>","'"+cDNATechAuth+"'")
             endif
             cScript:=StrTran(cScript,"<basicAuth>","'"+cBasicAuth+"'")
-            cScript:=StrTran(cScript,"http://localhost:9898/rest/",aParamRet[3])
+            cScript:=StrTran(cScript,"https://localhost:9898/rest/",cRESTURL)
             .:SetContent(cScript)
         END WEBEXOBJECT
         *oFWWebExPage:SetAttr("style","min-height:100vh;padding:1rem;box-sizing:border-box;overflow:auto;")
-        cHTML:=oFWWebExPage:Render()
+        cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT
 
     WEBEXOBJECT CLEAN
