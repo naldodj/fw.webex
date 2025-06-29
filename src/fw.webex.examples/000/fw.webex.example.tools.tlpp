@@ -55,7 +55,7 @@ static method Execute(bExecute,cTitle,lPrepareEnvironment) class FWExampleTools
             RPCClearEnv()
         endif
     else
-        lRedefineBottom:=.F.
+        lRedefineBottom:=(FWIsInCallStack("u_FWWebExExample_000"))
         Eval(bExecute)
     endif
 

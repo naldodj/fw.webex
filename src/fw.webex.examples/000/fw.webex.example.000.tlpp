@@ -1,0 +1,138 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+#include "fw.webex.th"
+
+using namespace FWWebEx
+
+procedure u_FWWebExExample_000()
+    private cCadastro:="Exemplos FWWebEx"
+    FWExampleTools():Execute({||FWWebExExample_000()},cCadastro,.T.)
+return
+
+static procedure FWWebExExample_000()
+
+    local cExample:="" as character
+
+    local jExamples:=JSONObject():New() as json
+
+    local nTop as numeric
+    local nLeft as numeric
+    local nBottom as numeric
+    local nRight as numeric
+
+    local nExample as numeric
+    local nExamples:=9 as numeric
+
+    local oTDlg as object
+    local oTMenu as object
+    local oTPanel as object
+    local oTBitMap as object
+    local oFWDefSize as object
+    local oWNDDefault as object
+
+    for nExample:=1 to nExamples
+        cExample:="u_FWWebExExample_"+StrZero(nExample,3)
+        jExamples[cExample]:=&("{||"+cExample+"()}")
+    next nExample
+
+    oWNDDefault:=GetWNDDefault()
+    if ((Empty(oWNDDefault)).and.(Type("oMainWnd")=="O"))
+        oWNDDefault:=oMainWnd
+    endif
+
+    oFWDefSize:=FWDefSize():New(.T.,.T.)//Sem enchoicebar
+    oFWDefSize:lLateral:=.F.//Calculo vertical
+    oFWDefSize:AddObject("TMENU",100,100,.T.,.T.)//TMENU
+
+    oFWDefSize:Process()
+
+    nTop:=oFWDefSize:aWindSize[1]
+    nLeft:=oFWDefSize:aWindSize[2]
+    nBottom:=oFWDefSize:aWindSize[3]
+    nRight:=oFWDefSize:aWindSize[4]
+
+    if (lRedefineBottom)
+        nBottom-=50
+    endif
+
+    DEFINE MSDIALOG oTDlg TITLE cCadastro FROM nTop,nLeft TO nBottom,nRight PIXEL OF oWNDDefault
+
+        if (lRedefineBottom)
+            oTDlg:nTop+=7
+            oTDlg:nLeft+=5
+            oTDlg:nRight+=0
+            oTDlg:nBottom-=11
+        endif
+
+        @ 000,000 MSPANEL oTPanel OF oTDlg
+        oTPanel:Align:=CONTROL_ALIGN_ALLCLIENT
+
+        @ nTop,nLeft BITMAP oTBitMap RESNAME "DNA_TECH_LOGO_MENU_BACKGROUND_BLACK_PANTER" SIZE nBottom,nRight BORDER OF oTPanel PIXEL
+        oTBitMap:lTransparent:=.F.
+        oTBitMap:Align:=CONTROL_ALIGN_ALLCLIENT
+        oTBitMap:SetCSS("{background-size: 100% 100%;}")
+
+        FWMsgRun(nil,{||oTMenu:=LoadMenu(@oTDlg,jExamples)},"Wait! Loading Menu",cCadastro)
+
+        oTDlg:SetMenu(oTMenu)
+        oTDlg:lCentered:=(!lRedefineBottom)
+
+    ACTIVATE DIALOG oTDlg
+
+    FreeObj(@jExamples)
+
+    FreeObj(@oFWDefSize)
+
+    FreeObj(@oTBitMap)
+    FreeObj(@oTPanel)
+    FreeObj(@oTMenu)
+    FreeObj(@oTDlg)
+
+return
+
+static function LoadMenu(oTDlg as object,jExamples as json) as object
+
+    local aNames as array
+
+    local bTMenuAction as codeblock
+
+    local cName as character
+
+    local nName as numeric
+    local nNames as numeric
+
+    local oTMenu as object
+    local oTMenuItem as object
+
+    aNames:=aClone(jExamples:GetNames())
+    nNames:=Len(aNames)
+
+    MENU oTMenu IMAGE "" OF oTDlg
+        MENUITEM oTMenuItem PROMPT cCadastro
+        MENU
+            for nName:=1 to nNames
+                cName:=aNames[nName]
+                bTMenuAction:=jExamples[cName]
+                MENUITEM oTMenuItem PROMPT cName
+                oTMenuItem:bAction:=bTMenuAction
+            next nName
+        ENDMENU
+        MENU
+            MENUITEM oTMenuItem PROMPT "Exit" ACTION if(ApMsgNoYes("Deseja sair?"),oTDlg:End(),.F.)
+        ENDMENU
+    ENDMENU
+
+    oTMenu:align:=CONTROL_ALIGN_ALLCLIENT
+
+    FWFreeArray(@aNames)
+
+return(oTMenu)
