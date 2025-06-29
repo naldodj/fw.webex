@@ -3,14 +3,10 @@
 ```advpl
 #include "fw.webex.th"
 
-#include "tbiconn.ch"
-
 using namespace FWWebEx
 
 procedure u_FWWebExExample_001()
-    PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01"
-        FWWebExExample_001()
-    RESET ENVIRONMENT
+    FWExampleTools():Execute({||FWWebExExample_001()},ProcName(),.T.)
 return
 
 static procedure FWWebExExample_001()

@@ -3,45 +3,24 @@
 ```advpl
 #include "fw.webex.th"
 
-#include "shell.ch"
-#include "tbiconn.ch"
-
 #include "tlpp-core.th"
 #include "tlpp-rest.th"
 
 using namespace FWWebEx
 
 procedure u_FWWebExExample_007()
-
-    local lMainWnd as logical
-
-    private lRedefineBottom as logical
-
-    lMainWnd:=(Type("oMainWnd")=="O")
-    if (!lMainWnd)
-        PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01"
-            private oMainWnd as object
-            lRedefineBottom:=.T.
-            DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
-            ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_007(),oMainWnd:End())
-            FreeObj(@oMainWnd)
-        RESET ENVIRONMENT
-    else
-        lRedefineBottom:=.F.
-        FWWebExExample_007()
-    endif
-
+    FWExampleTools():Execute({||FWWebExExample_007()},ProcName(),.T.)
 return
 
 static procedure FWWebExExample_007()
 
-    local aParamBox:=Array(0) as array
-    local aParamRet:=Array(0) as array
-
     local cHTML as character
     local cHTMLFile as character
 
+    local cUSR as character
+    local cPDW as character
     local cScript as character
+    local cRESTURL as character
     local cProcName:=ProcName() as character
     local cBasicAuth as character
     local cDNATechAuth as character
@@ -51,21 +30,11 @@ static procedure FWWebExExample_007()
     local oDivTable as object
     local oTableStyle as object
 
-    aAdd(aParamBox,{1,"Usuario",Space(100),"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-    aAdd(aParamBox,{1,"Senha",Space(100),"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-    aAdd(aParamBox,{1,"URL REST",Space(200),"@","NaoVazio()","","AllWaysTrue()",200,.T.})
-    if (!ParamBox(@aParamBox,"Selecione os Parametros",@aParamRet,nil,nil,.T.,nil,nil,nil,nil,.T.,.T.))
+    if (!FWExampleTools():GetRESTCredential(@cUSR,@cPDW,@cRESTURL))
         return
     endif
 
-    aParamRet[1]:=AllTrim(aParamRet[1])
-    aParamRet[2]:=AllTrim(aParamRet[2])
-    aParamRet[3]:=AllTrim(aParamRet[3])
-    if (Right(aParamRet[3],1)!="/")
-        aParamRet[3]+="/"
-    endif
-
-    cBasicAuth:="Basic "+Encode64(aParamRet[1]+":"+aParamRet[1])
+    cBasicAuth:="Basic "+Encode64(cUSR+":"+cPDW)
 
     oPage:=WebExPage():New("Exemplo 007 - Funcionarios (REST + DataTable)")
     oTableStyle:=WebExControl():New("style")
@@ -75,13 +44,13 @@ static procedure FWWebExExample_007()
             padding: 4px 8px !important;
         }
         #custom-loader {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        height: 4px !important;
-        background: linear-gradient(270deg, #0dcaf0, #0d6efd) !important;
-        animation: progressbar-stripes 1s linear infinite !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            height: 4px !important;
+            background: linear-gradient(270deg, #0dcaf0, #0d6efd) !important;
+            animation: progressbar-stripes 1s linear infinite !important;
         }
         @keyframes progressbar-stripes {
         0% { background-position: 1rem 0; }
@@ -185,13 +154,12 @@ static procedure FWWebExExample_007()
                 ajax: function (data, callback) {
                     const pageNumber = Math.floor(data.start / data.length) + 1;
                     const rowsPerPage = data.length === -1 ? 999999 : data.length;
-                    //const basicAuth = 'Basic ' + btoa('admin:admin');
-                    fetch('http://localhost:9898/rest/callProcRestCrudTLPP/post/', {
+                    fetch('https://localhost:9898/rest/callProcRestCrudTLPP/post/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': basicAuth,
-                            'X-DNATech-Auth-Token': 'DNATechAuth'
+                            'Authorization': <basicAuth>,
+                            'X-DNATech-Auth-Token': <DNATechAuth>
                         },
                         body: JSON.stringify({
                             ClassName: 'userRestCrudTLPPCoreFunction',
@@ -256,15 +224,15 @@ static procedure FWWebExExample_007()
 
     if (!FindClass("DNA.TECH.USERRESTCRUDTLPP"))
         //Considerando que callProcRestCrudTLPP depende de DNA.TECH.USERRESTCRUDTLPP
-        //u_callProcRestCrudTLPP atuara como um mock da callProcRestCrudTLPP.
-        cScript:=StrTran(cScript,"callProcRestCrudTLPP","u_callProcRestCrudTLPP")
+        //u_callProcRestCrudTLPPEx007 atuara como um mock da callProcRestCrudTLPP.
+        cScript:=StrTran(cScript,"callProcRestCrudTLPP","u_callProcRestCrudTLPPEx007")
     else
         cDNATechAuth:=MemoRead("\dna.tech\authentication\authentication.aut")
         cDNATechAuth:=Encode64("token:"+cDNATechAuth)
-        cScript:=StrTran(cScript,"DNATechAuth",cDNATechAuth)
+        cScript:=StrTran(cScript,"<DNATechAuth>","'"+cDNATechAuth+"'")
     endif
-    cScript:=StrTran(cScript,"basicAuth","'"+cBasicAuth+"'")
-    cScript:=StrTran(cScript,"http://localhost:9898/rest/",aParamRet[3])
+    cScript:=StrTran(cScript,"<basicAuth>","'"+cBasicAuth+"'")
+    cScript:=StrTran(cScript,"https://localhost:9898/rest/",cRESTURL)
 
     oScript:SetContent(cScript)
     oPage:AddChild(oScript)
@@ -284,7 +252,7 @@ static procedure FWWebExExample_007()
     cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
     MemoWrite(cHTMLFile,cHTML)
 
-    htmlFileShow(cHTML,cProcName,cHTMLFile)
+    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
 
     fErase(cHTMLFile)
 

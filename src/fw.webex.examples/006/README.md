@@ -3,27 +3,10 @@
 ```advpl
 #include "fw.webex.th"
 
-#include "shell.ch"
-
 using namespace FWWebEx
 
 procedure u_FWWebExExample_006()
-
-    local lMainWnd:=(Type("oMainWnd")=="O") as logical
-
-    private lRedefineBottom as logical
-
-    if (!lMainWnd)
-        private oMainWnd as object
-        lRedefineBottom:=.T.
-        DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
-        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_006(),oMainWnd:End())
-        FreeObj(@oMainWnd)
-    else
-        lRedefineBottom:=.F.
-        FWWebExExample_006()
-    endif
-
+    FWExampleTools():Execute({||FWWebExExample_006()},ProcName(),.F.)
 return
 
 static procedure FWWebExExample_006()
@@ -39,6 +22,15 @@ static procedure FWWebExExample_006()
     local oButton:=WebExButton():New("Buscar")
     local oScript:=WebExControl():New("script")
     local oDivTable:=WebExControl():New("div")
+    local oTableStyle:=WebExControl():New("style")
+
+    beginContent var cTableStyle
+        table.dataTable.compact tbody td {
+            padding: 4px 8px !important;
+        }
+    endContent
+    oTableStyle:SetContent(cTableStyle)
+    oPage:AddChild(oTableStyle)
 
     //Campo para a Pesquisa do CEP
     oForm:AddField("CEP","cep","text","Digite o CEP")
@@ -53,6 +45,21 @@ static procedure FWWebExExample_006()
     oPage:AddChild(oDivTable)
 
     // Script para requisitar ViaCEP e preencher a tabela com DataTables
+    //Portuguese-Brasil translation
+    //https://datatables.net/plug-ins/i18n/Portuguese-Brasil.html
+    /*
+        Tabela do DOM (so pra referencia)
+        https://datatables.net/reference/option/dom
+        | Letra | Elemento que aparece           |
+        | ----- | ------------------------------ |
+        | **B** | Botoes (exportacao etc.)       |
+        | **l** | Seletor de "linhas por pagina" |
+        | **f** | Campo de busca (filtro)        |
+        | **r** | Texto "processing..."          |
+        | **t** | Tabela                         |
+        | **i** | Info de "Mostrando x a y de z" |
+        | **p** | Paginacao                      |
+    */
     beginContent var cScript
         function buscarCEP() {
             const cep = document.getElementsByName('cep')[0].value.replace(/[^0-9]/g,'');
@@ -63,24 +70,58 @@ static procedure FWWebExExample_006()
             fetch('https://viacep.com.br/ws/' + cep + '/json/')
                 .then(response => response.json())
                 .then(data => {
-                if (data.erro) {
-                    document.getElementById('tableResult').innerHTML = '<div class=\"alert alert-danger\">CEP n&atilde;o encontrado.</div>';
-                } else {
-                    let html = '<table id=\"example\" class=\"table table-striped table-hover mt-3\">';
-                    html += '<thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody>';
-                    for (let key in data) {
-                        html += '<tr><td><strong>' + key + '</strong></td><td>' + data[key] + '</td></tr>';
+                    if (data.erro) {
+                        document.getElementById('tableResult').innerHTML = '<div class=\"alert alert-danger\">CEP n&atilde;o encontrado.</div>';
+                    } else {
+                        let html = '<table id=\"example\" class=\"table table-striped table-hover mt-3 display compact nowrap\">';
+                        html += '<thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody>';
+                        for (let key in data) {
+                            html += '<tr><td><strong>' + key + '</strong></td><td>' + data[key] + '</td></tr>';
+                        }
+                        html += '</tbody></table>';
+                        document.getElementById('tableResult').innerHTML = html;
+                        var table = new DataTable('#example', {
+                            dom: 'Blfrtip',
+                            lengthMenu: [1,2,3,4,5,6,7,8,9,10,25,50,100,-1],
+                            pageLength: 6,//DEFAULT
+                            buttons: [
+                                'copy',
+                                'csv',
+                                'print',
+                                {
+                                    extend: 'excelHtml5',
+                                    title: 'u_FWWebExExample_006',
+                                    filename: 'relatorio_excel',
+                                    autoFilter: true
+                                },
+                                {
+                                    extend: 'pdf',
+                                    title: 'u_FWWebExExample_006',
+                                    filename: 'relatorio_pdf'
+                                }
+                            ],
+                            responsive: true,
+                            className: 'compact',
+                            language: {
+                                url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/pt-BR.json',
+                                lengthLabels: {
+                                    '-1': 'Todos' //https://datatables.net/reference/option/lengthMenu
+                                }
+                            },
+                            "drawCallback": function(settings) {
+                                // This drawCallback ensures consistent table height across pages.
+                                // It calculates how many empty rows are needed to fill the remaining space,
+                                // and appends them to the table so all pages have the same visual height.
+                                const api = this.api();
+                                const rows = api.rows({ page: 'current' }).count();
+                                const pageSize = api.page.len();
+                                const emptyRows = pageSize - rows;
+                                for (let i = 0; i < emptyRows; i++) {
+                                    $('#example tbody').append('<tr class="empty-row"><td colspan="999">&nbsp;</td></tr>');
+                                }
+                            }
+                        });
                     }
-                    html += '</tbody></table>';
-                    document.getElementById('tableResult').innerHTML = html;
-                    //Portuguese-Brasil translation
-                    //https://datatables.net/plug-ins/i18n/Portuguese-Brasil.html
-                    var table = new DataTable('#example', {
-                        language: {
-                            url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/pt-BR.json',
-                        },
-                    });
-                }
                 })
                 .catch(() => {
                 document.getElementById('tableResult').innerHTML = '<div class=\"alert alert-danger\">Erro ao consultar o CEP.</div>';
@@ -99,6 +140,7 @@ static procedure FWWebExExample_006()
     FreeObj(@oButton)
     FreeObj(@oScript)
     FreeObj(@oDivTable)
+    FreeObj(@oTableStyle)
 
     cHTML:=EncodeUTF8(cHTML)
     if (!lIsDir("\web\tmp\"))
@@ -107,7 +149,7 @@ static procedure FWWebExExample_006()
     cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
     MemoWrite(cHTMLFile,cHTML)
 
-    htmlFileShow(cHTML,cProcName,cHTMLFile)
+    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
 
     fErase(cHTMLFile)
 

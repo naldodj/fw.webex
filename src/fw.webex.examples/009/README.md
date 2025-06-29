@@ -3,28 +3,10 @@
 ```advpl
 #include "fw.webex.th"
 
-#include "shell.ch"
-
 using namespace FWWebEx
 
 procedure u_FWWebExExample_009()
-
-    local lMainWnd as logical
-
-    private lRedefineBottom as logical
-
-    lMainWnd:=(Type("oMainWnd")=="O")
-    if (!lMainWnd)
-        private oMainWnd as object
-        lRedefineBottom:=.T.
-        DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
-        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_009(),oMainWnd:End())
-        FreeObj(@oMainWnd)
-    else
-        lRedefineBottom:=.F.
-        FWWebExExample_009()
-    endif
-
+    FWExampleTools():Execute({||FWWebExExample_009()},ProcName(),.F.)
 return
 
 static procedure FWWebExExample_009()
@@ -114,7 +96,7 @@ static procedure FWWebExExample_009()
     cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
     MemoWrite(cHTMLFile,cHTML)
 
-    htmlFileShow(cHTML,cProcName,cHTMLFile)
+    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
 
     fErase(cHTMLFile)
 
