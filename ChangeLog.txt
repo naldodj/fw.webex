@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-29 02:29 UTC naldodj (oTableDrillDown:BuildHeader())
+  ! Fix oTableDrillDown:BuildHeader()
+    * src/fw.webex.examples/009/fw.webex.example.009.tlpp
+
 2025-06-29 02:17 UTC naldodj (:AddStyle)
   * src/fw.webex/tools/fw.webex.webapp.tools.tlpp
   * src/fw.webex/web/fw.webex.page.tlpp
