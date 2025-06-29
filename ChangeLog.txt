@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-29 13:30 UTC naldodj (Fix)
+  ! toggle drill-down icon between + and - on row expand/collapse
+    * src/fw.webex/web/fw.webex.table.tlpp
+
 2025-06-29 12:52 UTC naldodj (Example of Examples: README)
   + src/fw.webex.examples/000/README.md
 
