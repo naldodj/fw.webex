@@ -16,16 +16,17 @@ namespace FWWebEx
 #include "tlpp-core.th"
 
 class WebApp
-    static method ThemeIsDark() as logical
+    static method ThemeIsDark(cTheme as character) as logical
     static method WebAgentIsConnected() as logical
 end class
 
-static method ThemeIsDark() class WebApp
+static method ThemeIsDark(cTheme) class WebApp
 
-    local cTheme as character
     local lIsDark as logical
 
     local oError as object
+
+    paramtype 1 var cTheme as character optional
 
     try
         cTheme:=Upper(allTrim(totvs.framework.css.getNewWebAppTheme()))

@@ -17,33 +17,162 @@ class WebExPage from WebExControl
 
     public data cTitle as character
 
-    public method New(cTitle as character) as object
+    public data jStyle as json
 
+    public method New(cTitle as character) as object
+    public method AddStyle(cStyle) as object
     public method RenderHTML() as character
 
 endclass
 
 method New(cTitle) class WebExPage
-   paramtype 1 var cTitle as character
-   _Super:New("main")
-   ::cTitle:=cTitle
+    paramtype 1 var cTitle as character
+    _Super:New("main")
+    ::cTitle:=cTitle
+    ::jStyle:=JSONObject():New()
+return(self)
+
+method AddStyle(cStyle) class WebExPage
+    local oStyle as object
+    paramtype 1 var cStyle as character
+    WITH WEBEXOBJECT oStyle CLASS WebExControl TYPE style
+        .:SetContent(cStyle)
+        ::jStyle[oStyle:cID]:=oStyle
+    END WEBEXOBJECT
 return(self)
 
 method RenderHTML() class WebExPage
 
     local cHTML:="<!DOCTYPE html>" as character
     local cBody:=_Super:RenderHTML() as character
+    local cTheme as character
+    local cStyle as character
 
-    local lIsDark:=WebApp():ThemeIsDark() as logical
+    local lIsDark:=WebApp():ThemeIsDark(@cTheme) as logical
 
-    local oObj as object
+    local oPage as object
+    local oHeader as object
 
-    WITH WEBEXOBJECT oObj CLASS WebExControl TYPE html
+    if ((!lIsDark).and.(!Empty(cTheme)).and.(cTheme=="SUNSET").and.(Empty(::jStyle:GetNames())))
+
+        beginContent var cStyle
+
+            :root {
+                --sunset-red: #e74c3c;
+                --sunset-orange: #f39c12;
+                --sunset-bg-dark: #1a1a1a;
+                --sunset-text: #f5f5f5;
+            }
+
+            body {
+                background-color: var(--sunset-bg-dark) !important;
+                color: var(--sunset-text) !important;
+            }
+
+            .btn {
+                background-color: transparent !important;
+                color: var(--sunset-red) !important;
+                border: 1px solid var(--sunset-red) !important;
+                border-radius: 0.5rem !important;
+                transition: all 0.3s ease !important;
+            }
+
+            .btn:hover,
+            .btn:focus {
+                background-color: var(--sunset-red) !important;
+                color: #fff !important;
+            }
+
+            .form-control,
+            .form-select {
+                background-color: #2b2b2b !important;
+                color: var(--sunset-text) !important;
+                border: 1px solid var(--sunset-red) !important;
+                border-radius: 0.5rem !important;
+            }
+
+            .form-control::placeholder {
+                color: #bbb !important;
+            }
+
+            .form-control:focus,
+            .form-select:focus {
+                box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.4) !important;
+                border-color: var(--sunset-orange) !important;
+                background-color: #2b2b2b !important;
+                color: var(--sunset-text) !important;
+            }
+
+            .navbar {
+                background-color: #111 !important;
+                border-bottom: 2px solid var(--sunset-red) !important;
+            }
+
+            .navbar .nav-link,
+            .navbar-brand {
+                color: var(--sunset-text) !important;
+            }
+
+            .navbar .nav-link:hover {
+                color: var(--sunset-orange) !important;
+            }
+
+            .card {
+                background-color: #222 !important;
+                border: 1px solid var(--sunset-red) !important;
+                color: var(--sunset-text) !important;
+            }
+
+            a {
+                color: var(--sunset-orange) !important;
+            }
+
+            a:hover {
+                color: var(--sunset-red) !important;
+            }
+
+            .table {
+                color: var(--sunset-text) !important;
+                background-color: #1f1f1f !important;
+            }
+
+            .table thead {
+                background-color: #2c2c2c !important;
+                color: var(--sunset-orange) !important;
+            }
+
+            .table-bordered,
+            .table-bordered th,
+            .table-bordered td {
+                border: 1px solid var(--sunset-red) !important;
+            }
+
+            input[type="checkbox"],
+            input[type="radio"] {
+                accent-color: var(--sunset-red) !important;
+                background-color: #2b2b2b !important;
+                border: 1px solid var(--sunset-red) !important;
+            }
+
+            /* Para navegadores que ignoram `accent-color`, como Safari velho ou Firefox pre-92 */
+            input[type="checkbox"]:checked,
+            input[type="radio"]:checked {
+                background-color: var(--sunset-red) !important;
+                border-color: var(--sunset-red) !important;
+            }
+
+        endContent
+
+        ::AddStyle(cStyle)
+
+    endif
+
+    WITH WEBEXOBJECT oPage CLASS WebExControl TYPE html
         .:SetAttr("lang","pt-br")
         if (lIsDark)
             .:SetAttr("data-bs-theme","dark")
         endif
-        WITH WEBEXOBJECT CLASS WebExControl TYPE head
+        WITH WEBEXOBJECT oHeader CLASS WebExControl TYPE head
             WITH WEBEXOBJECT CLASS WebExControl TYPE meta
                 .:SetAttr("charset","UTF-8")
             END WEBEXOBJECT
@@ -428,14 +557,16 @@ method RenderHTML() class WebExPage
             WITH WEBEXOBJECT CLASS WebExControl TYPE title
                 .:SetContent(::cTitle)
             END WEBEXOBJECT
+            //Styles
+            aEval(::jStyle:GetNames(),{|cName|oHeader:AddChild(::jStyle[cName])})
         END WEBEXOBJECT
         WITH WEBEXOBJECT CLASS WebExControl TYPE body
             .:SetAttr("class","p-4")
             .:SetContent(cBody)
         END WEBEXOBJECT
-        cHTML+=oObj:RenderHTML()
+        cHTML+=oPage:RenderHTML()
     END WEBEXOBJECT
 
-    FreeObj(@oObj)
+    FreeObj(@oPage)
 
 return(cHTML)
