@@ -7,101 +7,104 @@
 
 using namespace FWWebEx
 
-procedure u_FWWebExExample_005()
+procedure u_FWWebExExample_009()
 
-    local lMainWnd:=(Type("oMainWnd")=="O") as logical
+    local lMainWnd as logical
 
     private lRedefineBottom as logical
 
+    lMainWnd:=(Type("oMainWnd")=="O")
     if (!lMainWnd)
         private oMainWnd as object
         lRedefineBottom:=.T.
         DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
-        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_005(),oMainWnd:End())
+        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_009(),oMainWnd:End())
         FreeObj(@oMainWnd)
     else
         lRedefineBottom:=.F.
-        FWWebExExample_005()
+        FWWebExExample_009()
     endif
 
 return
 
-static procedure FWWebExExample_005()
+static procedure FWWebExExample_009()
+
+    local aEmpresas:={;
+         {;
+            "99";
+           ,"TOTVS";
+          ,{;
+                {;
+                     "99-0001";
+                    ,"DEPARTAMENTO 0001";
+                    ,"50%";
+                };
+            };
+        };
+        ,{;
+            "01";
+           ,"DNATech";
+          ,{;
+                {;
+                     "01-0001";
+                    ,"DEPARTAMENTO 0001";
+                    ,".5%";
+                };
+            };
+        };
+    } as array
 
     local cHTML as character
     local cHTMLFile as character
+    local cHTMLDrillDown as character
 
-    local cScript as character
     local cProcName:=ProcName() as character
 
-    local oDiv as object
-    local oButton as object
+    local nEmpresa as numeric
+    local nEmpresas:=Len(aEmpresas) as numeric
 
-    local oPage:=WebExPage():New("Exemplo 005 - Formul&aacute;rio ViaCEP") as object
-    local oForm:=WebExForm():New("Consulta de CEP") as object
-    local oScript:=WebExControl():New("script") as object
+    local oPage as object
+    local oTable as object
+    local oTableDrillDown as object
 
-    oForm:SetMethod("get")
-    oForm:SetAction("#")
+    oTable:=WebExTable():New("Turnover por Empresa")
+    oTable:SeTitleBefore(.T.)
+    oTable:EnableDrillDown()
 
-    // Campo de busca
-    oForm:AddField("CEP","cep","text","Digite o CEP")
+    oTable:AddColumnHeader("C&oacute;digo")
+    oTable:AddColumnHeader("Nome")
+    oTable:BuildHeader()
 
-    // Campos que serao atualizados via Ajax (ja definidos)
-    oForm:AddField("Logradouro","logradouro","text","")
-    oForm:AddField("Bairro","bairro","text","")
-    oForm:AddField("Cidade","localidade","text","")
-    oForm:AddField("UF","uf","text","")
-    oForm:AddField("C&oacute;digo IBGE","ibge","text","")
+    for nEmpresa:=1 to nEmpresas
+        oTableDrillDown:=WebExTable():New()
+        oTableDrillDown:SeTitleBefore(.T.)
+        oTableDrillDown:AddColumnHeader("C&oacute;digo")
+        oTableDrillDown:AddColumnHeader("Nome")
+        oTableDrillDown:AddColumnHeader("% Turnover")
+        aEval(aEmpresas[nEmpresa][3],{|aRowDrillDown|;
+                 oTableDrillDown:SetTitle("Turnover Departamento ["+aRowDrillDown[1]+"]");
+                ,oTableDrillDown:AddCell(aRowDrillDown[1]);
+                ,oTableDrillDown:AddCell(aRowDrillDown[2]);
+                ,oTableDrillDown:AddCell(aRowDrillDown[3]);
+                ,oTableDrillDown:BuildBodyRow();
+            };
+        )
+        cHTMLDrillDown:=oTableDrillDown:RenderHTML()
+        cHTMLDrillDown:=WebExHelper():EscapeAll(cHTMLDrillDown)
+        FreeObj(@oTableDrillDown)
+        oTable:AddCell(aEmpresas[nEmpresa][1])
+        oTable:AddCell(aEmpresas[nEmpresa][2])
+        oTable:BuildBodyRow(cHTMLDrillDown)
+    next nEmpresa
 
-    oDiv:=WebExControl():New("div")
-    oDiv:SetAttr("id","resultadoCEP")
-
-    oButton:=WebExButton():New("Buscar")
-    oButton:SetAttr("onclick","buscarCEP(); return false;")
-
-    oForm:AddChild(oDiv)
-    oForm:AddChild(oButton)
-
-    oPage:AddChild(oForm)
-
-    // Adiciona o script para consulta Ajax do ViaCEP
-    beginContent var cScript
-        function buscarCEP() {
-            const cep = document.getElementsByName('cep')[0].value.replace(/[^0-9]/g,'');
-            if (cep.length !== 8) {
-                document.getElementById('resultadoCEP').innerHTML = '<div class=\"alert alert-danger\">CEP inv&aacute;lido.</div>';
-                return;
-            }
-            fetch('https://viacep.com.br/ws/' + cep + '/json/')
-                .then(response => response.json())
-                .then(data => {
-                if (data.erro) {
-                    document.getElementById('resultadoCEP').innerHTML = '<div class=\"alert alert-danger\">CEP n&atilde;o encontrado.</div>';
-                } else {
-                    document.getElementsByName('logradouro')[0].value = data.logradouro || '';
-                    document.getElementsByName('bairro')[0].value = data.bairro || '';
-                    document.getElementsByName('localidade')[0].value = data.localidade || '';
-                    document.getElementsByName('uf')[0].value = data.uf || '';
-                    document.getElementsByName('ibge')[0].value = data.ibge || '';
-                    document.getElementById('resultadoCEP').innerHTML = '';
-                }
-            }).catch(() => {
-                document.getElementById('resultadoCEP').innerHTML = '<div class=\"alert alert-danger\">Erro ao consultar o CEP.</div>';
-            });
-        }
-    endContent
-
-    oScript:SetContent(cScript)
-
-    oPage:AddChild(oScript)
+    oPage:=WebExPage():New("Drill-down Exemplo")
+    oPage:AddChild(oTable)
     cHTML:=oPage:RenderHTML()
 
-    FreeObj(@oDiv)
+    FreeObj(@oTable)
     FreeObj(@oPage)
-    FreeObj(@oForm)
-    FreeObj(@oScript)
-    FreeObj(@oButton)
+
+    FWFreeArray(@aEmpresas)
 
     cHTML:=EncodeUTF8(cHTML)
     if (!lIsDir("\web\tmp\"))
@@ -117,8 +120,8 @@ static procedure FWWebExExample_005()
 return
 ````
 
-![image](https://github.com/user-attachments/assets/1e2db3f4-343c-4230-a5b4-43d6bd4ff475)
+![image](https://github.com/user-attachments/assets/f984fc01-c4d7-4b9c-964f-f953720f3bb1)
 
 ---
 
-![image](https://github.com/user-attachments/assets/8d083612-2a35-44a0-a8f7-1e0616ba8abc)
+![image](https://github.com/user-attachments/assets/1df36047-b1b7-422e-996c-e7cc8f9a1f45)
