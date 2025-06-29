@@ -120,7 +120,7 @@ static procedure FWWebExExample_009()
 return
 ````
 
-![image](https://github.com/user-attachments/assets/f984fc01-c4d7-4b9c-964f-f953720f3bb1)
+![image](https://github.com/user-attachments/assets/42fd8139-b7ae-4716-b987-970aa8381858)
 
 ---
 
