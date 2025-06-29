@@ -81,6 +81,7 @@ static procedure FWWebExExample_009()
         oTableDrillDown:AddColumnHeader("C&oacute;digo")
         oTableDrillDown:AddColumnHeader("Nome")
         oTableDrillDown:AddColumnHeader("% Turnover")
+        oTableDrillDown:BuildHeader()
         aEval(aEmpresas[nEmpresa][3],{|aRowDrillDown|;
                  oTableDrillDown:SetTitle("Turnover Departamento ["+aRowDrillDown[1]+"]");
                 ,oTableDrillDown:AddCell(aRowDrillDown[1]);
