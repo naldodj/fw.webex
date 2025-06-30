@@ -1,5 +1,7 @@
 # FW.WebEX — Framework Web Extensível para Protheus (ADVPL/TLPP)
-![dna_tech_logo_black_panter](https://github.com/user-attachments/assets/b3e14547-41e0-484f-9d42-533fc71c28b8)
+
+![fwwebex_banner](https://github.com/user-attachments/assets/64a542a9-97f3-47b0-81f9-1655374a1a90)
+
 --
 **FW.WebEX** é um microframework escrito em ADVPL/TLPP que permite criar interfaces web responsivas, modernas e funcionais **diretamente do seu código no Protheus**, sem precisar de Angular, React ou qualquer outra parafernália.
 
