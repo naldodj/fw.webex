@@ -25,10 +25,11 @@ static procedure FWWebExExample_007()
     local cBasicAuth as character
     local cDNATechAuth as character
 
-    local oPage as object
     local oScript as object
     local oDivTable as object
     local oTableStyle as object
+
+    local oFWWebExPage as object
 
     if (!FWExampleTools():GetRESTCredential(@cUSR,@cPDW,@cRESTURL))
         return
@@ -36,7 +37,7 @@ static procedure FWWebExExample_007()
 
     cBasicAuth:="Basic "+Encode64(cUSR+":"+cPDW)
 
-    oPage:=WebExPage():New("Exemplo 007 - Funcionarios (REST + DataTable)")
+    oFWWebExPage:=WebExPage():New("Exemplo 007 - Funcionarios (REST + DataTable)")
     oTableStyle:=WebExControl():New("style")
 
     beginContent var cTableStyle
@@ -58,14 +59,14 @@ static procedure FWWebExExample_007()
         }
     endContent
     oTableStyle:SetContent(cTableStyle)
-    oPage:AddChild(oTableStyle)
+    oFWWebExPage:AddChild(oTableStyle)
 
     oScript:=WebExControl():New("script")
 
     // Adiciona container de tabela
     oDivTable:=WebExControl():New("div")
     oDivTable:SetAttr("id","tableResult")
-    oPage:AddChild(oDivTable)
+    oFWWebExPage:AddChild(oDivTable)
 
     /*
         Tabela do DOM (so pra referencia)
@@ -235,12 +236,12 @@ static procedure FWWebExExample_007()
     cScript:=StrTran(cScript,"https://localhost:9898/rest/",cRESTURL)
 
     oScript:SetContent(cScript)
-    oPage:AddChild(oScript)
-    *oPage:SetAttr("style","min-height:100vh;padding:1rem;box-sizing:border-box;overflow:auto;")
+    oFWWebExPage:AddChild(oScript)
+    *oFWWebExPage:SetAttr("style","min-height:100vh;padding:1rem;box-sizing:border-box;overflow:auto;")
 
-    cHTML:=oPage:RenderHTML()
+    cHTML:=oFWWebExPage:RenderHTML()
 
-    FreeObj(@oPage)
+    FreeObj(@oFWWebExPage)
     FreeObj(@oScript)
     FreeObj(@oDivTable)
     FreeObj(@oTableStyle)

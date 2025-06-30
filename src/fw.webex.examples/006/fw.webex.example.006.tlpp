@@ -25,32 +25,39 @@ static procedure FWWebExExample_006()
     local cScript as character
     local cProcName:=ProcName() as character
 
-    local oPage:=WebExPage():New("Exemplo 006 - ViaCEP em DataTable")
-    local oForm:=WebExForm():New("Buscar CEP")
-    local oButton:=WebExButton():New("Buscar")
-    local oScript:=WebExControl():New("script")
-    local oDivTable:=WebExControl():New("div")
-    local oTableStyle:=WebExControl():New("style")
+    local oScript as object
+    local oDivTable as object
+    local oTableStyle as object
+
+    local oFWWebExPage as object
+    local oFWWebExForm as object
+    local oFWWebExButton as object
 
     beginContent var cTableStyle
         table.dataTable.compact tbody td {
             padding: 4px 8px !important;
         }
     endContent
+    oTableStyle:=WebExControl():New("style")
     oTableStyle:SetContent(cTableStyle)
-    oPage:AddChild(oTableStyle)
+
+    oFWWebExPage:=WebExPage():New("Exemplo 006 - ViaCEP em DataTable")
+    oFWWebExPage:AddChild(oTableStyle)
 
     //Campo para a Pesquisa do CEP
-    oForm:AddField("CEP","cep","text","Digite o CEP")
+    oFWWebExForm:=WebExForm():New("Buscar CEP")
+    oFWWebExForm:AddField("CEP","cep","text","Digite o CEP")
 
-    oButton:SetAttr("onclick","buscarCEP(); return false;")
-    oForm:AddChild(oButton)
+    oFWWebExButton:=WebExButton():New("Buscar")
+    oFWWebExButton:SetAttr("onclick","buscarCEP(); return false;")
+    oFWWebExForm:AddChild(oFWWebExButton)
 
     // Tabela que sera preenchida
-    oPage:AddChild(oForm)
+    oFWWebExPage:AddChild(oFWWebExForm)
 
+    oDivTable:=WebExControl():New("div")
     oDivTable:SetAttr("id","tableResult")
-    oPage:AddChild(oDivTable)
+    oFWWebExPage:AddChild(oDivTable)
 
     // Script para requisitar ViaCEP e preencher a tabela com DataTables
     //Portuguese-Brasil translation
@@ -137,15 +144,16 @@ static procedure FWWebExExample_006()
         }
     endContent
 
+    oScript:=WebExControl():New("script")
     oScript:SetContent(cScript)
 
-    oPage:AddChild(oScript)
+    oFWWebExPage:AddChild(oScript)
 
-    cHTML:=oPage:RenderHTML()
+    cHTML:=oFWWebExPage:RenderHTML()
 
-    FreeObj(@oPage)
-    FreeObj(@oForm)
-    FreeObj(@oButton)
+    FreeObj(@oFWWebExPage)
+    FreeObj(@oFWWebExForm)
+    FreeObj(@oFWWebExButton)
     FreeObj(@oScript)
     FreeObj(@oDivTable)
     FreeObj(@oTableStyle)

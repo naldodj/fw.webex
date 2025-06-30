@@ -31,7 +31,7 @@ static procedure FWWebExExample_000()
     local nRight as numeric
 
     local nExample as numeric
-    local nExamples:=10 as numeric
+    local nExamples:=11 as numeric
 
     local oTDlg as object
     local oTMenu as object
@@ -55,7 +55,7 @@ static procedure FWWebExExample_000()
             jExamples["Tables"][cExample]:=&("{||"+cExample+"()}")
         case (cRight$"004")
             jExamples["UIComponents"][cExample]:=&("{||"+cExample+"()}")
-        case (cRight$"010")
+        case (cRight$"010|011")
             jExamples["DashBoard"][cExample]:=&("{||"+cExample+"()}")
         endcase
     next nExample

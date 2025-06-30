@@ -53,47 +53,47 @@ static procedure FWWebExExample_009()
     local nEmpresa as numeric
     local nEmpresas:=Len(aEmpresas) as numeric
 
-    local oPage as object
-    local oTable as object
-    local oTableDrillDown as object
+    local oFWWebExPage as object
+    local oFWWebExTable as object
+    local oFWWebExTableDrillDown as object
 
-    oTable:=WebExTable():New("Turnover por Empresa")
-    oTable:SetTitleBefore(.T.)
-    oTable:EnableDrillDown()
+    oFWWebExTable:=WebExTable():New("Turnover por Empresa")
+    oFWWebExTable:SetTitleBefore(.T.)
+    oFWWebExTable:EnableDrillDown()
 
-    oTable:AddColumnHeader("C&oacute;digo")
-    oTable:AddColumnHeader("Nome")
-    oTable:BuildHeader()
+    oFWWebExTable:AddColumnHeader("C&oacute;digo")
+    oFWWebExTable:AddColumnHeader("Nome")
+    oFWWebExTable:BuildHeader()
 
     for nEmpresa:=1 to nEmpresas
-        oTableDrillDown:=WebExTable():New()
-        oTableDrillDown:SetTitleBefore(.T.)
-        oTableDrillDown:AddColumnHeader("C&oacute;digo")
-        oTableDrillDown:AddColumnHeader("Nome")
-        oTableDrillDown:AddColumnHeader("% Turnover")
-        oTableDrillDown:BuildHeader()
+        oFWWebExTableDrillDown:=WebExTable():New()
+        oFWWebExTableDrillDown:SetTitleBefore(.T.)
+        oFWWebExTableDrillDown:AddColumnHeader("C&oacute;digo")
+        oFWWebExTableDrillDown:AddColumnHeader("Nome")
+        oFWWebExTableDrillDown:AddColumnHeader("% Turnover")
+        oFWWebExTableDrillDown:BuildHeader()
         aEval(aEmpresas[nEmpresa][3],{|aRowDrillDown|;
-                 oTableDrillDown:SetTitle("Turnover Departamento ["+aRowDrillDown[1]+"]");
-                ,oTableDrillDown:AddCell(aRowDrillDown[1]);
-                ,oTableDrillDown:AddCell(aRowDrillDown[2]);
-                ,oTableDrillDown:AddCell(aRowDrillDown[3]);
-                ,oTableDrillDown:BuildBodyRow();
+                 oFWWebExTableDrillDown:SetTitle("Turnover Departamento ["+aRowDrillDown[1]+"]");
+                ,oFWWebExTableDrillDown:AddCell(aRowDrillDown[1]);
+                ,oFWWebExTableDrillDown:AddCell(aRowDrillDown[2]);
+                ,oFWWebExTableDrillDown:AddCell(aRowDrillDown[3]);
+                ,oFWWebExTableDrillDown:BuildBodyRow();
             };
         )
-        cHTMLDrillDown:=oTableDrillDown:RenderHTML()
+        cHTMLDrillDown:=oFWWebExTableDrillDown:RenderHTML()
         cHTMLDrillDown:=WebExHelper():EscapeAll(cHTMLDrillDown)
-        FreeObj(@oTableDrillDown)
-        oTable:AddCell(aEmpresas[nEmpresa][1])
-        oTable:AddCell(aEmpresas[nEmpresa][2])
-        oTable:BuildBodyRow(cHTMLDrillDown)
+        FreeObj(@oFWWebExTableDrillDown)
+        oFWWebExTable:AddCell(aEmpresas[nEmpresa][1])
+        oFWWebExTable:AddCell(aEmpresas[nEmpresa][2])
+        oFWWebExTable:BuildBodyRow(cHTMLDrillDown)
     next nEmpresa
 
-    oPage:=WebExPage():New("Drill-down Exemplo")
-    oPage:AddChild(oTable)
-    cHTML:=oPage:RenderHTML()
+    oFWWebExPage:=WebExPage():New("Drill-down Exemplo")
+    oFWWebExPage:AddChild(oFWWebExTable)
+    cHTML:=oFWWebExPage:RenderHTML()
 
-    FreeObj(@oTable)
-    FreeObj(@oPage)
+    FreeObj(@oFWWebExTable)
+    FreeObj(@oFWWebExPage)
 
     FWFreeArray(@aEmpresas)
 

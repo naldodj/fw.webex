@@ -22,8 +22,14 @@ static procedure FWWebExExample_004()
         // ALERTA DE ERRO
         WITH WEBEXOBJECT CLASS WebExAlert ARGS "Erro ao carregar os dados do cliente.","danger"
         END WEBEXOBJECT
+        // SEPARADOR HORIZONTAL
+        WITH WEBEXOBJECT CLASS WebExHR
+        END WEBEXOBJECT
         // ALERTA DE SUCESSO
         WITH WEBEXOBJECT CLASS WebExAlert ARGS "Opera&ccedil;&atilde;o realizada com sucesso!","success"
+        END WEBEXOBJECT
+        // SEPARADOR HORIZONTAL
+        WITH WEBEXOBJECT CLASS WebExHR
         END WEBEXOBJECT
         // CARD COM TEXTO ENCORPADO
         WITH WEBEXOBJECT CLASS WebExCard ARGS "Cliente Encontrado",""
@@ -46,8 +52,20 @@ static procedure FWWebExExample_004()
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
+        // SEPARADOR HORIZONTAL
+        WITH WEBEXOBJECT CLASS WebExHR
+        END WEBEXOBJECT
         // CARD COM BODY
         WITH WEBEXOBJECT CLASS WebExCard ARGS "TITLE","BODY"
+        END WEBEXOBJECT
+        // SEPARADOR HORIZONTAL
+        WITH WEBEXOBJECT CLASS WebExHR
+        END WEBEXOBJECT
+        // CARD KPI
+        WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Turnover Geral","12,5%","bg-danger",WebExIcon():New("bi-bar-chart")
+        END WEBEXOBJECT
+        // SEPARADOR HORIZONTAL
+        WITH WEBEXOBJECT CLASS WebExHR
         END WEBEXOBJECT
         cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT

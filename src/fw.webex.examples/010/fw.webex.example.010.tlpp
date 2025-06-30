@@ -24,73 +24,74 @@ static procedure FWWebExExample_010()
 
     local cProcName:=ProcName() as character
 
-    local oPage as object
+    local oFWWebExPage as object
 
-    local oRow1 as object
-    local oRow2 as object
+    local oFWWebExRow1 as object
+    local oFWWebExRow2 as object
 
-    local oCol1 as object
-    local oCol2 as object
-    local oCol3 as object
-    local oCol4 as object
+    local oFWWebExCol1 as object
+    local oFWWebExCol2 as object
+    local oFWWebExCol3 as object
+    local oFWWebExCol4 as object
 
-    local oCardKPI as object
+    local oFWWebExCardKPI as object
 
     // KPI 1
-    oCol1:=WebExCol():New(4)
-    oCol1:AddChild(WebExCardKPI():New("Faturamento","R$ 125.000","bg-success",WebExIcon():New("bi-bar-chart")))
+    oFWWebExCol1:=WebExCol():New(4)
+    oFWWebExCardKPI:=WebExCardKPI():New("Faturamento","R$ 125.000","bg-success",WebExIcon():New("bi-bar-chart"))
+    oFWWebExCol1:AddChild(oFWWebExCardKPI)
 
     // KPI 2
-    oCol2:=WebExCol():New(4)
-    oCol2:AddClass("border-start")
-    oCol2:AddClass("border-secondary")
-    oCol2:AddClass("ps-3")
-    oCardKPI:=WebExCardKPI():New("Despesas","R$ 87.000","bg-danger",WebExIcon():New("bi-graph-up"))
-    oCol2:AddChild(oCardKPI)
+    oFWWebExCol2:=WebExCol():New(4)
+    oFWWebExCol2:AddClass("border-start")
+    oFWWebExCol2:AddClass("border-secondary")
+    oFWWebExCol2:AddClass("ps-3")
+    oFWWebExCardKPI:=WebExCardKPI():New("Despesas","R$ 87.000","bg-danger",WebExIcon():New("bi-graph-up"))
+    oFWWebExCol2:AddChild(oFWWebExCardKPI)
 
     // KPI 3
-    oCol3:=WebExCol():New(4)
-    oCol3:AddClass("border-start")
-    oCol3:AddClass("border-secondary")
-    oCol3:AddClass("ps-3")
-    oCardKPI:=WebExCardKPI():New("Outros","R$ 75.000","bg-info",WebExIcon():New("bi-currency-dollar"))
-    oCol3:AddChild(oCardKPI)
+    oFWWebExCol3:=WebExCol():New(4)
+    oFWWebExCol3:AddClass("border-start")
+    oFWWebExCol3:AddClass("border-secondary")
+    oFWWebExCol3:AddClass("ps-3")
+    oFWWebExCardKPI:=WebExCardKPI():New("Outros","R$ 75.000","bg-info",WebExIcon():New("bi-currency-dollar"))
+    oFWWebExCol3:AddChild(oFWWebExCardKPI)
 
-    oRow1:=WebExRow():New()
-    oRow1:AddChild(oCol1)
-    oRow1:AddChild(oCol2)
-    oRow1:AddChild(oCol3)
+    oFWWebExRow1:=WebExRow():New()
+    oFWWebExRow1:AddChild(oFWWebExCol1)
+    oFWWebExRow1:AddChild(oFWWebExCol2)
+    oFWWebExRow1:AddChild(oFWWebExCol3)
 
-    oCol3:=WebExCol():New(6)
-    oCardKPI:=WebExCardKPI():New("Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material"))
-    oCardKPI:SetIconBefore(.F.)
-    oCol3:AddChild(oCardKPI)
+    oFWWebExCol3:=WebExCol():New(6)
+    oFWWebExCardKPI:=WebExCardKPI():New("Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material"))
+    oFWWebExCardKPI:SetIconBefore(.F.)
+    oFWWebExCol3:AddChild(oFWWebExCardKPI)
 
-    oCol4:=WebExCol():New(6)
-    oCardKPI:=WebExCardKPI():New("Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material"))
-    oCardKPI:SetIconBefore(.F.)
-    oCol4:AddChild(oCardKPI)
+    oFWWebExCol4:=WebExCol():New(6)
+    oFWWebExCardKPI:=WebExCardKPI():New("Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material"))
+    oFWWebExCardKPI:SetIconBefore(.F.)
+    oFWWebExCol4:AddChild(oFWWebExCardKPI)
 
     // Segunda linha com KPI
-    oRow2:=WebExRow():New()
-    oRow2:AddChild(oCol3)
-    oRow2:AddChild(oCol4)
+    oFWWebExRow2:=WebExRow():New()
+    oFWWebExRow2:AddChild(oFWWebExCol3)
+    oFWWebExRow2:AddChild(oFWWebExCol4)
 
-    oPage:=WebExPage():New("KPI Dashboard")
-    oPage:AddChild(oRow1)
-    oPage:AddChild(WebExHr():New()) // separador horizontal
-    oPage:AddChild(oRow2)
+    oFWWebExPage:=WebExPage():New("KPI Dashboard")
+    oFWWebExPage:AddChild(oFWWebExRow1)
+    oFWWebExPage:AddChild(WebExHR():New()) // separador horizontal
+    oFWWebExPage:AddChild(oFWWebExRow2)
 
-    cHTML:=oPage:RenderHTML()
+    cHTML:=oFWWebExPage:RenderHTML()
 
-    FreeObj(@oCardKPI)
-    FreeObj(@oRow1)
-    FreeObj(@oRow2)
-    FreeObj(@oCol1)
-    FreeObj(@oCol2)
-    FreeObj(@oCol3)
-    FreeObj(@oCol4)
-    FreeObj(@oPage)
+    FreeObj(@oFWWebExCardKPI)
+    FreeObj(@oFWWebExRow1)
+    FreeObj(@oFWWebExRow2)
+    FreeObj(@oFWWebExCol1)
+    FreeObj(@oFWWebExCol2)
+    FreeObj(@oFWWebExCol3)
+    FreeObj(@oFWWebExCol4)
+    FreeObj(@oFWWebExPage)
 
     cHTML:=EncodeUTF8(cHTML)
     if (!lIsDir("\web\tmp\"))

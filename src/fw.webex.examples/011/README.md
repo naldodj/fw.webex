@@ -1,0 +1,83 @@
+# 💡 Exemplo de uso (11)
+
+```advpl
+#include "fw.webex.th"
+
+using namespace FWWebEx
+
+procedure u_FWWebExExample_011()
+    FWExampleTools():Execute({||FWWebExExample_011()},ProcName(),.F.)
+return
+
+static procedure FWWebExExample_011()
+
+    local cHTML as character
+    local cHTMLFile as character
+
+    local cProcName:=ProcName() as character
+
+    local oFWWebExPage as object
+
+    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName+" (KPI Dashboard)"
+        // ROW 1
+        WITH WEBEXOBJECT CLASS WebExRow
+            // KPI 1
+            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Faturamento","R$ 125.000","bg-success",WebExIcon():New("bi-bar-chart")
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+            // KPI 2
+            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                .:AddClass("border-start")
+                .:AddClass("border-secondary")
+                .:AddClass("ps-3")
+                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Despesas","R$ 87.000","bg-danger",WebExIcon():New("bi-graph-up")
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+            // KPI 3
+            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                .:AddClass("border-start")
+                .:AddClass("border-secondary")
+                .:AddClass("ps-3")
+                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Outros","R$ 75.000","bg-info",WebExIcon():New("bi-currency-dollar")
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExHR() // separador horizontal
+        END WEBEXOBJECT
+        // ROW 2
+        WITH WEBEXOBJECT CLASS WebExRow
+            // KPI 1
+            WITH WEBEXOBJECT CLASS WebExCol ARGS 6
+                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material")
+                    .:SetIconBefore(.F.)
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+            // KPI 2
+            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                .:AddClass("border-start")
+                .:AddClass("border-secondary")
+                .:AddClass("ps-3")
+                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material")
+                    .:SetIconBefore(.F.)
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+        cHTML:=oFWWebExPage:RenderHTML()
+    END WEBEXOBJECT
+
+    WEBEXOBJECT CLEAN
+
+    cHTML:=EncodeUTF8(cHTML)
+    if (!lIsDir("\web\tmp\"))
+        FWMakeDir("\web\tmp\",.F.)
+    endif
+    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
+    MemoWrite(cHTMLFile,cHTML)
+
+    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+
+    fErase(cHTMLFile)
+
+return
+````
