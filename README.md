@@ -225,6 +225,46 @@ Toda ajuda é bem-vinda! A ideia aqui é **evoluir juntos** como comunidade Prot
 
 ---
 
+## 🛠️ Como Participar
+
+Contribuições são bem-vindas! Siga estas diretrizes para garantir a consistência do código:
+
+🧾 Estilo de Codificação
+
+* Indentação: use 4 espaços por nível de indentação.
+* Parênteses, chaves, colchetes: sempre com espaçamento correto e estilo claro.
+* return: deve sempre iniciar na mesma coluna do nível atual (sem recuo adicional).
+* Nomes de métodos e variáveis: utilize nomes descritivos em inglês, com camelCase para métodos e snake_case para variáveis locais se necessário.
+*  Classes: o nome deve ser prefixado por WebEx e descrever a função do componente (ex: WebExForm, WebExTable, WebExCardKPI).
+*  Arquivos: devem estar organizados por tipo (ex: forms/, tables/, components/) dentro de src/fw.webex.
+
+🧪 Contribuindo com Novos Exemplos
+
+* Crie uma nova função com nome u_FWWebExExample_XXX() onde XXX é o próximo número disponível.
+* Armazene o exemplo em src/fw.webex.examples/.
+* Mantenha a mesma estrutura dos exemplos existentes:
+
+Página HTML gerada via TL++.
+
+Uso de objetos WebEx*.
+
+Interface limpa e responsiva.
+
+📎 Convenções de Commit
+
+Use o padrão (Harbour: [How to Participate](https://github.com/naldodj/naldodj-harbour-core#how-to-participate):
+
+```text
+2025-07-01 HH:MM UTC seu_nome (contexto)
+  + src/...      ; Adição
+  - src/...      ; Remoção
+  * src/...      ; Alteração
+  ! src/...      ; Correção
+  % src/...      ; Otimização
+```
+
+---
+
 ## ✨ Visão
 
 > Acreditamos que dá pra evoluir mantendo o que o Protheus tem de melhor: a produtividade.
