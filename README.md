@@ -254,7 +254,7 @@ Interface limpa e responsiva.
 
 📎 Convenções de Commit
 
-Use o padrão (Harbour: [How to Participate](https://github.com/naldodj/naldodj-harbour-core#how-to-participate):
+Utilizamos padrão Harbour: [How to Participate](https://github.com/naldodj/naldodj-harbour-core#how-to-participate)
 
 ```text
 2025-07-01 HH:MM UTC seu_nome (contexto)
