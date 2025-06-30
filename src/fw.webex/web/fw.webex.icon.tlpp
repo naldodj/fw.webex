@@ -1,0 +1,90 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExIcon from WebExControl
+
+    public data cIcon as character
+    public data cIconType as character
+
+    public method New(cIcon as character,cIconType as character) as object
+
+    public method SetIconType(cIconType as character) as object
+    public method SetSize(cSize as character) as object
+    public method SetIcon(cIcon as character) as object
+
+endclass
+
+method New(cIcon,cIconType) class WebExIcon
+    paramtype 1 var cIcon as character
+    paramtype 2 var cIconType as character optional default "bootstrap"
+    _Super:New("i")
+    ::SetIconType(cIconType)
+    ::SetIcon(cIcon,cIconType)
+return(self)
+
+method SetIconType(cIconType) class WebExIcon
+    ::cIconType:=Lower(AllTrim(cIconType))
+return(self)
+
+method SetIcon(cIcon,cIconType) class WebExIcon
+
+    paramtype 1 var cIcon as character
+    paramtype 2 var cIconType as character optional default ::cIconType
+
+    cIconType:=Lower(cIconType)
+
+    // Remove classes anteriores
+    if (::cIconType!=cIconType)
+        do case
+        case (::cIconType=="bootstrap")
+            ::RemoveClass("bi")
+            ::RemoveClass(::cIcon)
+        case (::cIconType=="material")
+            ::RemoveClass("material-icons")
+        case (::cIconType=="fontawesome")
+            ::RemoveClass("fa")
+            ::RemoveClass(::cIcon)
+        endcase
+        ::cIconType:=cIconType
+    endif
+
+    ::cIcon:=cIcon
+
+    // Adiciona classes novas conforme tipo
+    do case
+    case (::cIconType=="bootstrap")
+        ::AddClass("bi")
+        ::AddClass(::cIcon)
+    case (::cIconType=="material")
+        ::AddClass("material-icons")
+        ::SetContent(::cIcon)
+    case (::cIconType=="fontawesome")
+        ::AddClass("fa")
+        ::AddClass(::cIcon)
+    endcase
+
+return(self)
+
+method SetSize(cSize) class WebExIcon
+    paramtype 1 var cSize as character
+    if (::cIconType=="bootstrap")
+        ::AddClass("fs-"+cSize)
+    elseif (::cIconType=="fontawesome")
+        // aceita 1x, 2x, 3x ate 10x (validar antes?)
+        ::AddClass("fa-"+cSize)
+    elseif (::cIconType=="material")
+        ::AddClass("md-"+cSize)
+    endif
+return(self)

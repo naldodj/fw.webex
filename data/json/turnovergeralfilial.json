@@ -1,0 +1,774 @@
+{
+    "method": "get",
+    "path": "/userRestCrudADVPL/codModel/",
+    "PageNumber": 1,
+    "RowspPage": 36,
+    "model": "TURNOVERGERALFILIAL",
+    "table": {
+        "alias": "SCGN0000E6",
+        "name": "",
+        "description": "",
+        "index": "PERIODO+RA_FILIAL",
+        "items": [
+            {
+                "detail": {
+                    "row": 1,
+                    "HasError": false,
+                    "key": "20230101",
+                    "recNo": 1,
+                    "items": {
+                        "codPeriodo": "202301",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 198,
+                        "totalFuncionariosAdmitidos": 20,
+                        "totalFuncionariosMes": 218,
+                        "totalFuncionariosDemitidos": 4,
+                        "totalFuncionariosFinalMes": 214,
+                        "turnOverGeral": 6.06,
+                        "turnOverDemissoes": 1.01
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 2,
+                    "HasError": false,
+                    "key": "20230102",
+                    "recNo": 13,
+                    "items": {
+                        "codPeriodo": "202301",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 185,
+                        "totalFuncionariosAdmitidos": 110,
+                        "totalFuncionariosMes": 295,
+                        "totalFuncionariosDemitidos": 13,
+                        "totalFuncionariosFinalMes": 282,
+                        "turnOverGeral": 33.24,
+                        "turnOverDemissoes": 3.51
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 3,
+                    "HasError": false,
+                    "key": "20230103",
+                    "recNo": 25,
+                    "items": {
+                        "codPeriodo": "202301",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 155,
+                        "totalFuncionariosAdmitidos": 6,
+                        "totalFuncionariosMes": 161,
+                        "totalFuncionariosDemitidos": 3,
+                        "totalFuncionariosFinalMes": 158,
+                        "turnOverGeral": 2.9,
+                        "turnOverDemissoes": 0.97
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 4,
+                    "HasError": false,
+                    "key": "20230201",
+                    "recNo": 2,
+                    "items": {
+                        "codPeriodo": "202302",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 214,
+                        "totalFuncionariosAdmitidos": 103,
+                        "totalFuncionariosMes": 317,
+                        "totalFuncionariosDemitidos": 12,
+                        "totalFuncionariosFinalMes": 305,
+                        "turnOverGeral": 26.87,
+                        "turnOverDemissoes": 2.8
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 5,
+                    "HasError": false,
+                    "key": "20230202",
+                    "recNo": 14,
+                    "items": {
+                        "codPeriodo": "202302",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 282,
+                        "totalFuncionariosAdmitidos": 23,
+                        "totalFuncionariosMes": 305,
+                        "totalFuncionariosDemitidos": 17,
+                        "totalFuncionariosFinalMes": 288,
+                        "turnOverGeral": 7.09,
+                        "turnOverDemissoes": 3.01
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 6,
+                    "HasError": false,
+                    "key": "20230203",
+                    "recNo": 26,
+                    "items": {
+                        "codPeriodo": "202302",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 158,
+                        "totalFuncionariosAdmitidos": 21,
+                        "totalFuncionariosMes": 179,
+                        "totalFuncionariosDemitidos": 5,
+                        "totalFuncionariosFinalMes": 174,
+                        "turnOverGeral": 8.23,
+                        "turnOverDemissoes": 1.58
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 7,
+                    "HasError": false,
+                    "key": "20230301",
+                    "recNo": 3,
+                    "items": {
+                        "codPeriodo": "202303",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 305,
+                        "totalFuncionariosAdmitidos": 29,
+                        "totalFuncionariosMes": 334,
+                        "totalFuncionariosDemitidos": 87,
+                        "totalFuncionariosFinalMes": 247,
+                        "turnOverGeral": 19.02,
+                        "turnOverDemissoes": 14.26
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 8,
+                    "HasError": false,
+                    "key": "20230302",
+                    "recNo": 15,
+                    "items": {
+                        "codPeriodo": "202303",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 288,
+                        "totalFuncionariosAdmitidos": 49,
+                        "totalFuncionariosMes": 337,
+                        "totalFuncionariosDemitidos": 28,
+                        "totalFuncionariosFinalMes": 309,
+                        "turnOverGeral": 13.37,
+                        "turnOverDemissoes": 4.86
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 9,
+                    "HasError": false,
+                    "key": "20230303",
+                    "recNo": 27,
+                    "items": {
+                        "codPeriodo": "202303",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 174,
+                        "totalFuncionariosAdmitidos": 10,
+                        "totalFuncionariosMes": 184,
+                        "totalFuncionariosDemitidos": 7,
+                        "totalFuncionariosFinalMes": 177,
+                        "turnOverGeral": 4.89,
+                        "turnOverDemissoes": 2.01
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 10,
+                    "HasError": false,
+                    "key": "20230401",
+                    "recNo": 4,
+                    "items": {
+                        "codPeriodo": "202304",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 247,
+                        "totalFuncionariosAdmitidos": 40,
+                        "totalFuncionariosMes": 287,
+                        "totalFuncionariosDemitidos": 10,
+                        "totalFuncionariosFinalMes": 277,
+                        "turnOverGeral": 10.12,
+                        "turnOverDemissoes": 2.02
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 11,
+                    "HasError": false,
+                    "key": "20230402",
+                    "recNo": 16,
+                    "items": {
+                        "codPeriodo": "202304",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 309,
+                        "totalFuncionariosAdmitidos": 26,
+                        "totalFuncionariosMes": 335,
+                        "totalFuncionariosDemitidos": 11,
+                        "totalFuncionariosFinalMes": 324,
+                        "turnOverGeral": 5.99,
+                        "turnOverDemissoes": 1.78
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 12,
+                    "HasError": false,
+                    "key": "20230403",
+                    "recNo": 28,
+                    "items": {
+                        "codPeriodo": "202304",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 177,
+                        "totalFuncionariosAdmitidos": 16,
+                        "totalFuncionariosMes": 193,
+                        "totalFuncionariosDemitidos": 7,
+                        "totalFuncionariosFinalMes": 186,
+                        "turnOverGeral": 6.5,
+                        "turnOverDemissoes": 1.98
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 13,
+                    "HasError": false,
+                    "key": "20230501",
+                    "recNo": 5,
+                    "items": {
+                        "codPeriodo": "202305",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 277,
+                        "totalFuncionariosAdmitidos": 18,
+                        "totalFuncionariosMes": 295,
+                        "totalFuncionariosDemitidos": 12,
+                        "totalFuncionariosFinalMes": 283,
+                        "turnOverGeral": 5.42,
+                        "turnOverDemissoes": 2.17
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 14,
+                    "HasError": false,
+                    "key": "20230502",
+                    "recNo": 17,
+                    "items": {
+                        "codPeriodo": "202305",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 324,
+                        "totalFuncionariosAdmitidos": 17,
+                        "totalFuncionariosMes": 341,
+                        "totalFuncionariosDemitidos": 18,
+                        "totalFuncionariosFinalMes": 323,
+                        "turnOverGeral": 5.4,
+                        "turnOverDemissoes": 2.78
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 15,
+                    "HasError": false,
+                    "key": "20230503",
+                    "recNo": 29,
+                    "items": {
+                        "codPeriodo": "202305",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 186,
+                        "totalFuncionariosAdmitidos": 24,
+                        "totalFuncionariosMes": 210,
+                        "totalFuncionariosDemitidos": 20,
+                        "totalFuncionariosFinalMes": 190,
+                        "turnOverGeral": 11.83,
+                        "turnOverDemissoes": 5.38
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 16,
+                    "HasError": false,
+                    "key": "20230601",
+                    "recNo": 6,
+                    "items": {
+                        "codPeriodo": "202306",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 283,
+                        "totalFuncionariosAdmitidos": 26,
+                        "totalFuncionariosMes": 309,
+                        "totalFuncionariosDemitidos": 8,
+                        "totalFuncionariosFinalMes": 301,
+                        "turnOverGeral": 6.01,
+                        "turnOverDemissoes": 1.41
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 17,
+                    "HasError": false,
+                    "key": "20230602",
+                    "recNo": 18,
+                    "items": {
+                        "codPeriodo": "202306",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 323,
+                        "totalFuncionariosAdmitidos": 26,
+                        "totalFuncionariosMes": 349,
+                        "totalFuncionariosDemitidos": 9,
+                        "totalFuncionariosFinalMes": 340,
+                        "turnOverGeral": 5.42,
+                        "turnOverDemissoes": 1.39
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 18,
+                    "HasError": false,
+                    "key": "20230603",
+                    "recNo": 30,
+                    "items": {
+                        "codPeriodo": "202306",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 190,
+                        "totalFuncionariosAdmitidos": 11,
+                        "totalFuncionariosMes": 201,
+                        "totalFuncionariosDemitidos": 5,
+                        "totalFuncionariosFinalMes": 196,
+                        "turnOverGeral": 4.21,
+                        "turnOverDemissoes": 1.32
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 19,
+                    "HasError": false,
+                    "key": "20230701",
+                    "recNo": 7,
+                    "items": {
+                        "codPeriodo": "202307",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 301,
+                        "totalFuncionariosAdmitidos": 13,
+                        "totalFuncionariosMes": 314,
+                        "totalFuncionariosDemitidos": 11,
+                        "totalFuncionariosFinalMes": 303,
+                        "turnOverGeral": 3.99,
+                        "turnOverDemissoes": 1.83
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 20,
+                    "HasError": false,
+                    "key": "20230702",
+                    "recNo": 19,
+                    "items": {
+                        "codPeriodo": "202307",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 340,
+                        "totalFuncionariosAdmitidos": 17,
+                        "totalFuncionariosMes": 357,
+                        "totalFuncionariosDemitidos": 110,
+                        "totalFuncionariosFinalMes": 247,
+                        "turnOverGeral": 18.68,
+                        "turnOverDemissoes": 16.18
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 21,
+                    "HasError": false,
+                    "key": "20230703",
+                    "recNo": 31,
+                    "items": {
+                        "codPeriodo": "202307",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 196,
+                        "totalFuncionariosAdmitidos": 9,
+                        "totalFuncionariosMes": 205,
+                        "totalFuncionariosDemitidos": 2,
+                        "totalFuncionariosFinalMes": 203,
+                        "turnOverGeral": 2.81,
+                        "turnOverDemissoes": 0.51
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 22,
+                    "HasError": false,
+                    "key": "20230801",
+                    "recNo": 8,
+                    "items": {
+                        "codPeriodo": "202308",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 303,
+                        "totalFuncionariosAdmitidos": 20,
+                        "totalFuncionariosMes": 323,
+                        "totalFuncionariosDemitidos": 6,
+                        "totalFuncionariosFinalMes": 317,
+                        "turnOverGeral": 4.29,
+                        "turnOverDemissoes": 0.99
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 23,
+                    "HasError": false,
+                    "key": "20230802",
+                    "recNo": 20,
+                    "items": {
+                        "codPeriodo": "202308",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 247,
+                        "totalFuncionariosAdmitidos": 21,
+                        "totalFuncionariosMes": 268,
+                        "totalFuncionariosDemitidos": 13,
+                        "totalFuncionariosFinalMes": 255,
+                        "turnOverGeral": 6.88,
+                        "turnOverDemissoes": 2.63
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 24,
+                    "HasError": false,
+                    "key": "20230803",
+                    "recNo": 32,
+                    "items": {
+                        "codPeriodo": "202308",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 203,
+                        "totalFuncionariosAdmitidos": 24,
+                        "totalFuncionariosMes": 227,
+                        "totalFuncionariosDemitidos": 11,
+                        "totalFuncionariosFinalMes": 216,
+                        "turnOverGeral": 8.62,
+                        "turnOverDemissoes": 2.71
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 25,
+                    "HasError": false,
+                    "key": "20230901",
+                    "recNo": 9,
+                    "items": {
+                        "codPeriodo": "202309",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 317,
+                        "totalFuncionariosAdmitidos": 26,
+                        "totalFuncionariosMes": 343,
+                        "totalFuncionariosDemitidos": 14,
+                        "totalFuncionariosFinalMes": 329,
+                        "turnOverGeral": 6.31,
+                        "turnOverDemissoes": 2.21
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 26,
+                    "HasError": false,
+                    "key": "20230902",
+                    "recNo": 21,
+                    "items": {
+                        "codPeriodo": "202309",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 255,
+                        "totalFuncionariosAdmitidos": 20,
+                        "totalFuncionariosMes": 275,
+                        "totalFuncionariosDemitidos": 13,
+                        "totalFuncionariosFinalMes": 262,
+                        "turnOverGeral": 6.47,
+                        "turnOverDemissoes": 2.55
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 27,
+                    "HasError": false,
+                    "key": "20230903",
+                    "recNo": 33,
+                    "items": {
+                        "codPeriodo": "202309",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 216,
+                        "totalFuncionariosAdmitidos": 10,
+                        "totalFuncionariosMes": 226,
+                        "totalFuncionariosDemitidos": 12,
+                        "totalFuncionariosFinalMes": 214,
+                        "turnOverGeral": 5.09,
+                        "turnOverDemissoes": 2.78
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 28,
+                    "HasError": false,
+                    "key": "20231001",
+                    "recNo": 10,
+                    "items": {
+                        "codPeriodo": "202310",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 329,
+                        "totalFuncionariosAdmitidos": 61,
+                        "totalFuncionariosMes": 390,
+                        "totalFuncionariosDemitidos": 8,
+                        "totalFuncionariosFinalMes": 382,
+                        "turnOverGeral": 10.49,
+                        "turnOverDemissoes": 1.22
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 29,
+                    "HasError": false,
+                    "key": "20231002",
+                    "recNo": 22,
+                    "items": {
+                        "codPeriodo": "202310",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 262,
+                        "totalFuncionariosAdmitidos": 30,
+                        "totalFuncionariosMes": 292,
+                        "totalFuncionariosDemitidos": 7,
+                        "totalFuncionariosFinalMes": 285,
+                        "turnOverGeral": 7.06,
+                        "turnOverDemissoes": 1.34
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 30,
+                    "HasError": false,
+                    "key": "20231003",
+                    "recNo": 34,
+                    "items": {
+                        "codPeriodo": "202310",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 214,
+                        "totalFuncionariosAdmitidos": 17,
+                        "totalFuncionariosMes": 231,
+                        "totalFuncionariosDemitidos": 2,
+                        "totalFuncionariosFinalMes": 229,
+                        "turnOverGeral": 4.44,
+                        "turnOverDemissoes": 0.47
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 31,
+                    "HasError": false,
+                    "key": "20231101",
+                    "recNo": 11,
+                    "items": {
+                        "codPeriodo": "202311",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 382,
+                        "totalFuncionariosAdmitidos": 6,
+                        "totalFuncionariosMes": 388,
+                        "totalFuncionariosDemitidos": 0,
+                        "totalFuncionariosFinalMes": 388,
+                        "turnOverGeral": 0.79,
+                        "turnOverDemissoes": 0
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 32,
+                    "HasError": false,
+                    "key": "20231102",
+                    "recNo": 23,
+                    "items": {
+                        "codPeriodo": "202311",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 285,
+                        "totalFuncionariosAdmitidos": 2,
+                        "totalFuncionariosMes": 287,
+                        "totalFuncionariosDemitidos": 0,
+                        "totalFuncionariosFinalMes": 287,
+                        "turnOverGeral": 0.35,
+                        "turnOverDemissoes": 0
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 33,
+                    "HasError": false,
+                    "key": "20231103",
+                    "recNo": 35,
+                    "items": {
+                        "codPeriodo": "202311",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 229,
+                        "totalFuncionariosAdmitidos": 1,
+                        "totalFuncionariosMes": 230,
+                        "totalFuncionariosDemitidos": 0,
+                        "totalFuncionariosFinalMes": 230,
+                        "turnOverGeral": 0.22,
+                        "turnOverDemissoes": 0
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 34,
+                    "HasError": false,
+                    "key": "20231201",
+                    "recNo": 12,
+                    "items": {
+                        "codPeriodo": "202312",
+                        "codFilial": "01",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 388,
+                        "totalFuncionariosAdmitidos": 0,
+                        "totalFuncionariosMes": 388,
+                        "totalFuncionariosDemitidos": 0,
+                        "totalFuncionariosFinalMes": 388,
+                        "turnOverGeral": 0,
+                        "turnOverDemissoes": 0
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 35,
+                    "HasError": false,
+                    "key": "20231202",
+                    "recNo": 24,
+                    "items": {
+                        "codPeriodo": "202312",
+                        "codFilial": "02",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 287,
+                        "totalFuncionariosAdmitidos": 0,
+                        "totalFuncionariosMes": 287,
+                        "totalFuncionariosDemitidos": 0,
+                        "totalFuncionariosFinalMes": 287,
+                        "turnOverGeral": 0,
+                        "turnOverDemissoes": 0
+                    }
+                }
+            },
+            {
+                "detail": {
+                    "row": 36,
+                    "HasError": false,
+                    "key": "20231203",
+                    "recNo": 36,
+                    "items": {
+                        "codPeriodo": "202312",
+                        "codFilial": "03",
+                        "totalTransferenciasSaida": 0,
+                        "totalTransferenciasEntrada": 0,
+                        "totalFuncionariosInicioMes": 230,
+                        "totalFuncionariosAdmitidos": 0,
+                        "totalFuncionariosMes": 230,
+                        "totalFuncionariosDemitidos": 0,
+                        "totalFuncionariosFinalMes": 230,
+                        "turnOverGeral": 0,
+                        "turnOverDemissoes": 0
+                    }
+                }
+            }
+        ]
+    },
+    "hasNextPage": false,
+    "TotalRows": 36,
+    "TotalPages": 1
+}

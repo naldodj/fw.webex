@@ -28,7 +28,7 @@ class WebExTable from WebExControl
 
     public method New(cTitle) as object
     public method SetTitle(cTitle) as object
-    public method SeTitleBefore(lTitleBefore) as object
+    public method SetTitleBefore(lTitleBefore) as object
     public method AddColumnHeader(cLabel as character) as object
     public method BuildHeader() as object
     public method AddCell(xValue as variant) as object
@@ -42,7 +42,7 @@ method New(cTitle) class WebExTable
     paramtype 1 var cTitle as character optional
     _Super:New("table")
     ::SetTitle(cTitle)
-    ::SeTitleBefore(.T.)
+    ::SetTitleBefore(.T.)
     ::AddClass("table")
     ::AddClass("table-striped")
     ::AddClass("table-hover")
@@ -58,7 +58,7 @@ method SetTitle(cTitle) class WebExTable
     ::cTitle:=cTitle
 return(self)
 
-method SeTitleBefore(lTitleBefore) class WebExTable
+method SetTitleBefore(lTitleBefore) class WebExTable
     paramtype 1 var lTitleBefore as logical optional default .F.
     ::lTitleBefore:=lTitleBefore
 return(self)

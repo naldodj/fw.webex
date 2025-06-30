@@ -1,0 +1,33 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExHr from WebExControl
+    public method New() as object
+endclass
+
+method New() class WebExHr
+    _Super:New("hr")
+    ::SetAttr("class","my-4")
+return(self)
+
+class WebExVr from WebExControl
+    public method New() as object
+endclass
+
+method New() class WebExVr
+    _Super:New("div")
+    ::SetAttr("class","vr mx-2")
+    ::SetAttr("style","height: 100%; border-left: 1px solid #dee2e6;")
+return(self)

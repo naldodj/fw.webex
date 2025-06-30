@@ -1,0 +1,106 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+#include "fw.webex.th"
+
+using namespace FWWebEx
+
+procedure u_FWWebExExample_010()
+    FWExampleTools():Execute({||FWWebExExample_010()},ProcName(),.F.)
+return
+
+static procedure FWWebExExample_010()
+
+    local cHTML as character
+    local cHTMLFile as character
+
+    local cProcName:=ProcName() as character
+
+    local oPage as object
+
+    local oRow1 as object
+    local oRow2 as object
+
+    local oCol1 as object
+    local oCol2 as object
+    local oCol3 as object
+    local oCol4 as object
+
+    local oCardKPI as object
+
+    // KPI 1
+    oCol1:=WebExCol():New(4)
+    oCol1:AddChild(WebExCardKPI():New("Faturamento","R$ 125.000","bg-success",WebExIcon():New("bi-bar-chart")))
+
+    // KPI 2
+    oCol2:=WebExCol():New(4)
+    oCol2:AddClass("border-start")
+    oCol2:AddClass("border-secondary")
+    oCol2:AddClass("ps-3")
+    oCardKPI:=WebExCardKPI():New("Despesas","R$ 87.000","bg-danger",WebExIcon():New("bi-graph-up"))
+    oCol2:AddChild(oCardKPI)
+
+    // KPI 3
+    oCol3:=WebExCol():New(4)
+    oCol3:AddClass("border-start")
+    oCol3:AddClass("border-secondary")
+    oCol3:AddClass("ps-3")
+    oCardKPI:=WebExCardKPI():New("Outros","R$ 75.000","bg-info",WebExIcon():New("bi-currency-dollar"))
+    oCol3:AddChild(oCardKPI)
+
+    oRow1:=WebExRow():New()
+    oRow1:AddChild(oCol1)
+    oRow1:AddChild(oCol2)
+    oRow1:AddChild(oCol3)
+
+    oCol3:=WebExCol():New(6)
+    oCardKPI:=WebExCardKPI():New("Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material"))
+    oCardKPI:SetIconBefore(.F.)
+    oCol3:AddChild(oCardKPI)
+
+    oCol4:=WebExCol():New(6)
+    oCardKPI:=WebExCardKPI():New("Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material"))
+    oCardKPI:SetIconBefore(.F.)
+    oCol4:AddChild(oCardKPI)
+
+    // Segunda linha com KPI
+    oRow2:=WebExRow():New()
+    oRow2:AddChild(oCol3)
+    oRow2:AddChild(oCol4)
+
+    oPage:=WebExPage():New("KPI Dashboard")
+    oPage:AddChild(oRow1)
+    oPage:AddChild(WebExHr():New()) // separador horizontal
+    oPage:AddChild(oRow2)
+
+    cHTML:=oPage:RenderHTML()
+
+    FreeObj(@oCardKPI)
+    FreeObj(@oRow1)
+    FreeObj(@oRow2)
+    FreeObj(@oCol1)
+    FreeObj(@oCol2)
+    FreeObj(@oCol3)
+    FreeObj(@oCol4)
+    FreeObj(@oPage)
+
+    cHTML:=EncodeUTF8(cHTML)
+    if (!lIsDir("\web\tmp\"))
+        FWMakeDir("\web\tmp\",.F.)
+    endif
+    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
+    MemoWrite(cHTMLFile,cHTML)
+
+    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+
+    fErase(cHTMLFile)
+
+return

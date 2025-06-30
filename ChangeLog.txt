@@ -3,6 +3,29 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-30 17:45 UTC naldodj (New Feature)
+  + data/json/turnovergeralfuncionarios.json
+  + data/scripts/ps1/turnovergeralfuncionarios.ps1
+  + src/fw.webex/web/fw.webex.cardkpi.tlpp
+  + src/fw.webex/web/fw.webex.gridsystem.tlpp
+  + src/fw.webex/web/fw.webex.rules.tlpp
+  + src/fw.webex.examples/010/README.md
+  + src/resource/fwwebex_banner_linkedin.png
+  + src/resource/fwwebex_banner.png
+  + src/resource/fwwebex_logo.png
+  + data/json/turnovergeralcentrodecusto.json
+  + data/json/turnovergeralempresa.json
+  + data/json/turnovergeralfilial.json
+  + data/json/turnovergeralfuncoes.json
+  + src/fw.webex/web/fw.webex.icon.tlpp
+  + src/fw.webex.examples/010/fw.webex.example.010.tlpp
+  * src/fw.webex/web/fw.webex.page.tlpp
+  * src/fw.webex/web/fw.webex.table.tlpp
+  * src/fw.webex.examples/000/fw.webex.example.000.tlpp
+  * src/fw.webex.examples/004/fw.webex.example.004.tlpp
+  * src/fw.webex.examples/009/fw.webex.example.009.tlpp
+  * src/fw.webex.examples/009/README.md
+
 2025-06-29 13:58 UTC naldodj (Create the Menu by Category)
   * src/fw.webex.examples/000/fw.webex.example.000.tlpp
 

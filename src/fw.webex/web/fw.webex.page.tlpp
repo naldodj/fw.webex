@@ -229,9 +229,29 @@ method RenderHTML() class WebExPage
                 END WEBEXOBJECT
             //Bootstrap Optional JavaScript
 ***************************************************************************************************************************
-            //Materialize
+            //Bootstrap Icons
                 WITH WEBEXOBJECT CLASS WebExControl TYPE !--
-                    .:SetContent("https://materializecss.com/icons.html")
+                    .:SetContent("Bootstrap Icons")
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExControl TYPE link
+                    .:SetAttr("href","https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css")
+                    .:SetAttr("rel","stylesheet")
+                END WEBEXOBJECT
+            //Bootstrao Icons
+***************************************************************************************************************************
+            //font-awesome Icons
+                WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                    .:SetContent("font-awesome Icons")
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExControl TYPE link
+                    .:SetAttr("href","https://cdnjs.cloudflare.com/ajax/libs/font-awesome/latest/css/all.min.css")
+                    .:SetAttr("rel","stylesheet")
+                END WEBEXOBJECT
+            //font-awesome Icons
+***************************************************************************************************************************
+            //Materialize Icons
+                WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                    .:SetContent("Materialize Icons :: https://materializecss.com/icons.html")
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExControl TYPE link
                     .:SetAttr("href","https://fonts.googleapis.com/icon?family=Material+Icons")

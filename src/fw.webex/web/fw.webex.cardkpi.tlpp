@@ -1,0 +1,101 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExCardKPI from WebExControl
+
+    public data cTitle as character
+    public data cValue as character
+    public data cTheme as character
+
+    public data lIconBefore as logical
+
+    public data oIcon as character
+
+    public method New(cTitle as character,cValue as character,cTheme as character,oIcon as object) as object
+    public method SetIconBefore(lIconBefore) as object
+    public method RenderHTML() as character
+
+endclass
+
+method New(cTitle,cValue,cTheme,oIcon) class WebExCardKPI
+
+    paramtype 1 var cTitle as character optional default ""
+    paramtype 2 var cValue as character optional default ""
+    paramtype 3 var cTheme as character optional default "bg-primary"
+    paramtype 4 var oIcon as object optional
+
+    _Super:New("div")
+
+    ::cTitle:=cTitle
+    ::cValue:=cValue
+    ::cTheme:=cTheme
+    ::oIcon:=oIcon
+
+    ::AddClass("card")
+    ::AddClass("mb-3")
+    ::AddClass("border-secondary")
+    ::AddClass("text-light")
+    if (!Empty(::cTheme))
+        ::AddClass(::cTheme)
+    endif
+
+    ::SetIconBefore()
+
+return(self)
+
+method SetIconBefore(lIconBefore) class WebExCardKPI
+    paramtype 1 var lIconBefore as logical optional default .T.
+    ::lIconBefore:=lIconBefore
+return(self)
+
+method RenderHTML() class WebExCardKPI
+
+    local cHTML as character
+
+    local oBody as object
+    local oTitle as object
+    local oText as object
+    local oStrong as object
+
+    oStrong:=WebExStrong():New(::cTitle)
+
+    oTitle:=WebExControl():New("h5")
+    oTitle:AddClass("card-title")
+    if (::lIconBefore)
+        if (!Empty(::oIcon))
+            oTitle:AddChild(::oIcon)
+        endif
+    endif
+    oTitle:AddChild(oStrong)
+    if (!::lIconBefore)
+        if (!Empty(::oIcon))
+            oTitle:AddChild(::oIcon)
+        endif
+    endif
+
+    oText:=WebExControl():New("p")
+    oText:AddClass("card-text")
+    oText:SetContent(::cValue)
+
+    oBody:=WebExControl():New("div")
+    oBody:AddClass("card-body")
+    oBody:AddChild(oTitle)
+    oBody:AddChild(oText)
+
+    ::AddChild(oBody)
+
+    cHTML:=_Super:RenderHTML()
+
+return(cHTML)

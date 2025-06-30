@@ -1,0 +1,33 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExRow from WebExControl
+    public method New() as object
+endclass
+
+method New() class WebExRow
+    _Super:New("div")
+    ::SetAttr("class","row g-3")
+return(self)
+
+class WebExCol from WebExControl
+    public method New(nColSize as numeric) as object
+endclass
+
+method New(nColSize) class WebExCol
+    paramtype 1 var nColSize as numeric optional default 12
+    _Super:New("div")
+    ::SetAttr("class", "col-md-"+cValToChar(nColSize))
+return(self)

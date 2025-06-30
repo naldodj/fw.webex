@@ -50,7 +50,7 @@ static procedure FWWebExExample_009()
     local oTableDrillDown as object
 
     oTable:=WebExTable():New("Turnover por Empresa")
-    oTable:SeTitleBefore(.T.)
+    oTable:SetTitleBefore(.T.)
     oTable:EnableDrillDown()
 
     oTable:AddColumnHeader("C&oacute;digo")
@@ -59,7 +59,7 @@ static procedure FWWebExExample_009()
 
     for nEmpresa:=1 to nEmpresas
         oTableDrillDown:=WebExTable():New()
-        oTableDrillDown:SeTitleBefore(.T.)
+        oTableDrillDown:SetTitleBefore(.T.)
         oTableDrillDown:AddColumnHeader("C&oacute;digo")
         oTableDrillDown:AddColumnHeader("Nome")
         oTableDrillDown:AddColumnHeader("% Turnover")
