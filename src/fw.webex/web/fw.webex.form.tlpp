@@ -67,7 +67,7 @@ method AddField(cLabel,cName,cType,cPlaceholder) class WebExForm
 return(self)
 
 method AddButton(oButton) class WebExForm
-   paramtype 1 var oButton as object
+   paramtype 1 var oButton as object class WEBEXBUTTON
    ::jButtons[oButton:cID]:=oButton
 return(self)
 

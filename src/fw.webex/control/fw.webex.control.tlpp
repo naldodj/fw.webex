@@ -29,6 +29,8 @@ class WebExControl
     public method New(cType as character) as object
     public method NewID() as character
 
+    public method ClassName() as character
+
     public method SetAttr(cKey as character,uValue as variant) as object
     public method GetAttr(cAttr) as character
 
@@ -56,6 +58,12 @@ return(self)
 method NewID() class WebExControl
 return((StrTran(Lower(GetClassName(self)),".","_")+"_"+UUIDRandom()))
 
+method ClassName() class WebExControl
+    local cClassName:=GetClassName(self)
+    //Remove NameSpace. PARMTYPE.CH, ainda, nao tem suporte para NameSpace.
+    cClassName:=StrTran(cClassName,"FWWEBEX.","")
+return(cClassName)
+
 method SetAttr(cKey,uValue) class WebExControl
    paramtype 1 var cKey as character
    paramtype 2 var uValue as array,character,date,json,logical,numeric optional default cKey
@@ -78,8 +86,13 @@ method SetContent(cContent) class WebExControl
 return(self)
 
 method AddChild(oChild) class WebExControl
-   paramtype 1 var oChild as object /*class WebExControl*/
-   ::jChildren[oChild:cID]:=oChild
+    local cClassName as character
+    paramtype 1 var oChild as object
+    cClassName:=GetClassName(self)
+    if (!Left(cClassName,8)=="FWWEBEX.")
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Only FWWEBEX.WebExControl-based objects can be added here. Nice try though."
+    endif
+    ::jChildren[oChild:cID]:=oChild
 return(self)
 
 method RenderHTML() class WebExControl

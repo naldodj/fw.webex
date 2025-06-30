@@ -34,7 +34,7 @@ method New(cTitle,cValue,cTheme,oIcon) class WebExCardKPI
     paramtype 1 var cTitle as character optional default ""
     paramtype 2 var cValue as character optional default ""
     paramtype 3 var cTheme as character optional default "bg-primary"
-    paramtype 4 var oIcon as object optional
+    paramtype 4 var oIcon as object class WEBEXICON optional
 
     _Super:New("div")
 

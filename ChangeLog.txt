@@ -3,6 +3,11 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-30 18:50 UTC naldodj (ClassName)
+  * src/fw.webex/web/fw.webex.cardkpi.tlpp
+  * src/fw.webex/web/fw.webex.form.tlpp
+  * src/fw.webex/control/fw.webex.control.tlpp
+
 2025-06-30 17:45 UTC naldodj (New Feature)
   + data/json/turnovergeralfuncionarios.json
   + data/scripts/ps1/turnovergeralfuncionarios.ps1
