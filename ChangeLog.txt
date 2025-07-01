@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-30 23:01 UTC naldodj (Fix Sunset Theme)
+  * src/fw.webex/web/fw.webex.cardkpi.tlpp
+  * src/fw.webex/web/fw.webex.page.tlpp
+
 2025-06-30 22:49 UTC naldodj (Indent JavaScript code)
   * src/fw.webex/web/fw.webex.table.tlpp
 

@@ -105,7 +105,6 @@ method RenderHTML() class WebExPage
             }
 
             .card {
-                background-color: #fff !important;
                 border: 1px solid var(--totvs-border) !important;
                 border-radius: 6px;
                 padding: 15px;

@@ -46,7 +46,6 @@ method New(cTitle,cValue,cTheme,oIcon) class WebExCardKPI
     ::AddClass("card")
     ::AddClass("mb-3")
     ::AddClass("border-secondary")
-    ::AddClass("text-light")
     if (!Empty(::cTheme))
         ::AddClass(::cTheme)
     endif
