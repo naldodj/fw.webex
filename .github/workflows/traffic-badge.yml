@@ -26,6 +26,8 @@ jobs:
         echo "{ \"schemaVersion\": 1, \"label\": \"clones\", \"message\": \"${CLONES}\", \"color\": \"blue\" }" > clone-badge.json
 
     - name: Commit e push do badge
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -33,4 +35,6 @@ jobs:
         git pull
         git add clone-badge.json
         git commit -m "Atualiza badge de clones"
-        git push
+
+        git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/DNATechByNaldoDJ/fw.webex.git
+        git push origin HEAD:main
