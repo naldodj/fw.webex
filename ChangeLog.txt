@@ -3,6 +3,19 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-01 13:12 UTC naldodj (Now we don’t throw the whole kitchen sink into <head>. Just what’s needed.)
+  * include/fw.webex.th
+  * src/fw.webex/control/fw.webex.control.tlpp
+  * src/fw.webex/tools/fw.webex.context.tlpp
+  * src/fw.webex/web/fw.webex.cardkpi.tlpp
+  * src/fw.webex/web/fw.webex.icon.tlpp
+  * src/fw.webex/web/fw.webex.page.tlpp
+  * src/fw.webex/web/fw.webex.table.tlpp
+  * src/fw.webex/web/fw.webex.template.bulk.action.table.tlpp
+  * src/fw.webex.examples/006/fw.webex.example.006.tlpp
+  * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+
 2025-06-30 23:01 UTC naldodj (Fix Sunset Theme)
   * src/fw.webex/web/fw.webex.cardkpi.tlpp
   * src/fw.webex/web/fw.webex.page.tlpp

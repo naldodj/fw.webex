@@ -246,8 +246,10 @@ static procedure FWWebExExample_007()
     oScript:SetContent(cScript)
     oFWWebExPage:AddChild(oScript)
     *oFWWebExPage:SetAttr("style","min-height:100vh;padding:1rem;box-sizing:border-box;overflow:auto;")
+    oFWWebExPage:EnableDataTable()
 
     cHTML:=oFWWebExPage:RenderHTML()
+    oFWWebExPage:DisableFeatures()
 
     FreeObj(@oFWWebExPage)
     FreeObj(@oScript)

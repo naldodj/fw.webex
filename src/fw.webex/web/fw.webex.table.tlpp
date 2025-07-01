@@ -51,6 +51,7 @@ method New(cTitle) class WebExTable
     ::lExpandable:=.F.
     ::oTBody:=WebExControl():New("tbody")
     ::oTHead:=WebExControl():New("thead")
+    ::EnableDataTable()
 return(self)
 
 method SetTitle(cTitle) class WebExTable

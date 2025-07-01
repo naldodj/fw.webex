@@ -51,6 +51,7 @@ method New(cTitle,cValue,cTheme,oIcon) class WebExCardKPI
     endif
 
     ::SetIconBefore()
+    ::EnableIcons()
 
 return(self)
 

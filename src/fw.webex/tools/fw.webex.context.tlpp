@@ -19,7 +19,7 @@ static __aFreeStack:=Array(0) as array
 class WebExContext
 
     static method ObjBegin(oObject as object) as object
-    static method ObjEnd() as variant
+    static method ObjEnd(lAddChild as logical) as variant
     static method ObjGet() as object
     static method ObjClean() as variant
 
@@ -31,10 +31,11 @@ method ObjBegin(oObject) class WebExContext
    aAdd(__aFreeStack,oObject)
 return(oObject)
 
-method ObjEnd() class WebExContext
+method ObjEnd(lAddChild) class WebExContext
     local nLen:=Len(__aWithStack) as numeric
     local oChild as object
     local oParent as object
+    paramtype 1 var lAddChild as logical optional default .T.
     if (nLen>0)
         oChild:=__aWithStack[nLen]
         __aWithStack[nLen]:=nil
@@ -42,7 +43,9 @@ method ObjEnd() class WebExContext
         aSize(__aWithStack,--nLen)
         if (nLen>0)
             oParent:=__aWithStack[nLen]
-            oParent:AddChild(oChild)
+            if (lAddChild)
+                oParent:AddChild(oChild)
+            endif
         else
             oParent:=oChild
         endif
@@ -59,6 +62,6 @@ method ObjGet() class WebExContext
 return(oObj)
 
 static method ObjClean() class WebExContext
-    aEval(__aFreeStack,{|o|FreeObj(@o)})
+    aEval(__aFreeStack,{|o|if(ValType(o)=="O",(o:DisableFeatures(),FreeObj(@o)),nil)})
     aSize(__aFreeStack,0)
 return

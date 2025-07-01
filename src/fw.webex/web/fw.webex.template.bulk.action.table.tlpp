@@ -36,6 +36,7 @@ method New(cTitle) class WebExTemplateBulkActionTable
     ::cTitle:=cTitle
     ::jColumns:=JSONObject():New()
     ::jItems:=JSONObject():New()
+    ::EnableDataTable()
 return(self)
 
 method FromSQL(cSQL) class WebExTemplateBulkActionTable

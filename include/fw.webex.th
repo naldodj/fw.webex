@@ -15,7 +15,7 @@ Released to Public Domain.
     #xcommand WITH WEBEXOBJECT [<obj>] => [<obj>:=] WebExContext():ObjBegin([<obj>])
     #xcommand WITH WEBEXOBJECT [<obj>] CLASS <class> [TYPE <*type*>] => [<obj>:=] WebExContext():ObjBegin(<class>():New([<(type)>]))
     #xcommand WITH WEBEXOBJECT [<obj>] CLASS <class> [<arg: ARG, ARGS> <Args,...>] => [<obj>:=] WebExContext():ObjBegin(<class>():New([<Args>]))
-    #xcommand END WEBEXOBJECT => (WebExContext():ObjEnd(),if(Type("__oWebExContextObj__")=="O",(__oWebExContextObj__:=nil),nil))
+    #xcommand END WEBEXOBJECT [<noaddchild: NOADDCHILD>] => (WebExContext():ObjEnd(if(<.noaddchild.>,.F.,.T.)),if(Type("__oWebExContextObj__")=="O",(__oWebExContextObj__:=nil),nil))
 
     #xcommand WEBEXOBJECT CLEAN => WebExContext():ObjClean()
 
