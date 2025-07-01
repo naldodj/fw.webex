@@ -140,8 +140,10 @@ static procedure FWWebExExample_006()
     oScript:SetContent(cScript)
 
     oFWWebExPage:AddChild(oScript)
+    oFWWebExPage:EnableDataTable()
 
     cHTML:=oFWWebExPage:RenderHTML()
+    oFWWebExPage:Clean()
 
     FreeObj(@oFWWebExPage)
     FreeObj(@oFWWebExForm)

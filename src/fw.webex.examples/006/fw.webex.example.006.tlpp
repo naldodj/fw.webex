@@ -151,7 +151,7 @@ static procedure FWWebExExample_006()
     oFWWebExPage:EnableDataTable()
 
     cHTML:=oFWWebExPage:RenderHTML()
-    oFWWebExPage:DisableFeatures()
+    oFWWebExPage:Clean()
 
     FreeObj(@oFWWebExPage)
     FreeObj(@oFWWebExForm)

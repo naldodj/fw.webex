@@ -83,6 +83,7 @@ static procedure FWWebExExample_009()
     oFWWebExPage:=WebExPage():New("Drill-down Exemplo")
     oFWWebExPage:AddChild(oFWWebExTable)
     cHTML:=oFWWebExPage:RenderHTML()
+    oFWWebExPage:Clean()
 
     FreeObj(@oFWWebExTable)
     FreeObj(@oFWWebExPage)

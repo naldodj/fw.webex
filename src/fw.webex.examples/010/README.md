@@ -75,6 +75,7 @@ static procedure FWWebExExample_010()
     oFWWebExPage:AddChild(oFWWebExRow2)
 
     cHTML:=oFWWebExPage:RenderHTML()
+    oFWWebExPage:Clean()
 
     FreeObj(@oFWWebExCardKPI)
     FreeObj(@oFWWebExRow1)

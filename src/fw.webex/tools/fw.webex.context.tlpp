@@ -62,6 +62,6 @@ method ObjGet() class WebExContext
 return(oObj)
 
 static method ObjClean() class WebExContext
-    aEval(__aFreeStack,{|o|if(ValType(o)=="O",(o:DisableFeatures(),FreeObj(@o)),nil)})
+    aEval(__aFreeStack,{|o|if(ValType(o)=="O",(o:Clean(),FreeObj(@o)),nil)})
     aSize(__aFreeStack,0)
 return

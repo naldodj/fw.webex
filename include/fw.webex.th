@@ -19,7 +19,10 @@ Released to Public Domain.
 
     #xcommand WEBEXOBJECT CLEAN => WebExContext():ObjClean()
 
-    #xtranslate .:<method> => (__oWebExContextObj__:=WebExContext():ObjGet(),__oWebExContextObj__:<method>)
+    #xtranslate .this => (__oWebExContextObj__:=WebExContext():ObjGet())
+    #xtranslate .:<property_method> => (__oWebExContextObj__:=WebExContext():ObjGet(),__oWebExContextObj__:<property_method>)
+
+    #define FWWEBEX_ID_MAX_SIZE 10
 
     #IFNDEF _PROTHEUS_CH
         #include "totvs.ch"

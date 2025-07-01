@@ -90,6 +90,7 @@ static procedure FWWebExExample_005()
 
     oFWWebExPage:AddChild(oScript)
     cHTML:=oFWWebExPage:RenderHTML()
+    oFWWebExPage:Clean()
 
     FreeObj(@oDiv)
     FreeObj(@oFWWebExPage)

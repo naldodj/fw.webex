@@ -13,6 +13,14 @@ Released to Public Domain.
 
 using namespace FWWebEx
 
+//Para chamada atraves do Menu do Protheus FWWeb000 como funcao de usuario
+//Em 01/07/2025 as 15:21:10 A equipe da TOTVS Ainda nao resolveu a questao de funcoes TLPP com Nomes Longos.
+//Eles poderiam colocar: tlpp.call(<cFunction>,[xParms]) para executar funcoes TL++ em Advpl nas chamadas do MENU.
+//Fazer o Q. Bora criar um Wrapper chamado u_FWWeb000.
+procedure u_FWWeb000()
+    tlpp.call("u_FWWebExExample_000")
+return
+
 procedure u_FWWebExExample_000()
     private cCadastro:="Exemplos FWWebEx"
     FWExampleTools():Execute({||FWWebExExample_000()},cCadastro,.T.)
