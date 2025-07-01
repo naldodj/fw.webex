@@ -25,16 +25,15 @@ jobs:
         CLONES=$(jq '.count' clones.json)
         echo "{ \"schemaVersion\": 1, \"label\": \"clones\", \"message\": \"${CLONES}\", \"color\": \"blue\" }" > clone-badge.json
 
-    - name: Commit e push do badge
+    - name: Commit e push do badge usando GH_TOKEN
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git config user.name "Automated Badge Bot"
+        git config user.email "badgebot@users.noreply.github.com"
 
-        git pull
         git add clone-badge.json
-        git commit -m "Atualiza badge de clones"
+        git commit -m "Atualiza badge de clones" || echo "Nada para commitar"
 
         git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/DNATechByNaldoDJ/fw.webex.git
         git push origin HEAD:main
