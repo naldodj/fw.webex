@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-06-30 22:09 UTC naldodj (Fix Sunset Theme)
+  ! Fix Sunset Theme
+    * src/fw.webex/web/fw.webex.page.tlpp
+
 2025-06-30 19:27 UTC naldodj (...)
   + src/fw.webex.examples/011/fw.webex.example.011.tlpp
   + src/fw.webex.examples/011/README.md

@@ -58,107 +58,108 @@ method RenderHTML() class WebExPage
         beginContent var cStyle
 
             :root {
-                --sunset-red: #e74c3c;
-                --sunset-orange: #f39c12;
-                --sunset-bg-dark: #1a1a1a;
-                --sunset-text: #f5f5f5;
+                --totvs-red: #c62828;
+                --totvs-light-gray: #f4f4f4;
+                --totvs-dark-gray: #dcdcdc;
+                --totvs-border: #ccc;
+                --totvs-text: #000;
+                --totvs-highlight: #e0e0e0;
+                --totvs-btn-bg: #ffffff;
             }
 
             body {
-                background-color: var(--sunset-bg-dark) !important;
-                color: var(--sunset-text) !important;
+                background-color: var(--totvs-light-gray) !important;
+                color: var(--totvs-text) !important;
+                font-family: "Segoe UI", sans-serif !important;
             }
 
             .btn {
-                background-color: transparent !important;
-                color: var(--sunset-red) !important;
-                border: 1px solid var(--sunset-red) !important;
-                border-radius: 0.5rem !important;
-                transition: all 0.3s ease !important;
+                background-color: var(--totvs-btn-bg) !important;
+                color: var(--totvs-red) !important;
+                border: 1px solid var(--totvs-red) !important;
+                border-radius: 4px !important;
+                font-weight: bold;
+                padding: 6px 12px;
+                transition: all 0.2s ease-in-out !important;
             }
 
             .btn:hover,
             .btn:focus {
-                background-color: var(--sunset-red) !important;
+                background-color: var(--totvs-red) !important;
                 color: #fff !important;
             }
 
             .form-control,
             .form-select {
-                background-color: #2b2b2b !important;
-                color: var(--sunset-text) !important;
-                border: 1px solid var(--sunset-red) !important;
-                border-radius: 0.5rem !important;
-            }
-
-            .form-control::placeholder {
-                color: #bbb !important;
+                background-color: #fff !important;
+                color: var(--totvs-text) !important;
+                border: 1px solid var(--totvs-border) !important;
+                border-radius: 3px !important;
+                padding: 5px 10px;
             }
 
             .form-control:focus,
             .form-select:focus {
-                box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.4) !important;
-                border-color: var(--sunset-orange) !important;
-                background-color: #2b2b2b !important;
-                color: var(--sunset-text) !important;
+                border-color: var(--totvs-red) !important;
+                box-shadow: 0 0 3px rgba(198, 40, 40, 0.4) !important;
+            }
+
+            .card {
+                background-color: #fff !important;
+                border: 1px solid var(--totvs-border) !important;
+                border-radius: 6px;
+                padding: 15px;
+                color: var(--totvs-text);
+                box-shadow: 0 0 10px rgba(0,0,0,0.05);
             }
 
             .navbar {
-                background-color: #111 !important;
-                border-bottom: 2px solid var(--sunset-red) !important;
+                background-color: #fff !important;
+                border-bottom: 2px solid var(--totvs-red) !important;
             }
 
             .navbar .nav-link,
             .navbar-brand {
-                color: var(--sunset-text) !important;
+                color: var(--totvs-text) !important;
             }
 
             .navbar .nav-link:hover {
-                color: var(--sunset-orange) !important;
-            }
-
-            .card {
-                background-color: #222 !important;
-                border: 1px solid var(--sunset-red) !important;
-                color: var(--sunset-text) !important;
-            }
-
-            a {
-                color: var(--sunset-orange) !important;
-            }
-
-            a:hover {
-                color: var(--sunset-red) !important;
+                color: var(--totvs-red) !important;
             }
 
             .table {
-                color: var(--sunset-text) !important;
-                background-color: #1f1f1f !important;
+                background-color: #fff !important;
+                color: var(--totvs-text) !important;
+                border: 1px solid var(--totvs-border);
             }
 
             .table thead {
-                background-color: #2c2c2c !important;
-                color: var(--sunset-orange) !important;
+                background-color: var(--totvs-dark-gray) !important;
+                color: var(--totvs-text) !important;
             }
 
             .table-bordered,
             .table-bordered th,
             .table-bordered td {
-                border: 1px solid var(--sunset-red) !important;
+                border: 1px solid var(--totvs-border) !important;
+            }
+
+            .table tbody tr:hover {
+                background-color: var(--totvs-highlight) !important;
+            }
+
+            a {
+                color: var(--totvs-red) !important;
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
             }
 
             input[type="checkbox"],
             input[type="radio"] {
-                accent-color: var(--sunset-red) !important;
-                background-color: #2b2b2b !important;
-                border: 1px solid var(--sunset-red) !important;
-            }
-
-            /* Para navegadores que ignoram `accent-color`, como Safari velho ou Firefox pre-92 */
-            input[type="checkbox"]:checked,
-            input[type="radio"]:checked {
-                background-color: var(--sunset-red) !important;
-                border-color: var(--sunset-red) !important;
+                accent-color: var(--totvs-red) !important;
             }
 
         endContent
