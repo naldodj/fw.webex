@@ -142,23 +142,23 @@ method RenderHTML() class WebExTable
     if (::lExpandable)
         // Adiciona script de expandRow com ID prefixado
         oScript:=WebExControl():New("script")
+        //TODO: fetch real content via AJAX and update td.innerHTML
         beginContent var cScript
-            //TODO: fetch real content via AJAX and update td.innerHTML
             function ::cID_expandRow(button) {
-            const tr = button.closest('tr');
-            if (tr.nextSibling && tr.nextSibling.classList.contains('child-row')) {
-                tr.nextSibling.remove();
-                button.innerText = '+';
-                return;
-            }
-            const td = document.createElement('td');
-            td.colSpan = tr.children.length;
-            td.innerHTML = button.getAttribute('data-html') || '<div class=\"text-muted\">Loading...</div>';
-            const newRow = document.createElement('tr');
-            newRow.classList.add('child-row');
-            newRow.appendChild(td);
-            tr.parentNode.insertBefore(newRow, tr.nextSibling);
-            button.innerText = '-';
+                const tr = button.closest('tr');
+                if (tr.nextSibling && tr.nextSibling.classList.contains('child-row')) {
+                    tr.nextSibling.remove();
+                    button.innerText = '+';
+                    return;
+                }
+                const td = document.createElement('td');
+                td.colSpan = tr.children.length;
+                td.innerHTML = button.getAttribute('data-html') || '<div class=\"text-muted\">Loading...</div>';
+                const newRow = document.createElement('tr');
+                newRow.classList.add('child-row');
+                newRow.appendChild(td);
+                tr.parentNode.insertBefore(newRow, tr.nextSibling);
+                button.innerText = '-';
             }
         endContent
         cScript:=StrTran(cScript,"::cID",::cID)
