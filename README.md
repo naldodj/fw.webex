@@ -1,6 +1,7 @@
 # FW.WebEX — Framework Web Extensível para Protheus (ADVPL/TLPP) 🌟
 ⭐ Gostou do projeto? Deixa uma estrelinha aí no topo! Isso ajuda muito!  ⭐
 [![Stars](https://img.shields.io/github/stars/DNATechByNaldoDJ/fw.webex?style=social)](https://github.com/DNATechByNaldoDJ/fw.webex)
+![Clones](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/DNATechByNaldoDJ/fw.webex/main/clone-badge.json)
 
 ![fwwebex_banner](https://github.com/user-attachments/assets/64a542a9-97f3-47b0-81f9-1655374a1a90)
 
