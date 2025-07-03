@@ -179,11 +179,12 @@ method GetHeader() class WebExControl
 return(__jHeader)
 
 method AddInHeader(oChild) class WebExControl
-    local cClassName as character
     paramtype 1 var oChild as object
     cClassName:=GetClassName(self)
     if (!Left(cClassName,8)=="FWWEBEX.")
-        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Only FWWEBEX.WebExControl-based objects can be added here. Nice try though."
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must belong to the FWWEBEX namespace. Got '"+cClassName+"' instead. Check your class declaration."
+    elseif ((!MethIsMemberOf(self,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
     __jHeader[oChild:cID]:=oChild
 return(self)
