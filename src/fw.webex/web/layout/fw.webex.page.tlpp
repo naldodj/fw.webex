@@ -191,63 +191,63 @@ method RenderHTML() class WebExPage
 
     endif
 
-    WITH WEBEXOBJECT oPage CLASS WebExControl TYPE html
+    WITH WEBEXOBJECT oPage CLASS WebExHtml
         .:SetAttr("lang","pt-br")
         if (lIsDark)
             .:SetAttr("data-bs-theme","dark")
         endif
-        WITH WEBEXOBJECT oHeader CLASS WebExControl TYPE head
-            WITH WEBEXOBJECT CLASS WebExControl TYPE meta
+        WITH WEBEXOBJECT oHeader CLASS WebExHead
+            WITH WEBEXOBJECT CLASS WebExMeta
                 .:SetAttr("charset","UTF-8")
             END WEBEXOBJECT
-            WITH WEBEXOBJECT CLASS WebExControl TYPE meta
+            WITH WEBEXOBJECT CLASS WebExMeta
                 .:SetAttr("application-name","FWWebEx")
             END WEBEXOBJECT
-            WITH WEBEXOBJECT CLASS WebExControl TYPE meta
+            WITH WEBEXOBJECT CLASS WebExMeta
                 .:SetAttr("name","viewport")
                 .:SetAttr("content","width=device-width, initial-scale=1")
             END WEBEXOBJECT
 ***************************************************************************************************************************
             //PO UI CSS
-                WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                WITH WEBEXOBJECT CLASS WebExComment
                     .:SetContent("PO UI CSS")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExControl TYPE link
+                WITH WEBEXOBJECT CLASS WebExLink
                     .:SetAttr("href","https://cdn.jsdelivr.net/npm/@po-ui/style/css/po-theme-default.min.css")
                     .:SetAttr("rel","stylesheet")
                 END WEBEXOBJECT
             //PO UI CSS
 ***************************************************************************************************************************
             //Bootstrap CSS
-                WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                WITH WEBEXOBJECT CLASS WebExComment
                     .:SetContent("Bootstrap CSS")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExControl TYPE link
+                WITH WEBEXOBJECT CLASS WebExLink
                     .:SetAttr("href","https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css")
                     .:SetAttr("rel","stylesheet")
                 END WEBEXOBJECT
             //Bootstrap CSS
 ***************************************************************************************************************************
             //Bootstrap Optional JavaScript
-                WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                WITH WEBEXOBJECT CLASS WebExComment
                     .:SetContent("Optional JavaScript")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                WITH WEBEXOBJECT CLASS WebExComment
                     .:SetContent("jQuery first, then Popper.js, then Bootstrap JS")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
+                WITH WEBEXOBJECT CLASS WebExScript
                     .:SetAttr("src","https://releases.jquery.com/git/jquery-git.slim.min.js")
                     .:SetAttr("defer")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
+                WITH WEBEXOBJECT CLASS WebExScript
                     .:SetAttr("src","https://releases.jquery.com/git/jquery-git.min.js")
                     .:SetAttr("defer")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
+                WITH WEBEXOBJECT CLASS WebExScript
                     .:SetAttr("src","https://cdn.jsdelivr.net/npm/@popperjs/core/dist/umd/popper.min.js")
                     .:SetAttr("defer")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
+                WITH WEBEXOBJECT CLASS WebExScript
                     .:SetAttr("src","https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js")
                     .:SetAttr("defer")
                 END WEBEXOBJECT
@@ -261,13 +261,11 @@ method RenderHTML() class WebExPage
             aEval(::jStyle:GetNames(),{|cName|oHeader:AddChild(::jStyle[cName])})
 ***************************************************************************************************************************
             //Title
-            WITH WEBEXOBJECT CLASS WebExControl TYPE title
-                .:SetContent(::cTitle)
+            WITH WEBEXOBJECT CLASS WebExTitle ARGS ::cTitle
             END WEBEXOBJECT
 ***************************************************************************************************************************
         END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExControl TYPE body
-            .:SetAttr("class","p-4")
+        WITH WEBEXOBJECT CLASS WebExBody
             if (!lHasMain)
                 WITH WEBEXOBJECT CLASS WebExMain ARGS .T.
                     .:SetContent(cBody)
@@ -275,6 +273,10 @@ method RenderHTML() class WebExPage
             else
                 .:SetContent(cBody)
             endif
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExHR
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExFooter
         END WEBEXOBJECT
         cHTML+=oPage:RenderHTML()
     END WEBEXOBJECT

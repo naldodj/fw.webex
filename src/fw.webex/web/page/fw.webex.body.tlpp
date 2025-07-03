@@ -1,0 +1,26 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExBody from WebExControl
+    public method New() as object
+endclass
+
+method New() class WebExBody
+    _Super:New("body")
+    ::AddClass("p-4")
+    ::AddClass("d-flex")
+    ::AddClass("flex-column")
+    ::AddClass("min-vh-100")
+return(self)

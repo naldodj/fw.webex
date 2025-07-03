@@ -31,7 +31,8 @@ end class
 method New(lFluid) class WebExMain
     paramtype 1 var lFluid as logical optional default .T. // default: container-fluid
     _Super:New("main")
-    ::SetAttr("class","main-content")
+    ::AddClass("main-content")
+    ::AddClass("flex-grow-1")
     ::lFluid:=lFluid
 return(self)
 

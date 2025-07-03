@@ -1,0 +1,23 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExTitle from WebExControl
+    public method New(cTitle as character) as object
+endclass
+
+method New(cTitle) class WebExTitle
+    paramtype 1 var cTitle as character optional default ""
+    _Super:New("title")
+return(self)

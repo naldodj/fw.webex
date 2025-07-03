@@ -3,6 +3,44 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-03 12:55 UTC naldodj (refactor: reorganized folder structure to improve modularity and clarity)
+  + src/fw.webex/web/component/fw.webex.comment.tlpp
+  + src/fw.webex/web/component/fw.webex.script.tlpp
+  + src/fw.webex/web/page/fw.webex.body.tlpp
+  + src/fw.webex/web/page/fw.webex.footer.tlpp
+  + src/fw.webex/web/page/fw.webex.head.tlpp
+  + src/fw.webex/web/page/fw.webex.html.tlpp
+  + src/fw.webex/web/page/fw.webex.link.tlpp
+  + src/fw.webex/web/page/fw.webex.meta.tlpp
+  + src/fw.webex/web/page/fw.webex.title.tlpp
+  * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+  * src/fw.webex/control/fw.webex.control.tlpp -> src/fw.webex/web/control/fw.webex.control.tlpp
+  * src/fw.webex/web/fw.webex.alert.tlpp -> src/fw.webex/web/component/fw.webex.alert.tlpp
+  * src/fw.webex/web/fw.webex.button.tlpp -> src/fw.webex/web/component/fw.webex.button.tlpp
+  * src/fw.webex/web/fw.webex.card.tlpp -> src/fw.webex/web/component/fw.webex.card.tlpp
+  * src/fw.webex/web/fw.webex.cardkpi.tlpp -> src/fw.webex/web/component/fw.webex.cardkpi.tlpp
+  * src/fw.webex/web/fw.webex.checkbox.tlpp -> src/fw.webex/web/component/fw.webex.checkbox.tlpp
+  * src/fw.webex/web/fw.webex.container.tlpp -> src/fw.webex/web/component/fw.webex.container.tlpp
+  * src/fw.webex/web/fw.webex.field.tlpp -> src/fw.webex/web/component/fw.webex.field.tlpp
+  * src/fw.webex/web/fw.webex.fieldset.tlpp -> src/fw.webex/web/component/fw.webex.fieldset.tlpp
+  * src/fw.webex/web/fw.webex.form.tlpp -> src/fw.webex/web/component/fw.webex.form.tlpp
+  * src/fw.webex/web/fw.webex.gridsystem.tlpp -> src/fw.webex/web/component/fw.webex.gridsystem.tlpp
+  * src/fw.webex/web/fw.webex.icon.tlpp -> src/fw.webex/web/component/fw.webex.icon.tlpp
+  * src/fw.webex/web/fw.webex.input.tlpp -> src/fw.webex/web/component/fw.webex.input.tlpp
+  * src/fw.webex/web/fw.webex.label.tlpp -> src/fw.webex/web/component/fw.webex.label.tlpp
+  * src/fw.webex/web/fw.webex.legend.tlpp -> src/fw.webex/web/component/fw.webex.legend.tlpp
+  * src/fw.webex/web/fw.webex.main.tlpp -> src/fw.webex/web/layout/fw.webex.main.tlpp
+  * src/fw.webex/web/fw.webex.navside.tlpp -> src/fw.webex/web/component/fw.webex.navside.tlpp
+  * src/fw.webex/web/fw.webex.navtop.tlpp -> src/fw.webex/web/component/fw.webex.navtop.tlpp
+  * src/fw.webex/web/fw.webex.page.tlpp -> src/fw.webex/web/layout/fw.webex.page.tlpp
+  * src/fw.webex/web/fw.webex.rules.tlpp -> src/fw.webex/web/component/fw.webex.rules.tlpp
+  * src/fw.webex/web/fw.webex.shell.tlpp -> src/fw.webex/web/layout/fw.webex.shell.tlpp
+  * src/fw.webex/web/fw.webex.sidebar.tlpp -> src/fw.webex/web/component/fw.webex.sidebar.tlpp
+  * src/fw.webex/web/fw.webex.strong.tlpp -> src/fw.webex/web/component/fw.webex.strong.tlpp
+  * src/fw.webex/web/fw.webex.table.tlpp -> src/fw.webex/web/component/fw.webex.table.tlpp
+  * src/fw.webex/web/fw.webex.template.bulk.action.table.tlpp -> src/fw.webex/web/component/fw.webex.template.bulk.action.table.tlpp
+
 2025-07-03 00:28 UTC naldodj (New Features Test)
   * src/fw.webex.examples/009/fw.webex.example.009.tlpp
 

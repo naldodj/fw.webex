@@ -1,0 +1,29 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExFooter from WebExControl
+    public method New(cContent as character) as object
+endclass
+
+method New(cContent) class WebExFooter
+    paramtype 1 var cContent as character optional default "Powered by <strong>(<a href='https://github.com/DNATechByNaldoDJ/fw.webex' target='_blank'>FWWebEx</a>)</strong> (DNATech)"
+    _Super:New("footer")
+    ::AddClass("text-center")
+    ::AddClass("text-muted")
+    ::AddClass("mt-auto") // margin-top: auto
+    ::AddClass("small")
+    ::AddClass("p-3")
+    ::SetContent(cContent)
+return(self)
