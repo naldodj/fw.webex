@@ -53,8 +53,10 @@ static procedure FWWebExExample_009()
     local nEmpresa as numeric
     local nEmpresas:=Len(aEmpresas) as numeric
 
-    local oFWWebExPage as object
+    local oFWWebExMain as object
+    local oFWWebExShell as object
     local oFWWebExTable as object
+    local oFWWebExContainer as object
     local oFWWebExTableDrillDown as object
 
     oFWWebExTable:=WebExTable():New("Turnover por Empresa")
@@ -88,13 +90,22 @@ static procedure FWWebExExample_009()
         oFWWebExTable:BuildBodyRow(cHTMLDrillDown)
     next nEmpresa
 
-    oFWWebExPage:=WebExPage():New("Drill-down Exemplo")
-    oFWWebExPage:AddChild(oFWWebExTable)
-    cHTML:=oFWWebExPage:RenderHTML()
-    oFWWebExPage:Clean()
+    oFWWebExContainer:=WebExContainer():New()
+    oFWWebExContainer:AddChild(oFWWebExTable)
 
+    oFWWebExMain:=WebExMain():New()
+    oFWWebExMain:AddChild(oFWWebExContainer)
+
+    oFWWebExShell:=WebExShell():New("Drill-down Exemplo")
+    oFWWebExShell:AddChild(oFWWebExMain)
+    cHTML:=oFWWebExShell:RenderHTML()
+    oFWWebExShell:Clean()
+
+    FreeObj(@oFWWebExMain)
+    FreeObj(@oFWWebExShell)
     FreeObj(@oFWWebExTable)
-    FreeObj(@oFWWebExPage)
+    FreeObj(@oFWWebExContainer)
+    FreeObj(@oFWWebExTableDrillDown)
 
     FWFreeArray(@aEmpresas)
 
