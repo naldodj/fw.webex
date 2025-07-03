@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-02 23:55 UTC naldodj (New Features)
+  * src/fw.webex.examples/002/fw.webex.example.002.tlpp
+
 2025-07-02 21:28 UTC naldodj (New Features)
   + src/fw.webex/web/fw.webex.checkbox.tlpp
   + src/fw.webex/web/fw.webex.container.tlpp
