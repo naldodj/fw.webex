@@ -1,0 +1,64 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
++---> WebExSideBar
+    |
+    +---> WebExNavTop   <- topo (colapsador, logo, logout etc)
+    |
+    +---> WebExNavSide  <- menu lateral (colapsavel)
+    |
+    +---> WebExMain     <- <main> da pagina
+        |
+        +---> WebExContainer (div.container ou container-fluid)
+            |
+            +---> Conteudo da pagina (KPIs, cards, tabelas, forms...)
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExSideBar from WebExControl
+
+    public data cPosition as character // "top" or "left"
+
+    public method New() as object
+    public method AddChild(oChild as object) as object
+    public method RenderHTML() as character
+
+end class
+
+method New() class WebExSideBar
+    _Super:New()
+return(self)
+
+method AddChild(oChild) class WebExSideBar
+    _Super:AddChild(oChild)
+    if (oChild:IsKindOf("WebExNavSide",.T.))
+        ::cPosition:="left"
+    elseif (oChild:IsKindOf("WebExNavTop",.T.))
+        ::cPosition:="top"
+    endif
+return(self)
+
+method RenderHTML() class WebExSideBar
+    local cHTML as character
+    if (::cPosition=="left")
+        ::cType:="aside"
+        ::AddClass("sidebar")
+        ::AddClass("d-flex")
+        ::AddClass("flex-column")
+    elseif ::cPosition == "top"
+        ::cType:="header"
+        ::AddClass("navbar")
+        ::AddClass("navbar-expand-lg")
+    endif
+    cHTML:=_Super:RenderHTML()
+return(cHTML)

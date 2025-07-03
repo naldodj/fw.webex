@@ -40,6 +40,7 @@ class WebExControl
     public method New(cType as character) as object
     public method NewID() as character
 
+    public method IsKindOf(cClass as character,lParentTree as logical) as logical
     public method ClassName() as character
 
     public method GetMemberData(cMember as character,xDefault as variant) as variant
@@ -85,6 +86,37 @@ return(self)
 method NewID() class WebExControl
     __cID:=__Soma1(__cID)
 return((StrTran(Lower(GetClassName(self)),".","_")+"_"+__cID))
+
+method IsKindOf(cClass,lParentTree) class WebExControl
+
+    local aParents as array
+
+    local cThisClass as character
+    local cTargetClass as character
+
+    local lIsKindOf as logical
+
+    local nParent as numeric
+
+    paramtype 1 var cClass as character
+    paramtype 2 var lParentTree as logical optional default .F.
+
+    cThisClass:=GetClassName(self)
+    cTargetClass:=Upper(AllTrim(cClass))
+    if (!Left(cTargetClass,8)=="FWWEBEX.")
+        cTargetClass:=("FWWEBEX."+cTargetClass)
+    endif
+
+    lIsKindOf:=(cThisClass==cTargetClass)
+
+    if ((!lIsKindOf).and.(lParentTree))
+        aParents:=GetParentTree(self)
+        nParent:=aScan(aParents,{|cClassName|(cClassName==cTargetClass)})
+        FWFreeArray(@aParents)
+        lIsKindOf:=(nParent>0)
+    endif
+
+return(lIsKindOf)
 
 method ClassName() class WebExControl
     local cClassName:=GetClassName(self)
@@ -136,7 +168,9 @@ method AddChild(oChild) class WebExControl
     paramtype 1 var oChild as object
     cClassName:=GetClassName(self)
     if (!Left(cClassName,8)=="FWWEBEX.")
-        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Only FWWEBEX.WebExControl-based objects can be added here. Nice try though."
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must belong to the FWWEBEX namespace. Got '"+cClassName+"' instead. Check your class declaration."
+    elseif ((!MethIsMemberOf(self,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
     ::jChildren[oChild:cID]:=oChild
 return(self)

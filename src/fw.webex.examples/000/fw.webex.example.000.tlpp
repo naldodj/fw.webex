@@ -13,10 +13,12 @@ Released to Public Domain.
 
 using namespace FWWebEx
 
-//Para chamada atraves do Menu do Protheus FWWeb000 como funcao de usuario
-//Em 01/07/2025 as 15:21:10 A equipe da TOTVS Ainda nao resolveu a questao de funcoes TLPP com Nomes Longos.
-//Eles poderiam colocar: tlpp.call(<cFunction>,[xParms]) para executar funcoes TL++ em Advpl nas chamadas do MENU.
-//Fazer o Q. Bora criar um Wrapper chamado u_FWWeb000.
+/*
+    Obs.:   Para chamada atraves do Menu do Protheus inclua FWWeb000 como funcao de usuario
+            Em 01/07/2025 as 15:21:10 a equipe da TOTVS ainda nao resolveu a questao de funcoes TLPP com Nomes Longos no MENU.
+            Eles poderiam colocar: tlpp.call(<cFunction>,[xParms]) para executar funcoes TL++ em Advpl nas chamadas do MENU.
+            Fazer o Q. Bora criar um Wrapper chamado u_FWWeb000.
+*/
 procedure u_FWWeb000()
     tlpp.call("u_FWWebExExample_000")
 return
@@ -39,7 +41,7 @@ static procedure FWWebExExample_000()
     local nRight as numeric
 
     local nExample as numeric
-    local nExamples:=11 as numeric
+    local nExamples:=12 as numeric
 
     local oTDlg as object
     local oTMenu as object
@@ -52,9 +54,13 @@ static procedure FWWebExExample_000()
     jExamples["Tables"]:=JSONObject():New()
     jExamples["UIComponents"]:=JSONObject():New()
     jExamples["DashBoard"]:=JSONObject():New()
+    jExamples["Nav"]:=JSONObject():New()
 
     for nExample:=1 to nExamples
         cExample:="u_FWWebExExample_"+StrZero(nExample,3)
+        if (!FindFunction(cExample))
+            Loop
+        endif
         cRight:=Right(cExample,3)
         do case
         case (cRight$"003|005")
@@ -65,6 +71,8 @@ static procedure FWWebExExample_000()
             jExamples["UIComponents"][cExample]:=&("{||"+cExample+"()}")
         case (cRight$"010|011")
             jExamples["DashBoard"][cExample]:=&("{||"+cExample+"()}")
+        case (cRight$"012|013")
+            jExamples["Nav"][cExample]:=&("{||"+cExample+"()}")
         endcase
     next nExample
 

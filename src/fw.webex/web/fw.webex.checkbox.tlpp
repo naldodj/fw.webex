@@ -1,0 +1,38 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExCheckBox from WebExControl
+    public data oWebExInput as object
+    public data oWebExLabel as object
+    public method New(cLabel as character,cName as character,cTitle as character,cValue) as object
+endclass
+
+method New(cLabel,cName,cTitle,cValue) class WebExCheckBox
+    paramtype 1 var cLabel as character optional default ""
+    paramtype 2 var cName as character optional default ""
+    paramtype 3 var cTitle as character optional default ""
+    paramtype 4 var cValue as character optional default ""
+    _Super:New("div")
+    ::AddClass("form-check")
+    ::oWebExInput:=WebExInput():New(cName,"checkbox","",cTitle)
+    ::oWebExInput:AddClass("form-check-input")
+    if (!Empty(cValue))
+        ::oWebExInput:SetAttr("value",cValue)
+    endif
+    ::oWebExLabel:=WebExLabel():New(::oWebExInput:cID,cLabel)
+    ::oWebExLabel:AddClass("form-check-label")
+    ::AddChild(::oWebExLabel)
+    ::AddChild(::oWebExInput)
+return(self)

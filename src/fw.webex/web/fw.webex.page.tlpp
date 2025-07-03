@@ -5,6 +5,19 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
++-----> WebExPage
+        +
+        |
+        +-----> WebExSideBar (com WebExNavSide ou WebExNavTop)
+        |
+        +-----> WebExMain
+                +
+                |
+                +-----> WebExContainer
+                        +
+                        |
+                        +-----> Conteudo
+
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */
@@ -27,7 +40,8 @@ endclass
 
 method New(cTitle) class WebExPage
     paramtype 1 var cTitle as character
-    _Super:New("main")
+    _Super:New("div")
+    ::AddClass("main-div")
     ::cTitle:=cTitle
     ::jStyle:=JSONObject():New()
 return(self)
@@ -43,17 +57,25 @@ return(self)
 
 method RenderHTML() class WebExPage
 
-    local cHTML:="<!DOCTYPE html>" as character
-    local cBody:=_Super:RenderHTML() as character
+    local cHTML as character
+    local cBody as character
     local cTheme as character
     local cStyle as character
 
     local jHeader as json
 
-    local lIsDark:=WebApp():ThemeIsDark(@cTheme) as logical
+    local lIsDark as logical
+    local lHasMain as logical
 
     local oPage as object
     local oHeader as object
+
+    cHTML:="<!DOCTYPE html>"
+
+    cBody:=_Super:RenderHTML()
+    lHasMain:=("<main"$cBody)
+
+    lIsDark:=WebApp():ThemeIsDark(@cTheme)
 
     if ((!lIsDark).and.(!Empty(cTheme)).and.(cTheme=="SUNSET").and.(Empty(::jStyle:GetNames())))
 
@@ -183,7 +205,7 @@ method RenderHTML() class WebExPage
             END WEBEXOBJECT
             WITH WEBEXOBJECT CLASS WebExControl TYPE meta
                 .:SetAttr("name","viewport")
-                .:SetAttr("content","width=device-width, initial-scale=1, maximum-scale=1")
+                .:SetAttr("content","width=device-width, initial-scale=1")
             END WEBEXOBJECT
 ***************************************************************************************************************************
             //PO UI CSS
@@ -246,7 +268,13 @@ method RenderHTML() class WebExPage
         END WEBEXOBJECT
         WITH WEBEXOBJECT CLASS WebExControl TYPE body
             .:SetAttr("class","p-4")
-            .:SetContent(cBody)
+            if (!lHasMain)
+                WITH WEBEXOBJECT CLASS WebExMain ARGS .T.
+                    .:SetContent(cBody)
+                END WEBEXOBJECT
+            else
+                .:SetContent(cBody)
+            endif
         END WEBEXOBJECT
         cHTML+=oPage:RenderHTML()
     END WEBEXOBJECT

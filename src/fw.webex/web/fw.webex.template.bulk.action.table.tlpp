@@ -119,8 +119,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
                     WITH WEBEXOBJECT CLASS WebExControl TYPE thead
                         WITH WEBEXOBJECT CLASS WebExControl TYPE tr
                             WITH WEBEXOBJECT CLASS WebExControl TYPE th
-                                WITH WEBEXOBJECT CLASS WebExControl TYPE input
-                                    .:SetAttr("type","checkbox")
+                                WITH WEBEXOBJECT CLASS WebExCheckBox
                                     .:SetAttr("onclick",cIDTable+"_toggleAll(this)")
                                 END WEBEXOBJECT
                                 for i:=1 To Len(::jColumns)
@@ -140,9 +139,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
                         for i:=1 to Len(::jItems)
                             WITH WEBEXOBJECT CLASS WebExControl TYPE tr
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE td
-                                    WITH WEBEXOBJECT CLASS WebExControl TYPE input
-                                        .:SetAttr("type","checkbox")
-                                        .:SetAttr("class","row-select")
+                                    WITH WEBEXOBJECT CLASS WebExCheckBox
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                                 for j:=1 To Len(::jColumns)
@@ -172,7 +169,6 @@ method RenderHTML() class WebExTemplateBulkActionTable
             .:SetAttr("id",cIDModal)
             .:SetAttr("class","modal fade")
             .:SetAttr("tabindex","-1")
-            .:SetAttr("aria-hidden","true")
             WITH WEBEXOBJECT CLASS WebExControl TYPE div
                 .:SetAttr("class","modal-dialog")
                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
@@ -251,9 +247,12 @@ method RenderHTML() class WebExTemplateBulkActionTable
                 *
                 * @param {HTMLInputElement} masterCheckbox - The main checkbox that controls all row checkboxes.
                 */
-                function FUNCID_toggleAll(masterCheckbox) {
-                    const checkboxes = document.querySelectorAll(".row-select");
-                    checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+                function FUNCID_toggleAll(container) {
+                    const checkbox = container.querySelector('input[type="checkbox"]');
+                    const isChecked = checkbox.checked;
+                    const table = container.closest("table");
+                    const checkboxes = table.querySelectorAll('input[type="checkbox"]:not(#'+checkbox.id+')');
+                    checkboxes.forEach(cb => cb.checked = isChecked);
                 }
 
                 /**

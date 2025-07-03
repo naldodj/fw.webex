@@ -1,0 +1,147 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExNavTop from WebExControl
+
+    public data cBrand as character
+
+    public data jLinks as json
+
+    public data jDropDowns as json
+
+    public method New(cBrand) as object
+    public method AddLink(cLabel as character,cHRef as character,oIcon as object) as object
+    public method AddDropDown(cLabel as character,aItems as array) as object
+    public method RenderHTML() as character
+
+endclass
+
+method New(cBrand) class WebExNavTop
+    _Super:New("nav")
+    ::SetAttr("class","navbar navbar-expand-lg mb-4")
+    ::cBrand:=cBrand
+    ::jLinks:=JSONObject():New()
+    ::jDropDowns:=JSONObject():New()
+return(self)
+
+method AddLink(cLabel,cHRef,oIcon) class WebExNavTop
+    local oLink as object
+    paramtype 1 var cLabel as character
+    paramtype 2 var cHRef as character
+    paramtype 3 var oIcon as object class WEBEXICON optional
+    oLink:=WebExControl():New("a")
+    oLink:SetAttr("class","nav-link")
+    oLink:SetAttr("href",cHRef)
+    if (oIcon!=nil)
+        oLink:AddChild(oIcon)
+        oLink:AddContent(" ")
+    endif
+    oLink:AddContent(cLabel)
+    ::jLinks[oLink:cID]:=oLink
+return(oLink)
+
+method AddDropDown(cLabel,aItems) class WebExNavTop
+
+    local i as numeric
+
+    local oItem as object
+    local oLink as object
+    local oMenu as object
+    local oWrapper as object
+    local oToggle as object
+
+    oToggle:=WebExControl():New("a")
+    oToggle:SetAttr("class","nav-link dropdown-toggle")
+    oToggle:SetAttr("href","#")
+    oToggle:SetAttr("role","button")
+    oToggle:SetAttr("data-bs-toggle","dropdown")
+    oToggle:SetAttr("aria-expanded","false")
+    oToggle:SetContent(cLabel)
+
+    oMenu:=WebExControl():New("ul")
+    oMenu:SetAttr("class","dropdown-menu")
+    for i:=1 to Len(aItems)
+        oItem:=WebExControl():New("li")
+        oLink:=WebExControl():New("a")
+        oLink:SetAttr("class","dropdown-item")
+        oLink:SetAttr("href",aItems[i][2])
+        oLink:SetContent(aItems[i][1])
+        oItem:AddChild(oLink)
+        oMenu:AddChild(oItem)
+    next i
+
+    oWrapper:=WebExControl():New("li")
+    oWrapper:SetAttr("class","nav-item dropdown")
+    oWrapper:AddChild(oToggle)
+    oWrapper:AddChild(oMenu)
+
+    ::jDropDowns[oWrapper:cID]:=oWrapper
+
+return(oWrapper)
+
+method RenderHTML() class WebExNavTop
+
+    local cHtml as character
+
+    local oUl as object
+    local oSpan as object
+    local oBrand as object
+    local oButton as object
+    local oContainer as object
+    local oDivCollapse as object
+
+    ::AddClass("navbar navbar-expand-lg")
+
+    oContainer:=WebExControl():New("div")
+    oContainer:SetAttr("class","container-fluid")
+
+    oBrand:=WebExControl():New("a")
+    oBrand:SetAttr("class","navbar-brand")
+    oBrand:SetAttr("href","#")
+    oBrand:SetContent(::cBrand)
+
+    oSpan:=WebExControl():New("span")
+    oSpan:SetAttr("class","navbar-toggler-icon")
+
+    oButton:=WebExControl():New("button")
+    oButton:SetAttr("class","navbar-toggler")
+    oButton:SetAttr("type","button")
+    oButton:SetAttr("data-bs-toggle","collapse")
+    oButton:SetAttr("data-bs-target","#"+::cID+"_menu")
+    oButton:SetAttr("aria-controls",::cID+"_menu")
+    oButton:SetAttr("aria-expanded","false")
+    oButton:SetAttr("aria-label","Toggle navigation")
+    oButton:AddChild(oSpan)
+
+    oDivCollapse:=WebExControl():New("div")
+    oDivCollapse:SetAttr("class","collapse navbar-collapse")
+    oDivCollapse:SetAttr("id",::cID+"_menu")
+
+    oUl:=WebExControl():New("ul")
+    oUl:SetAttr("class","navbar-nav me-auto mb-2 mb-lg-0")
+
+    aEval(::jLinks:GetNames(),{|k|oUl:AddChild(::jLinks[k])})
+    aEval(::jDropDowns:GetNames(),{|k|oUl:AddChild(::jDropDowns[k])})
+
+    oDivCollapse:AddChild(oUl)
+    oContainer:AddChild(oBrand)
+    oContainer:AddChild(oButton)
+    oContainer:AddChild(oDivCollapse)
+
+    ::AddChild(oContainer)
+
+    cHtml:=_Super:RenderHTML()
+
+return(cHtml)

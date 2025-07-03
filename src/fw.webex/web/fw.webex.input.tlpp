@@ -14,16 +14,30 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExInput from WebExControl
-    public method New(cName as character,cType as character,cPlaceholder as character) as object
+    public method New(cName as character,cType as character,cPlaceholder as character,cTitle as character) as object
 endclass
 
-method New(cName,cType,cPlaceholder) class WebExInput
+method New(cName,cType,cPlaceholder,cTitle) class WebExInput
+
     paramtype 1 var cName as character
     paramtype 2 var cType as character
     paramtype 3 var cPlaceholder as character
+    paramtype 4 var cTitle as character optional default cPlaceholder
+
     _Super:New("input")
+
+    if (!cType=="checkbox")
+        ::SetAttr("class","form-control")
+    endif
+
     ::SetAttr("name",cName)
     ::SetAttr("type",cType)
-    ::SetAttr("placeholder",cPlaceholder)
-    ::SetAttr("class","form-control")
+
+    if (!Empty(cPlaceholder))
+        ::SetAttr("placeholder",cPlaceholder)
+    endif
+    if (!Empty(cTitle))
+        ::SetAttr("title",cTitle)
+    endif
+
 return(self)

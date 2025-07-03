@@ -15,10 +15,27 @@ namespace FWWebEx
 
 #include "shell.ch"
 
+static __cUserID as character
+static __cClientSecret as character
+static __cUserName as character
+static __cUserPassWord as character
+
 class FWExampleTools
+
     static method Execute(bExecute as codeblock,cTitle as character,lPrepareEnvironment as logical) as variant
     static method HtmlFileShow(cHTML as character,cTitle as character,cHTMLFile as character) as variant
     static method GetRESTCredential(cUSR as character,cPDW as character,cRESTURL as character) as logical
+
+    static method NoCheckUri() as array
+    static method ValidaToken(cToken,cPath) as logical
+    static method ParamsProvider() as json
+
+    static method GetUserID(cUserID) as character
+    static method GetClientSecret(cClientSecret) as character
+    static method GetUserName(cUserName) as character
+    static method GetUserPassWord(cUserPassWord) as character
+    static method GetOAuth2Token() as json
+
 endclass
 
 static method Execute(bExecute,cTitle,lPrepareEnvironment) class FWExampleTools
@@ -293,7 +310,7 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile) class FWExampleTools
 
 return
 
-static method GetRESTCredential(cUSR,cPDW,cRESTURL) class FWExampleTools
+static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,joAuth2) class FWExampleTools
 
     local aParamBox:=Array(0) as array
     local aParamRet:=Array(0) as array
@@ -302,7 +319,9 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL) class FWExampleTools
 
     paramtype 1 var cUSR as character optional default "admin"
     paramtype 2 var cPDW as character optional default "admin"
-    paramtype 3 var cRESTURL as character optional default "https://"+GetServerIP()+":"+LTrim(Str(GetServerPort()))+"/app-root/"
+    paramtype 3 var cRESTURL as character optional default "https://localhost:"+LTrim(Str(GetServerPort()))+"/app-root/"
+    paramtype 4 var cRESTURLOAuth2 as character optional default ""
+    paramtype 5 var joAuth2 as json optional
 
     if (Empty(cUSR))
         cUSR:="admin"
@@ -313,13 +332,18 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL) class FWExampleTools
     endif
     cPDW:=PadR(cPDW,100)
     if (Empty(cRESTURL))
-        cRESTURL:="https://"+GetServerIP()+":"+LTrim(Str(GetServerPort()))+"/app-root/"
+        cRESTURL:="https://localhost:"+LTrim(Str(GetServerPort()))+"/app-root/"
     endif
     cRESTURL:=PadR(cRESTURL,200)
+    cRESTURLOAuth2:=PadR(cRESTURLOAuth2,200)
+
+    MV_PAR04:=.F.
 
     aAdd(aParamBox,{1,"Usuario",cUSR,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
     aAdd(aParamBox,{1,"Senha",cPDW,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
     aAdd(aParamBox,{1,"URL REST",cRESTURL,"@","NaoVazio()","","AllWaysTrue()",200,.T.})
+    aAdd(aParamBox,{4,"OAuth2",MV_PAR04,"",100,"AllWaysTrue()",.F.})
+    aAdd(aParamBox,{1,"URL REST OAuth2",cRESTURLOAuth2,"@","IF(MV_PAR04,NaoVazio(),AllWaysTrue())","","MV_PAR04",200,.T.})
 
     begin sequence
 
@@ -330,10 +354,22 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL) class FWExampleTools
         endif
 
         cUSR:=AllTrim(aParamRet[1])
+        FWExampleTools():GetUserName(cUSR)
+
         cPDW:=AllTrim(aParamRet[2])
+        FWExampleTools():GetUserPassWord(cPDW)
+
         cRESTURL:=AllTrim(aParamRet[3])
         if (Right(cRESTURL,1)!="/")
             cRESTURL+="/"
+        endif
+
+        if (aParamRet[4])
+            cRESTURLOAuth2:=AllTrim(aParamRet[5])
+            if (Right(cRESTURLOAuth2,1)=="/")
+                cRESTURL:=SubStr(cRESTURLOAuth2,1,Len(cRESTURLOAuth2)-1)
+            endif
+            joAuth2:=FWExampleTools():GetOAuth2Token(cRESTURLOAuth2)
         endif
 
     end sequence
@@ -342,3 +378,113 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL) class FWExampleTools
     FWFreeArray(@aParamRet)
 
 return(lGetRESTCredential)
+
+//https://tdn.totvs.com/display/tec/onAuthNoCheckUri
+static method NoCheckUri() class FWExampleTools
+    local aNoCheckUri:=array(0) as array
+return(aNoCheckUri)
+
+//https://tdn.totvs.com/pages/viewpage.action?pageId=579117088
+static method ValidaToken(cToken,cPath) class FWExampleTools
+return(.T.)
+
+//https://tdn.totvs.com/display/tec/onAuthparams
+static method ParamsProvider() class FWExampleTools
+    local jParams := {;
+         "client_id" : FWExampleTools():GetUserID(); //string
+        ,"client_secret" : FWExampleTools():GetClientSecret();  // string
+        ,"username" : FWExampleTools():GetUserName();   // string
+        ,"password" : FWExampleTools():GetUserPassWord();   // string
+        ,"grant_type" : "password"; //string este conteudo deve ser fixo por enquanto
+        ,"access_expires" : 36000000;   //integer tempo em milissegundos
+        ,"refresh_expires" : Date()+1;  // ou para o caso de data fixa, o formato de data: "mm/dd/yyyy" -> "12/31/2021"
+    }
+return(jParams)
+
+static method GetUserID(cUserID) class FWExampleTools
+    if (!Empty(cUserID))
+        __cUserID:=cUserID
+    endif
+    if (empty(__cUserID))
+        __cUserID:="000000"
+    endif
+
+return(__cUserID)
+
+static method GetClientSecret(cClientSecret) class FWExampleTools
+    if (!Empty(cClientSecret))
+        __cClientSecret:=cClientSecret
+    endif
+    if (empty(__cClientSecret))
+        __cClientSecret:="@#UltraSecret#@"
+    endif
+return(__cClientSecret)
+
+static method GetUserName(cUserName) class FWExampleTools
+    if (!Empty(cUserName))
+        __cUserName:=cUserName
+    endif
+    if (empty(__cUserName))
+        __cUserName:="admin"
+    endif
+return(__cUserName)
+
+static method GetUserPassWord(cUserPassWord) class FWExampleTools
+    if (!Empty(cUserPassWord))
+        __cUserPassWord:=cUserPassWord
+    endif
+    if (empty(__cUserPassWord))
+        __cUserPassWord:="admin"
+    endif
+return(__cUserPassWord)
+
+static method GetOAuth2Token(cURLOAuth2) class FWExampleTools
+
+    local aNames as array
+    local aHeadStr as array
+
+    local cOAuth2 as character
+    local cBasicAuth as character
+
+    local joAuth2 as json
+
+    local nNames as numeric
+
+    local oFWRest as object
+
+    paramtype 1 var cURLOAuth2 as character
+
+    joAuth2:=JSONObject():New()
+    joAuth2["grant_type"]:="password"
+    joAuth2["username"]:=FWExampleTools():GetUserName()
+    joAuth2["password"]:=FWExampleTools():GetUserPassWord()
+
+    cBasicAuth:="Authorization: Basic "+Encode64(joAuth2["username"]+":"+joAuth2["password"])
+
+    cGetParam:="?"
+    aNames:=joAuth2:GetNames()
+    nNames:=Len(aNames)
+    aEval(aNames,{|cName,i|cGetParam+=cName+"="+joAuth2[cName]+if(i<nNames,"&","")})
+    FWFreeArray(@aNames)
+
+    cURLOAuth2+=cGetParam
+
+    aHeadStr:=Array(0)
+    aAdd(aHeadStr,"Content-Type: application/json")
+    aAdd(aHeadStr,"Content-Encoding: gzip")
+    aAdd(aHeadStr,cBasicAuth)
+
+    oFWRest:=FWRest():New(cURLOAuth2)
+    oFWRest:SetPath("")
+    oFWRest:SetChkStatus(.F.)
+    oFWRest:Get(aHeadStr,"")
+    FWFreeArray(@aHeadStr)
+
+    cOAuth2:=oFWRest:GetResult()
+    FreeObj(@oFWRest)
+
+    FreeObj(@joAuth2)
+    joAuth2:=JSONObject():New()
+    joAuth2:FromJSON(cOAuth2)
+
+return(joAuth2)

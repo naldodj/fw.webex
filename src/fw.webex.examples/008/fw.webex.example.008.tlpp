@@ -30,16 +30,23 @@ static procedure FWWebExExample_008()
     local cScript as character
     local cRESTURL as character
     local cProcName:=ProcName() as character
-    local cBasicAuth as character
     local cDNATechAuth as character
+    local cAutorization as character
+    local cRESTURLOAuth2 as character
+
+    local joAuth2 as json
 
     local oFWWebExPage as object
 
-    if (!FWExampleTools():GetRESTCredential(@cUSR,@cPDW,@cRESTURL))
+    if (!FWExampleTools():GetRESTCredential(@cUSR,@cPDW,@cRESTURL,@cRESTURLOAuth2,@joAuth2))
         return
     endif
 
-    cBasicAuth:="Basic "+Encode64(cUSR+":"+cPDW)
+    if ((valType(joAuth2)=="J").and.(joAuth2:HasProperty("access_token")))
+        cAutorization:="Bearer "+joAuth2["access_token"]
+    else
+        cAutorization:="Basic "+Encode64(cUSR+":"+cUSR)
+    endif
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName+" (REST + DataTable)"
         WITH WEBEXOBJECT CLASS WebExControl TYPE style
@@ -191,7 +198,7 @@ static procedure FWWebExExample_008()
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
-                                    'Authorization': <basicAuth>,
+                                    'Authorization': <Autorization>,
                                     'X-DNATech-Auth-Token': <DNATechAuth>
                                 },
                                 body: JSON.stringify({
@@ -263,7 +270,7 @@ static procedure FWWebExExample_008()
                 cDNATechAuth:=Encode64("token:"+cDNATechAuth)
                 cScript:=StrTran(cScript,"<DNATechAuth>","'"+cDNATechAuth+"'")
             endif
-            cScript:=StrTran(cScript,"<basicAuth>","'"+cBasicAuth+"'")
+            cScript:=StrTran(cScript,"<Autorization>","'"+cAutorization+"'")
             cScript:=StrTran(cScript,"https://localhost:9898/rest/",cRESTURL)
             .:SetContent(cScript)
         END WEBEXOBJECT

@@ -1,0 +1,119 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExNavSide from WebExControl
+
+    public data cBrand as character
+
+    public data jItems as json
+
+    public method New(cBrand as character) as object
+    public method SetBrand(cBrand as character) as object
+    public method AddItem(cLabel as character,cHRef as character,oIcon as character) as object
+    public method AddDivider() as object
+    public method AddHeader(cText as character) as object
+    public method RenderHTML() as character
+
+endclass
+
+method New(cBrand) class WebExNavSide
+    paramtype 1 var cBrand as character optional default ""
+    _Super:New("nav")
+    ::SetAttr("class","sidebar collapse show bg-body border-end")
+    ::SetAttr("id","sidebarMenu")
+    ::jItems:=JSONObject():New()
+    ::cBrand:=cBrand
+return(self)
+
+method SetBrand(cBrand) class WebExNavSide
+    paramtype 1 var cBrand as character
+    ::cBrand:=cBrand
+return(self)
+
+method AddItem(cLabel,cHRef,oIcon) class WebExNavSide
+
+    local oItem as object
+    local oLink as object
+    local oSpan as object
+
+    paramtype 1 var cLabel as character
+    paramtype 2 var cHRef as character
+    paramtype 3 var oIcon as object class WEBEXICON optional
+
+    oSpan:=WebExControl():New("span")
+    oSpan:SetContent(cLabel)
+
+    oLink:=WebExControl():New("a")
+    oLink:SetAttr("class","nav-link")
+    oLink:SetAttr("href",cHRef)
+    if (oIcon!=nil)
+        oLink:AddChild(oIcon)
+    endif
+    oLink:AddChild(oSpan)
+
+    oItem:=WebExControl():New("li")
+    oItem:SetAttr("class","nav-item")
+    oItem:AddChild(oLink)
+
+    ::jItems[oItem:cID]:=oItem
+
+return(oItem)
+
+method AddDivider() class WebExNavSide
+    local oDivider as object
+    oDivider:=WebExControl():New("hr")
+    oDivider:SetAttr("class","my-2")
+    ::jItems[oDivider:cID]:=oDivider
+return(oDivider)
+
+method AddHeader(cText) class WebExNavSide
+    local oHeader as object
+    paramtype 1 var cText as character
+    oHeader:=WebExControl():New("div")
+    oHeader:SetAttr("class","text-muted text-uppercase px-3 small fw-bold")
+    oHeader:SetContent(cText)
+    ::jItems[oHeader:cID]:=oHeader
+return(oHeader)
+
+method RenderHTML() class WebExNavSide
+
+    local cHTML as character
+
+    local oList as object
+    local oBrand as object
+    local oWrapper as object
+
+    oWrapper:=WebExControl():New("div")
+    oWrapper:SetAttr("class","d-flex flex-column flex-shrink-0 p-3")
+    oWrapper:SetAttr("style","min-height: 100vh")
+
+    if (!Empty(::cBrand))
+        oBrand:=WebExControl():New("a")
+        oBrand:SetAttr("href","#")
+        oBrand:SetAttr("class","navbar-brand mb-3")
+        oBrand:SetContent(::cBrand)
+        oWrapper:AddChild(oBrand)
+    endif
+
+    oList:=WebExControl():New("ul")
+    oList:SetAttr("class","nav nav-pills flex-column mb-auto")
+    aEval(::jItems:GetNames(),{|k|oList:AddChild(::jItems[k])})
+    oWrapper:AddChild(oList)
+
+    ::AddChild(oWrapper)
+
+    cHTML:=_Super:RenderHTML()
+
+return(cHTML)

@@ -14,16 +14,21 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExField from WebExControl
-    public method New(cLabel as character,cName as character,cType as character,cPlaceholder as character) as object
+    public data oWebExInput as object
+    public data oWebExLabel as object
+    public method New(cLabel as character,cName as character,cType as character,cPlaceholder as character,cTitle as character) as object
 endclass
 
-method New(cLabel,cName,cType,cPlaceholder) class WebExField
+method New(cLabel,cName,cType,cPlaceholder,cTitle) class WebExField
     paramtype 1 var cLabel as character
     paramtype 2 var cName as character
     paramtype 3 var cType as character
     paramtype 4 var cPlaceholder as character
+    paramtype 5 var cTitle as character optional default cPlaceholder
    _Super:New("div")
    ::SetAttr("class","mb-3")
-   ::AddChild(WebExLabel():New(cName,cLabel))
-   ::AddChild(WebExInput():New(cName,cType,cPlaceholder))
+   ::oWebExInput:=WebExInput():New(cName,cType,cPlaceholder,cTitle)
+   ::oWebExLabel:=WebExLabel():New(::oWebExInput:cID,cLabel)
+   ::AddChild(::oWebExLabel)
+   ::AddChild(::oWebExInput)
 return(self)

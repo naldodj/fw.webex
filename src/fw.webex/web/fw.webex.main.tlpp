@@ -1,0 +1,63 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
++---> WebExMain     <- <main> da pagina
+    |
+    +---> WebExContainer (div.container ou container-fluid)
+        |
+        +---> Conteudo da pagina (KPIs, cards, tabelas, forms...)
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExMain from WebExControl
+
+    public data lFluid as logical
+
+    public method New(lFluid as logical) as object
+    public method RenderHTML() as character
+
+end class
+
+method New(lFluid) class WebExMain
+    paramtype 1 var lFluid as logical optional default .T. // default: container-fluid
+    _Super:New("main")
+    ::SetAttr("class","main-content")
+    ::lFluid:=lFluid
+return(self)
+
+method RenderHTML() class WebExMain
+
+    local aChildren as array
+
+    local cName as character
+    local cHTML as character
+
+    local oChild as object
+    local oContainer as object
+
+    local nName as numeric
+    local nNames as numeric
+
+    oContainer:=WebExContainer():New(::lFluid)
+
+    // Move todos os filhos atuais para dentro do container
+    aChildren:=::jChildren:GetNames()
+    for nName:=1 to nNames
+        cName:=aChildren[nName]
+        oChild:=::jChildren[cName]
+        oContainer:AddChild(oChild)
+    next nName
+
+    cHTML:=_Super:RenderHTML()
+
+return(cHTML)

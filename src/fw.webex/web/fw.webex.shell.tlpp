@@ -1,0 +1,71 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
++---> WebExShell
+    ^
+    |
+    +---> WebExSideBar
+        |
+        +---> WebExNavTop   <- topo (colapsador, logo, logout etc)
+        |
+        +---> WebExNavSide  <- menu lateral (colapsavel)
+        |
+        +---> WebExMain     <- <main> da pagina
+            |
+            +---> WebExContainer (div.container ou container-fluid)
+                |
+                +---> Conteudo da pagina (KPIs, cards, tabelas, forms...)
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExShell from WebExPage
+
+    public data oMain as object
+    public data oSidebar as object
+
+    public method New(cTitle) as object
+    public method AddChild(oChild as object) as object
+    public method RenderHTML() as character
+
+endclass
+
+method New(cTitle) class WebExShell
+    paramtype cTitle as character
+    _Super:New("div")
+    ::cTitle:=cTitle
+    ::SetAttr("class","d-flex")
+    ::oMain:=WebExControl():New()
+    ::oMain:SetAttr("class","flex-fill p-3")
+return self
+
+method AddChild(oChild) class WebExShell
+    paramtype 1 var oChild as object
+    do case
+    case (oChild:IsKindOf("WebExNavSide"))
+        ::oSidebar:=oChild
+        oChild:SetAttr("class","flex-shrink-0")
+        _Super:AddChild(oChild)
+    case (oChild:IsKindOf("WebExPage"))
+        ::oMain:AddChild(oChild)
+    otherwise
+        ::oMain:AddChild(oChild)
+    endcase
+return(self)
+
+method RenderHTML() class WebExShell
+    local cHTML as character
+    if (::oMain!=nil)
+        _Super:AddChild(::oMain)
+    endif
+    cHTML:=_Super:RenderHTML()
+return(cHTML)

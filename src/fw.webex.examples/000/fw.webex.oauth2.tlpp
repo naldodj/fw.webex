@@ -1,0 +1,15 @@
+#include "tlpp-core.th"
+
+using namespace FWWebEx
+
+//https://tdn.totvs.com/display/tec/onAuthNoCheckUri
+function u_NoCheckUri()
+return(FWExampleTools():NoCheckUri())
+
+//https://tdn.totvs.com/pages/viewpage.action?pageId=579117088
+function u_validaToken(cToken,cPath) as logical
+return(FWExampleTools():ValidaToken(cToken,cPath))
+
+//https://tdn.totvs.com/display/tec/onAuthparams
+function u_paramsProvider() as json
+return(FWExampleTools():ParamsProvider())
