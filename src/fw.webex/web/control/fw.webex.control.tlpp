@@ -50,8 +50,13 @@ class WebExControl
     public method GetMemberData(cMember as character,xDefault as variant) as variant
     public method SetMemberData(cMember as character,xValue as variant) as variant
 
-    public method SetAttr(cKey as character,uValue as variant) as object
+    public method SetAttr(cAttr as character,cAttrValues as variant) as object
     public method GetAttr(cAttr as character) as character
+    public method HasAttr(cAttr as character,aAttr as array) as logical
+    public method DelAttr(cAttr as character) as logical
+
+    public method HasAttrValue(cAttr as character,cAttrValue as character,aAttr as array) as logical
+    public method DelAttrValue(cAttr as character,cAttrValue as character,aAttr as array) as logical
 
     public method SetContent(cContent as character) as object
     public method GetContent() as character
@@ -76,14 +81,14 @@ class WebExControl
 
     public method AddClass(cNewClass as character) as object
     public method HasClass(/*[@]*/cClass as character,/*@*/aClasses as array) as logical
-    public method RemoveClass(cClassRemove as character) as object
+    public method RemoveClass(cClassRemove as character) as logical
 
     public method EnableChart(lChartEnabled as logical) as object
     public method EnableIcons(lIconsEnabled as logical) as object
     public method EnableDataTable(lDataTableEnabled as logical) as object
 
     public method Clean() as variant
-    public method DisableScripts() as variant
+    public method RemoveScripts() as variant
     public method DisableFeatures() as variant
 
 endclass
@@ -169,21 +174,86 @@ method SetMemberData(cMember,xValue) class WebExControl
     endif
 return(lSetMemberData)
 
-method SetAttr(cKey,uValue) class WebExControl
-   paramtype 1 var cKey as character
-   paramtype 2 var uValue as array,character,date,json,logical,numeric optional default cKey
-   ::jAttrs[cKey]:=uValue
+method SetAttr(cAttr,cAttrValues) class WebExControl
+   paramtype 1 var cAttr as character
+   paramtype 2 var cAttrValues as character optional default cAttr
+   ::jAttrs[cAttr]:=cAttrValues
 return(self)
 
 method GetAttr(cAttr) class WebExControl
-    local cGetAttr as character
+    local cAttrValues as character
     paramtype 1 var cAttr as character
-    if (::jAttrs:HasProperty(cAttr))
-        cGetAttr:=::jAttrs[cAttr]
+    if (::HasAttr(cAttr))
+        cAttrValues:=::jAttrs[cAttr]
     else
-        cGetAttr:=""
+        cAttrValues:=""
     endif
-return(cGetAttr)
+return(cAttrValues)
+
+method HasAttr(cAttr,cAttrValue,aAttr) class WebExControl
+    local lHasAttr as logical
+    paramtype 1 var cAttr as character
+    lHasAttr:=::jAttrs:HasProperty(cAttr)
+return(lHasAttr)
+
+method DelAttr(cAttr) class WebExControl
+    local lDelAttr as logical
+    paramtype 1 var cAttr as character
+    lDelAttr:=(!::jAttrs:HasProperty(cAttr))
+    if (!lDelAttr)
+        lDelAttr:=::jAttrs:DelName(cAttr)
+    endif
+return(lDelAttr)
+
+method HasAttrValue(cAttr,cAttrValue,aAttr) class WebExControl
+    local lHasAttrValue as logical
+    local nHasAttr as numeric
+    paramtype 1 var cAttr as character
+    paramtype 2 var cAttrValue as character optional default cAttr
+    paramtype 3 var aAttr as array optional
+    aAttr:=StrTokArr2(Lower(AllTrim(::GetAttr(cAttr)))," ")
+    cAttrValue:=Lower(AllTrim(cAttrValue))
+    nHasAttr:=aScan(aAttr,{|cToken as character|(cToken==cAttrValue)})
+    lHasAttrValue:=(nHasAttr>0)
+return(lHasAttrValue)
+
+method DelAttrValue(cAttr,cAttrValue,aAttr) class WebExControl
+
+    local aAttr as array
+
+    local cNewValue as character
+
+    local lDelAttrValue as logical
+
+    local oForEach as object
+
+    paramtype 1 var cAttr as character
+    paramtype 2 var cAttrValue as character optional default cAttr
+    paramtype 3 var aAttr as array optional
+
+    if (Empty(aAttr))
+        lDelAttrValue:=::HasAttrValue(cAttr,cAttrValue,@aAttr)
+    else
+        lDelAttrValue:=(aScan(aAttr,{|cToken|cToken==cAttrValue})>0)
+    endif
+
+    if (lDelAttrValue)
+        cNewValue:=""
+        oForEach:=ForEach():New(aAttr,{|k as numeric,v as character,i as numeric|;
+            cNewValue+=if(!(v==cAttrValue),v,""),;
+            cNewValue+=if(!oForEach:__enumIsLast()," ","");
+            },;
+            .F.;
+        )
+        oForEach:Eval()
+        FreeObj(@oForEach)
+        cNewValue:=AllTrim(cNewValue)
+        ::SetAttr(cAttr,cNewValue)
+        FWFreeArray(@aAttr)
+        lDelAttrValue:=(!::HasAttrValue(cAttr,cAttrValue,@aAttr))
+    endif
+
+return(lDelAttrValue)
 
 method SetContent(cContent) class WebExControl
    paramtype 1 var cContent as character
@@ -419,45 +489,19 @@ method AddClass(cNewClass) class WebExControl
 return(self)
 
 method HasClass(cClass,aClasses) class WebExControl
-    local aClasses as array
     local lHasClass as logical
-    local nATClass as numeric
-    paramtype 1 var cClass as character
-    paramtype 2 var aClasses as array optional
-    aClasses:=StrTokArr2(Lower(AllTrim(::GetAttr("class")))," ")
-    cClass:=Lower(AllTrim(cClass))
-    nATClass:=aScan(aClasses,{|cToken as character|(cToken==cClass)})
-    lHasClass:=(nATClass>0)
+    lHasClass:=::HasAttrValue("class",cClass,@aClasses)
 return(lHasClass)
 
 method RemoveClass(cClassRemove) class WebExControl
-
     local aClasses as array
-
-    local cClass as character
-    local cNewClass as character
-
-    local oForEach as object
-
-    paramtype 1 var cClass as character
-
-    if (::HasClass(@cClassRemove,@aClasses))
-        cNewClass:=""
-        oForEach:=ForEach():New(aClasses,{|k as numeric,v as character,i as numeric|;
-            cNewClass+=if(!(v==cClassRemove),v,""),;
-            cNewClass+=if(!oForEach:__enumIsLast()," ","");
-            },;
-            .F.;
-        )
-        oForEach:Eval()
-        FreeObj(@oForEach)
-        cNewClass:=AllTrim(cNewClass)
-        ::SetAttr("class",cNewClass)
+    local lRemoveClass as logical
+    lRemoveClass:=::HasAttrValue("class",cClassRemove,@aClasses)
+    if (lRemoveClass)
+        lRemoveClass:=::DelAttrValue("class",cClassRemove,@aClasses)
     endif
-
     FWFreeArray(@aClasses)
-
-return(self)
+return(lRemoveClass)
 
 method EnableChart(lChartEnabled) class WebExControl
 
@@ -900,11 +944,11 @@ return(self)
 
 method Clean() class WebExControl
     ::ResetID()
-    ::DisableScripts()
+    ::RemoveScripts()
     ::DisableFeatures()
 return(nil)
 
-method DisableScripts() class WebExControl
+method RemoveScripts() class WebExControl
     local jHeadScripts:=::GetHeadScripts() as json
     local jBodyScripts:=::GetBodyScripts() as json
     aEval(jHeadScripts:GetNames(),{|cName|jHeadScripts:DelName(cName)})

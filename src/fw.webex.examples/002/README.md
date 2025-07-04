@@ -20,8 +20,8 @@ return
 
 static function FWWebExExample_002(cHTML as character) as character
 
-    local cHTMLFile as character
     local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
 
     local oFWWebExPage as object
 
@@ -36,7 +36,6 @@ static function FWWebExExample_002(cHTML as character) as character
         END WEBEXOBJECT
     END WEBEXOBJECT
 
-    cHTMLFile:=cProcName
     WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     WEBEXOBJECT CLEAN

@@ -6,6 +6,15 @@
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
 Released to Public Domain.
+
+loocal oNav:=WebExNavTop():New("FWWebEx")
+oNav:AddLink("Home","#home",WebExIcon():New("bi-house"))
+oNav:AddDropDown("Acoes", {;
+    ,{"Salvar","#salvar"};
+    ,{"Excluir","#excluir"};
+    ,{"Sair","#sair"};
+})
+
 --------------------------------------------------------------------------------------
 */
 
@@ -30,7 +39,7 @@ endclass
 method New(cBrand) class WebExNavTop
     paramtype 1 var cBrand as character optional default ""
     _Super:New("nav")
-    ::AddClass("navbar navbar-expand-lg mb-4")
+    ::AddClass("navbar mb-4")
     ::cBrand:=cBrand
     ::jLinks:=JSONObject():New()
     ::jDropDowns:=JSONObject():New()
@@ -62,6 +71,7 @@ method AddDropDown(cLabel,aItems) class WebExNavTop
     local oWrapper as object
     local oToggle as object
 
+    oToggle := WebExControl():New("a")
     oToggle:SetAttr("class","nav-link dropdown-toggle")
     oToggle:SetAttr("href","#")
     oToggle:SetAttr("role","button")
@@ -95,57 +105,54 @@ method RenderHTML() class WebExNavTop
     local cHTML as character
 
     local oUl as object
-    local oSpan as object
+    local oIcon as object
     local oBrand as object
     local oCollapse as object
     local oContainer as object
-    local oToggleBtn as object
+    local oSidebarToggle as object
 
-    oToggleBtn:=WebExControl():New("button")
-    oToggleBtn:SetAttr("class","navbar-toggler")
-    oToggleBtn:SetAttr("type","button")
-    oToggleBtn:SetAttr("data-bs-toggle","collapse")
-    oToggleBtn:SetAttr("data-bs-target","#menu")
+    // Botao para abrir/recolher o menu lateral (sidebar)
+    oSidebarToggle:=WebExControl():New("button")
+    oSidebarToggle:SetAttr("class","navbar-toggler border-0 bg-transparent mb-1 ps-0 pe-0 ms-0 me-0")
+    oSidebarToggle:SetAttr("type","button")
+    oSidebarToggle:SetAttr("data-bs-toggle","collapse")
+    oSidebarToggle:SetAttr("data-bs-target","#webex-sidebar")
+    oSidebarToggle:SetAttr("aria-controls","webex-sidebar")
+    oSidebarToggle:SetAttr("aria-expanded","false")
+    oSidebarToggle:SetAttr("aria-label","Alternar menu")
+    oSidebarToggle:SetAttr("style","margin-bottom: 2px; outline:none; box-shadow:none;")
 
-    oSpan:=WebExControl():New("span")
-    oSpan:SetAttr("class","navbar-toggler-icon")
-    oToggleBtn:AddChild(oSpan)
+    oIcon:=WebExIcon():New("bi-list")
+    oIcon:AddClass("fs-4 ms-0 me-0")
+    oSidebarToggle:AddChild(oIcon)
 
-    oContainer:=WebExControl():New("div")
-    oContainer:SetAttr("class","container-fluid")
-    oContainer:AddChild(oToggleBtn)
-
+    // Marca do sistema
     oBrand:=WebExControl():New("a")
-    oBrand:SetAttr("class","navbar-brand")
+    oBrand:SetAttr("class","navbar-brand ps-0 pe-0 ms-0 me-0")
     oBrand:SetAttr("href","#")
     oBrand:SetContent(::cBrand)
 
-    oToggler:=WebExControl():New("button")
-    oToggler:SetAttr("class","navbar-toggler")
-    oToggler:SetAttr("type","button")
-    oToggler:SetAttr("data-bs-toggle","collapse")
-    oToggler:SetAttr("data-bs-target","#"+::cID+"_menu")
-    oToggler:SetAttr("aria-controls",::cID+"_menu")
-    oToggler:SetAttr("aria-expanded","false")
-    oToggler:SetAttr("aria-label","Toggle navigation")
+    // Container principal do topo
+    oContainer:=WebExControl():New("div")
+    oContainer:SetAttr("class","container-fluid d-flex flex-column align-items-start px-0")
 
-    oSpan:=WebExControl():New("span")
-    oSpan:SetAttr("class","navbar-toggler-icon")
-    oToggler:AddChild(oSpan)
-
-    oCollapse:=WebExControl():New("div")
-    oCollapse:SetAttr("class","collapse navbar-collapse")
-    oCollapse:SetAttr("id",::cID+"_menu")
-
-    oUl:=WebExControl():New("ul")
-    oUl:SetAttr("class","navbar-nav me-auto mb-2 mb-lg-0")
-    aEval(::jLinks:GetNames(),{|k|oUl:AddChild(::jLinks[k])})
-    aEval(::jDropDowns:GetNames(),{|k|oUl:AddChild(::jDropDowns[k])})
-
-    oCollapse:AddChild(oUl)
+    oContainer:AddChild(oSidebarToggle)
     oContainer:AddChild(oBrand)
-    oContainer:AddChild(oToggler)
-    oContainer:AddChild(oCollapse)
+
+    if ((Len(::jLinks:GetNames())>0).or.(Len(::jDropDowns:GetNames())>0))
+        oUl:=WebExControl():New("ul")
+        oUl:SetAttr("class","navbar-nav me-auto mb-0")
+        // Adiciona os links
+        aEval(::jLinks:GetNames(), {|k| oUl:AddChild(::jLinks[k]) })
+        // Adiciona os dropdowns
+        aEval(::jDropDowns:GetNames(), {|k| oUl:AddChild(::jDropDowns[k]) })
+        // Menu colapsavel da barra superior
+        oCollapse:=WebExControl():New("div")
+        oCollapse:SetAttr("class","collapse navbar-collapse p-0 m-0")
+        oCollapse:SetAttr("id",::cID+"_menu")
+        oCollapse:AddChild(oUl)
+        oContainer:AddChild(oCollapse)
+    endif
 
     ::AddChild(oContainer)
 

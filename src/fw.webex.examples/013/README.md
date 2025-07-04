@@ -5,12 +5,12 @@
 
 using namespace FWWebEx
 
-procedure u_FWWebExExample_012()
+procedure u_FWWebExExample_013()
     local bExecute as codeblock
     local cHTML as character
     local cHTMLFile as character
     local cProcName:=ProcName() as character
-    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_012(@cHTML)},"Aguarde",cProcName)}
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_013(@cHTML)},"Aguarde",cProcName)}
     FWExampleTools():Execute(bExecute,cProcName,.T.)
     if (File(cHTMLFile))
         FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
@@ -18,117 +18,106 @@ procedure u_FWWebExExample_012()
     endif
 return
 
-//TODO: Finalizar o Exemplo 012
-static procedure FWWebExExample_012(cHTML as character) as character
+static procedure FWWebExExample_013(cHTML as character) as character
 
-    local cHTMLFile as character
+    local cScript as character
     local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
 
-    local oFWoSideBar as object
+    local oSpan:=WebExControl():New("span") as object
+    local oToggler:=WebExControl():New("button") as object
+
     local oFWWebExMain as object
-    local oFWWebExIcon as object
     local oFWWebExShell as object
-    local oFWWebExCardKPI as object
-    local oFWWebExContainer as object
-    local oFWWebExNavSideMenu as object
+    local oFWWebExScript as object
+    local oFWWebExNavTop as object
+    local oFWWebExNavSide as object
+    local oFWWebExSideBar as object
+    local oFWWebExCardKPI1 as object
+    local oFWWebExCardKPI2 as object
 
-    local oFWWebExRow1 as object
-    local oFWWebExRow2 as object
+    oSpan:SetAttr("class","navbar-toggler-icon")
 
-    local oFWWebExCol1 as object
-    local oFWWebExCol2 as object
-    local oFWWebExCol3 as object
-    local oFWWebExCol4 as object
+    // Botao para colapsar menu lateral (estilo Bootstrap)
+    oToggler:SetAttr("class","navbar-toggler")
+    oToggler:SetAttr("type","button")
+    oToggler:SetAttr("data-bs-toggle","collapse")
+    oToggler:SetAttr("data-bs-target","#webex-sidebar")
+    oToggler:SetAttr("aria-controls","webex-sidebar")
+    oToggler:SetAttr("aria-expanded","false")
+    oToggler:SetAttr("aria-label","Alternar menu")
+    oToggler:AddChild(oSpan)
 
-    // Monta menu lateral
-    oFWWebExNavSideMenu:=WebExNavSide():New()
-    oFWWebExNavSideMenu:SetBrand("FWWebEx")
-    oFWWebExNavSideMenu:AddHeader("Geral")
-    oFWWebExNavSideMenu:AddItem("Dashboard KPI","#kpi",WebExIcon():New("bi-bar-chart"))
-    oFWWebExNavSideMenu:AddDivider()
-    oFWWebExNavSideMenu:AddItem("Dashboard KPI 2","#kpi2",WebExIcon():New("bi-bar-chart"))
-    oFWWebExNavSideMenu:AddDivider()
-    oFWWebExNavSideMenu:AddHeader("Admin")
-    oFWWebExNavSideMenu:AddItem("Usu&aacute;rios","#",WebExIcon():New("bi-person"))
+    oFWWebExNavTop:=WebExNavTop():New("FWWebEx")
+    oFWWebExNavTop:AddChild(oToggler)
 
-    oFWoSideBar:=WebExSideBar():New()
-    oFWoSideBar:AddChild(oFWWebExNavSideMenu)
+    oFWWebExSideBar:=WebExSideBar():New()
+    oFWWebExSideBar:AddChild(oFWWebExNavTop)
 
-    // Cards KPI dentro do Container e Main
-    oFWWebExCol1:=WebExCol():New(4)
-    oFWWebExCardKPI:=WebExCardKPI():New("Faturamento","R$ 125.000","bg-success",WebExIcon():New("bi-bar-chart"))
-    oFWWebExCol1:AddChild(oFWWebExCardKPI)
+    // Menu lateral com data-toggle-kpi
+    oFWWebExNavSide:=WebExNavSide():New()
+    oFWWebExNavSide:SetAttr("id","webex-sidebar")
+    oFWWebExNavSide:SetAttr("class","collapse show")
+    oFWWebExNavSide:SetBrand("FWWebEx")
+    oFWWebExNavSide:AddItem("Dashboard KPI","#",WebExIcon():New("bi-bar-chart")):SetAttr("data-toggle-kpi","kpi")
+    oFWWebExNavSide:AddItem("Dashboard KPI 2","#",WebExIcon():New("bi-graph-up")):SetAttr("data-toggle-kpi","kpi2")
 
-    oFWWebExCol2:=WebExCol():New(4)
-    oFWWebExCol2:AddClass("border-start")
-    oFWWebExCol2:AddClass("border-secondary")
-    oFWWebExCol2:AddClass("ps-3")
-    oFWWebExCardKPI:=WebExCardKPI():New("Despesas","R$ 87.000","bg-danger",WebExIcon():New("bi-graph-up"))
-    oFWWebExCol2:AddChild(oFWWebExCardKPI)
+    oFWWebExSideBar:AddChild(oFWWebExNavSide)
 
-    oFWWebExCol3:=WebExCol():New(4)
-    oFWWebExCol3:AddClass("border-start")
-    oFWWebExCol3:AddClass("border-secondary")
-    oFWWebExCol3:AddClass("ps-3")
-    oFWWebExCardKPI:=WebExCardKPI():New("Outros","R$ 75.000","bg-info",WebExIcon():New("bi-currency-dollar"))
-    oFWWebExCol3:AddChild(oFWWebExCardKPI)
+    // KPI 1
+    oFWWebExCardKPI1:=WebExContainer():New(.T.)
+    oFWWebExCardKPI1:SetAttr("id","kpi")
+    oFWWebExCardKPI1:SetAttr("style","display:none")
+    oFWWebExCardKPI1:AddChild(WebExCardKPI():New("Faturamento","$10.000","bg-primary",WebExIcon():New("bi-cash")))
+    oFWWebExCardKPI1:AddChild(WebExCardKPI():New("Clientes Ativos","152","bg-success",WebExIcon():New("bi-people")))
 
-    oFWWebExRow1:=WebExRow():New()
-    oFWWebExRow1:AddChild(oFWWebExCol1)
-    oFWWebExRow1:AddChild(oFWWebExCol2)
-    oFWWebExRow1:AddChild(oFWWebExCol3)
-
-    oFWWebExCol3:=WebExCol():New(6)
-    oFWWebExIcon:=WebExIcon():New("analytics","material")
-    oFWWebExCardKPI:=WebExCardKPI():New("Clientes Ativos","1.024","bg-info",oFWWebExIcon)
-    oFWWebExCardKPI:SetIconBefore(.F.)
-    oFWWebExCol3:AddChild(oFWWebExCardKPI)
-
-    oFWWebExCol4:=WebExCol():New(6)
-    oFWWebExIcon:=WebExIcon():New("insights","material")
-    oFWWebExCardKPI:=WebExCardKPI():New("Ticket M&eacute;dio","R$ 122,00","bg-warning",oFWWebExIcon)
-    oFWWebExCardKPI:SetIconBefore(.F.)
-    oFWWebExCol4:AddChild(oFWWebExCardKPI)
-
-    oFWWebExRow2:=WebExRow():New()
-    oFWWebExRow2:AddChild(oFWWebExCol3)
-    oFWWebExRow2:AddChild(oFWWebExCol4)
-
-    oFWWebExContainer:=WebExContainer():New()
-    oFWWebExContainer:SetAttr("id","kpi")
-    oFWWebExContainer:AddChild(oFWWebExRow1)
-    oFWWebExContainer:AddChild(WebExHR():New())
-    oFWWebExContainer:AddChild(oFWWebExRow2)
+    // KPI 2
+    oFWWebExCardKPI2:=WebExContainer():New(.T.)
+    oFWWebExCardKPI2:SetAttr("id","kpi2")
+    oFWWebExCardKPI2:SetAttr("style","display:none")
+    oFWWebExCardKPI2:AddChild(WebExCardKPI():New("Despesas","$4.000","bg-danger",WebExIcon():New("bi-cart")))
+    oFWWebExCardKPI2:AddChild(WebExCardKPI():New("Lucro L&iacute;quido","$6.000","bg-warning",WebExIcon():New("bi-currency-dollar")))
 
     oFWWebExMain:=WebExMain():New()
-    oFWWebExMain:AddChild(oFWWebExContainer)
-    oFWWebExMain:AddChild(WebExHR():New())
-    oFWWebExMain:AddChild(BuildKPI2Content())
+    oFWWebExMain:AddChild(oFWWebExCardKPI1)
+    oFWWebExMain:AddChild(oFWWebExCardKPI2)
+
+    // Script para alternar exibicao dos KPIs
+    beginContent var cScript
+        document.addEventListener("DOMContentLoaded",()=>{
+            document.querySelectorAll("[data-toggle-kpi]").forEach(el=>{
+                el.addEventListener("click",()=>{
+                ["kpi","kpi2"].forEach(id=>{
+                    document.getElementById(id).style.display = (id === el.dataset.toggleKpi) ? "block" : "none";
+                    });
+                });
+            });
+        });
+    endContent
+
+    oFWWebExScript:=WebExScript():New()
+    oFWWebExScript:SetContent(cScript)
+
+    oFWWebExSideBar:AddChild(oFWWebExMain)
 
     oFWWebExShell:=WebExShell():New(cProcName)
-    oFWWebExShell:AddChild(oFWoSideBar)
-    oFWWebExShell:AddChild(oFWWebExMain)
+    oFWWebExShell:AddChild(oFWWebExSideBar)
 
-    cHTMLFile:=cProcName
     WebFileTools():HTMLFromControl(oFWWebExShell,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExShell:Clean()
 
-    FreeObj(@oFWoSideBar)
+    FreeObj(@oSpan)
+    FreeObj(@oToggler)
+
     FreeObj(@oFWWebExMain)
-    FreeObj(@oFWWebExIcon)
     FreeObj(@oFWWebExShell)
-    FreeObj(@oFWWebExCardKPI)
-    FreeObj(@oFWWebExContainer)
-    FreeObj(@oFWWebExNavSideMenu)
-
-    FreeObj(@oFWWebExRow1)
-    FreeObj(@oFWWebExRow2)
-
-    FreeObj(@oFWWebExCol1)
-    FreeObj(@oFWWebExCol2)
-    FreeObj(@oFWWebExCol3)
-    FreeObj(@oFWWebExCol4)
+    FreeObj(@oFWWebExScript)
+    FreeObj(@oFWWebExNavTop)
+    FreeObj(@oFWWebExNavSide)
+    FreeObj(@oFWWebExSideBar)
+    FreeObj(@oFWWebExCardKPI1)
+    FreeObj(@oFWWebExCardKPI2)
 
 return(cHTMLFile)
 ````

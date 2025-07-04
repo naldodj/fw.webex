@@ -20,9 +20,8 @@ return
 
 static procedure FWWebExExample_010(cHTML as character) as character
 
-    local cHTMLFile as character
-
     local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
 
     local oFWWebExPage as object
 
@@ -82,7 +81,6 @@ static procedure FWWebExExample_010(cHTML as character) as character
     oFWWebExPage:AddChild(WebExHR():New()) // separador horizontal
     oFWWebExPage:AddChild(oFWWebExRow2)
 
-    cHTMLFile:=cProcName
     WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     FreeObj(@oFWWebExCardKPI)
@@ -95,7 +93,6 @@ static procedure FWWebExExample_010(cHTML as character) as character
     FreeObj(@oFWWebExPage)
 
 return(cHTMLFile)
-
 ````
 
 ![image](https://github.com/user-attachments/assets/16d7dd2e-7077-4f80-872b-b4c8cfa5ccf2)

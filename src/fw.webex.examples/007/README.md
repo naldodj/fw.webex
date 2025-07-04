@@ -23,13 +23,12 @@ return
 
 static procedure FWWebExExample_007(cHTML as character) as character
 
-    local cHTMLFile as character
-
     local cUSR as character
     local cPDW as character
     local cScript as character
     local cRESTURL as character
     local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
     local cDNATechAuth as character
     local cAutorization as character
     local cRESTURLOAuth2 as character
@@ -255,7 +254,6 @@ static procedure FWWebExExample_007(cHTML as character) as character
     *oFWWebExPage:SetAttr("style","min-height:100vh;padding:1rem;box-sizing:border-box;overflow:auto;")
     oFWWebExPage:EnableDataTable()
 
-    cHTMLFile:=cProcName
     WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExPage:Clean()

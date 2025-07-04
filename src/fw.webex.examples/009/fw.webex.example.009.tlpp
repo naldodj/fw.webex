@@ -53,10 +53,9 @@ static procedure FWWebExExample_009(cHTML as character) as character
         };
     } as array
 
-    local cHTMLFile as character
-    local cHTMLDrillDown as character
-
     local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
+    local cHTMLDrillDown as character
 
     local nEmpresa as numeric
     local nEmpresas:=Len(aEmpresas) as numeric
@@ -107,7 +106,6 @@ static procedure FWWebExExample_009(cHTML as character) as character
     oFWWebExShell:=WebExShell():New("Drill-down Exemplo")
     oFWWebExShell:AddChild(oFWWebExMain)
 
-    cHTMLFile:=cProcName
     WebFileTools():HTMLFromControl(oFWWebExShell,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExShell:Clean()

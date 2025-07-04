@@ -26,40 +26,10 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExSideBar from WebExControl
-
-    public data cPosition as character // "top" or "left"
-
     public method New() as object
-    public method AddChild(oChild as object) as object
-    public method RenderHTML() as character
-
 endclass
 
 method New() class WebExSideBar
-    _Super:New()
-    ::SetAttr("id",::cID)
-return self
-
-method AddChild(oChild) class WebExSideBar
-    _Super:AddChild(oChild)
-    if (oChild:IsKindOf("WebExNavSide",.T.))
-        ::cPosition:="left"
-    elseif (oChild:IsKindOf("WebExNavTop",.T.))
-        ::cPosition:="top"
-    endif
+    _Super:New("aside")
+    ::AddClass("sidebar d-flex flex-column")
 return(self)
-
-method RenderHTML() class WebExSideBar
-    local cHTML as character
-    if (::cPosition=="left")
-        ::cType:="aside"
-        ::AddClass("sidebar")
-        ::AddClass("d-flex")
-        ::AddClass("flex-column")
-    elseif ::cPosition == "top"
-        ::cType:="header"
-        ::AddClass("navbar")
-        ::AddClass("navbar-expand-lg")
-    endif
-    cHTML:=_Super:RenderHTML()
-return(cHTML)

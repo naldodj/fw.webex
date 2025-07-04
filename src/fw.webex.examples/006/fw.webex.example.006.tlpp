@@ -30,10 +30,9 @@ return
 
 static procedure FWWebExExample_006(cHTML as character) as character
 
-    local cHTMLFile as character
-
     local cScript as character
     local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
 
     local oDivTable as object
     local oTableStyle as object
@@ -160,7 +159,6 @@ static procedure FWWebExExample_006(cHTML as character) as character
     oFWWebExPage:AddChild(oFWWebExScript)
     oFWWebExPage:EnableDataTable()
 
-    cHTMLFile:=cProcName
     WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExPage:Clean()

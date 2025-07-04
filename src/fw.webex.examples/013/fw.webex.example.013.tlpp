@@ -5,23 +5,65 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
-+---> WebExShell
-    ^
-    |
-    +---> WebExSideBar
-        |
-        +---> WebExNavTop   <- topo (colapsador,logo,logout etc)
-        |
-        +---> WebExNavSide  <- menu lateral (colapsavel)
-        |
-        +---> WebExMain     <- <main> da pagina
++---> WebExPage
+      |
+      +---> oWrapper (div.d-flex)
             |
-            +---> WebExContainer (div.container ou container-fluid)
-                |
-                +---> Conteudo da pagina (KPIs,cards,tabelas,forms...)
+            +---> oFWWebExSideBar (WebExSideBar)
+            |     |
+            |     +---> oFWWebExNavTop (WebExNavTop)
+            |     |     |
+            |     |     +---> container-fluid.d-flex.flex-column.align-items-start
+            |     |           |
+            |     |           +---> oSidebarToggle (button.navbar-toggler)
+            |     |           |     |
+            |     |           |     +---> WebExIcon (bi-list)
+            |     |           |
+            |     |           +---> oBrand (a.navbar-brand com texto "FWWebEx")
+            |     |           |
+            |     |           +---> collapse.navbar-collapse (com links/dropdowns se houver)
+            |
+            |     +---> oFWWebExNavSide (div#webex-sidebar.collapse.show)
+            |           |
+            |           +---> oBrandLink (a.d-flex.align-items-center.justify-content-center.mb-3.text-white.fw-bold.text-decoration-none)
+            |           |     |
+            |           |     +---> oBrandIcon (div.me-2)
+            |           |     |     |
+            |           |     |     +---> WebExIcon (bi-bar-chart)
+            |           |     |
+            |           |     +---> oBrandText (div.mx-3)
+            |           |           |
+            |           |           +---> oTextInBrand (span.fw-bold com texto "FWWebEx")
+            |           |
+            |           +---> oFWWebExHRDivider (hr.my-2)
+            |           |
+            |           +---> oMenuItem (li.nav-item.active)
+            |                 |
+            |                 +---> oMenuLink (a.nav-link[href=#])
+            |                       |
+            |                       +---> oMenuIcon (WebExIcon.bi-speedometer2)
+            |                       +---> oMenuText (span com texto "Dashboard")
+            |
+            +---> oContentWrapper (div.d-flex.flex-column.w-100)
+                  |
+                  +---> oTopBar (nav.navbar.shadow.mb-3)
+                  |     |
+                  |     +---> oH1 (h1.h4 com texto "Dashboard")
+                  |
+                  +---> oFWWebExMain (WebExMain)
+                        |
+                        +---> oFWWebExCardKPI1 (WebExContainer#kpi[style=display:none])
+                        |     |
+                        |     +---> WebExCardKPI "Faturamento"
+                        |     +---> WebExCardKPI "Clientes Ativos"
+                        |
+                        +---> oFWWebExCardKPI2 (WebExContainer#kpi2[style=display:none])
+                              |
+                              +---> WebExCardKPI "Despesas"
+                              +---> WebExCardKPI "Lucro Liquido"
+
 
 Released to Public DoMain.
-TODO: Melhorar e Finalizar o Exemplo 013
 --------------------------------------------------------------------------------------
 */
 
@@ -45,47 +87,52 @@ return
 static procedure FWWebExExample_013(cHTML as character) as character
 
     local cScript as character
-    local cHTMLFile as character
     local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
 
-    local oSpan:=WebExControl():New("span") as object
-    local oToggler:=WebExControl():New("button") as object
+    local oH1 as object
+
+    local oTopBar as object
+    local oWrapper as object
+    local oContentWrapper as object
 
     local oFWWebExMain as object
+    local oFWWebExIcon as object
     local oFWWebExShell as object
+    local oFWWebExStyle as object
     local oFWWebExScript as object
-    local oFWWebExNavTop as object
     local oFWWebExNavSide as object
     local oFWWebExSideBar as object
     local oFWWebExCardKPI1 as object
     local oFWWebExCardKPI2 as object
 
-    oSpan:SetAttr("class","navbar-toggler-icon")
+    oH1:=WebExControl():New("h1")
+    oH1:AddClass("h4")
+    oH1:SetContent("Dashboard")
 
-    // Botao para colapsar menu lateral (estilo Bootstrap)
-    oToggler:SetAttr("class","navbar-toggler")
-    oToggler:SetAttr("type","button")
-    oToggler:SetAttr("data-bs-toggle","collapse")
-    oToggler:SetAttr("data-bs-target","#webex-sidebar")
-    oToggler:SetAttr("aria-controls","webex-sidebar")
-    oToggler:SetAttr("aria-expanded","false")
-    oToggler:SetAttr("aria-label","Alternar menu")
-    oToggler:AddChild(oSpan)
-
-    oFWWebExNavTop:=WebExNavTop():New("FWWebEx")
-    oFWWebExNavTop:AddChild(oToggler)
+    oTopBar:=WebExControl():New("nav")
+    oTopBar:AddClass("navbar shadow mb-3")
+    oTopBar:AddChild(oH1)
 
     oFWWebExSideBar:=WebExSideBar():New()
-    oFWWebExSideBar:AddChild(oFWWebExNavTop)
 
     // Menu lateral com data-toggle-kpi
     oFWWebExNavSide:=WebExNavSide():New()
+    oFWWebExNavSide:cType:="div"
     oFWWebExNavSide:SetAttr("id","webex-sidebar")
+    oFWWebExNavSide:AddClass("collapse")
+    oFWWebExNavSide:AddClass("show")
     oFWWebExNavSide:SetAttr("class","collapse show")
-    oFWWebExNavSide:SetBrand("FWWebEx")
-    oFWWebExNavSide:AddItem("Dashboard KPI","#",WebExIcon():New("bi-bar-chart")):SetAttr("data-toggle-kpi","kpi")
-    oFWWebExNavSide:AddItem("Dashboard KPI 2","#",WebExIcon():New("bi-graph-up")):SetAttr("data-toggle-kpi","kpi2")
+    oFWWebExNavSide:SetBrand("Side Menu")
 
+    oFWWebExIcon:=WebExIcon():New("bi-bar-chart")
+    oFWWebExNavSide:AddItem("Dashboard KPI","#",oFWWebExIcon):SetAttr("data-toggle-kpi","kpi")
+
+    oFWWebExIcon:=WebExIcon():New("bi-graph-up")
+    oFWWebExNavSide:AddItem("Dashboard KPI 2","#",oFWWebExIcon):SetAttr("data-toggle-kpi","kpi2")
+
+    oFWWebExNavTop:=WebExNavTop():New("FWWebEx")
+    oFWWebExSideBar:AddChild(oFWWebExNavTop)
     oFWWebExSideBar:AddChild(oFWWebExNavSide)
 
     // KPI 1
@@ -106,6 +153,16 @@ static procedure FWWebExExample_013(cHTML as character) as character
     oFWWebExMain:AddChild(oFWWebExCardKPI1)
     oFWWebExMain:AddChild(oFWWebExCardKPI2)
 
+    oContentWrapper:=WebExControl():New("div")
+    oContentWrapper:AddClass("d-flex flex-column w-100")
+    oContentWrapper:AddChild(oTopBar)
+    oContentWrapper:AddChild(oFWWebExMain)
+
+    oWrapper:=WebExControl():New("div")
+    oWrapper:AddClass("d-flex")
+    oWrapper:AddChild(oFWWebExSideBar)     // menu lateral
+    oWrapper:AddChild(oContentWrapper)     // conteudo principal
+
     // Script para alternar exibicao dos KPIs
     beginContent var cScript
         document.addEventListener("DOMContentLoaded",()=>{
@@ -122,23 +179,39 @@ static procedure FWWebExExample_013(cHTML as character) as character
     oFWWebExScript:=WebExScript():New()
     oFWWebExScript:SetContent(cScript)
 
-    oFWWebExSideBar:AddChild(oFWWebExMain)
+    beginContent var cStyle
+        #webex-sidebar {
+            transition: all 0.3s ease;
+            width: 250px;
+            overflow: hidden;
+        }
+        #webex-sidebar.collapse:not(.show) {
+            width: 0;
+            padding: 0;
+            opacity: 0;
+            display: block !important; /* forca o Bootstrap a nao esconder tudo */
+        }
+    endContent
+    oFWWebExStyle:=WebExStyle():New()
+    oFWWebExStyle:SetContent(cStyle)
 
     oFWWebExShell:=WebExShell():New(cProcName)
-    oFWWebExShell:AddChild(oFWWebExSideBar)
+    oFWWebExShell:AddChild(oWrapper)
 
-    cHTMLFile:=cProcName
     WebFileTools():HTMLFromControl(oFWWebExShell,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExShell:Clean()
 
-    FreeObj(@oSpan)
-    FreeObj(@oToggler)
+    FreeObj(@oH1)
+
+    FreeObj(@oTopBar)
+    FreeObj(@oWrapper)
+    FreeObj(@oContentWrapper)
 
     FreeObj(@oFWWebExMain)
+    FreeObj(@oFWWebExIcon)
     FreeObj(@oFWWebExShell)
     FreeObj(@oFWWebExScript)
-    FreeObj(@oFWWebExNavTop)
     FreeObj(@oFWWebExNavSide)
     FreeObj(@oFWWebExSideBar)
     FreeObj(@oFWWebExCardKPI1)

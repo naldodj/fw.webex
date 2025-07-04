@@ -18,16 +18,17 @@ procedure u_FWWebExExample_012()
     endif
 return
 
-//TODO: Finalizar o Exemplo 012
 static procedure FWWebExExample_012(cHTML as character) as character
 
-    local cHTMLFile as character
+    local cScript as character
     local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
 
     local oFWoSideBar as object
     local oFWWebExMain as object
     local oFWWebExIcon as object
     local oFWWebExShell as object
+    local oFWWebExScript as object
     local oFWWebExCardKPI as object
     local oFWWebExContainer as object
     local oFWWebExNavSideMenu as object
@@ -44,9 +45,9 @@ static procedure FWWebExExample_012(cHTML as character) as character
     oFWWebExNavSideMenu:=WebExNavSide():New()
     oFWWebExNavSideMenu:SetBrand("FWWebEx")
     oFWWebExNavSideMenu:AddHeader("Geral")
-    oFWWebExNavSideMenu:AddItem("Dashboard KPI","#kpi",WebExIcon():New("bi-bar-chart"))
+    oFWWebExNavSideMenu:AddItem("Dashboard KPI","#kpi",WebExIcon():New("bi-bar-chart")):SetAttr("data-toggle-kpi","kpi")
     oFWWebExNavSideMenu:AddDivider()
-    oFWWebExNavSideMenu:AddItem("Dashboard KPI 2","#kpi2",WebExIcon():New("bi-bar-chart"))
+    oFWWebExNavSideMenu:AddItem("Dashboard KPI 2","#kpi2",WebExIcon():New("bi-bar-chart")):SetAttr("data-toggle-kpi","kpi2")
     oFWWebExNavSideMenu:AddDivider()
     oFWWebExNavSideMenu:AddHeader("Admin")
     oFWWebExNavSideMenu:AddItem("Usu&aacute;rios","#",WebExIcon():New("bi-person"))
@@ -96,6 +97,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
 
     oFWWebExContainer:=WebExContainer():New()
     oFWWebExContainer:SetAttr("id","kpi")
+    oFWWebExContainer:SetAttr("style","display:none")
     oFWWebExContainer:AddChild(oFWWebExRow1)
     oFWWebExContainer:AddChild(WebExHR():New())
     oFWWebExContainer:AddChild(oFWWebExRow2)
@@ -109,7 +111,22 @@ static procedure FWWebExExample_012(cHTML as character) as character
     oFWWebExShell:AddChild(oFWoSideBar)
     oFWWebExShell:AddChild(oFWWebExMain)
 
-    cHTMLFile:=cProcName
+    // Script para alternar exibicao dos KPIs
+    beginContent var cScript
+        document.addEventListener("DOMContentLoaded",()=>{
+            document.querySelectorAll("[data-toggle-kpi]").forEach(el=>{
+                el.addEventListener("click",()=>{
+                ["kpi","kpi2"].forEach(id=>{
+                    document.getElementById(id).style.display = (id === el.dataset.toggleKpi) ? "block" : "none";
+                    });
+                });
+            });
+        });
+    endContent
+
+    oFWWebExScript:=WebExScript():New()
+    oFWWebExScript:SetContent(cScript)
+
     WebFileTools():HTMLFromControl(oFWWebExShell,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExShell:Clean()
@@ -118,6 +135,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
     FreeObj(@oFWWebExMain)
     FreeObj(@oFWWebExIcon)
     FreeObj(@oFWWebExShell)
+    FreeObj(@oFWWebExScript)
     FreeObj(@oFWWebExCardKPI)
     FreeObj(@oFWWebExContainer)
     FreeObj(@oFWWebExNavSideMenu)

@@ -55,6 +55,10 @@ static method Execute(bExecute,cTitle,lPrepareEnvironment) class FWExampleTools
     if (!lMainWnd)
         if (lPrepareEnvironment)
             FWMsgRun(nil,{||RPCSetEnv("99","01",GetEnvServer())},"Wait...","Preparing environment")
+            if ((Type("__cInternet")=="C").and.(__cInternet=="AUTOMATICO"))
+                //Redefine modo Blind
+                __cInternet:=NIL
+            endif
         endif
             private oMainWnd as object
             lRedefineBottom:=.T.
@@ -189,6 +193,10 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile) class FWExampleTools
             nLeft:=oFWDefSize:aWindSize[2]
             nBottom:=oFWDefSize:aWindSize[3]
             nRight:=oFWDefSize:aWindSize[4]
+        endif
+
+        if (Type("lRedefineBottom")!="L")
+            private lRedefineBottom:=.T. as logical
         endif
 
         if (lRedefineBottom)

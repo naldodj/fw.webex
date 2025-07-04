@@ -31,8 +31,12 @@ method New(cContent) class WebExFooter
         .:AddClass("mt-auto") // margin-top: auto
         .:AddClass("small")
         .:AddClass("p-3")
-        WITH WEBEXOBJECT CLASS WebExHR
+        WITH WEBEXOBJECT CLASS WebExControl TYPE div
+            WITH WEBEXOBJECT CLASS WebExHR
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExControl TYPE span
+                .:SetContent(cContent)
+            END WEBEXOBJECT
         END WEBEXOBJECT
-        .:SetContent(cContent)
     END WEBEXOBJECT
 return(self)
