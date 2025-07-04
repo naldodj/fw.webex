@@ -5,6 +5,40 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
++---> WebExPage
+      |
+      +---> WebExAlert ("Erro ao carregar os dados do cliente.", "danger")
+      |
+      +---> WebExHR
+      |
+      +---> WebExAlert ("Opera&ccedil;&atilde;o realizada com sucesso!", "success")
+      |
+      +---> WebExHR
+      |
+      +---> WebExCard ("Cliente Encontrado", "")
+      |     |
+      |     +---> <p class="card-text">
+      |     |     |
+      |     |     +---> WebExStrong ("    Nome:")
+      |     |     +---> <span> Joao da Silva</span>
+      |     |
+      |     +---> <p class="card-text">
+      |           |
+      |           +---> WebExStrong ("    Cidade:")
+      |           +---> <span> Vitoria - ES</span>
+      |
+      +---> WebExHR
+      |
+      +---> WebExCard ("TITLE", "BODY")
+      |
+      +---> WebExHR
+      |
+      +---> WebExCardKPI ("Turnover Geral", "12,5%", "bg-danger")
+            |
+            +---> WebExIcon ("bi-bar-chart")
+      |
+      +---> WebExHR
+
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */

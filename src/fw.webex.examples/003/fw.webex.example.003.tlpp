@@ -5,6 +5,22 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
++---> WebExPage
+      |
+      +---> WebExForm ("Consulta CEP")
+      |     |
+      |     +---> input[name="cep"] (type=text, placeholder="Digite o CEP")
+      |     +---> WebExButton ("Buscar CEP") ? chama buscarCEP()
+      |
+      +---> WebExScript
+      |     |
+      |     +---> <script> com funcao JS buscarCEP()
+      |           que faz fetch na API ViaCEP e injeta HTML no resultadoCEP
+      |
+      +---> WebExControl (div#resultadoCEP.mt-4)
+              |
+              +---> (dinamicamente preenchido via JS com um .card de resultado do CEP)
+
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */

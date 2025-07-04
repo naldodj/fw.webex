@@ -5,6 +5,46 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
++---> WebExPage ("Exemplo 006 - ViaCEP em DataTable")
+      |
+      +---> <style> (custom table padding)
+      |
+      +---> WebExForm ("Buscar CEP")
+      |     |
+      |     +---> input[name="cep"] (type="text", placeholder="Digite o CEP")
+      |     |
+      |     +---> WebExButton ("Buscar")
+      |           |
+      |           +---> onclick="buscarCEP(); return false;"
+      |
+      +---> WebExControl (div#tableResult)
+      |
+      +---> WebExScript
+            |
+            +---> <script>
+                  |
+                  +---> function buscarCEP()
+                        |
+                        +---> faz requisicao para https://viacep.com.br/ws/{cep}/json/
+                        |
+                        +---> se erro:
+                        |       +---> insere div.alert-danger dentro de #tableResult
+                        |
+                        +---> se sucesso:
+                                |
+                                +---> monta tabela HTML com:
+                                |     +---> table#example.table.table-striped.table-hover.display.compact.nowrap
+                                |           |
+                                |           +---> thead > tr > th (Campo, Valor)
+                                |           +---> tbody > tr > td (chave, valor)
+                                |
+                                +---> ativa plugin DataTable com:
+                                      |
+                                      +---> botoes: copy, csv, excel, print, pdf
+                                      +---> paginacao, busca, responsive
+                                      +---> idioma pt-BR via CDN
+                                      +---> drawCallback para manter altura visual igual entre paginas
+
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */

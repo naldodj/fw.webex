@@ -5,6 +5,33 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
++---> WebExPage ("Exemplo 005 - Formulario ViaCEP")
+      |
+      +---> WebExForm ("Consulta de CEP")
+            |
+            +---> input[name="cep"] (text)           <- Digite o CEP
+            +---> input[name="logradouro"] (text)    <- preenchido via JS
+            +---> input[name="bairro"] (text)
+            +---> input[name="localidade"] (text)
+            +---> input[name="uf"] (text)
+            +---> input[name="ibge"] (text)
+            |
+            +---> WebExControl (div#resultadoCEP)     <- onde aparece feedback da busca
+            |
+            +---> WebExButton ("Buscar")
+                  |
+                  +---> onclick="buscarCEP(); return false;"
+      |
+      +---> WebExScript
+            |
+            +---> <script>
+                  |
+                  +---> funcao JS buscarCEP()
+                          |
+                          +--->  faz fetch para ViaCEP
+                          |
+                          +--->  preenche campos e div#resultadoCEP dinamicamente
+
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */

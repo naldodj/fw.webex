@@ -4,6 +4,45 @@
 | |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+O Exemplo final devera ter esta estrutura
++---> WebExPage
+      |
+      +---> oWrapper (div.d-flex)
+            |
+            +---> oSidebar (ul.nav.flex-column.bg-primary.p-3)
+            |     |
+            |     +---> oBrandLink (a.d-flex.align-items-center.justify-content-center.mb-3.text-white.fw-bold.text-decoration-none)
+            |     |     |
+            |     |     +---> oBrandIcon (div.me-2)
+            |     |     |     |
+            |     |     |     +---> WebExIcon (bi-bar-chart)
+            |     |     |
+            |     |     +---> oBrandText (div.mx-3)
+            |     |           |
+            |     |           +---> oTextInBrand (span.fw-bold com texto "FWWebEx")
+            |     |
+            |     +---> oFWWebExHRDivider (hr.my-2)
+            |     |
+            |     +---> oMenuItem (li.nav-item.active)
+            |           |
+            |           +---> oMenuLink (a.nav-link[href=#])
+            |                 |
+            |                 +---> oMenuIcon (WebExIcon.bi-speedometer2)
+            |                 +---> oMenuText (span com texto "Dashboard")
+            |
+            +---> oContentWrapper (div.d-flex.flex-column.w-100)
+                  |
+                  +---> oTopBar (nav.navbar.shadow.mb-3)
+                  |     |
+                  |     +---> oH1 (h1.h4 com texto "Dashboard")
+                  |
+                  +---> oFWWebExMain
+                        |
+                        +---> oFWWebExContainer (container-fluid)
+                              |
+                              +---> WebExTemplateBulkActionTable ("Tabela 32")
+                              +---> WebExHR
+                              +---> WebExTemplateBulkActionTable ("Tabela 35")
 
 Released to Public Domain.
 --------------------------------------------------------------------------------------

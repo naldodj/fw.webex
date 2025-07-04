@@ -5,6 +5,58 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
++---> WebExPage ("FWWebExExample_008 (REST + DataTable)")
+      |
+      +---> <style> (tabela compacta + animacao do loader)
+      |
+      +---> <div id="custom-loader" style="display:none">
+      |     |
+      |     +---> <div class="progress">
+      |           |
+      |           +---> <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary">
+      |                 |
+      |                 +---> "Carregando..."
+      |
+      +---> <div class="container rounded shadow p-3">
+            |
+            +---> <div class="table-responsive">
+                  |
+                  +---> <table id="example" class="table table-striped table-hover display compact nowrap">
+                        |
+                        +---> <thead>
+                        |     |
+                        |     +---> <tr>
+                        |           |
+                        |           +---> <th>Filial</th>
+                        |           +---> <th>Matricula</th>
+                        |           +---> <th>Apelido</th>
+                        |           +---> <th>Centro de Custo</th>
+                        |           +---> <th>Salario</th>
+                        |           +---> <th>Adt.Servico</th>
+                        |           +---> <th>Cat.Func.</th>
+                        |           +---> <th>Sexo</th>
+                        |
+                        +---> <tbody> (preenchido dinamicamente via fetch)
+      |
+      +---> <script>
+            |
+            +---> DOMContentLoaded
+                  |
+                  +---> Instancia DataTable com:
+                  |     |
+                  |     +---> serverSide: true
+                  |     +---> processing: false
+                  |     +---> dom: 'Blfrtip' (botoes, filtro, paginacao etc.)
+                  |     +---> botoes: copy, csv, excel, print, pdf
+                  |     +---> ajax: fetch com body JSON customizado
+                  |     +---> headers: Authorization (Bearer ou Basic), X-DNATech-Auth-Token
+                  |     +---> responsive, compact
+                  |     +---> idioma: pt-BR via CDN
+                  |
+                  +---> preDrawCallback: mostra #custom-loader
+                  +---> drawCallback: esconde loader e completa altura com linhas em branco
+                  +---> processamento falho: mostra erro no console
+
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */
