@@ -1,4 +1,4 @@
-# 💡 Exemplo de uso (12)
+# 💡 Exemplo de uso (14)
 
 ```advpl
 #include "fw.webex.th"
@@ -18,20 +18,19 @@ procedure u_FWWebExExample_014()
     endif
 return
 
-// Dashboard básico com layout SBAdmin
+// Dashboard basico com layout SBAdmin
 static function FWWebExExample_014(cHTML as character) as character
 
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
 
-    local oMain as object
-    local oPage as object
-    local oTopbar as object
-    local oDivider as object
+    local oH1 as object
+    local oTopBar as object
     local oWrapper as object
     local oSidebar as object
 
-    local oContainer as object
+    local oTextInBrand as object
+
     local oBrandLink as object
     local oBrandIcon as object
     local oBrandText as object
@@ -41,88 +40,100 @@ static function FWWebExExample_014(cHTML as character) as character
     local oMenuIcon as object
     local oMenuText as object
 
+    local oFWWebExMain as object
+    local oFWWebExPage as object
     local oContentWrapper as object
+    local oFWWebExHRDivider as object
+    local oFWWebExContainer as object
 
-    oPage:=WebExPage():New("FWWebEx SBAdmin Clone")
-    oWrapper:=WebExControl():New("div")
-    oWrapper:AddClass("d-flex")
-    oSidebar:=WebExControl():New("ul")
-    oSidebar:AddClass("nav flex-column bg-primary text-white p-3")
+    oBrandIcon:=WebExControl():New("div")
+    oBrandIcon:AddClass("me-2")
+    oBrandIcon:AddChild(WebExIcon():New("bi-bar-chart"))
+
+    oTextInBrand:=WebExControl():New("span")
+    oTextInBrand:AddClass("fw-bold")
+    oTextInBrand:SetContent("FWWebEx")
+
+    oBrandText:=WebExControl():New("div")
+    oBrandText:AddClass("mx-3")
+    oBrandText:AddChild(oTextInBrand)
 
     // Brand
     oBrandLink:=WebExControl():New("a")
     oBrandLink:AddClass("d-flex align-items-center justify-content-center mb-3 text-white fw-bold text-decoration-none")
     oBrandLink:SetAttr("href","#")
-
-    oBrandIcon:=WebExControl():New("div")
-    oBrandIcon:AddClass("sidebar-brand-icon")
-    oBrandIcon:AddChild(WebExIcon():New("bi-bar-chart"))
-
-    oBrandText:=WebExControl():New("div")
-    oBrandText:AddClass("sidebar-brand-text mx-3")
-    oBrandText:SetContent("FWWebEx")
-
     oBrandLink:AddChild(oBrandIcon)
     oBrandLink:AddChild(oBrandText)
-    oSidebar:AddChild(oBrandLink)
 
     // Itens de menu
-    oDivider:=WebExHR():New("hr")
-    oDivider:AddClass("my-2") // Bem Bootstrap
-    oSidebar:AddChild(oDivider)
+    oFWWebExHRDivider:=WebExHR():New("hr")
+    oFWWebExHRDivider:RemoveClass("my-4")
+    oFWWebExHRDivider:AddClass("my-2") // Bem Bootstrap
+
+    oMenuIcon:=WebExIcon():New("bi-speedometer2")
+
+    oMenuText:=WebExControl():New("span")
+    oMenuText:SetContent("Dashboard")
+
+    oMenuLink:=WebExControl():New("a")
+    oMenuLink:AddClass("nav-link"):SetAttr("href","#")
+    oMenuLink:AddChild(oMenuIcon)
+    oMenuLink:AddChild(oMenuText)
 
     oMenuItem:=WebExControl():New("li")
     oMenuItem:AddClass("nav-item active")
-    oMenuLink:=WebExControl():New("a")
-    oMenuLink:AddClass("nav-link"):SetAttr("href","#")
-    oMenuIcon:=WebExIcon():New("bi-speedometer2")
-    oMenuText:=WebExControl():New("span")
-    oMenuText:SetContent("Dashboard")
-    oMenuLink:AddChild(oMenuIcon)
-    oMenuLink:AddChild(oMenuText)
     oMenuItem:AddChild(oMenuLink)
-    oSidebar:AddChild(oMenuItem)
 
-    // Conteúdo principal
-    oContentWrapper:=WebExControl():New("div")
-    oContentWrapper:AddClass("d-flex flex-column w-100")
-    oTopbar:=WebExControl():New("nav")
-    oTopbar:AddClass("navbar shadow mb-3")
+    oSidebar:=WebExControl():New("ul")
+    oSidebar:AddClass("nav flex-column bg-primary p-3")
+    oSidebar:AddChild(oBrandLink)
+    oSidebar:AddChild(oFWWebExHRDivider)
+    oSidebar:AddChild(oMenuItem)
 
     oH1:=WebExControl():New("h1")
     oH1:AddClass("h4")
     oH1:SetContent("Dashboard")
-    oTopbar:AddChild(oH1)
 
-    oMain:=WebExMain():New()
-    oContainer:=WebExContainer():New(.T.)
+    oTopBar:=WebExControl():New("nav")
+    oTopBar:AddClass("navbar shadow mb-3")
+    oTopBar:AddChild(oH1)
+
+    oFWWebExMain:=WebExMain():New()
+    oFWWebExContainer:=WebExContainer():New(.T.)
 
     // Cards
-    oContainer:AddChild(WebExCardKPI():New("Earnings (Monthly)","$40,000","bg-primary",WebExIcon():New("bi-calendar")))
-    oContainer:AddChild(WebExCardKPI():New("Earnings (Annual)","$215,000","bg-success",WebExIcon():New("bi-cash")))
-    oContainer:AddChild(WebExCardKPI():New("Tasks","50%","bg-info",WebExIcon():New("bi-clipboard")))
-    oContainer:AddChild(WebExCardKPI():New("Pending Requests","18","bg-warning",WebExIcon():New("bi-chat")))
+    oFWWebExContainer:AddChild(WebExCardKPI():New("Earnings (Monthly)","$40,000","bg-primary",WebExIcon():New("bi-calendar")))
+    oFWWebExContainer:AddChild(WebExCardKPI():New("Earnings (Annual)","$215,000","bg-success",WebExIcon():New("bi-cash")))
+    oFWWebExContainer:AddChild(WebExCardKPI():New("Tasks","50%","bg-info",WebExIcon():New("bi-clipboard")))
+    oFWWebExContainer:AddChild(WebExCardKPI():New("Pending Requests","18","bg-warning",WebExIcon():New("bi-chat")))
 
-    oMain:AddChild(oContainer)
-    oContentWrapper:AddChild(oTopbar)
-    oContentWrapper:AddChild(oMain)
+    oFWWebExMain:AddChild(oFWWebExContainer)
 
+    // Conteudo principal
+    oContentWrapper:=WebExControl():New("div")
+    oContentWrapper:AddClass("d-flex flex-column w-100")
+    oContentWrapper:AddChild(oTopBar)
+    oContentWrapper:AddChild(oFWWebExMain)
+
+    oWrapper:=WebExControl():New("div")
+    oWrapper:AddClass("d-flex")
     oWrapper:AddChild(oSidebar)
     oWrapper:AddChild(oContentWrapper)
-    oPage:AddChild(oWrapper)
 
-    WebFileTools():HTMLFromControl(oPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    oFWWebExPage:=WebExPage():New("FWWebEx SBAdmin Clone")
+    oFWWebExPage:AddChild(oWrapper)
 
-    oPage:Clean()
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
-    FreeObj(@oMain)
-    FreeObj(@oPage)
-    FreeObj(@oTopbar)
-    FreeObj(@oDivider)
+    oFWWebExPage:Clean()
+
+    FreeObj(@oH1)
+    FreeObj(@oTopBar)
     FreeObj(@oWrapper)
     FreeObj(@oSidebar)
 
-    FreeObj(@oContainer)
+    FreeObj(@oTextInBrand)
+
     FreeObj(@oBrandLink)
     FreeObj(@oBrandIcon)
     FreeObj(@oBrandText)
@@ -132,7 +143,14 @@ static function FWWebExExample_014(cHTML as character) as character
     FreeObj(@oMenuIcon)
     FreeObj(@oMenuText)
 
+    FreeObj(@oFWWebExMain)
+    FreeObj(@oFWWebExPage)
     FreeObj(@oContentWrapper)
+    FreeObj(@oFWWebExHRDivider)
+    FreeObj(@oFWWebExContainer)
 
 return(cHTMLFile)
 ````
+
+![image](https://github.com/user-attachments/assets/edeab1da-8bd4-4dd0-a383-8bc5ca55f5d5)
+
