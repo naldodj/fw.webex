@@ -12,7 +12,7 @@ procedure u_FWWebExExample_014()
     local cProcName:=ProcName() as character
     bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_014(@cHTML)},"Aguarde",cProcName)}
     FWExampleTools():Execute(bExecute,cProcName,.T.)
-    if (File(cHTMLFile))
+    if (!Empty(cHTMLFile).and.File(cHTMLFile))
         FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
         fErase(cHTMLFile)
     endif
@@ -153,4 +153,3 @@ return(cHTMLFile)
 ````
 
 ![image](https://github.com/user-attachments/assets/edeab1da-8bd4-4dd0-a383-8bc5ca55f5d5)
-
