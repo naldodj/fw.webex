@@ -6,10 +6,19 @@
 using namespace FWWebEx
 
 procedure u_FWWebExExample_009()
-    FWExampleTools():Execute({||FWWebExExample_009()},ProcName(),.F.)
+    local bExecute as codeblock
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_009(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (File(cHTMLFile))
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        fErase(cHTMLFile)
+    endif
 return
 
-static procedure FWWebExExample_009()
+static procedure FWWebExExample_009(cHTML as character) as character
 
     local aEmpresas:={;
          {;
@@ -36,7 +45,6 @@ static procedure FWWebExExample_009()
         };
     } as array
 
-    local cHTML as character
     local cHTMLFile as character
     local cHTMLDrillDown as character
 
@@ -45,8 +53,10 @@ static procedure FWWebExExample_009()
     local nEmpresa as numeric
     local nEmpresas:=Len(aEmpresas) as numeric
 
-    local oFWWebExPage as object
+    local oFWWebExMain as object
+    local oFWWebExShell as object
     local oFWWebExTable as object
+    local oFWWebExContainer as object
     local oFWWebExTableDrillDown as object
 
     oFWWebExTable:=WebExTable():New("Turnover por Empresa")
@@ -80,28 +90,29 @@ static procedure FWWebExExample_009()
         oFWWebExTable:BuildBodyRow(cHTMLDrillDown)
     next nEmpresa
 
-    oFWWebExPage:=WebExPage():New("Drill-down Exemplo")
-    oFWWebExPage:AddChild(oFWWebExTable)
-    cHTML:=oFWWebExPage:RenderHTML()
-    oFWWebExPage:Clean()
+    oFWWebExContainer:=WebExContainer():New()
+    oFWWebExContainer:AddChild(oFWWebExTable)
 
+    oFWWebExMain:=WebExMain():New()
+    oFWWebExMain:AddChild(oFWWebExContainer)
+
+    oFWWebExShell:=WebExShell():New("Drill-down Exemplo")
+    oFWWebExShell:AddChild(oFWWebExMain)
+
+    cHTMLFile:=cProcName
+    WebFileTools():HTMLFromControl(oFWWebExShell,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+
+    oFWWebExShell:Clean()
+
+    FreeObj(@oFWWebExMain)
+    FreeObj(@oFWWebExShell)
     FreeObj(@oFWWebExTable)
-    FreeObj(@oFWWebExPage)
+    FreeObj(@oFWWebExContainer)
+    FreeObj(@oFWWebExTableDrillDown)
 
     FWFreeArray(@aEmpresas)
 
-    cHTML:=EncodeUTF8(cHTML)
-    if (!lIsDir("\web\tmp\"))
-        FWMakeDir("\web\tmp\",.F.)
-    endif
-    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
-    MemoWrite(cHTMLFile,cHTML)
-
-    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
-
-    fErase(cHTMLFile)
-
-return
+return(cHTMLFile)
 ````
 
 ![image](https://github.com/user-attachments/assets/42fd8139-b7ae-4716-b987-970aa8381858)

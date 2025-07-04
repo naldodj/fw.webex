@@ -6,12 +6,20 @@
 using namespace FWWebEx
 
 procedure u_FWWebExExample_010()
-    FWExampleTools():Execute({||FWWebExExample_010()},ProcName(),.F.)
+    local bExecute as codeblock
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_010(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (File(cHTMLFile))
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        fErase(cHTMLFile)
+    endif
 return
 
-static procedure FWWebExExample_010()
+static procedure FWWebExExample_010(cHTML as character) as character
 
-    local cHTML as character
     local cHTMLFile as character
 
     local cProcName:=ProcName() as character
@@ -74,8 +82,8 @@ static procedure FWWebExExample_010()
     oFWWebExPage:AddChild(WebExHR():New()) // separador horizontal
     oFWWebExPage:AddChild(oFWWebExRow2)
 
-    cHTML:=oFWWebExPage:RenderHTML()
-    oFWWebExPage:Clean()
+    cHTMLFile:=cProcName
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     FreeObj(@oFWWebExCardKPI)
     FreeObj(@oFWWebExRow1)
@@ -86,18 +94,8 @@ static procedure FWWebExExample_010()
     FreeObj(@oFWWebExCol4)
     FreeObj(@oFWWebExPage)
 
-    cHTML:=EncodeUTF8(cHTML)
-    if (!lIsDir("\web\tmp\"))
-        FWMakeDir("\web\tmp\",.F.)
-    endif
-    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
-    MemoWrite(cHTMLFile,cHTML)
+return(cHTMLFile)
 
-    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
-
-    fErase(cHTMLFile)
-
-return
 ````
 
 ![image](https://github.com/user-attachments/assets/16d7dd2e-7077-4f80-872b-b4c8cfa5ccf2)

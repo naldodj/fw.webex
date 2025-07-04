@@ -207,7 +207,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
             END WEBEXOBJECT
         END WEBEXOBJECT
 
-        WITH WEBEXOBJECT CLASS WebExControl TYPE script
+        WITH WEBEXOBJECT CLASS WebExScript
 
             beginContent var cScript
 

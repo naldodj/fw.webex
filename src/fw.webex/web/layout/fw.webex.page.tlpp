@@ -39,7 +39,7 @@ class WebExPage from WebExControl
 endclass
 
 method New(cTitle) class WebExPage
-    paramtype 1 var cTitle as character
+    paramtype cTitle as character optional default "FWWEBEX"
     _Super:New("div")
     ::AddClass("main-div")
     ::cTitle:=cTitle
@@ -63,11 +63,15 @@ method RenderHTML() class WebExPage
     local cStyle as character
 
     local jHeader as json
+    local jHeadScripts as json
+    local jBodyScripts as json
 
     local lIsDark as logical
     local lHasMain as logical
 
     local oPage as object
+    local oBody as object
+    local oMain as object
     local oHeader as object
 
     cHTML:="<!DOCTYPE html>"
@@ -235,21 +239,17 @@ method RenderHTML() class WebExPage
                 WITH WEBEXOBJECT CLASS WebExComment
                     .:SetContent("jQuery first, then Popper.js, then Bootstrap JS")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExScript
-                    .:SetAttr("src","https://releases.jquery.com/git/jquery-git.slim.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://releases.jquery.com/git/jquery-git.slim.min.js")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExScript
-                    .:SetAttr("src","https://releases.jquery.com/git/jquery-git.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://releases.jquery.com/git/jquery-git.min.js")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExScript
-                    .:SetAttr("src","https://cdn.jsdelivr.net/npm/@popperjs/core/dist/umd/popper.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.jsdelivr.net/npm/@popperjs/core/dist/umd/popper.min.js")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExScript
-                    .:SetAttr("src","https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js")
                 END WEBEXOBJECT
             //Bootstrap Optional JavaScript
 ***************************************************************************************************************************
@@ -260,27 +260,36 @@ method RenderHTML() class WebExPage
             //Styles
             aEval(::jStyle:GetNames(),{|cName|oHeader:AddChild(::jStyle[cName])})
 ***************************************************************************************************************************
+            //Scripts Head
+            jHeadScripts:=oHeader:GetHeadScripts()
+            aEval(jHeadScripts:GetNames(),{|cName|oHeader:AddChild(jHeadScripts[cName])})
+***************************************************************************************************************************
             //Title
             WITH WEBEXOBJECT CLASS WebExTitle ARGS ::cTitle
             END WEBEXOBJECT
 ***************************************************************************************************************************
         END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExBody
+        WITH WEBEXOBJECT oBody CLASS WebExBody
             if (!lHasMain)
-                WITH WEBEXOBJECT CLASS WebExMain ARGS .T.
-                    .:SetContent(cBody)
+                WITH WEBEXOBJECT oMain CLASS WebExMain ARGS .T.
+                    oMain:SetContent(cBody)
                 END WEBEXOBJECT
             else
-                .:SetContent(cBody)
+                oBody:SetContent(cBody)
             endif
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExHR
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExFooter
+            WITH WEBEXOBJECT CLASS WebExFooter
+            END WEBEXOBJECT
+***************************************************************************************************************************
+            //Scripts Body
+            jBodyScripts:=oBody:GetBodyScriptBundle()
+            aEval(jBodyScripts:GetNames(),{|cName|oBody:AddChild(jBodyScripts[cName])})
+***************************************************************************************************************************
         END WEBEXOBJECT
         cHTML+=oPage:RenderHTML()
     END WEBEXOBJECT
 
-    FreeObj(@oPage)
+    FreeObj(@jHeader)
+    FreeObj(@jHeadScripts)
+    FreeObj(@jBodyScripts)
 
 return(cHTML)

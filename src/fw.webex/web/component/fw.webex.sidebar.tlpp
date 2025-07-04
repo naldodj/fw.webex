@@ -33,11 +33,12 @@ class WebExSideBar from WebExControl
     public method AddChild(oChild as object) as object
     public method RenderHTML() as character
 
-end class
+endclass
 
 method New() class WebExSideBar
     _Super:New()
-return(self)
+    ::SetAttr("id",::cID)
+return self
 
 method AddChild(oChild) class WebExSideBar
     _Super:AddChild(oChild)

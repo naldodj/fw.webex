@@ -1,0 +1,45 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExScript from WebExControl
+    public data cSrc as character
+    public data lUseAddChild as logical
+    public data lScriptInBody as logical
+    public method New(lScriptInBody as logical,lUseAddChild as logical) as object
+    public method SetContent(cSrc as character,lAddScript as logical) as object
+endclass
+
+method New(lScriptInBody,lUseAddChild) class WebExScript
+    paramtype 1 var lScriptInBody as logical optional default .T.
+    paramtype 2 var lUseAddChild as logical optional default (!lScriptInBody)
+    _Super:New("script")
+    ::lScriptInBody:=lScriptInBody
+    ::lUseAddChild:=lUseAddChild
+return(self)
+
+method SetContent(cSrc,lAddScript) class WebExScript
+    paramtype 1 var cSrc as character
+    paramtype 2 var lAddScript as logical optional default .T.
+    ::cSrc:=cSrc
+    if (!::lScriptInBody)
+        ::SetAttr("src",::cSrc)
+        ::SetAttr("defer")
+    else
+        _Super:SetContent(::cSrc)
+    endif
+    if ((lAddScript).and.(!::lUseAddChild))
+        ::AddScript(self)
+    endif
+return(self)

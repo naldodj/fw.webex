@@ -1,5 +1,7 @@
 # FW.WebEX — Framework Web Extensível para Protheus (ADVPL/TLPP) 🌟
-## ⭐ Gostou do projeto? Deixa uma estrelinha ⭐ aí no topo! Isso ajuda muito!  
+
+## ⭐Gostou do projeto? Deixa uma estrelinha(⭐) aí no topo! Isso ajuda muito!
+
 [![Stars](https://img.shields.io/github/stars/DNATechByNaldoDJ/fw.webex?style=social)](https://github.com/DNATechByNaldoDJ/fw.webex)
 ![Clones](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/DNATechByNaldoDJ/fw.webex/main/clone-badge.json)
 
@@ -17,6 +19,7 @@
 A TOTVS está indo para o web. Mas o desenvolvedor ADVPL não precisa (re)aprender Angular ou TypeScript só pra fazer uma tela de cadastro ou uma tabela com ação.
 
 **FW.WebEX** nasceu da ideia de manter o espírito do desenvolvimento no Protheus:
+
 - Rápido
 - Sem burocracia
 - Produtivo
@@ -65,15 +68,11 @@ static procedure FWWebExExample_001()
         WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName
             .:FromSQL("SELECT TOP 10 * FROM SX5990")
         END WEBEXOBJECT
-        cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT
 
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+
     WEBEXOBJECT CLEAN
-
-    cHTML:=EncodeUTF8(cHTML)
-    cHTMLFile:="c:\tmp\"+Lower(cProcName)+".html"
-
-    MemoWrite(cHTMLFile,cHTML)
 
     ShellExecute("open",cHTMLFile,"","",1)
 
@@ -129,7 +128,7 @@ static procedure FWWebExExample_003()
             .:AddField("CEP","cep","text","Digite o CEP")
             .:AddButton(WebExButton():New("Buscar CEP"))
         END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExControl TYPE script
+        WITH WEBEXOBJECT CLASS WebExScript
             beginContent var cScript
 
                 function buscarCEP() {
@@ -197,17 +196,18 @@ static procedure FWWebExExample_003()
 
 return
 ````
+
 ![WebExForm](https://github.com/user-attachments/assets/fcf7609f-a2be-43b4-b63e-af5aa2718d58)
 
 ---
 
 ## 🧩 Dependências
 
-* Nenhuma no backend (ADVPL puro)
-* Frontend usa:
+- Nenhuma no backend (ADVPL puro)
+- Frontend usa:
 
-  * [Bootstrap 5.n](https://getbootstrap.com)
-  * (opcional) [PO UI CSS](https://po-ui.io)
+  - [Bootstrap 5.n](https://getbootstrap.com)
+  - (opcional) [PO UI CSS](https://po-ui.io)
 
 ---
 
@@ -223,10 +223,10 @@ return
 
 Toda ajuda é bem-vinda! A ideia aqui é **evoluir juntos** como comunidade Protheus:
 
-* Criar novos componentes (`fw.webex.form`, `fw.webex.chart`, etc.)
-* Melhorar o renderizador
-* Adicionar eventos dinâmicos
-* Documentar com mais exemplos
+- Criar novos componentes (`fw.webex.form`, `fw.webex.chart`, etc.)
+- Melhorar o renderizador
+- Adicionar eventos dinâmicos
+- Documentar com mais exemplos
 
 ---
 
@@ -236,18 +236,18 @@ Contribuições são bem-vindas! Siga estas diretrizes para garantir a consistê
 
 🧾 Estilo de Codificação
 
-* Indentação: use 4 espaços por nível de indentação.
-* Parênteses, chaves, colchetes: sempre com espaçamento correto e estilo claro.
-* return: deve sempre iniciar na mesma coluna do nível atual (sem recuo adicional).
-* Nomes de métodos e variáveis: utilize nomes descritivos em inglês, com camelCase para métodos e snake_case para variáveis locais se necessário.
-*  Classes: o nome deve ser prefixado por WebEx e descrever a função do componente (ex: WebExForm, WebExTable, WebExCardKPI).
-*  Arquivos: devem estar organizados por tipo (ex: forms/, tables/, components/) dentro de src/fw.webex.
+- Indentação: use 4 espaços por nível de indentação.
+- Parênteses, chaves, colchetes: sempre com espaçamento correto e estilo claro.
+- return: deve sempre iniciar na mesma coluna do nível atual (sem recuo adicional).
+- Nomes de métodos e variáveis: utilize nomes descritivos em inglês, com camelCase para métodos e snake_case para variáveis locais se necessário.
+- Classes: o nome deve ser prefixado por WebEx e descrever a função do componente (ex: WebExForm, WebExTable, WebExCardKPI).
+- Arquivos: devem estar organizados por tipo (ex: forms/, tables/, components/) dentro de src/fw.webex.
 
 🧪 Contribuindo com Novos Exemplos
 
-* Crie uma nova função com nome u_FWWebExExample_XXX() onde XXX é o próximo número disponível.
-* Armazene o exemplo em src/fw.webex.examples/.
-* Mantenha a mesma estrutura dos exemplos existentes:
+- Crie uma nova função com nome u_FWWebExExample_XXX() onde XXX é o próximo número disponível.
+- Armazene o exemplo em src/fw.webex.examples/.
+- Mantenha a mesma estrutura dos exemplos existentes:
 
 Página HTML gerada via TL++.
 
@@ -277,7 +277,8 @@ Utilizamos padrão Harbour: [How to Participate](https://github.com/naldodj/nald
 
 ---
 
-## ⭐ Gostou do projeto? Deixa uma estrelinha ⭐ aí no topo! Isso ajuda muito!  
+## ⭐ Gostou do projeto? Deixa uma estrelinha(⭐) aí no topo! Isso ajuda muito!
+
 [![Stars](https://img.shields.io/github/stars/DNATechByNaldoDJ/fw.webex?style=social)](https://github.com/DNATechByNaldoDJ/fw.webex)
 ![Clones](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/DNATechByNaldoDJ/fw.webex/main/clone-badge.json)
 

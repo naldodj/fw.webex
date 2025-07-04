@@ -1,0 +1,62 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebFileTools
+    static method HTMLFromControl(oFWWebExControl as object,cHTMLFilePath as character,cHTMLFileName as character,cHTMLContent as character,lEncodeUTF8 as logical) as logical
+end class
+
+static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLContent,lEncodeUTF8) class WebFileTools
+
+    local cClassName as character
+
+    local cSPDrive as character
+    local cSPPath as character
+    local cSPFile as character
+    local cSPExt as character
+
+    local lRet as logical
+
+    paramtype 1 var oFWWebExControl as object
+    paramtype 2 var cHTMLFilePath as character optional default "\web\tmp\"
+    paramtype 3 var cHTMLFileName as character optional
+    paramtype 4 var cHTMLContent as character optional
+    paramtype 5 var lEncodeUTF8 as logical optional default .T.
+
+    cClassName:=GetClassName(oFWWebExControl)
+    if (!Left(cClassName,8)=="FWWEBEX.")
+        CLASSPARAMEXCEPTION PARAM 1 VAR oFWWebExControl TEXT cClassName MESSAGE "Object must belong to the FWWEBEX namespace. Got '"+cClassName+"' instead. Check your class declaration."
+    elseif ((!MethIsMemberOf(oFWWebExControl,"ISKINDOF",.T.)).or.(!oFWWebExControl:IsKindOf("WEBEXCONTROL",.T.)))
+        CLASSPARAMEXCEPTION PARAM 1 VAR oFWWebExControl TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
+    endif
+
+    cHTMLContent:=oFWWebExControl:RenderHTML()
+    if (lEncodeUTF8)
+        cHTMLContent:=EncodeUTF8(cHTMLContent)
+    endif
+
+    cHTMLFilePath:=Lower(cHTMLFilePath)
+    if (!lIsDir(cHTMLFilePath))
+        FWMakeDir(cHTMLFilePath,.F./*[lShowMsg]*/)
+    endif
+
+    cHTMLFileName:=(cHTMLFilePath+Lower(cHTMLFileName))
+    SplitPath(cHTMLFileName,@cSPDrive,@cSPPath,@cSPFile,@cSPExt)
+    if (Empty(cSPExt))
+        cHTMLFileName+=".html"
+    endif
+
+    lRet:=MemoWrite(cHTMLFileName,cHTMLContent)
+
+return(lRet)

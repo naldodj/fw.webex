@@ -18,12 +18,21 @@ class WebExFooter from WebExControl
 endclass
 
 method New(cContent) class WebExFooter
-    paramtype 1 var cContent as character optional default "Powered by <strong>(<a href='https://github.com/DNATechByNaldoDJ/fw.webex' target='_blank'>FWWebEx</a>)</strong> (DNATech)"
+    local cDefault as character
+    beginContent var cDefault
+&copy; __YEAR__ <strong><a href="https://github.com/DNATechByNaldoDJ/fw.webex" target="_blank">FWWebEx</a></strong> (DNATech). Licensed under MIT.
+    endContent
+    cDefault:=StrTran(cDefault,"__YEAR__",Str(Year(Date())))
+    paramtype 1 var cContent as character optional default cDefault
     _Super:New("footer")
-    ::AddClass("text-center")
-    ::AddClass("text-muted")
-    ::AddClass("mt-auto") // margin-top: auto
-    ::AddClass("small")
-    ::AddClass("p-3")
-    ::SetContent(cContent)
+    WITH WEBEXOBJECT self
+        .:AddClass("text-center")
+        .:AddClass("text-muted")
+        .:AddClass("mt-auto") // margin-top: auto
+        .:AddClass("small")
+        .:AddClass("p-3")
+        WITH WEBEXOBJECT CLASS WebExHR
+        END WEBEXOBJECT
+        .:SetContent(cContent)
+    END WEBEXOBJECT
 return(self)

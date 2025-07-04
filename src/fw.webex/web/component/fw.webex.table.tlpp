@@ -125,8 +125,9 @@ method RenderHTML() class WebExTable
     local cHTML as character
     local cScript as character
 
-    local oScript as object
     local oCaption as object
+
+    local oFWWebExScript as object
 
     if (!Empty(::cTitle))
         ::AddClass(if(::lTitleBefore,"caption-top","caption-bottom"))
@@ -142,7 +143,7 @@ method RenderHTML() class WebExTable
 
     if (::lExpandable)
         // Adiciona script de expandRow com ID prefixado
-        oScript:=WebExControl():New("script")
+        oFWWebExScript:=WebExScript():New()
         //TODO: fetch real content via AJAX and update td.innerHTML
         beginContent var cScript
             function ::cID_expandRow(button) {
@@ -163,8 +164,7 @@ method RenderHTML() class WebExTable
             }
         endContent
         cScript:=StrTran(cScript,"::cID",::cID)
-        oScript:SetContent(cScript)
-        ::AddChild(oScript)
+        oFWWebExScript:SetContent(cScript)
     endif
 
     cHTML:=_Super:RenderHTML()

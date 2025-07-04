@@ -33,16 +33,15 @@ class WebExShell from WebExPage
     public data oMain as object
     public data oSidebar as object
 
-    public method New(cTitle) as object
+    public method New(cTitle as character) as object
     public method AddChild(oChild as object) as object
     public method RenderHTML() as character
 
 endclass
 
 method New(cTitle) class WebExShell
-    paramtype cTitle as character
-    _Super:New("div")
-    ::cTitle:=cTitle
+    paramtype cTitle as character optional default "FWWEBEX"
+    _Super:New(cTitle)
     ::SetAttr("class","d-flex")
     ::oMain:=WebExControl():New()
     ::oMain:SetAttr("class","flex-fill p-3")

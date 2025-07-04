@@ -3,6 +3,51 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-04 02:11 UTC naldodj (refactor: reorganized folder structure and source to improve modularity and clarity)
+  + src/fw.webex/tools/fw.webex.file.tools.tlpp
+  + src/fw.webex/web/script/fw.webex.script.tlpp
+  + src/fw.webex.examples/013/fw.webex.example.013.tlpp
+  + src/fw.webex.examples/013/README.md
+  - src/fw.webex/web/component/fw.webex.script.tlpp
+  * README.md
+  * src/fw.webex/tools/fw.webex.context.tlpp
+  * src/fw.webex/web/component/fw.webex.comment.tlpp
+  * src/fw.webex/web/component/fw.webex.navside.tlpp
+  * src/fw.webex/web/component/fw.webex.navtop.tlpp
+  * src/fw.webex/web/component/fw.webex.sidebar.tlpp
+  * src/fw.webex/web/component/fw.webex.table.tlpp
+  * src/fw.webex/web/component/fw.webex.template.bulk.action.table.tlpp
+  * src/fw.webex/web/control/fw.webex.control.tlpp
+  * src/fw.webex/web/layout/fw.webex.page.tlpp
+  * src/fw.webex/web/layout/fw.webex.shell.tlpp
+  * src/fw.webex/web/page/fw.webex.footer.tlpp
+  * src/fw.webex/web/page/fw.webex.title.tlpp
+  * src/fw.webex.examples/000/fw.webex.example.000.tlpp
+  * src/fw.webex.examples/001/fw.webex.example.001.tlpp
+  * src/fw.webex.examples/001/README.md
+  * src/fw.webex.examples/002/fw.webex.example.002.tlpp
+  * src/fw.webex.examples/002/README.md
+  * src/fw.webex.examples/003/fw.webex.example.003.tlpp
+  * src/fw.webex.examples/003/README.md
+  * src/fw.webex.examples/004/fw.webex.example.004.tlpp
+  * src/fw.webex.examples/004/README.md
+  * src/fw.webex.examples/005/fw.webex.example.005.tlpp
+  * src/fw.webex.examples/005/README.md
+  * src/fw.webex.examples/006/fw.webex.example.006.tlpp
+  * src/fw.webex.examples/006/README.md
+  * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  * src/fw.webex.examples/007/README.md
+  * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+  * src/fw.webex.examples/008/README.md
+  * src/fw.webex.examples/009/fw.webex.example.009.tlpp
+  * src/fw.webex.examples/009/README.md
+  * src/fw.webex.examples/010/fw.webex.example.010.tlpp
+  * src/fw.webex.examples/010/README.md
+  * src/fw.webex.examples/011/fw.webex.example.011.tlpp
+  * src/fw.webex.examples/011/README.md
+  * src/fw.webex.examples/012/fw.webex.example.012.tlpp
+  * src/fw.webex.examples/012/README.md
+
 2025-07-03 12:55 UTC naldodj (refactor: reorganized folder structure to improve modularity and clarity)
   + src/fw.webex/web/component/fw.webex.comment.tlpp
   + src/fw.webex/web/component/fw.webex.script.tlpp

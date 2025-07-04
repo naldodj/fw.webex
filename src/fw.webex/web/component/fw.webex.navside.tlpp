@@ -21,7 +21,7 @@ class WebExNavSide from WebExControl
 
     public method New(cBrand as character) as object
     public method SetBrand(cBrand as character) as object
-    public method AddItem(cLabel as character,cHRef as character,oIcon as character) as object
+    public method AddItem(cLabel as character,cHRef as character,oIcon as object) as object
     public method AddDivider() as object
     public method AddHeader(cText as character) as object
     public method RenderHTML() as character
@@ -31,14 +31,13 @@ endclass
 method New(cBrand) class WebExNavSide
     paramtype 1 var cBrand as character optional default ""
     _Super:New("nav")
-    ::SetAttr("class","sidebar collapse show bg-body border-end")
-    ::SetAttr("id","sidebarMenu")
+    ::SetAttr("class","sidebar bg-body border-end")
+    ::SetAttr("id",::cID)
     ::jItems:=JSONObject():New()
     ::cBrand:=cBrand
 return(self)
 
 method SetBrand(cBrand) class WebExNavSide
-    paramtype 1 var cBrand as character
     ::cBrand:=cBrand
 return(self)
 
@@ -72,8 +71,7 @@ method AddItem(cLabel,cHRef,oIcon) class WebExNavSide
 return(oItem)
 
 method AddDivider() class WebExNavSide
-    local oDivider as object
-    oDivider:=WebExControl():New("hr")
+    local oDivider:=WebExControl():New("hr")
     oDivider:SetAttr("class","my-2")
     ::jItems[oDivider:cID]:=oDivider
 return(oDivider)
@@ -97,7 +95,7 @@ method RenderHTML() class WebExNavSide
 
     oWrapper:=WebExControl():New("div")
     oWrapper:SetAttr("class","d-flex flex-column flex-shrink-0 p-3")
-    oWrapper:SetAttr("style","min-height: 100vh")
+    //oWrapper:SetAttr("style","min-height: 100vh")
 
     if (!Empty(::cBrand))
         oBrand:=WebExControl():New("a")

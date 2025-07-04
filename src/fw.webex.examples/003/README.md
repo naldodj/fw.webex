@@ -6,12 +6,20 @@
 using namespace FWWebEx
 
 procedure u_FWWebExExample_003()
-    FWExampleTools():Execute({||FWWebExExample_003()},ProcName(),.F.)
+    local bExecute as codeblock
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_003(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (File(cHTMLFile))
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        fErase(cHTMLFile)
+    endif
 return
 
-static procedure FWWebExExample_003()
+static function FWWebExExample_003(cHTML as character) as character
 
-    local cHTML as character
     local cHTMLFile as character
 
     local cScript as character
@@ -26,7 +34,7 @@ static procedure FWWebExExample_003()
             .:AddField("CEP","cep","text","Digite o CEP")
             .:AddButton(WebExButton():New("Buscar CEP"))
         END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExControl TYPE script
+        WITH WEBEXOBJECT CLASS WebExScript
             beginContent var cScript
 
                 function buscarCEP() {
@@ -76,23 +84,14 @@ static procedure FWWebExExample_003()
             .:SetAttr("id","resultadoCEP")
             .:SetAttr("class","mt-4")
         END WEBEXOBJECT
-        cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT
+
+    cHTMLFile:=cProcName
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     WEBEXOBJECT CLEAN
 
-    cHTML:=EncodeUTF8(cHTML)
-    if (!lIsDir("\web\tmp\"))
-        FWMakeDir("\web\tmp\",.F.)
-    endif
-    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
-    MemoWrite(cHTMLFile,cHTML)
-
-    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
-
-    fErase(cHTMLFile)
-
-return
+return(cHTMLFile)
 ````
 
 ![image](https://github.com/user-attachments/assets/20f6358a-b92e-4a97-9b65-6c5621c744ee)

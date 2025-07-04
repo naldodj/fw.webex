@@ -18,10 +18,9 @@ class WebExNavTop from WebExControl
     public data cBrand as character
 
     public data jLinks as json
-
     public data jDropDowns as json
 
-    public method New(cBrand) as object
+    public method New(cBrand as character) as object
     public method AddLink(cLabel as character,cHRef as character,oIcon as object) as object
     public method AddDropDown(cLabel as character,aItems as array) as object
     public method RenderHTML() as character
@@ -29,8 +28,9 @@ class WebExNavTop from WebExControl
 endclass
 
 method New(cBrand) class WebExNavTop
+    paramtype 1 var cBrand as character optional default ""
     _Super:New("nav")
-    ::SetAttr("class","navbar navbar-expand-lg mb-4")
+    ::AddClass("navbar navbar-expand-lg mb-4")
     ::cBrand:=cBrand
     ::jLinks:=JSONObject():New()
     ::jDropDowns:=JSONObject():New()
@@ -62,7 +62,6 @@ method AddDropDown(cLabel,aItems) class WebExNavTop
     local oWrapper as object
     local oToggle as object
 
-    oToggle:=WebExControl():New("a")
     oToggle:SetAttr("class","nav-link dropdown-toggle")
     oToggle:SetAttr("href","#")
     oToggle:SetAttr("role","button")
@@ -93,55 +92,63 @@ return(oWrapper)
 
 method RenderHTML() class WebExNavTop
 
-    local cHtml as character
+    local cHTML as character
 
     local oUl as object
     local oSpan as object
     local oBrand as object
-    local oButton as object
+    local oCollapse as object
     local oContainer as object
-    local oDivCollapse as object
+    local oToggleBtn as object
 
-    ::AddClass("navbar navbar-expand-lg")
+    oToggleBtn:=WebExControl():New("button")
+    oToggleBtn:SetAttr("class","navbar-toggler")
+    oToggleBtn:SetAttr("type","button")
+    oToggleBtn:SetAttr("data-bs-toggle","collapse")
+    oToggleBtn:SetAttr("data-bs-target","#menu")
+
+    oSpan:=WebExControl():New("span")
+    oSpan:SetAttr("class","navbar-toggler-icon")
+    oToggleBtn:AddChild(oSpan)
 
     oContainer:=WebExControl():New("div")
     oContainer:SetAttr("class","container-fluid")
+    oContainer:AddChild(oToggleBtn)
 
     oBrand:=WebExControl():New("a")
     oBrand:SetAttr("class","navbar-brand")
     oBrand:SetAttr("href","#")
     oBrand:SetContent(::cBrand)
 
+    oToggler:=WebExControl():New("button")
+    oToggler:SetAttr("class","navbar-toggler")
+    oToggler:SetAttr("type","button")
+    oToggler:SetAttr("data-bs-toggle","collapse")
+    oToggler:SetAttr("data-bs-target","#"+::cID+"_menu")
+    oToggler:SetAttr("aria-controls",::cID+"_menu")
+    oToggler:SetAttr("aria-expanded","false")
+    oToggler:SetAttr("aria-label","Toggle navigation")
+
     oSpan:=WebExControl():New("span")
     oSpan:SetAttr("class","navbar-toggler-icon")
+    oToggler:AddChild(oSpan)
 
-    oButton:=WebExControl():New("button")
-    oButton:SetAttr("class","navbar-toggler")
-    oButton:SetAttr("type","button")
-    oButton:SetAttr("data-bs-toggle","collapse")
-    oButton:SetAttr("data-bs-target","#"+::cID+"_menu")
-    oButton:SetAttr("aria-controls",::cID+"_menu")
-    oButton:SetAttr("aria-expanded","false")
-    oButton:SetAttr("aria-label","Toggle navigation")
-    oButton:AddChild(oSpan)
-
-    oDivCollapse:=WebExControl():New("div")
-    oDivCollapse:SetAttr("class","collapse navbar-collapse")
-    oDivCollapse:SetAttr("id",::cID+"_menu")
+    oCollapse:=WebExControl():New("div")
+    oCollapse:SetAttr("class","collapse navbar-collapse")
+    oCollapse:SetAttr("id",::cID+"_menu")
 
     oUl:=WebExControl():New("ul")
     oUl:SetAttr("class","navbar-nav me-auto mb-2 mb-lg-0")
-
     aEval(::jLinks:GetNames(),{|k|oUl:AddChild(::jLinks[k])})
     aEval(::jDropDowns:GetNames(),{|k|oUl:AddChild(::jDropDowns[k])})
 
-    oDivCollapse:AddChild(oUl)
+    oCollapse:AddChild(oUl)
     oContainer:AddChild(oBrand)
-    oContainer:AddChild(oButton)
-    oContainer:AddChild(oDivCollapse)
+    oContainer:AddChild(oToggler)
+    oContainer:AddChild(oCollapse)
 
     ::AddChild(oContainer)
 
-    cHtml:=_Super:RenderHTML()
+    cHTML:=_Super:RenderHTML()
 
-return(cHtml)
+return(cHTML)

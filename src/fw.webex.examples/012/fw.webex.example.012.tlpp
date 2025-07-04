@@ -20,7 +20,8 @@
                 |
                 +---> Conteudo da pagina (KPIs,cards,tabelas,forms...)
 
-Released to Public DoFWWebExMain.
+Released to Public DoMain.
+TODO: Melhorar e Finalizar o Exemplo 012
 --------------------------------------------------------------------------------------
 */
 
@@ -29,13 +30,21 @@ Released to Public DoFWWebExMain.
 using namespace FWWebEx
 
 procedure u_FWWebExExample_012()
-    FWExampleTools():Execute({||FWWebExExample_012()},ProcName(),.F.)
+    local bExecute as codeblock
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_012(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (File(cHTMLFile))
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        fErase(cHTMLFile)
+    endif
 return
 
-//TODO: Finalizar o Exemplo 012
-static procedure FWWebExExample_012()
+static procedure FWWebExExample_012(cHTML as character) as character
 
-    local cHTML as character
+    local cScript as character
     local cHTMLFile as character
     local cProcName:=ProcName() as character
 
@@ -43,6 +52,7 @@ static procedure FWWebExExample_012()
     local oFWWebExMain as object
     local oFWWebExIcon as object
     local oFWWebExShell as object
+    local oFWWebExScript as object
     local oFWWebExCardKPI as object
     local oFWWebExContainer as object
     local oFWWebExNavSideMenu as object
@@ -59,9 +69,9 @@ static procedure FWWebExExample_012()
     oFWWebExNavSideMenu:=WebExNavSide():New()
     oFWWebExNavSideMenu:SetBrand("FWWebEx")
     oFWWebExNavSideMenu:AddHeader("Geral")
-    oFWWebExNavSideMenu:AddItem("Dashboard KPI","#kpi",WebExIcon():New("bi-bar-chart"))
+    oFWWebExNavSideMenu:AddItem("Dashboard KPI","#kpi",WebExIcon():New("bi-bar-chart")):SetAttr("data-toggle-kpi","kpi")
     oFWWebExNavSideMenu:AddDivider()
-    oFWWebExNavSideMenu:AddItem("Dashboard KPI 2","#kpi2",WebExIcon():New("bi-bar-chart"))
+    oFWWebExNavSideMenu:AddItem("Dashboard KPI 2","#kpi2",WebExIcon():New("bi-bar-chart")):SetAttr("data-toggle-kpi","kpi2")
     oFWWebExNavSideMenu:AddDivider()
     oFWWebExNavSideMenu:AddHeader("Admin")
     oFWWebExNavSideMenu:AddItem("Usu&aacute;rios","#",WebExIcon():New("bi-person"))
@@ -111,6 +121,7 @@ static procedure FWWebExExample_012()
 
     oFWWebExContainer:=WebExContainer():New()
     oFWWebExContainer:SetAttr("id","kpi")
+    oFWWebExContainer:SetAttr("style","display:none")
     oFWWebExContainer:AddChild(oFWWebExRow1)
     oFWWebExContainer:AddChild(WebExHR():New())
     oFWWebExContainer:AddChild(oFWWebExRow2)
@@ -124,8 +135,24 @@ static procedure FWWebExExample_012()
     oFWWebExShell:AddChild(oFWoSideBar)
     oFWWebExShell:AddChild(oFWWebExMain)
 
-    cHTML:=oFWWebExShell:RenderHTML()
-    cHTML:=EncodeUTF8(cHTML)
+    // Script para alternar exibicao dos KPIs
+    beginContent var cScript
+        document.addEventListener("DOMContentLoaded",()=>{
+            document.querySelectorAll("[data-toggle-kpi]").forEach(el=>{
+                el.addEventListener("click",()=>{
+                ["kpi","kpi2"].forEach(id=>{
+                    document.getElementById(id).style.display = (id === el.dataset.toggleKpi) ? "block" : "none";
+                    });
+                });
+            });
+        });
+    endContent
+
+    oFWWebExScript:=WebExScript():New()
+    oFWWebExScript:SetContent(cScript)
+
+    cHTMLFile:=cProcName
+    WebFileTools():HTMLFromControl(oFWWebExShell,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExShell:Clean()
 
@@ -133,6 +160,7 @@ static procedure FWWebExExample_012()
     FreeObj(@oFWWebExMain)
     FreeObj(@oFWWebExIcon)
     FreeObj(@oFWWebExShell)
+    FreeObj(@oFWWebExScript)
     FreeObj(@oFWWebExCardKPI)
     FreeObj(@oFWWebExContainer)
     FreeObj(@oFWWebExNavSideMenu)
@@ -145,18 +173,7 @@ static procedure FWWebExExample_012()
     FreeObj(@oFWWebExCol3)
     FreeObj(@oFWWebExCol4)
 
-    cHTML:=EncodeUTF8(cHTML)
-    if (!lIsDir("\web\tmp\"))
-        FWMakeDir("\web\tmp\",.F.)
-    endif
-    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
-    MemoWrite(cHTMLFile,cHTML)
-
-    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
-
-    fErase(cHTMLFile)
-
-return
+return(cHTMLFile)
 
 static function BuildKPI2Content()
 
@@ -188,6 +205,7 @@ static function BuildKPI2Content()
 
     oFWWebExContainer=WebExContainer():New()
     oFWWebExContainer:SetAttr("id","kpi2")
+    oFWWebExContainer:SetAttr("style","display:none")
     oFWWebExContainer:AddChild(oFWWebExRow1)
     oFWWebExContainer:AddChild(WebExHR():New())
     oFWWebExContainer:AddChild(oFWWebExRow2)

@@ -9,9 +9,9 @@ Released to Public Domain.
 --------------------------------------------------------------------------------------
 */
 
-#include "fw.webex.th"
+namespace FWWebEx
 
-using namespace FWWebEx
+#include "fw.webex.th"
 
 class WebExComment from WebExControl
     public method New() as object

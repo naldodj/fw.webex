@@ -32,18 +32,24 @@ method ObjBegin(oObject) class WebExContext
 return(oObject)
 
 method ObjEnd(lAddChild) class WebExContext
+    local lWebExScript as logical
     local nLen:=Len(__aWithStack) as numeric
     local oChild as object
     local oParent as object
     paramtype 1 var lAddChild as logical optional default .T.
-    if (nLen>0)
+    if ((nLen>0).and.(ValType(__aWithStack[nLen])=="O"))
         oChild:=__aWithStack[nLen]
+        lWebExScript:=(oChild:ClassName()=="WEBEXSCRIPT")
+        lWebExScript:=((lWebExScript).and.(!oChild:lUseAddChild))
+        if (lWebExScript)
+            oChild:AddScript(oChild)
+        endif
         __aWithStack[nLen]:=nil
         aDel(__aWithStack,nLen)
         aSize(__aWithStack,--nLen)
         if (nLen>0)
             oParent:=__aWithStack[nLen]
-            if (lAddChild)
+            if ((lAddChild).and.(!lWebExScript))
                 oParent:AddChild(oChild)
             endif
         else

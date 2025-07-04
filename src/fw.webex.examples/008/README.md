@@ -9,12 +9,20 @@
 using namespace FWWebEx
 
 procedure u_FWWebExExample_008()
-    FWExampleTools():Execute({||FWWebExExample_008()},ProcName(),.T.)
+    local bExecute as codeblock
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_008(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (File(cHTMLFile))
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        fErase(cHTMLFile)
+    endif
 return
 
-static procedure FWWebExExample_008()
+static procedure FWWebExExample_008(cHTML as character) as character
 
-    local cHTML as character
     local cHTMLFile as character
 
     local cUSR as character
@@ -22,16 +30,23 @@ static procedure FWWebExExample_008()
     local cScript as character
     local cRESTURL as character
     local cProcName:=ProcName() as character
-    local cBasicAuth as character
     local cDNATechAuth as character
+    local cAutorization as character
+    local cRESTURLOAuth2 as character
+
+    local joAuth2 as json
 
     local oFWWebExPage as object
 
-    if (!FWExampleTools():GetRESTCredential(@cUSR,@cPDW,@cRESTURL))
+    if (!FWExampleTools():GetRESTCredential(@cUSR,@cPDW,@cRESTURL,@cRESTURLOAuth2,@joAuth2))
         return
     endif
 
-    cBasicAuth:="Basic "+Encode64(cUSR+":"+cPDW)
+    if ((valType(joAuth2)=="J").and.(joAuth2:HasProperty("access_token")))
+        cAutorization:="Bearer "+joAuth2["access_token"]
+    else
+        cAutorization:="Basic "+Encode64(cUSR+":"+cUSR)
+    endif
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName+" (REST + DataTable)"
         WITH WEBEXOBJECT CLASS WebExControl TYPE style
@@ -113,7 +128,7 @@ static procedure FWWebExExample_008()
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExControl TYPE script
+        WITH WEBEXOBJECT CLASS WebExScript
             /*
                 Tabela do DOM (so pra referencia)
                 https://datatables.net/reference/option/dom
@@ -135,7 +150,7 @@ static procedure FWWebExExample_008()
                         processing: false,
                         dom: 'Blfrtip',
                         lengthMenu: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,30,35,40,45,50,100,-1],
-                        pageLength: 10,//DEFAULT
+                        pageLength: 8,//DEFAULT
                         buttons: [
                             'copy',
                             'csv',
@@ -183,7 +198,7 @@ static procedure FWWebExExample_008()
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
-                                    'Authorization': <basicAuth>,
+                                    'Authorization': <Autorization>,
                                     'X-DNATech-Auth-Token': <DNATechAuth>
                                 },
                                 body: JSON.stringify({
@@ -255,28 +270,20 @@ static procedure FWWebExExample_008()
                 cDNATechAuth:=Encode64("token:"+cDNATechAuth)
                 cScript:=StrTran(cScript,"<DNATechAuth>","'"+cDNATechAuth+"'")
             endif
-            cScript:=StrTran(cScript,"<basicAuth>","'"+cBasicAuth+"'")
+            cScript:=StrTran(cScript,"<Autorization>","'"+cAutorization+"'")
             cScript:=StrTran(cScript,"https://localhost:9898/rest/",cRESTURL)
             .:SetContent(cScript)
         END WEBEXOBJECT
         *oFWWebExPage:SetAttr("style","min-height:100vh;padding:1rem;box-sizing:border-box;overflow:auto;")
-        cHTML:=oFWWebExPage:RenderHTML()
+        oFWWebExPage:EnableDataTable()
     END WEBEXOBJECT
+
+    cHTMLFile:=cProcName
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     WEBEXOBJECT CLEAN
 
-    cHTML:=EncodeUTF8(cHTML)
-    if (!lIsDir("\web\tmp\"))
-        FWMakeDir("\web\tmp\",.F.)
-    endif
-    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
-    MemoWrite(cHTMLFile,cHTML)
-
-    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
-
-    fErase(cHTMLFile)
-
-return
+return(cHTMLFile)
 ````
 
 ![image](https://github.com/user-attachments/assets/a8d89f33-2cd2-4edd-a8de-bf06636db231)

@@ -6,12 +6,20 @@
 using namespace FWWebEx
 
 procedure u_FWWebExExample_011()
-    FWExampleTools():Execute({||FWWebExExample_011()},ProcName(),.F.)
+    local bExecute as codeblock
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_011(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (File(cHTMLFile))
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        fErase(cHTMLFile)
+    endif
 return
 
-static procedure FWWebExExample_011()
+static procedure FWWebExExample_011(cHTML as character) as character
 
-    local cHTML as character
     local cHTMLFile as character
 
     local cProcName:=ProcName() as character
@@ -63,23 +71,14 @@ static procedure FWWebExExample_011()
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
-        cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT
+
+    cHTMLFile:=cProcName
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     WEBEXOBJECT CLEAN
 
-    cHTML:=EncodeUTF8(cHTML)
-    if (!lIsDir("\web\tmp\"))
-        FWMakeDir("\web\tmp\",.F.)
-    endif
-    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
-    MemoWrite(cHTMLFile,cHTML)
-
-    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
-
-    fErase(cHTMLFile)
-
-return
+return(cHTMLFile)
 ````
 
 ![image](https://github.com/user-attachments/assets/62534c6f-7a5a-43e5-b30f-cf12671fc715)

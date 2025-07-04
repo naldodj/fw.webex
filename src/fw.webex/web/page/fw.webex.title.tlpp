@@ -18,6 +18,7 @@ class WebExTitle from WebExControl
 endclass
 
 method New(cTitle) class WebExTitle
-    paramtype 1 var cTitle as character optional default ""
+    paramtype 1 var cTitle as character optional default "FWWEBEX"
     _Super:New("title")
+    ::SetContent(cTitle)
 return(self)

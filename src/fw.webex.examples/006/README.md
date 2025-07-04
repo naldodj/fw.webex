@@ -5,25 +5,35 @@
 
 using namespace FWWebEx
 
+using namespace FWWebEx
+
 procedure u_FWWebExExample_006()
-    FWExampleTools():Execute({||FWWebExExample_006()},ProcName(),.F.)
+    local bExecute as codeblock
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_006(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (File(cHTMLFile))
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        fErase(cHTMLFile)
+    endif
 return
 
-static procedure FWWebExExample_006()
+static procedure FWWebExExample_006(cHTML as character) as character
 
-    local cHTML as character
     local cHTMLFile as character
 
     local cScript as character
     local cProcName:=ProcName() as character
 
-    local oScript as object
     local oDivTable as object
     local oTableStyle as object
 
     local oFWWebExPage as object
     local oFWWebExForm as object
     local oFWWebExButton as object
+    local oFWWebExScript as object
 
     beginContent var cTableStyle
         table.dataTable.compact tbody td {
@@ -90,7 +100,7 @@ static procedure FWWebExExample_006()
                         var table = new DataTable('#example', {
                             dom: 'Blfrtip',
                             lengthMenu: [1,2,3,4,5,6,7,8,9,10,25,50,100,-1],
-                            pageLength: 6,//DEFAULT
+                            pageLength: 4,//DEFAULT
                             buttons: [
                                 'copy',
                                 'csv',
@@ -136,34 +146,25 @@ static procedure FWWebExExample_006()
         }
     endContent
 
-    oScript:=WebExControl():New("script")
-    oScript:SetContent(cScript)
+    oFWWebExScript:=WebExScript():New()
+    oFWWebExScript:SetContent(cScript)
 
-    oFWWebExPage:AddChild(oScript)
+    oFWWebExPage:AddChild(oFWWebExScript)
     oFWWebExPage:EnableDataTable()
 
-    cHTML:=oFWWebExPage:RenderHTML()
+    cHTMLFile:=cProcName
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+
     oFWWebExPage:Clean()
 
     FreeObj(@oFWWebExPage)
     FreeObj(@oFWWebExForm)
     FreeObj(@oFWWebExButton)
-    FreeObj(@oScript)
+    FreeObj(@oFWWebExScript)
     FreeObj(@oDivTable)
     FreeObj(@oTableStyle)
 
-    cHTML:=EncodeUTF8(cHTML)
-    if (!lIsDir("\web\tmp\"))
-        FWMakeDir("\web\tmp\",.F.)
-    endif
-    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
-    MemoWrite(cHTMLFile,cHTML)
-
-    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
-
-    fErase(cHTMLFile)
-
-return
+return(cHTMLFile)
 ````
 
 ![image](https://github.com/user-attachments/assets/efacbddb-895b-40d6-9c39-18822cbfbf03)

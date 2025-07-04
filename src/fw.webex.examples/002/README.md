@@ -6,38 +6,42 @@
 using namespace FWWebEx
 
 procedure u_FWWebExExample_002()
-    FWExampleTools():Execute({||FWWebExExample_002()},ProcName(),.F.)
+    local bExecute as codeblock
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_002(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (File(cHTMLFile))
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        fErase(cHTMLFile)
+    endif
 return
 
-static procedure FWWebExExample_002()
+static function FWWebExExample_002(cHTML as character) as character
 
-    local cHTML as character
     local cHTMLFile as character
     local cProcName:=ProcName() as character
 
     local oFWWebExPage as object
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
-        WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName
-            .:FromSQL("SELECT TOP 10 * FROM SX5990")
+        WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName+" (Tabela 32)"
+            .:FromSQL("SELECT * FROM SX5990 WHERE X5_TABELA='32' AND D_E_L_E_T_<>'*'")
         END WEBEXOBJECT
-        cHTML:=oFWWebExPage:RenderHTML()
+        WITH WEBEXOBJECT CLASS WebExHR
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName+" (Tabela 35)"
+            .:FromSQL("SELECT * FROM SX5990 WHERE X5_TABELA='35' AND D_E_L_E_T_<>'*'")
+        END WEBEXOBJECT
     END WEBEXOBJECT
+
+    cHTMLFile:=cProcName
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     WEBEXOBJECT CLEAN
 
-    cHTML:=EncodeUTF8(cHTML)
-    if (!lIsDir("\web\tmp\"))
-        FWMakeDir("\web\tmp\",.F.)
-    endif
-    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
-    MemoWrite(cHTMLFile,cHTML)
-
-    FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
-
-    fErase(cHTMLFile)
-
-return
+return(cHTMLFile)
 ````
 
 ![image](https://github.com/user-attachments/assets/dba13e70-a014-42db-81e7-83e8a8307d20)

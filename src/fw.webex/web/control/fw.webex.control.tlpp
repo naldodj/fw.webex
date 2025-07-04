@@ -13,9 +13,10 @@ Released to Public Domain.
 
 static __aVoidTags:={"area","base","br","col","embed","hr","img","input","link","meta","source","track","wbr"} as array
 
-static __cID:=Replicate("0",FWWEBEX_ID_MAX_SIZE) as character
+static __cID as character
 
 static __jHeader:=JSONObject():New() as json
+static __jScripts:=JSONObject():New() as json
 static __jFeatures:={;
     "lChartEnabled":.F.;
    ,"lIconsEnabled":.F.;
@@ -38,7 +39,10 @@ class WebExControl
     public data lDataTableEnabled as logical
 
     public method New(cType as character) as object
+
     public method NewID() as character
+    public method GetID() as character
+    public method ResetID() as object
 
     public method IsKindOf(cClass as character,lParentTree as logical) as logical
     public method ClassName() as character
@@ -47,14 +51,26 @@ class WebExControl
     public method SetMemberData(cMember as character,xValue as variant) as variant
 
     public method SetAttr(cKey as character,uValue as variant) as object
-    public method GetAttr(cAttr) as character
+    public method GetAttr(cAttr as character) as character
 
     public method SetContent(cContent as character) as object
+    public method GetContent() as character
 
     public method AddChild(oChild as object) as object
 
     public method GetHeader() as json
-    public method AddInHeader(oChild) as object
+    public method AddInHeader(oChild as object) as object
+    public method FindInHeader(cID as character) as logical
+
+    public method GetScripts() as json
+    public method GetHeadScripts() as json
+    public method GetBodyScripts() as json
+    public method GetBodyScriptBundle() as json
+
+    public method FindInHeadScripts(cID as character) as logical
+    public method FindInBodyScripts(cID as character) as logical
+
+    public method AddScript(oScript as object) as object
 
     public method RenderHTML() as character
 
@@ -67,6 +83,7 @@ class WebExControl
     public method EnableDataTable(lDataTableEnabled as logical) as object
 
     public method Clean() as variant
+    public method DisableScripts() as variant
     public method DisableFeatures() as variant
 
 endclass
@@ -83,9 +100,19 @@ method New(cType) class WebExControl
     ::lDataTableEnabled:=__jFeatures["lDataTableEnabled"]
 return(self)
 
+method GetID() class WebExControl
+return(::cID)
+
 method NewID() class WebExControl
+    if (Empty(__cID))
+        ::ResetID()
+    endif
     __cID:=__Soma1(__cID)
-return((StrTran(Lower(GetClassName(self)),".","_")+"_"+__cID))
+return((self:ClassName()+"_"+__cID))
+
+method ResetID() class WebExControl
+    __cID:=Replicate("0",FWWEBEX_ID_MAX_SIZE)
+return(self)
 
 method IsKindOf(cClass,lParentTree) class WebExControl
 
@@ -163,13 +190,16 @@ method SetContent(cContent) class WebExControl
    ::cContent:=cContent
 return(self)
 
+method GetContent() class WebExControl
+return(::cContent)
+
 method AddChild(oChild) class WebExControl
     local cClassName as character
     paramtype 1 var oChild as object
     cClassName:=GetClassName(self)
     if (!Left(cClassName,8)=="FWWEBEX.")
         CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must belong to the FWWEBEX namespace. Got '"+cClassName+"' instead. Check your class declaration."
-    elseif ((!MethIsMemberOf(self,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
+    elseif ((!MethIsMemberOf(oChild,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
         CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
     ::jChildren[oChild:cID]:=oChild
@@ -183,11 +213,116 @@ method AddInHeader(oChild) class WebExControl
     cClassName:=GetClassName(self)
     if (!Left(cClassName,8)=="FWWEBEX.")
         CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must belong to the FWWEBEX namespace. Got '"+cClassName+"' instead. Check your class declaration."
-    elseif ((!MethIsMemberOf(self,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
+    elseif ((!MethIsMemberOf(oChild,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
         CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
     __jHeader[oChild:cID]:=oChild
-return(self)
+return(oChild)
+
+method FindInHeader(cID) class WebExControl
+    local lFound as logical
+    paramtype 1 var cID as character
+    lFound:=__jHeader:HasProperty(cID)
+return(lFound)
+
+method GetScripts() class WebExControl
+return(__jScripts)
+
+method GetHeadScripts() class WebExControl
+    local jHeadScripts as json
+    if (__jScripts:HasProperty("head"))
+        jHeadScripts:=__jScripts["head"]
+    else
+        jHeadScripts:=JSONObject():New()
+    endif
+return(jHeadScripts)
+
+method GetBodyScripts() class WebExControl
+
+    local jBodyScripts as json
+
+    if (__jScripts:HasProperty("body"))
+        jBodyScripts:=__jScripts["body"]
+    else
+        jBodyScripts:=JSONObject():New()
+    endif
+
+return(jBodyScripts)
+
+method GetBodyScriptBundle() class WebExControl
+
+    local aScripts as array
+
+    local cID as character
+    local cSrc as character
+    local cCRLF:=CRLF as character
+    local cContent as character
+
+    local jBodyScripts as json
+
+    local nScript as numeric
+    local nScripts as numeric
+
+    local oWebExScript as object
+
+    if (__jScripts:HasProperty("body"))
+        cSrc:=cCRLF
+        aScripts:=__jScripts["body"]:GetNames()
+        nScripts:=Len(aScripts)
+        for nScript:=1 to nScripts
+            cID:=aScripts[nScript]
+            oWebExScript:=__jScripts["body"][cID]
+            cContent:=if(ValType(oWebExScript)=="O",oWebExScript:GetContent(),"__NULL__")
+            if (cContent=="__NULL__")
+                //TODO: Rever quando Script Externo :SetAttr("src",...). Nao deve estar aqui.
+                loop
+            endif
+            cSrc+="/* --- script: ["+cID+"] --- */"
+            cSrc+=cCRLF
+            cSrc+=cContent
+            cSrc+=cCRLF
+            cSrc+="/* "+Replicate("-",(18+Len(cID)))+" */"
+            cSrc+=cCRLF
+        next nScript
+        FWFreeArray(@aScripts)
+        //ScriptBundle
+        oWebExScript:=WebExScript():New()
+        oWebExScript:SetContent(cSrc,.F.)
+        jBodyScripts:=JSONObject():New()
+        jBodyScripts[oWebExScript:cID]:=oWebExScript
+    else
+        jBodyScripts:=JSONObject():New()
+    endif
+
+return(jBodyScripts)
+
+method FindInHeadScripts(cID) class WebExControl
+    local jHeadScripts as json
+    local lFound as logical
+    paramtype 1 var cID as character
+    jHeadScripts:=::GetHeadScripts()
+    lFound:=jHeadScripts:HasProperty(cID)
+return(lFound)
+
+method FindInBodyScripts(cID) class WebExControl
+    local jBodyScripts as json
+    local lFound as logical
+    paramtype 1 var cID as character
+    jBodyScripts:=::GetBodyScripts()
+    lFound:=jBodyScripts:HasProperty(cID)
+return(lFound)
+
+method AddScript(oScript) class WebExControl
+    local cType as character
+    paramtype 1 var oScript as object class WebExScript
+    if (!::FindInHeader(oScript:cID))
+        cType:=if(oScript:lScriptInBody,"body","head")
+        if (!__jScripts:HasProperty(cType))
+            __jScripts[cType]:=JSONObject():New()
+        endif
+        __jScripts[cType][oScript:cID]:=oScript
+    endif
+return(oScript)
 
 method RenderHTML() class WebExControl
 
@@ -244,6 +379,10 @@ method RenderHTML() class WebExControl
             cHTML+=">"
         endif
 
+        if (::cContent!="__NULL__")
+            cHTML+=::cContent
+        endif
+
         aChildren:=::jChildren:GetNames()
         nChilds:=Len(aChildren)
         if (nChilds>0)
@@ -256,8 +395,6 @@ method RenderHTML() class WebExControl
                     endif
                 endif
             next nChild
-        elseif (::cContent!="__NULL__")
-            cHTML+=::cContent
         endif
 
         if (cLowerType!="!--")
@@ -334,9 +471,8 @@ method EnableChart(lChartEnabled) class WebExControl
                 .:SetContent("Chart")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
-            WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                .:SetAttr("src","https://cdn.jsdelivr.net/npm/chart.js")
-                .:SetAttr("defer")
+            WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                .:SetContent("https://cdn.jsdelivr.net/npm/chart.js")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
         //Chart
@@ -421,14 +557,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                 .:SetAttr("rel","stylesheet")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
-            WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                .:SetAttr("src","https://cdn.datatables.net/2.3.2/js/dataTables.min.js")
-                .:SetAttr("defer")
+            WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                .:SetContent("https://cdn.datatables.net/2.3.2/js/dataTables.min.js")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
-            WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                .:SetAttr("src","https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.min.js")
-                .:SetAttr("defer")
+            WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                .:SetContent("https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.min.js")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
         //Data Tables
@@ -443,9 +577,8 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetContent("Excel : https://cdnjs.com/libraries/jszip")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //Excel
@@ -455,14 +588,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetContent("PDF : https://cdnjs.com/libraries/pdfmake")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/pdfmake.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/pdfmake.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/vfs_fonts.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/vfs_fonts.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //PDF
@@ -477,14 +608,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/autofill/2.7.0/js/autoFill.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/autofill/2.7.0/js/autoFill.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //AutoFill
@@ -499,29 +628,24 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/buttons/3.2.3/js/dataTables.buttons.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/buttons/3.2.3/js/dataTables.buttons.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/buttons/3.2.3/js/buttons.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/buttons/3.2.3/js/buttons.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/buttons/3.2.3/js/buttons.colVis.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/buttons/3.2.3/js/buttons.colVis.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/buttons/3.2.3/js/buttons.print.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/buttons/3.2.3/js/buttons.print.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //Buttons
@@ -536,14 +660,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/colreorder/2.1.1/js/dataTables.colReorder.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/colreorder/2.1.1/js/dataTables.colReorder.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/colreorder/2.1.1/js/colReorder.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/colreorder/2.1.1/js/colReorder.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //ColReorder
@@ -558,14 +680,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //FixedColumns
@@ -580,14 +700,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/fixedheader/4.0.3/js/dataTables.fixedHeader.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/fixedheader/4.0.3/js/dataTables.fixedHeader.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/fixedheader/4.0.3/js/fixedHeader.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/fixedheader/4.0.3/js/fixedHeader.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //FixedHeader
@@ -602,14 +720,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/keytable/2.12.1/js/dataTables.keyTable.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/keytable/2.12.1/js/dataTables.keyTable.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/keytable/2.12.1/js/keyTable.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/keytable/2.12.1/js/keyTable.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //KeyTable
@@ -624,14 +740,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/responsive/3.0.4/js/dataTables.responsive.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/responsive/3.0.4/js/dataTables.responsive.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/responsive/3.0.4/js/responsive.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/responsive/3.0.4/js/responsive.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //Responsive
@@ -646,14 +760,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/rowgroup/1.5.1/js/dataTables.rowGroup.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/rowgroup/1.5.1/js/dataTables.rowGroup.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/rowgroup/1.5.1/js/rowGroup.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/rowgroup/1.5.1/js/rowGroup.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //RowGroup
@@ -668,14 +780,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/rowreorder/1.5.0/js/dataTables.rowReorder.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/rowreorder/1.5.0/js/dataTables.rowReorder.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/rowreorder/1.5.0/js/rowReorder.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/rowreorder/1.5.0/js/rowReorder.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //RowReorder
@@ -690,14 +800,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/scroller/2.4.3/js/dataTables.scroller.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/scroller/2.4.3/js/dataTables.scroller.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/scroller/2.4.3/js/scroller.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/scroller/2.4.3/js/scroller.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //Scroller
@@ -712,14 +820,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/searchbuilder/1.8.2/js/dataTables.searchBuilder.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/searchbuilder/1.8.2/js/dataTables.searchBuilder.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/searchbuilder/1.8.2/js/searchBuilder.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/searchbuilder/1.8.2/js/searchBuilder.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //SearchBuilder
@@ -734,14 +840,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/searchpanes/2.3.3/js/dataTables.searchPanes.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/searchpanes/2.3.3/js/dataTables.searchPanes.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/searchpanes/2.3.3/js/searchPanes.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/searchpanes/2.3.3/js/searchPanes.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //SearchPanes
@@ -756,14 +860,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/select/3.0.1/js/dataTables.select.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/select/3.0.1/js/dataTables.select.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/select/3.0.1/js/select.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/select/3.0.1/js/select.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //Select
@@ -778,14 +880,12 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/staterestore/1.4.1/js/dataTables.stateRestore.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/staterestore/1.4.1/js/dataTables.stateRestore.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                    .:SetAttr("src","https://cdn.datatables.net/staterestore/1.4.1/js/stateRestore.bootstrap5.min.js")
-                    .:SetAttr("defer")
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdn.datatables.net/staterestore/1.4.1/js/stateRestore.bootstrap5.min.js")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
             //Select
@@ -799,8 +899,16 @@ method EnableDataTable(lDataTableEnabled) class WebExControl
 return(self)
 
 method Clean() class WebExControl
-    __cID:=Replicate("0",FWWEBEX_ID_MAX_SIZE)
+    ::ResetID()
+    ::DisableScripts()
     ::DisableFeatures()
+return(nil)
+
+method DisableScripts() class WebExControl
+    local jHeadScripts:=::GetHeadScripts() as json
+    local jBodyScripts:=::GetBodyScripts() as json
+    aEval(jHeadScripts:GetNames(),{|cName|jHeadScripts:DelName(cName)})
+    aEval(jBodyScripts:GetNames(),{|cName|jBodyScripts:DelName(cName)})
 return(nil)
 
 method DisableFeatures() class WebExControl
