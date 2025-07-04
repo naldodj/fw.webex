@@ -24,44 +24,49 @@ static procedure FWWebExExample_013(cHTML as character) as character
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
 
-    local oSpan:=WebExControl():New("span") as object
-    local oToggler:=WebExControl():New("button") as object
+    local oH1 as object
+
+    local oTopBar as object
+    local oWrapper as object
+    local oContentWrapper as object
 
     local oFWWebExMain as object
+    local oFWWebExIcon as object
     local oFWWebExShell as object
+    local oFWWebExStyle as object
     local oFWWebExScript as object
-    local oFWWebExNavTop as object
     local oFWWebExNavSide as object
     local oFWWebExSideBar as object
     local oFWWebExCardKPI1 as object
     local oFWWebExCardKPI2 as object
 
-    oSpan:SetAttr("class","navbar-toggler-icon")
+    oH1:=WebExControl():New("h1")
+    oH1:AddClass("h4")
+    oH1:SetContent("Dashboard")
 
-    // Botao para colapsar menu lateral (estilo Bootstrap)
-    oToggler:SetAttr("class","navbar-toggler")
-    oToggler:SetAttr("type","button")
-    oToggler:SetAttr("data-bs-toggle","collapse")
-    oToggler:SetAttr("data-bs-target","#webex-sidebar")
-    oToggler:SetAttr("aria-controls","webex-sidebar")
-    oToggler:SetAttr("aria-expanded","false")
-    oToggler:SetAttr("aria-label","Alternar menu")
-    oToggler:AddChild(oSpan)
-
-    oFWWebExNavTop:=WebExNavTop():New("FWWebEx")
-    oFWWebExNavTop:AddChild(oToggler)
+    oTopBar:=WebExControl():New("nav")
+    oTopBar:AddClass("navbar shadow mb-3")
+    oTopBar:AddChild(oH1)
 
     oFWWebExSideBar:=WebExSideBar():New()
-    oFWWebExSideBar:AddChild(oFWWebExNavTop)
 
     // Menu lateral com data-toggle-kpi
     oFWWebExNavSide:=WebExNavSide():New()
+    oFWWebExNavSide:cType:="div"
     oFWWebExNavSide:SetAttr("id","webex-sidebar")
+    oFWWebExNavSide:AddClass("collapse")
+    oFWWebExNavSide:AddClass("show")
     oFWWebExNavSide:SetAttr("class","collapse show")
-    oFWWebExNavSide:SetBrand("FWWebEx")
-    oFWWebExNavSide:AddItem("Dashboard KPI","#",WebExIcon():New("bi-bar-chart")):SetAttr("data-toggle-kpi","kpi")
-    oFWWebExNavSide:AddItem("Dashboard KPI 2","#",WebExIcon():New("bi-graph-up")):SetAttr("data-toggle-kpi","kpi2")
+    oFWWebExNavSide:SetBrand("Side Menu")
 
+    oFWWebExIcon:=WebExIcon():New("bi-bar-chart")
+    oFWWebExNavSide:AddItem("Dashboard KPI","#",oFWWebExIcon):SetAttr("data-toggle-kpi","kpi")
+
+    oFWWebExIcon:=WebExIcon():New("bi-graph-up")
+    oFWWebExNavSide:AddItem("Dashboard KPI 2","#",oFWWebExIcon):SetAttr("data-toggle-kpi","kpi2")
+
+    oFWWebExNavTop:=WebExNavTop():New("FWWebEx")
+    oFWWebExSideBar:AddChild(oFWWebExNavTop)
     oFWWebExSideBar:AddChild(oFWWebExNavSide)
 
     // KPI 1
@@ -82,6 +87,16 @@ static procedure FWWebExExample_013(cHTML as character) as character
     oFWWebExMain:AddChild(oFWWebExCardKPI1)
     oFWWebExMain:AddChild(oFWWebExCardKPI2)
 
+    oContentWrapper:=WebExControl():New("div")
+    oContentWrapper:AddClass("d-flex flex-column w-100")
+    oContentWrapper:AddChild(oTopBar)
+    oContentWrapper:AddChild(oFWWebExMain)
+
+    oWrapper:=WebExControl():New("div")
+    oWrapper:AddClass("d-flex")
+    oWrapper:AddChild(oFWWebExSideBar)     // menu lateral
+    oWrapper:AddChild(oContentWrapper)     // conteudo principal
+
     // Script para alternar exibicao dos KPIs
     beginContent var cScript
         document.addEventListener("DOMContentLoaded",()=>{
@@ -98,22 +113,39 @@ static procedure FWWebExExample_013(cHTML as character) as character
     oFWWebExScript:=WebExScript():New()
     oFWWebExScript:SetContent(cScript)
 
-    oFWWebExSideBar:AddChild(oFWWebExMain)
+    beginContent var cStyle
+        #webex-sidebar {
+            transition: all 0.3s ease;
+            width: 250px;
+            overflow: hidden;
+        }
+        #webex-sidebar.collapse:not(.show) {
+            width: 0;
+            padding: 0;
+            opacity: 0;
+            display: block !important; /* forca o Bootstrap a nao esconder tudo */
+        }
+    endContent
+    oFWWebExStyle:=WebExStyle():New()
+    oFWWebExStyle:SetContent(cStyle)
 
     oFWWebExShell:=WebExShell():New(cProcName)
-    oFWWebExShell:AddChild(oFWWebExSideBar)
+    oFWWebExShell:AddChild(oWrapper)
 
     WebFileTools():HTMLFromControl(oFWWebExShell,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExShell:Clean()
 
-    FreeObj(@oSpan)
-    FreeObj(@oToggler)
+    FreeObj(@oH1)
+
+    FreeObj(@oTopBar)
+    FreeObj(@oWrapper)
+    FreeObj(@oContentWrapper)
 
     FreeObj(@oFWWebExMain)
+    FreeObj(@oFWWebExIcon)
     FreeObj(@oFWWebExShell)
     FreeObj(@oFWWebExScript)
-    FreeObj(@oFWWebExNavTop)
     FreeObj(@oFWWebExNavSide)
     FreeObj(@oFWWebExSideBar)
     FreeObj(@oFWWebExCardKPI1)
@@ -121,3 +153,12 @@ static procedure FWWebExExample_013(cHTML as character) as character
 
 return(cHTMLFile)
 ````
+
+![image](https://github.com/user-attachments/assets/8a737d2c-394e-423f-804d-4b646522ba54)
+
+![image](https://github.com/user-attachments/assets/2ec1a010-82b1-4f04-aea7-984222c429ed)
+
+![image](https://github.com/user-attachments/assets/adc093b5-bea8-4546-b3ba-5a6bda62f2b9)
+
+
+
