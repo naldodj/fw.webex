@@ -30,9 +30,10 @@ static procedure FWWebExExample_012(cHTML as character) as character
     local oWrapper as object
     local oContentWrapper as object
 
+    local oFWWebExBody as object
     local oFWWebExMain as object
     local oFWWebExIcon as object
-    local oFWWebExShell as object
+    local oFWWebExPage as object
     local oFWWebExStyle as object
     local oFWWebExScript as object
     local oFWWebExNavSide as object
@@ -104,6 +105,20 @@ static procedure FWWebExExample_012(cHTML as character) as character
                 });
             });
         });
+        document.addEventListener("DOMContentLoaded", ()=>{
+            const sidebar = document.getElementById("webex-sidebar");
+            const brand = document.querySelector(".navbar-brand");
+
+            const observer = new MutationObserver(() => {
+                if (!sidebar.classList.contains("show")) {
+                    brand.classList.add("collapse-hide");
+                } else {
+                    brand.classList.remove("collapse-hide");
+                }
+            });
+
+            observer.observe(sidebar, { attributes: true, attributeFilter: ["class"] });
+        });
     endContent
 
     oFWWebExScript:=WebExScript():New()
@@ -115,22 +130,22 @@ static procedure FWWebExExample_012(cHTML as character) as character
             width: 250px;
             overflow: hidden;
         }
-        #webex-sidebar.collapse:not(.show) {
-            width: 0;
-            padding: 0;
-            opacity: 0;
-            display: block !important; /* forca o Bootstrap a nao esconder tudo */
+        .navbar-brand.collapse-hide {
+            display: none !important;
         }
     endContent
     oFWWebExStyle:=WebExStyle():New()
     oFWWebExStyle:SetContent(cStyle)
 
-    oFWWebExShell:=WebExShell():New(cProcName)
-    oFWWebExShell:AddChild(oWrapper)
+    oFWWebExBody:=WebExBody():New()
+    oFWWebExBody:AddChild(oWrapper)
 
-    WebFileTools():HTMLFromControl(oFWWebExShell,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    oFWWebExPage:=WebExPage():New(cProcName)
+    oFWWebExPage:AddChild(oFWWebExBody)
 
-    oFWWebExShell:Clean()
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+
+    oFWWebExPage:Clean()
 
     FreeObj(@oH1)
 
@@ -138,15 +153,15 @@ static procedure FWWebExExample_012(cHTML as character) as character
     FreeObj(@oWrapper)
     FreeObj(@oContentWrapper)
 
+    FreeObj(@oFWWebExBody)
     FreeObj(@oFWWebExMain)
     FreeObj(@oFWWebExIcon)
-    FreeObj(@oFWWebExShell)
+    FreeObj(@oFWWebExPage)
     FreeObj(@oFWWebExScript)
     FreeObj(@oFWWebExNavSide)
     FreeObj(@oFWWebExSideBar)
     FreeObj(@oFWWebExCardKPI1)
     FreeObj(@oFWWebExCardKPI2)
-
 
 return(cHTMLFile)
 ````

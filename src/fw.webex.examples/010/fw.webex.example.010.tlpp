@@ -5,6 +5,46 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
++---> WebExPage ("KPI Dashboard")
+      |
+      +---> WebExRow (Primeira linha de KPI)
+      |     |
+      |     +---> WebExCol (col-4)
+      |     |     |
+      |     |     +---> WebExCardKPI ("Faturamento", "R$ 125.000", bg-success)
+      |     |           |
+      |     |           +---> WebExIcon ("bi-bar-chart")
+      |     |
+      |     +---> WebExCol (col-4, border-start, border-secondary, ps-3)
+      |     |     |
+      |     |     +---> WebExCardKPI ("Despesas", "R$ 87.000", bg-danger)
+      |     |           |
+      |     |           +---> WebExIcon ("bi-graph-up")
+      |     |
+      |     +---> WebExCol (col-4, border-start, border-secondary, ps-3)
+      |           |
+      |           +---> WebExCardKPI ("Outros", "R$ 75.000", bg-info)
+      |                 |
+      |                 +---> WebExIcon ("bi-currency-dollar")
+      |
+      +---> WebExHR (linha horizontal separadora)
+      |
+      +---> WebExRow (Segunda linha de KPI)
+            |
+            +---> WebExCol (col-6)
+            |     |
+            |     +---> WebExCardKPI ("Clientes Ativos", "1.024", bg-info)
+            |           |
+            |           +---> WebExIcon ("analytics", material)
+            |           +---> Icone posicionado apos o texto (SetIconBefore(.F.))
+            |
+            +---> WebExCol (col-6)
+                  |
+                  +---> WebExCardKPI ("Ticket Medio", "R$ 122,00", bg-warning)
+                        |
+                        +---> WebExIcon ("insights", material)
+                        +---> Icone posicionado apos o texto (SetIconBefore(.F.))
+
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */
@@ -32,6 +72,7 @@ static procedure FWWebExExample_010(cHTML as character) as character
     local cHTMLFile:=cProcName as character
 
     local oFWWebExPage as object
+    local oFWWebExBody as object
 
     local oFWWebExRow1 as object
     local oFWWebExRow2 as object
@@ -84,10 +125,13 @@ static procedure FWWebExExample_010(cHTML as character) as character
     oFWWebExRow2:AddChild(oFWWebExCol3)
     oFWWebExRow2:AddChild(oFWWebExCol4)
 
+    oFWWebExBody:=WebExBody():New()
+    oFWWebExBody:AddChild(oFWWebExRow1)
+    oFWWebExBody:AddChild(WebExHR():New()) // separador horizontal
+    oFWWebExBody:AddChild(oFWWebExRow2)
+
     oFWWebExPage:=WebExPage():New("KPI Dashboard")
-    oFWWebExPage:AddChild(oFWWebExRow1)
-    oFWWebExPage:AddChild(WebExHR():New()) // separador horizontal
-    oFWWebExPage:AddChild(oFWWebExRow2)
+    oFWWebExPage:AddChild(oFWWebExBody)
 
     WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 

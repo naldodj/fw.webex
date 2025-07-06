@@ -15,7 +15,8 @@ namespace FWWebEx
 
 class WebExBody from WebExControl
     public method New() as object
-endclass
+    public method AddChild(oChild as object) as object
+end class
 
 method New() class WebExBody
     _Super:New("body")
@@ -23,4 +24,18 @@ method New() class WebExBody
     ::AddClass("d-flex")
     ::AddClass("flex-column")
     ::AddClass("min-vh-100")
+return(self)
+
+method AddChild(oChild) class WebExBody
+    local cClassName as character
+    paramtype 1 var oChild as object
+    cClassName:=GetClassName(oChild)
+    if (!Left(cClassName,8)=="FWWEBEX.")
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must belong to the FWWEBEX namespace. Got '"+cClassName+"' instead. Check your class declaration."
+    elseif ((!MethIsMemberOf(oChild,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
+    elseif (oChild:IsKindOf("WEBEXBODY",.T.))
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Cannot nest a <body> element inside another <body>. Received: "+cClassName+". A WebExBody must be the root or direct child of WebExPage/WebExPage."
+    endif
+    _Super:AddChild(oChild)
 return(self)

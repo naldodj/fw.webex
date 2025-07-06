@@ -5,6 +5,68 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
++---> WebExPage ("Drill-down Exemplo")
+      |
+      +---> WebExMain
+            |
+            +---> WebExContainer
+                  |
+                  +---> WebExTable ("Turnover por Empresa")
+                        |
+                        +---> <thead>
+                        |     |
+                        |     +---> <tr>
+                        |           +---> <th>Codigo</th>
+                        |           +---> <th>Nome</th>
+                        |
+                        +---> <tbody>
+                              |
+                              +---> <tr> (Empresa 99)
+                              |     |
+                              |     +---> <td>99</td>
+                              |     +---> <td>TOTVS</td>
+                              |
+                              |     +---> DrillDown HTML (escaped)
+                              |           |
+                              |           +---> WebExTable ("Turnover Departamento [99-0001]")
+                              |                 |
+                              |                 +---> <thead>
+                              |                 |     |
+                              |                 |     +---> <tr>
+                              |                 |           +---> <th>Codigo</th>
+                              |                 |           +---> <th>Nome</th>
+                              |                 |           +---> <th>% Turnover</th>
+                              |                 |
+                              |                 +---> <tbody>
+                              |                       |
+                              |                       +---> <tr>
+                              |                             +---> <td>99-0001</td>
+                              |                             +---> <td>DEPARTAMENTO 0001</td>
+                              |                             +---> <td>50%</td>
+                              |
+                              +---> <tr> (Empresa 01)
+                                    |
+                                    +---> <td>01</td>
+                                    +---> <td>DNATech</td>
+                                    |
+                                    +---> DrillDown HTML (escaped)
+                                          |
+                                          +---> WebExTable ("Turnover Departamento [01-0001]")
+                                                |
+                                                +---> <thead>
+                                                |     |
+                                                |     +---> <tr>
+                                                |           +---> <th>Codigo</th>
+                                                |           +---> <th>Nome</th>
+                                                |           +---> <th>% Turnover</th>
+                                                |
+                                                +---> <tbody>
+                                                      |
+                                                      +---> <tr>
+                                                            +---> <td>01-0001</td>
+                                                            +---> <td>DEPARTAMENTO 0001</td>
+                                                            +---> <td>.5%</td>
+
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */
@@ -61,7 +123,8 @@ static procedure FWWebExExample_009(cHTML as character) as character
     local nEmpresas:=Len(aEmpresas) as numeric
 
     local oFWWebExMain as object
-    local oFWWebExShell as object
+    local oFWWebExBody as object
+    local oFWWebExPage as object
     local oFWWebExTable as object
     local oFWWebExContainer as object
     local oFWWebExTableDrillDown as object
@@ -103,15 +166,19 @@ static procedure FWWebExExample_009(cHTML as character) as character
     oFWWebExMain:=WebExMain():New()
     oFWWebExMain:AddChild(oFWWebExContainer)
 
-    oFWWebExShell:=WebExShell():New("Drill-down Exemplo")
-    oFWWebExShell:AddChild(oFWWebExMain)
+    oFWWebExBody:=WebExBody():New()
+    oFWWebExBody:AddChild(oFWWebExMain)
 
-    WebFileTools():HTMLFromControl(oFWWebExShell,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    oFWWebExPage:=WebExPage():New("Drill-down Exemplo")
+    oFWWebExPage:AddChild(oFWWebExBody)
 
-    oFWWebExShell:Clean()
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+
+    oFWWebExPage:Clean()
 
     FreeObj(@oFWWebExMain)
-    FreeObj(@oFWWebExShell)
+    FreeObj(@oFWWebExBody)
+    FreeObj(@oFWWebExPage)
     FreeObj(@oFWWebExTable)
     FreeObj(@oFWWebExContainer)
     FreeObj(@oFWWebExTableDrillDown)

@@ -26,47 +26,50 @@ static procedure FWWebExExample_011(cHTML as character) as character
     local oFWWebExPage as object
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName+" (KPI Dashboard)"
-        // ROW 1
-        WITH WEBEXOBJECT CLASS WebExRow
-            // KPI 1
-            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Faturamento","R$ 125.000","bg-success",WebExIcon():New("bi-bar-chart")
+        //Body
+        WITH WEBEXOBJECT CLASS WebExBody
+            // ROW 1
+            WITH WEBEXOBJECT CLASS WebExRow
+                // KPI 1
+                WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                    WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Faturamento","R$ 125.000","bg-success",WebExIcon():New("bi-bar-chart")
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+                // KPI 2
+                WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                    .:AddClass("border-start")
+                    .:AddClass("border-secondary")
+                    .:AddClass("ps-3")
+                    WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Despesas","R$ 87.000","bg-danger",WebExIcon():New("bi-graph-up")
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+                // KPI 3
+                WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                    .:AddClass("border-start")
+                    .:AddClass("border-secondary")
+                    .:AddClass("ps-3")
+                    WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Outros","R$ 75.000","bg-info",WebExIcon():New("bi-currency-dollar")
+                    END WEBEXOBJECT
                 END WEBEXOBJECT
             END WEBEXOBJECT
-            // KPI 2
-            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
-                .:AddClass("border-start")
-                .:AddClass("border-secondary")
-                .:AddClass("ps-3")
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Despesas","R$ 87.000","bg-danger",WebExIcon():New("bi-graph-up")
-                END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExHR() // separador horizontal
             END WEBEXOBJECT
-            // KPI 3
-            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
-                .:AddClass("border-start")
-                .:AddClass("border-secondary")
-                .:AddClass("ps-3")
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Outros","R$ 75.000","bg-info",WebExIcon():New("bi-currency-dollar")
+            // ROW 2
+            WITH WEBEXOBJECT CLASS WebExRow
+                // KPI 1
+                WITH WEBEXOBJECT CLASS WebExCol ARGS 6
+                    WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material")
+                        .:SetIconBefore(.F.)
+                    END WEBEXOBJECT
                 END WEBEXOBJECT
-            END WEBEXOBJECT
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExHR() // separador horizontal
-        END WEBEXOBJECT
-        // ROW 2
-        WITH WEBEXOBJECT CLASS WebExRow
-            // KPI 1
-            WITH WEBEXOBJECT CLASS WebExCol ARGS 6
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material")
-                    .:SetIconBefore(.F.)
-                END WEBEXOBJECT
-            END WEBEXOBJECT
-            // KPI 2
-            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
-                .:AddClass("border-start")
-                .:AddClass("border-secondary")
-                .:AddClass("ps-3")
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material")
-                    .:SetIconBefore(.F.)
+                // KPI 2
+                WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                    .:AddClass("border-start")
+                    .:AddClass("border-secondary")
+                    .:AddClass("ps-3")
+                    WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material")
+                        .:SetIconBefore(.F.)
+                    END WEBEXOBJECT
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT

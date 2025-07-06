@@ -30,6 +30,8 @@ static procedure FWWebExExample_006(cHTML as character) as character
     local oTableStyle as object
 
     local oFWWebExPage as object
+    local oFWWebExBody as object
+
     local oFWWebExForm as object
     local oFWWebExButton as object
     local oFWWebExScript as object
@@ -39,11 +41,8 @@ static procedure FWWebExExample_006(cHTML as character) as character
             padding: 4px 8px !important;
         }
     endContent
-    oTableStyle:=WebExControl():New("style")
+    oTableStyle:=WebExStyle():New("style")
     oTableStyle:SetContent(cTableStyle)
-
-    oFWWebExPage:=WebExPage():New("Exemplo 006 - ViaCEP em DataTable")
-    oFWWebExPage:AddChild(oTableStyle)
 
     //Campo para a Pesquisa do CEP
     oFWWebExForm:=WebExForm():New("Buscar CEP")
@@ -54,11 +53,8 @@ static procedure FWWebExExample_006(cHTML as character) as character
     oFWWebExForm:AddChild(oFWWebExButton)
 
     // Tabela que sera preenchida
-    oFWWebExPage:AddChild(oFWWebExForm)
-
     oDivTable:=WebExControl():New("div")
     oDivTable:SetAttr("id","tableResult")
-    oFWWebExPage:AddChild(oDivTable)
 
     // Script para requisitar ViaCEP e preencher a tabela com DataTables
     //Portuguese-Brasil translation
@@ -148,14 +144,20 @@ static procedure FWWebExExample_006(cHTML as character) as character
     oFWWebExScript:=WebExScript():New()
     oFWWebExScript:SetContent(cScript)
 
-    oFWWebExPage:AddChild(oFWWebExScript)
+    oFWWebExBody:=WebExBody():New()
+    oFWWebExBody:AddChild(oFWWebExForm)
+    oFWWebExBody:AddChild(oDivTable)
+
+    oFWWebExPage:=WebExPage():New("Exemplo 006 - ViaCEP em DataTable")
     oFWWebExPage:EnableDataTable()
+    oFWWebExPage:AddChild(oFWWebExBody)
 
     WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExPage:Clean()
 
     FreeObj(@oFWWebExPage)
+    FreeObj(@oFWWebExBody)
     FreeObj(@oFWWebExForm)
     FreeObj(@oFWWebExButton)
     FreeObj(@oFWWebExScript)

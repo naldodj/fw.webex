@@ -22,7 +22,7 @@ method New(cContent) class WebExFooter
     beginContent var cDefault
 &copy; __YEAR__ <strong><a href="https://github.com/DNATechByNaldoDJ/fw.webex" target="_blank">FWWebEx</a></strong> (DNATech). Licensed under MIT.
     endContent
-    cDefault:=StrTran(cDefault,"__YEAR__",Str(Year(Date())))
+    cDefault:=StrTran(cDefault,"__YEAR__",LTrim(Str(Year(Date()))))
     paramtype 1 var cContent as character optional default cDefault
     _Super:New("footer")
     WITH WEBEXOBJECT self

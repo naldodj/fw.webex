@@ -53,7 +53,8 @@ static procedure FWWebExExample_009(cHTML as character) as character
     local nEmpresas:=Len(aEmpresas) as numeric
 
     local oFWWebExMain as object
-    local oFWWebExShell as object
+    local oFWWebExBody as object
+    local oFWWebExPage as object
     local oFWWebExTable as object
     local oFWWebExContainer as object
     local oFWWebExTableDrillDown as object
@@ -95,15 +96,19 @@ static procedure FWWebExExample_009(cHTML as character) as character
     oFWWebExMain:=WebExMain():New()
     oFWWebExMain:AddChild(oFWWebExContainer)
 
-    oFWWebExShell:=WebExShell():New("Drill-down Exemplo")
-    oFWWebExShell:AddChild(oFWWebExMain)
+    oFWWebExBody:=WebExBody():New()
+    oFWWebExBody:AddChild(oFWWebExMain)
 
-    WebFileTools():HTMLFromControl(oFWWebExShell,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    oFWWebExPage:=WebExPage():New("Drill-down Exemplo")
+    oFWWebExPage:AddChild(oFWWebExBody)
 
-    oFWWebExShell:Clean()
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+
+    oFWWebExPage:Clean()
 
     FreeObj(@oFWWebExMain)
-    FreeObj(@oFWWebExShell)
+    FreeObj(@oFWWebExBody)
+    FreeObj(@oFWWebExPage)
     FreeObj(@oFWWebExTable)
     FreeObj(@oFWWebExContainer)
     FreeObj(@oFWWebExTableDrillDown)

@@ -32,8 +32,12 @@ class WebExPage from WebExControl
 
     public data jStyle as json
 
+    public data oBody as object
+
     public method New(cTitle as character) as object
+    public method AddChild(oChild as object) as object
     public method AddStyle(cStyle) as object
+    public method SetBody(oBody as object) as object
     public method RenderHTML() as character
 
 endclass
@@ -44,6 +48,41 @@ method New(cTitle) class WebExPage
     ::AddClass("main-div")
     ::cTitle:=cTitle
     ::jStyle:=JSONObject():New()
+return(self)
+
+method AddChild(oChild) class WebExPage
+    local cClassName as character
+    paramtype 1 var oChild as object
+    cClassName:=GetClassName(oChild)
+    if (!Left(cClassName,8)=="FWWEBEX.")
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must belong to the FWWEBEX namespace. Got '"+cClassName+"' instead. Check your class declaration."
+    elseif ((!MethIsMemberOf(oChild,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
+    elseif (oChild:IsKindOf("WEBEXPAGE",.T.))
+        CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Cannot nest a WebExPage inside another WebExPage. Received: "+cClassName+". A WebExPage must be the top-level container."
+    endif
+    if (oChild:IsKindOf("WEBEXBODY"))
+        ::SetBody(oChild)
+    else
+        _Super:AddChild(oChild)
+    endif
+return(self)
+
+method SetBody(oBody) class WebExPage
+    local cClassName as character
+    paramtype 1 var oBody as object
+    cClassName:=GetClassName(oBody)
+    if (!Left(cClassName,8)=="FWWEBEX.")
+        CLASSPARAMEXCEPTION PARAM 1 VAR oBody TEXT cClassName MESSAGE "Object must belong to the FWWEBEX namespace. Got '"+cClassName+"' instead. Check your class declaration."
+    elseif ((!MethIsMemberOf(oBody,"ISKINDOF",.T.)).or.(!oBody:IsKindOf("WEBEXCONTROL",.T.)))
+        CLASSPARAMEXCEPTION PARAM 1 VAR oBody TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
+    endif
+    if (!oBody:IsKindOf("WEBEXBODY",.T.))
+        ::oBody:=WebExBody():New()
+        ::oBody:AddChild(oBody)
+    else
+        ::oBody:=oBody
+    endif
 return(self)
 
 method AddStyle(cStyle) class WebExPage
@@ -58,16 +97,14 @@ return(self)
 method RenderHTML() class WebExPage
 
     local cHTML as character
-    local cBody as character
     local cTheme as character
     local cStyle as character
 
     local jHeader as json
     local jHeadScripts as json
-    local jBodyScripts as json
+    local jPageScripts as json
 
     local lIsDark as logical
-    local lHasMain as logical
 
     local oPage as object
     local oBody as object
@@ -76,12 +113,9 @@ method RenderHTML() class WebExPage
 
     cHTML:="<!DOCTYPE html>"
 
-    cBody:=_Super:RenderHTML()
-    lHasMain:=("<main"$cBody)
-
     lIsDark:=WebApp():ThemeIsDark(@cTheme)
 
-    if ((!lIsDark).and.(!Empty(cTheme)).and.(cTheme=="SUNSET").and.(Empty(::jStyle:GetNames())))
+    if ((!lIsDark).and.(!Empty(cTheme)).and.(cTheme=="SUNSET"))
 
         beginContent var cStyle
 
@@ -195,12 +229,41 @@ method RenderHTML() class WebExPage
 
     endif
 
+    if (Empty(::oBody))
+        oMain:=WebExMain():New()
+        oBody:=WebExBody():New()
+        oBody:AddChild(oMain)
+    else
+        lHasMain:=::oBody:IsKindOf("WEBEXMAIN")
+        if (lHasMain)
+            oBody:=::oBody
+        else
+            oMain:=WebExMain():New()
+            oMain:AddChild(::oBody)
+            oBody:=WebExBody():New()
+            oBody:AddChild(oMain)
+        endif
+    endif
+    ::oBody:=oBody
+    WITH WEBEXOBJECT ::oBody
+        WITH WEBEXOBJECT CLASS WebExFooter
+        END WEBEXOBJECT
+    END WEBEXOBJECT
+    ::oBody:RenderHTML()
+    ::oBody:SetRenderChildren(.F.)
+
     WITH WEBEXOBJECT oPage CLASS WebExHtml
         .:SetAttr("lang","pt-br")
         if (lIsDark)
             .:SetAttr("data-bs-theme","dark")
         endif
         WITH WEBEXOBJECT oHeader CLASS WebExHead
+            ***************************************************************************************************************************
+            //Title
+            WITH WEBEXOBJECT CLASS WebExTitle ARGS ::cTitle
+            END WEBEXOBJECT
+            ***************************************************************************************************************************
+            //Meta
             WITH WEBEXOBJECT CLASS WebExMeta
                 .:SetAttr("charset","UTF-8")
             END WEBEXOBJECT
@@ -211,7 +274,7 @@ method RenderHTML() class WebExPage
                 .:SetAttr("name","viewport")
                 .:SetAttr("content","width=device-width, initial-scale=1")
             END WEBEXOBJECT
-***************************************************************************************************************************
+            ***************************************************************************************************************************
             //PO UI CSS
                 WITH WEBEXOBJECT CLASS WebExComment
                     .:SetContent("PO UI CSS")
@@ -221,7 +284,7 @@ method RenderHTML() class WebExPage
                     .:SetAttr("rel","stylesheet")
                 END WEBEXOBJECT
             //PO UI CSS
-***************************************************************************************************************************
+            ***************************************************************************************************************************
             //Bootstrap CSS
                 WITH WEBEXOBJECT CLASS WebExComment
                     .:SetContent("Bootstrap CSS")
@@ -231,7 +294,7 @@ method RenderHTML() class WebExPage
                     .:SetAttr("rel","stylesheet")
                 END WEBEXOBJECT
             //Bootstrap CSS
-***************************************************************************************************************************
+            ***************************************************************************************************************************
             //Bootstrap Optional JavaScript
                 WITH WEBEXOBJECT CLASS WebExComment
                     .:SetContent("Optional JavaScript")
@@ -252,44 +315,32 @@ method RenderHTML() class WebExPage
                     .:SetContent("https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js")
                 END WEBEXOBJECT
             //Bootstrap Optional JavaScript
-***************************************************************************************************************************
+            ***************************************************************************************************************************
             //Custom Header
             jHeader:=oHeader:GetHeader()
             aEval(jHeader:GetNames(),{|cName|oHeader:AddChild(jHeader[cName])})
-***************************************************************************************************************************
+            ***************************************************************************************************************************
             //Styles
             aEval(::jStyle:GetNames(),{|cName|oHeader:AddChild(::jStyle[cName])})
-***************************************************************************************************************************
+            ***************************************************************************************************************************
             //Scripts Head
             jHeadScripts:=oHeader:GetHeadScripts()
             aEval(jHeadScripts:GetNames(),{|cName|oHeader:AddChild(jHeadScripts[cName])})
-***************************************************************************************************************************
-            //Title
-            WITH WEBEXOBJECT CLASS WebExTitle ARGS ::cTitle
-            END WEBEXOBJECT
-***************************************************************************************************************************
+            ***************************************************************************************************************************
         END WEBEXOBJECT
-        WITH WEBEXOBJECT oBody CLASS WebExBody
-            if (!lHasMain)
-                WITH WEBEXOBJECT oMain CLASS WebExMain ARGS .T.
-                    oMain:SetContent(cBody)
-                END WEBEXOBJECT
-            else
-                oBody:SetContent(cBody)
-            endif
-            WITH WEBEXOBJECT CLASS WebExFooter
-            END WEBEXOBJECT
-***************************************************************************************************************************
-            //Scripts Body
-            jBodyScripts:=oBody:GetBodyScriptBundle()
-            aEval(jBodyScripts:GetNames(),{|cName|oBody:AddChild(jBodyScripts[cName])})
-***************************************************************************************************************************
+        ***************************************************************************************************************************
+        WITH WEBEXOBJECT ::oBody
         END WEBEXOBJECT
-        cHTML+=oPage:RenderHTML()
+        ***************************************************************************************************************************
+        //Scripts
+        jPageScripts:=oPage:GetPageScriptBundle()
+        aEval(jPageScripts:GetNames(),{|cName|oPage:AddChild(jPageScripts[cName])})
     END WEBEXOBJECT
+
+    cHTML+=oPage:RenderHTML()
 
     FreeObj(@jHeader)
     FreeObj(@jHeadScripts)
-    FreeObj(@jBodyScripts)
+    FreeObj(@jPageScripts)
 
 return(cHTML)

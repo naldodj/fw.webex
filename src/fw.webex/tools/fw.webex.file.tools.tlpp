@@ -34,7 +34,7 @@ static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLC
     paramtype 4 var cHTMLContent as character optional
     paramtype 5 var lEncodeUTF8 as logical optional default .T.
 
-    cClassName:=GetClassName(oFWWebExControl)
+    cClassName:=oFWWebExControl:ClassFullName()
     if (!Left(cClassName,8)=="FWWEBEX.")
         CLASSPARAMEXCEPTION PARAM 1 VAR oFWWebExControl TEXT cClassName MESSAGE "Object must belong to the FWWEBEX namespace. Got '"+cClassName+"' instead. Check your class declaration."
     elseif ((!MethIsMemberOf(oFWWebExControl,"ISKINDOF",.T.)).or.(!oFWWebExControl:IsKindOf("WEBEXCONTROL",.T.)))

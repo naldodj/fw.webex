@@ -5,6 +5,46 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
++---> WebExPage ("FWWebExExample_011 (KPI Dashboard)")
+      |
+      +---> WebExRow (Primeira linha de KPIs)
+      |     |
+      |     +---> WebExCol (col-4)
+      |     |     |
+      |     |     +---> WebExCardKPI ("Faturamento", "R$ 125.000", bg-success)
+      |     |           |
+      |     |           +---> WebExIcon ("bi-bar-chart")
+      |     |
+      |     +---> WebExCol (col-4, border-start, border-secondary, ps-3)
+      |     |     |
+      |     |     +---> WebExCardKPI ("Despesas", "R$ 87.000", bg-danger)
+      |     |           |
+      |     |           +---> WebExIcon ("bi-graph-up")
+      |     |
+      |     +---> WebExCol (col-4, border-start, border-secondary, ps-3)
+      |           |
+      |           +---> WebExCardKPI ("Outros", "R$ 75.000", bg-info)
+      |                 |
+      |                 +---> WebExIcon ("bi-currency-dollar")
+      |
+      +---> WebExHR (linha horizontal separadora)
+      |
+      +---> WebExRow (Segunda linha de KPIs)
+            |
+            +---> WebExCol (col-6)
+            |     |
+            |     +---> WebExCardKPI ("Clientes Ativos", "1.024", bg-info)
+            |           |
+            |           +---> WebExIcon ("analytics", material)
+            |           +---> Icone depois do texto (SetIconBefore(.F.))
+            |
+            +---> WebExCol (col-4, border-start, border-secondary, ps-3)
+                  |
+                  +---> WebExCardKPI ("Ticket Medio", "R$ 122,00", bg-warning)
+                        |
+                        +---> WebExIcon ("insights", material)
+                        +---> Icone depois do texto (SetIconBefore(.F.))
+
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */
@@ -34,47 +74,50 @@ static procedure FWWebExExample_011(cHTML as character) as character
     local oFWWebExPage as object
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName+" (KPI Dashboard)"
-        // ROW 1
-        WITH WEBEXOBJECT CLASS WebExRow
-            // KPI 1
-            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Faturamento","R$ 125.000","bg-success",WebExIcon():New("bi-bar-chart")
+        //Body
+        WITH WEBEXOBJECT CLASS WebExBody
+            // ROW 1
+            WITH WEBEXOBJECT CLASS WebExRow
+                // KPI 1
+                WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                    WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Faturamento","R$ 125.000","bg-success",WebExIcon():New("bi-bar-chart")
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+                // KPI 2
+                WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                    .:AddClass("border-start")
+                    .:AddClass("border-secondary")
+                    .:AddClass("ps-3")
+                    WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Despesas","R$ 87.000","bg-danger",WebExIcon():New("bi-graph-up")
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+                // KPI 3
+                WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                    .:AddClass("border-start")
+                    .:AddClass("border-secondary")
+                    .:AddClass("ps-3")
+                    WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Outros","R$ 75.000","bg-info",WebExIcon():New("bi-currency-dollar")
+                    END WEBEXOBJECT
                 END WEBEXOBJECT
             END WEBEXOBJECT
-            // KPI 2
-            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
-                .:AddClass("border-start")
-                .:AddClass("border-secondary")
-                .:AddClass("ps-3")
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Despesas","R$ 87.000","bg-danger",WebExIcon():New("bi-graph-up")
-                END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExHR() // separador horizontal
             END WEBEXOBJECT
-            // KPI 3
-            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
-                .:AddClass("border-start")
-                .:AddClass("border-secondary")
-                .:AddClass("ps-3")
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Outros","R$ 75.000","bg-info",WebExIcon():New("bi-currency-dollar")
+            // ROW 2
+            WITH WEBEXOBJECT CLASS WebExRow
+                // KPI 1
+                WITH WEBEXOBJECT CLASS WebExCol ARGS 6
+                    WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material")
+                        .:SetIconBefore(.F.)
+                    END WEBEXOBJECT
                 END WEBEXOBJECT
-            END WEBEXOBJECT
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExHR() // separador horizontal
-        END WEBEXOBJECT
-        // ROW 2
-        WITH WEBEXOBJECT CLASS WebExRow
-            // KPI 1
-            WITH WEBEXOBJECT CLASS WebExCol ARGS 6
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material")
-                    .:SetIconBefore(.F.)
-                END WEBEXOBJECT
-            END WEBEXOBJECT
-            // KPI 2
-            WITH WEBEXOBJECT CLASS WebExCol ARGS 4
-                .:AddClass("border-start")
-                .:AddClass("border-secondary")
-                .:AddClass("ps-3")
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material")
-                    .:SetIconBefore(.F.)
+                // KPI 2
+                WITH WEBEXOBJECT CLASS WebExCol ARGS 4
+                    .:AddClass("border-start")
+                    .:AddClass("border-secondary")
+                    .:AddClass("ps-3")
+                    WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material")
+                        .:SetIconBefore(.F.)
+                    END WEBEXOBJECT
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT

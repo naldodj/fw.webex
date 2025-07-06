@@ -89,6 +89,7 @@ static function FWWebExExample_014(cHTML as character) as character
     local oMenuIcon as object
     local oMenuText as object
 
+    local oFWWebExBody as object
     local oFWWebExMain as object
     local oFWWebExPage as object
     local oContentWrapper as object
@@ -169,8 +170,11 @@ static function FWWebExExample_014(cHTML as character) as character
     oWrapper:AddChild(oSidebar)
     oWrapper:AddChild(oContentWrapper)
 
+    oFWWebExBody:=WebExBody():New()
+    oFWWebExBody:AddChild(oWrapper)
+
     oFWWebExPage:=WebExPage():New("FWWebEx SBAdmin Clone")
-    oFWWebExPage:AddChild(oWrapper)
+    oFWWebExPage:AddChild(oFWWebExBody)
 
     WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
 
