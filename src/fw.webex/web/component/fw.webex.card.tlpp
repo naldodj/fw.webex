@@ -14,25 +14,32 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExCard from WebExControl
-    public method New(cTitle as character,cBody as character) as object
+
+    public data cCardTitle as character
+    public data cCardBody as character
+
+    public method New(cCardTitle as character,cCardBody as character) as object
+
 endclass
 
-method New(cTitle,cBody) class WebExCard
-    paramtype 1 var cTitle as character
-    paramtype 2 var cBody as character optional default ""
+method New(cCardTitle,cCardBody) class WebExCard
+    paramtype 1 var cCardTitle as character
+    paramtype 2 var cCardBody as character optional default ""
     _Super:New("div")
+    ::cCardTitle:=cCardTitle
+    ::cCardBody:=cCardBody
     WITH WEBEXOBJECT self
         .:SetAttr("class","card")
         WITH WEBEXOBJECT CLASS WebExControl TYPE div
             .:SetAttr("class","card-body")
             WITH WEBEXOBJECT CLASS WebExControl TYPE h5
                 .:SetAttr("class","card-title")
-                .:SetContent(cTitle)
+                .:SetContent(::cCardTitle)
             END WEBEXOBJECT
-            if (!Empty(cBody))
+            if (!Empty(::cCardBody))
                 WITH WEBEXOBJECT CLASS WebExControl TYPE p
                     .:SetAttr("class","card-text")
-                    .:SetContent(cBody)
+                    .:SetContent(::cCardBody)
                 END WEBEXOBJECT
             endif
         END WEBEXOBJECT

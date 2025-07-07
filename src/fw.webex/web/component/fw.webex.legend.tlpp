@@ -14,11 +14,13 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExLegend from WebExControl
-   public method New(cLegend as character) as object
+   public data cLegendContent
+   public method New(cLegendContent as character) as object
 endclass
 
-method New(cLegend) class WebExLegend
-   paramtype 1 var cLegend as character
+method New(cLegendContent) class WebExLegend
+   paramtype 1 var cLegendContent as character
    _Super:New("legend")
-   ::SetContent(cLegend)
+   ::cLegendContent:=cLegendContent
+   ::SetContent(::cLegendContent)
 return(self)

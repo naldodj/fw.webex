@@ -23,11 +23,13 @@ method New() class WebExRow
 return(self)
 
 class WebExCol from WebExControl
+    public data nColSize as numeric
     public method New(nColSize as numeric) as object
 endclass
 
 method New(nColSize) class WebExCol
     paramtype 1 var nColSize as numeric optional default 12
     _Super:New("div")
+    ::nColSize:=nColSize
     ::SetAttr("class", "col-md-"+cValToChar(nColSize))
 return(self)

@@ -14,11 +14,13 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExFieldSet from WebExControl
-   public method New(cLegend as character) as object
+   public data cFieldSetLegend as character
+   public method New(cFieldSetLegend as character) as object
 endclass
 
-method New(cLegend) class WebExFieldSet
-   paramtype 1 var cLegend as character
+method New(cFieldSetLegend) class WebExFieldSet
+   paramtype 1 var cFieldSetLegend as character
    _Super:New("fieldset")
-   ::AddChild(WebExLegend():New(cLegend))
+   ::cFieldSetLegend:=cFieldSetLegend
+   ::AddChild(WebExLegend():New(cFieldSetLegend))
 return(self)

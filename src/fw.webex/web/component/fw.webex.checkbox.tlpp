@@ -14,24 +14,34 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExCheckBox from WebExControl
+
+    public data cCheckBoxLabel as character
+    public data cCheckBoxName as character
+    public data cCheckBoxTitle as character
+    public data cCheckBoxValue as character
+
     public data oWebExInput as object
     public data oWebExLabel as object
-    public method New(cLabel as character,cName as character,cTitle as character,cValue) as object
+    public method New(cCheckBoxLabel as character,cCheckBoxName as character,cCheckBoxTitle as character,cCheckBoxValue) as object
 endclass
 
-method New(cLabel,cName,cTitle,cValue) class WebExCheckBox
-    paramtype 1 var cLabel as character optional default ""
-    paramtype 2 var cName as character optional default ""
-    paramtype 3 var cTitle as character optional default ""
-    paramtype 4 var cValue as character optional default ""
+method New(cCheckBoxLabel,cCheckBoxName,cCheckBoxTitle,cCheckBoxValue) class WebExCheckBox
+    paramtype 1 var cCheckBoxLabel as character optional default ""
+    paramtype 2 var cCheckBoxName as character optional default ""
+    paramtype 3 var cCheckBoxTitle as character optional default ""
+    paramtype 4 var cCheckBoxValue as character optional default ""
     _Super:New("div")
+    ::cCheckBoxLabel:=cCheckBoxLabel
+    ::cCheckBoxName:=cCheckBoxName
+    ::cCheckBoxTitle:=cCheckBoxTitle
+    ::cCheckBoxValue:=cCheckBoxValue
     ::AddClass("form-check")
-    ::oWebExInput:=WebExInput():New(cName,"checkbox","",cTitle)
+    ::oWebExInput:=WebExInput():New(cCheckBoxName,"checkbox","",cCheckBoxTitle)
     ::oWebExInput:AddClass("form-check-input")
-    if (!Empty(cValue))
-        ::oWebExInput:SetAttr("value",cValue)
+    if (!Empty(cCheckBoxValue))
+        ::oWebExInput:SetAttr("value",cCheckBoxValue)
     endif
-    ::oWebExLabel:=WebExLabel():New(::oWebExInput:cID,cLabel)
+    ::oWebExLabel:=WebExLabel():New(::oWebExInput:cID,cCheckBoxLabel)
     ::oWebExLabel:AddClass("form-check-label")
     ::AddChild(::oWebExLabel)
     ::AddChild(::oWebExInput)

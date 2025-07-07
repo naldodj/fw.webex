@@ -14,18 +14,18 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExStyle from WebExControl
-    public data cStyle as character
+    public data cStyleContent as character
     public method New() as object
-    public method SetContent(cStyle as character) as object
+    public method SetContent(cStyleContent as character) as object
 endclass
 
 method New() class WebExStyle
     _Super:New("style")
 return(self)
 
-method SetContent(cStyle) class WebExStyle
-    paramtype 1 var cStyle as character
-    ::cStyle:=cStyle
-    _Super:SetContent(::cStyle)
+method SetContent(cStyleContent) class WebExStyle
+    paramtype 1 var cStyleContent as character
+    ::cStyleContent:=cStyleContent
+    _Super:SetContent(::cStyleContent)
     ::AddInHeader(self)
 return(self)

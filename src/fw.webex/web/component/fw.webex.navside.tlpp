@@ -15,50 +15,50 @@ namespace FWWebEx
 
 class WebExNavSide from WebExControl
 
-    public data cBrand as character
+    public data cNavSideBrand as character
 
-    public data jItems as json
+    public data jNavSideItems as json
 
-    public method New(cBrand as character) as object
-    public method SetBrand(cBrand as character) as object
-    public method AddItem(cLabel as character,cHRef as character,oIcon as object) as object
+    public method New(cNavSideBrand as character) as object
+    public method SetBrand(cNavSideBrand as character) as object
+    public method AddItem(cNavSideLabel as character,cNavSideHRef as character,oNavIcon as object) as object
     public method AddDivider() as object
-    public method AddHeader(cText as character) as object
+    public method AddHeader(cNavSideHeaderText as character) as object
     public method RenderHTML() as character
 
 endclass
 
-method New(cBrand) class WebExNavSide
-    paramtype 1 var cBrand as character optional default ""
+method New(cNavSideBrand) class WebExNavSide
+    paramtype 1 var cNavSideBrand as character optional default ""
     _Super:New("nav")
     ::SetAttr("class","sidebar bg-body border-end")
     ::SetAttr("id",::cID)
-    ::jItems:=JSONObject():New()
-    ::cBrand:=cBrand
+    ::jNavSideItems:=JSONObject():New()
+    ::cNavSideBrand:=cNavSideBrand
 return(self)
 
-method SetBrand(cBrand) class WebExNavSide
-    ::cBrand:=cBrand
+method SetBrand(cNavSideBrand) class WebExNavSide
+    ::cNavSideBrand:=cNavSideBrand
 return(self)
 
-method AddItem(cLabel,cHRef,oIcon) class WebExNavSide
+method AddItem(cNavSideLabel,cNavSideHRef,oNavIcon) class WebExNavSide
 
     local oItem as object
     local oLink as object
     local oSpan as object
 
-    paramtype 1 var cLabel as character
-    paramtype 2 var cHRef as character
-    paramtype 3 var oIcon as object class WEBEXICON optional
+    paramtype 1 var cNavSideLabel as character
+    paramtype 2 var cNavSideHRef as character
+    paramtype 3 var oNavIcon as object class WEBEXICON optional
 
     oSpan:=WebExControl():New("span")
-    oSpan:SetContent(cLabel)
+    oSpan:SetContent(cNavSideLabel)
 
     oLink:=WebExControl():New("a")
     oLink:SetAttr("class","nav-link")
-    oLink:SetAttr("href",cHRef)
-    if (oIcon!=nil)
-        oLink:AddChild(oIcon)
+    oLink:SetAttr("href",cNavSideHRef)
+    if (oNavIcon!=nil)
+        oLink:AddChild(oNavIcon)
     endif
     oLink:AddChild(oSpan)
 
@@ -66,23 +66,23 @@ method AddItem(cLabel,cHRef,oIcon) class WebExNavSide
     oItem:SetAttr("class","nav-item")
     oItem:AddChild(oLink)
 
-    ::jItems[oItem:cID]:=oItem
+    ::jNavSideItems[oItem:cID]:=oItem
 
 return(oItem)
 
 method AddDivider() class WebExNavSide
     local oDivider:=WebExControl():New("hr")
     oDivider:SetAttr("class","my-2")
-    ::jItems[oDivider:cID]:=oDivider
+    ::jNavSideItems[oDivider:cID]:=oDivider
 return(oDivider)
 
-method AddHeader(cText) class WebExNavSide
+method AddHeader(cNavSideHeaderText) class WebExNavSide
     local oHeader as object
-    paramtype 1 var cText as character
+    paramtype 1 var cNavSideHeaderText as character
     oHeader:=WebExControl():New("div")
     oHeader:SetAttr("class","text-muted text-uppercase px-3 small fw-bold")
-    oHeader:SetContent(cText)
-    ::jItems[oHeader:cID]:=oHeader
+    oHeader:SetContent(cNavSideHeaderText)
+    ::jNavSideItems[oHeader:cID]:=oHeader
 return(oHeader)
 
 method RenderHTML() class WebExNavSide
@@ -97,17 +97,17 @@ method RenderHTML() class WebExNavSide
     oWrapper:SetAttr("class","d-flex flex-column flex-shrink-0 p-3")
     //oWrapper:SetAttr("style","min-height: 100vh")
 
-    if (!Empty(::cBrand))
+    if (!Empty(::cNavSideBrand))
         oBrand:=WebExControl():New("a")
         oBrand:SetAttr("href","#")
         oBrand:SetAttr("class","navbar-brand mb-3")
-        oBrand:SetContent(::cBrand)
+        oBrand:SetContent(::cNavSideBrand)
         oWrapper:AddChild(oBrand)
     endif
 
     oList:=WebExControl():New("ul")
     oList:SetAttr("class","nav nav-pills flex-column mb-auto")
-    aEval(::jItems:GetNames(),{|k|oList:AddChild(::jItems[k])})
+    aEval(::jNavSideItems:GetNames(),{|k|oList:AddChild(::jNavSideItems[k])})
     oWrapper:AddChild(oList)
 
     ::AddChild(oWrapper)

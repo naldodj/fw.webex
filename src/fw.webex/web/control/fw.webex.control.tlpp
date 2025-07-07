@@ -52,6 +52,7 @@ class WebExControl
 
     public method Clone(lDetachChildren as logical) as object
     protected method __CloneNewInstance() as object
+    protected method __CloneCompexData(xComplex as variant) as variant
 
     public method DumpDOM(nLevel as numeric) as character
 
@@ -138,6 +139,7 @@ method Clone(lDetachChildren) class WebExControl
     local aMemberData as array
 
     local cKey as character
+    local cData as character
 
     local i as numeric
 
@@ -145,16 +147,24 @@ method Clone(lDetachChildren) class WebExControl
     local oChild as object
     local oChildClone as object
 
+    local xValue as variant
+
     paramtype 1 var lDetachChildren as logical optional default .F.
 
     // Cria nova instancia do mesmo tipo
     oClone:=self:__CloneNewInstance()
 
+    private pSelf:=self as object
+
     // Copia dados simples
-    aMemberData:=aClone(ClassDataArr(self,.F.))
+    aMemberData:=aClone(ClassDataArr(self,.T.))
     for i:=1 to Len(aMemberData)
         cKey:=aMemberData[i][1]
-        oClone:SetMemberData(cKey,aMemberData[i][2],.F.)
+        cData:="pSelf"
+        cData+=":"
+        cData+=cKey
+        xValue:=&(cData)
+        oClone:SetMemberData(cKey,xValue,.T.)
     next i
     FWFreeArray(@aMemberData)
 
@@ -176,7 +186,7 @@ method Clone(lDetachChildren) class WebExControl
                 .and.;
                 MethIsMemberOf(oChild,"ISKINDOF",.T.);
                 .and.;
-                oChild:IsKindOf("WebExControl",.T.);
+                oChild:IsKindOf("WEBEXCONTROL",.T.);
         )
             oChildClone:=oChild:Clone(lDetachChildren)
             oClone:AddChild(oChildClone)
@@ -195,6 +205,7 @@ method __CloneNewInstance() class WebExControl
     local aClassMethArr as array
 
     local cParam as character
+    local cClassName as character
     local cNewInstanceMethod as character
 
     local nATParam as numeric
@@ -209,9 +220,10 @@ method __CloneNewInstance() class WebExControl
     nATMethod:=aScan(aClassMethArr,{|aMethod|aMethod[1]=="NEW"})
 
     if (nATMethod>0)
-        private __aClassDataArrValue__:=ClassDataArr(self,.F.)
+        cClassName:=GetClassName(self)
+        private __aClassDataArrValue__:=ClassDataArr(self,.T.)
         nParams:=Len(aClassMethArr[nATMethod][2])
-        cNewInstanceMethod:="oSelf:New("
+        cNewInstanceMethod:=cClassName+"():New("
         if (nParams>0)
             for nParam:=1 to nParams
                 cParam:=aClassMethArr[nATMethod][2][nParam]
@@ -223,7 +235,6 @@ method __CloneNewInstance() class WebExControl
             next nParam
         endif
         cNewInstanceMethod+=")"
-        private oSelf:=self
         oClone:=&(cNewInstanceMethod)
         FWFreeArray(@__aClassDataArrValue__)
     endif
@@ -231,6 +242,49 @@ method __CloneNewInstance() class WebExControl
     FWFreeArray(@aClassMethArr)
 
 return(oClone)
+
+method __CloneCompexData(xComplex) class WebExControl
+    local aNames as array
+    local cKey as character
+    local cType as character
+    local i as numeric
+    local j as numeric
+    local xClone as variant
+    cType:=ValType(xComplex)
+    do case
+    case (cType=="A")
+        j:=Len(xComplex)
+        xClone:=Array(j)
+        for i:=1 to Len(xComplex)
+            xClone[i]:=self:__CloneCompexData(xComplex[i])
+        next i
+    case (cType=="J")
+        xClone:=JSONObject():New()
+        aNames:=xComplex:GetNames()
+        j:=Len(aNames)
+        for i:=1 to j
+            cKey:=aNames[i]
+            xClone[cKey]:=self:__CloneCompexData(xComplex[cKey])
+        next i
+    case (cType=="O")
+        cClassName:=GetClassName(xComplex)
+        if(;
+            (!Left(cClassName,8)=="FWWEBEX.");
+            .or.;
+            (!MethIsMemberOf(xComplex,"CLONE",.T.));
+            .or.;
+            (!MethIsMemberOf(xComplex,"ISKINDOF",.T.));
+            .or.;
+            (!xComplex:IsKindOf("WEBEXCONTROL",.T.));
+        )
+            xClone:=xComplex
+        else
+            xClone:=xComplex:Clone()
+        endif
+    otherwise
+        xClone:=xComplex
+    end case
+return(xClone)
 
 method DumpDOM(nLevel) class WebExControl
 
@@ -313,7 +367,7 @@ method DumpDOM(nLevel) class WebExControl
                     .and.;
                     MethIsMemberOf(oChild,"ISKINDOF",.T.);
                     .and.;
-                    oChild:IsKindOf("WebExControl",.T.);
+                    oChild:IsKindOf("WEBEXCONTROL",.T.);
             )
                cDOM+=oChild:DumpDOM(nLevel+1)
             endif
@@ -378,22 +432,52 @@ method ClassFullName() class WebExControl
 return(GetClassName(self))
 
 method GetMemberData(cMember,xDefault,lSuperClass) class WebExControl
+
+    local aClassDataArr as array
+
+    local nAT as numeric
+
+    local xValue as variant
+
     paramtype 1 var cMember as character optional default ""
     paramtype 2 var lSuperClass as logical optional default .T.
-return(__GetMemberData(@self,@cMember,@xDefault,@lSuperClass))
+
+    if (!Empty(cMember))
+        if (AttIsMemberOf(self,cMember,lSuperClass))
+            aClassDataArr:=ClassDataArr(self,lSuperClass)
+            cMember:=Upper(AllTrim(cMember))
+            nAT:=aScan(aClassDataArr,{|x|(x[1]==cMember)})
+            if (nAT>0)
+                xValue:=aClassDataArr[nAT][2]
+            else
+                xValue:=xDefault
+            endif
+        else
+            xValue:=xDefault
+        endif
+    else
+        xValue:=aClone(ClassDataArr(self,lSuperClass))
+    endif
+
+return(xValue)
 
 method SetMemberData(cMember,xValue,lSuperClass) class WebExControl
+    local cType as character
     local lSetMemberData as logical
     paramtype 1 var cMember as character
     paramtype 3 var lSuperClass as logical optional default .T.
     lSetMemberData:=AttIsMemberOf(self,cMember,lSuperClass)
     if (lSetMemberData)
-        private pSelf as object
-        pSelf:=self
+        private pSelf:=self as object
         cData:="pSelf"
         cData+=":"
         cData+=cMember
-        &(cData):=xValue
+        cType:=ValType(xValue)
+        if ((cType$"A|J|O").and.(FWIsInCallStack("CLONE")))
+            &(cData):=self:__CloneCompexData(xValue)
+        else
+            &(cData):=xValue
+        endif
     endif
 return(lSetMemberData)
 
@@ -1277,32 +1361,5 @@ return(nil)
 
 method DisableFeatures() class WebExControl
     aEval(__jHeader:GetNames(),{|cName|__jHeader:DelName(cName)})
-    aEval(__jFeatures:GetNames(),{|cFeature|__jFeatures[cFeature]:=.F.,self:SetMemberData(cFeature,.F.)})
+    aEval(__jFeatures:GetNames(),{|cFeature|__jFeatures[cFeature]:=.F.,self:SetMemberData(cFeature,.T.)})
 return(nil)
-
-static function __GetMemberData(oSelf as object,cMember as character,xDefault as variant,lSuperClass as logical) as variant
-
-    local aClassDataArr as array
-
-    local nAT as numeric
-
-    local xValue as variant
-
-    if (!Empty(cMember))
-        if (AttIsMemberOf(oSelf,cMember,lSuperClass))
-            aClassDataArr:=ClassDataArr(oSelf,lSuperClass)
-            cMember:=Upper(AllTrim(cMember))
-            nAT:=aScan(aClassDataArr,{|x|(x[1]==cMember)})
-            if (nAT>0)
-                xValue:=aClassDataArr[nAT][2]
-            else
-                xValue:=xDefault
-            endif
-        else
-            xValue:=xDefault
-        endif
-    else
-        xValue:=aClone(ClassDataArr(oSelf,lSuperClass))
-    endif
-
-return(xValue)

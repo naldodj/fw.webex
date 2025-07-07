@@ -14,30 +14,42 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExInput from WebExControl
-    public method New(cName as character,cType as character,cPlaceholder as character,cTitle as character) as object
+
+    public data cInputName as character
+    public data cInputType as character
+    public data cInputPlaceholder as character
+    public data cInputTitle as character
+
+    public method New(cInputName as character,cInputType as character,cInputPlaceholder as character,cInputTitle as character) as object
+
 endclass
 
-method New(cName,cType,cPlaceholder,cTitle) class WebExInput
+method New(cInputName,cInputType,cInputPlaceholder,cInputTitle) class WebExInput
 
-    paramtype 1 var cName as character
-    paramtype 2 var cType as character
-    paramtype 3 var cPlaceholder as character
-    paramtype 4 var cTitle as character optional default cPlaceholder
+    paramtype 1 var cInputName as character
+    paramtype 2 var cInputType as character
+    paramtype 3 var cInputPlaceholder as character
+    paramtype 4 var cInputTitle as character optional default cInputPlaceholder
 
     _Super:New("input")
 
-    if (!cType=="checkbox")
+    ::cInputName:=cInputName
+    ::cInputType:=cInputType
+    ::cInputPlaceholder:=cInputPlaceholder
+    ::cInputTitle:=cInputTitle
+
+    if (!cInputType=="checkbox")
         ::SetAttr("class","form-control")
     endif
 
-    ::SetAttr("name",cName)
-    ::SetAttr("type",cType)
+    ::SetAttr("name",cInputName)
+    ::SetAttr("type",cInputType)
 
-    if (!Empty(cPlaceholder))
-        ::SetAttr("placeholder",cPlaceholder)
+    if (!Empty(cInputPlaceholder))
+        ::SetAttr("placeholder",cInputPlaceholder)
     endif
-    if (!Empty(cTitle))
-        ::SetAttr("title",cTitle)
+    if (!Empty(cInputTitle))
+        ::SetAttr("title",cInputTitle)
     endif
 
 return(self)

@@ -14,14 +14,21 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExLabel from WebExControl
-    public method New(cFor as character,cText as character) as object
+
+    public data cLabelFor as character
+    public data cLabelText as character
+
+    public method New(cLabelFor as character,cLabelText as character) as object
+
 endclass
 
-method New(cFor,cText) class WebExLabel
-    paramtype 1 var cFor as character
-    paramtype 2 var cText as character
+method New(cLabelFor,cLabelText) class WebExLabel
+    paramtype 1 var cLabelFor as character
+    paramtype 2 var cLabelText as character
     _Super:New("label")
-    ::SetAttr("for",cFor)
+    ::cLabelFor:=cLabelFor
+    ::cLabelText:=cLabelText
+    ::SetAttr("for",cLabelFor)
     ::SetAttr("class","form-label")
-    ::SetContent(cText)
+    ::SetContent(cLabelText)
 return(self)

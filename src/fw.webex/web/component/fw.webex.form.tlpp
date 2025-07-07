@@ -15,18 +15,18 @@ namespace FWWebEx
 
 class WebExForm from WebExControl
 
-    public data cTitle as character
-    public data cMethod as character
-    public data cAction as character
+    public data cFormTitle as character
+    public data cFormMethod as character
+    public data cFormAction as character
 
-    public data jFields as json
-    public data jButtons as json
+    public data jFormFields as json
+    public data jFormButtons as json
 
-    public data lButtonsFirst as logical
+    public data lFormButtonsFirst as logical
 
-    public method New(cTitle as character,lButtonsFirst as logical) as object
-    public method SetMethod(cMethod as character) as object
-    public method SetAction(cAction as character) as object
+    public method New(cFormTitle as character,lFormButtonsFirst as logical) as object
+    public method SetMethod(cFormMethod as character) as object
+    public method SetAction(cFormAction as character) as object
     public method AddField(cLabel as character,cName as character,cType as character,cPlaceholder as character) as object
     public method AddButton(oButton as object) as object
 
@@ -34,26 +34,26 @@ class WebExForm from WebExControl
 
 endclass
 
-method New(cTitle,lButtonsFirst) class WebExForm
-    paramtype 1 var cTitle as character
-    paramtype 2 var lButtonsFirst as logical optional default .F.
+method New(cFormTitle,lFormButtonsFirst) class WebExForm
+    paramtype 1 var cFormTitle as character
+    paramtype 2 var lFormButtonsFirst as logical optional default .F.
     _Super:New("form")
-    ::cTitle:=cTitle
-    ::lButtonsFirst:=lButtonsFirst
+    ::cFormTitle:=cFormTitle
+    ::lFormButtonsFirst:=lFormButtonsFirst
     ::SetMethod("get")
     ::SetAction("#")
-    ::jFields:=JSONObject():New()
-    ::jButtons:=JSONObject():New()
+    ::jFormFields:=JSONObject():New()
+    ::jFormButtons:=JSONObject():New()
 return(self)
 
-method SetMethod(cMethod) class WebExForm
-   paramtype 1 var cMethod as character
-   ::cMethod:=Lower(AllTrim(cMethod))
+method SetMethod(cFormMethod) class WebExForm
+   paramtype 1 var cFormMethod as character
+   ::cFormMethod:=Lower(AllTrim(cFormMethod))
 return(self)
 
-method SetAction(cAction) class WebExForm
-   paramtype 1 var cAction as character
-   ::cAction:=AllTrim(cAction)
+method SetAction(cFormAction) class WebExForm
+   paramtype 1 var cFormAction as character
+   ::cFormAction:=AllTrim(cFormAction)
 return(self)
 
 method AddField(cLabel,cName,cType,cPlaceholder) class WebExForm
@@ -63,12 +63,12 @@ method AddField(cLabel,cName,cType,cPlaceholder) class WebExForm
    paramtype 3 var cType as character
    paramtype 4 var cPlaceholder as character
    oField:=WebExField():New(cLabel,cName,cType,cPlaceholder)
-   ::jFields[oField:cID]:=oField
+   ::jFormFields[oField:cID]:=oField
 return(self)
 
 method AddButton(oButton) class WebExForm
    paramtype 1 var oButton as object class WEBEXBUTTON
-   ::jButtons[oButton:cID]:=oButton
+   ::jFormButtons[oButton:cID]:=oButton
 return(self)
 
 method RenderHTML() class WebExForm
@@ -83,13 +83,13 @@ method RenderHTML() class WebExForm
     local oChild as object
     local oFieldSet as object
 
-    ::SetAttr("method",::cMethod)
-    ::SetAttr("action",::cAction)
+    ::SetAttr("method",::cFormMethod)
+    ::SetAttr("action",::cFormAction)
     ::SetAttr("class","p-3 border rounded")
 
-    oFieldSet:=WebExFieldSet():New(::cTitle)
+    oFieldSet:=WebExFieldSet():New(::cFormTitle)
 
-    jChilds:=if(::lButtonsFirst,::jButtons,::jFields)
+    jChilds:=if(::lFormButtonsFirst,::jFormButtons,::jFormFields)
 
     aNames:=jChilds:GetNames()
     nNames:=Len(aNames)
@@ -101,7 +101,7 @@ method RenderHTML() class WebExForm
 
     FWFreeArray(@aNames)
 
-    jChilds:=if(::lButtonsFirst,::jFields,::jButtons)
+    jChilds:=if(::lFormButtonsFirst,::jFormFields,::jFormButtons)
     aNames:=jChilds:GetNames()
     nNames:=Len(aNames)
     for nName:=1 to nNames

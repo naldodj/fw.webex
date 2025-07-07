@@ -14,11 +14,16 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExTitle from WebExControl
-    public method New(cTitle as character) as object
+
+    public data cTitleContent as character
+
+    public method New(cTitleContent as character) as object
+
 endclass
 
-method New(cTitle) class WebExTitle
-    paramtype 1 var cTitle as character optional default "FWWEBEX"
+method New(cTitleContent) class WebExTitle
+    paramtype 1 var cTitleContent as character optional default "FWWEBEX"
     _Super:New("title")
-    ::SetContent(cTitle)
+    ::cTitleContent:=cTitleContent
+    ::SetContent(::cTitleContent)
 return(self)

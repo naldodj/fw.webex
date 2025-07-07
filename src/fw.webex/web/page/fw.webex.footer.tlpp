@@ -14,17 +14,22 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExFooter from WebExControl
-    public method New(cContent as character) as object
+
+    public data cFooterContent as character
+
+    public method New(cFooterContent as character) as object
+
 endclass
 
-method New(cContent) class WebExFooter
+method New(cFooterContent) class WebExFooter
     local cDefault as character
     beginContent var cDefault
 &copy; __YEAR__ <strong><a href="https://github.com/DNATechByNaldoDJ/fw.webex" target="_blank">FWWebEx</a></strong> (DNATech). Licensed under MIT.
     endContent
     cDefault:=StrTran(cDefault,"__YEAR__",LTrim(Str(Year(Date()))))
-    paramtype 1 var cContent as character optional default cDefault
+    paramtype 1 var cFooterContent as character optional default cDefault
     _Super:New("footer")
+    ::cFooterContent:=cFooterContent
     WITH WEBEXOBJECT self
         .:AddClass("text-center")
         .:AddClass("text-muted")
@@ -35,7 +40,7 @@ method New(cContent) class WebExFooter
             WITH WEBEXOBJECT CLASS WebExHR
             END WEBEXOBJECT
             WITH WEBEXOBJECT CLASS WebExControl TYPE span
-                .:SetContent(cContent)
+                .:SetContent(::cFooterContent)
             END WEBEXOBJECT
         END WEBEXOBJECT
     END WEBEXOBJECT

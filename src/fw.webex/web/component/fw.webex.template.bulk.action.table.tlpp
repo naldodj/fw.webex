@@ -17,29 +17,29 @@ namespace FWWebEx
 
 class WebExTemplateBulkActionTable from WebExControl
 
-    public data cTitle
+    public data cTemplateBulkActionTableTitle
 
-    public data jColumns as json
-    public data jItems as json
+    public data jTemplateBulkActionTableColumns as json
+    public data jTemplateBulkActionTableItems as json
 
-    public method New(cTitle as character) as object
+    public method New(cTemplateBulkActionTableTitle as character) as object
 
-    public method FromSQL(cSQL as character) as object
+    public method FromSQL(cTemplateBulkActionTableSQL as character) as object
     public method RenderHTML() as character
 
 endclass
 
-method New(cTitle) class WebExTemplateBulkActionTable
-    paramtype 1 var cTitle as character optional default ""
+method New(cTemplateBulkActionTableTitle) class WebExTemplateBulkActionTable
+    paramtype 1 var cTemplateBulkActionTableTitle as character optional default ""
     _Super:New("div")
     ::SetAttr("style","overflow-x:auto")
-    ::cTitle:=cTitle
-    ::jColumns:=JSONObject():New()
-    ::jItems:=JSONObject():New()
+    ::cTemplateBulkActionTableTitle:=cTemplateBulkActionTableTitle
+    ::jTemplateBulkActionTableColumns:=JSONObject():New()
+    ::jTemplateBulkActionTableItems:=JSONObject():New()
     ::EnableDataTable()
 return(self)
 
-method FromSQL(cSQL) class WebExTemplateBulkActionTable
+method FromSQL(cTemplateBulkActionTableSQL) class WebExTemplateBulkActionTable
 
     local aCols:={} as array
     local aData:={} as array
@@ -52,7 +52,7 @@ method FromSQL(cSQL) class WebExTemplateBulkActionTable
     local i as numeric
     local nColumns as numeric
 
-    cQuery:="%"+cSQL+"%"
+    cQuery:="%"+cTemplateBulkActionTableSQL+"%"
 
     cTmpAlias:=GetNextAlias()
     beginSQL alias cTmpAlias
@@ -66,7 +66,7 @@ method FromSQL(cSQL) class WebExTemplateBulkActionTable
     (cTmpAlias)->(dbCloseArea())
     nColumns:=Len(aColumns)
 
-    TCSQLToArr(cSQL,@aData,nil,aColumns,aColumns)
+    TCSQLToArr(cTemplateBulkActionTableSQL,@aData,nil,aColumns,aColumns)
 
     for i:=1 to nColumns
         cProperty:=aColumns[i][DBS_NAME]
@@ -79,8 +79,8 @@ method FromSQL(cSQL) class WebExTemplateBulkActionTable
         aAdd(aCols,{"property":cProperty,"label":cLabel})
     next i
 
-    ::jColumns:Set(aClone(aCols))
-    ::jItems:Set(aClone(aData))
+    ::jTemplateBulkActionTableColumns:Set(aClone(aCols))
+    ::jTemplateBulkActionTableItems:Set(aClone(aData))
 
     FWFreeArray(@aCols)
     FWFreeArray(@aData)
@@ -104,10 +104,10 @@ method RenderHTML() class WebExTemplateBulkActionTable
 
         WITH WEBEXOBJECT CLASS WebExControl TYPE div
             .:SetAttr("class","container rounded shadow p-3")
-            if (!Empty(::cTitle))
+            if (!Empty(::cTemplateBulkActionTableTitle))
                 WITH WEBEXOBJECT CLASS WebExControl TYPE h3
                     .:SetAttr("class","mb-3")
-                    .:SetContent(::cTitle)
+                    .:SetContent(::cTemplateBulkActionTableTitle)
                 END WEBEXOBJECT
             endif
             WITH WEBEXOBJECT CLASS WebExControl TYPE div
@@ -122,10 +122,10 @@ method RenderHTML() class WebExTemplateBulkActionTable
                                 WITH WEBEXOBJECT CLASS WebExCheckBox
                                     .:SetAttr("onclick",cIDTable+"_toggleAll(this)")
                                 END WEBEXOBJECT
-                                for i:=1 To Len(::jColumns)
+                                for i:=1 To Len(::jTemplateBulkActionTableColumns)
                                     WITH WEBEXOBJECT CLASS WebExControl TYPE th
-                                        .:SetAttr("name",::jColumns[i]["property"])
-                                        .:SetContent(::jColumns[i]["label"])
+                                        .:SetAttr("name",::jTemplateBulkActionTableColumns[i]["property"])
+                                        .:SetContent(::jTemplateBulkActionTableColumns[i]["label"])
                                     END WEBEXOBJECT
                                 next i
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE th
@@ -136,15 +136,15 @@ method RenderHTML() class WebExTemplateBulkActionTable
                     END WEBEXOBJECT
                     // Corpo
                     WITH WEBEXOBJECT CLASS WebExControl TYPE tbody
-                        for i:=1 to Len(::jItems)
+                        for i:=1 to Len(::jTemplateBulkActionTableItems)
                             WITH WEBEXOBJECT CLASS WebExControl TYPE tr
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE td
                                     WITH WEBEXOBJECT CLASS WebExCheckBox
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
-                                for j:=1 To Len(::jColumns)
+                                for j:=1 To Len(::jTemplateBulkActionTableColumns)
                                     WITH WEBEXOBJECT CLASS WebExControl TYPE td
-                                        .:SetContent(cValToChar(::jItems[i][j]))
+                                        .:SetContent(cValToChar(::jTemplateBulkActionTableItems[i][j]))
                                     END WEBEXOBJECT
                                 next j
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE td

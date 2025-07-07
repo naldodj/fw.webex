@@ -14,14 +14,18 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExButton from WebExControl
-    public method New(cLabel as character, cType as character) as object
+    public data cButtonLabel
+    public data cButtonType
+    public method New(cButtonLabel as character,cButtonType as character) as object
 endclass
 
-method New(cLabel,cType) class WebExButton
-    paramtype 1 var cLabel as character
-    paramtype 2 var cType as character optional default "submit"
+method New(cButtonLabel,cButtonType) class WebExButton
+    paramtype 1 var cButtonLabel as character optional default ""
+    paramtype 2 var cButtonType as character optional default "submit"
     _Super:New("button")
-    ::SetAttr("type",cType)
+    ::cButtonLabel:=cButtonLabel
+    ::cButtonType:=cButtonType
+    ::SetAttr("type",cButtonType)
     ::SetAttr("class","btn btn-primary")
-    ::SetContent(cLabel)
+    ::SetContent(cButtonLabel)
 return(self)

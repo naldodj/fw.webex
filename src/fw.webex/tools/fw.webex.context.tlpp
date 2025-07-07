@@ -40,7 +40,7 @@ method ObjEnd(lAddChild) class WebExContext
     if ((nLen>0).and.(ValType(__aWithStack[nLen])=="O"))
         oChild:=__aWithStack[nLen]
         lWebExScript:=(oChild:ClassName()=="WEBEXSCRIPT")
-        lWebExScript:=((lWebExScript).and.(!oChild:lUseAddChild))
+        lWebExScript:=((lWebExScript).and.(!oChild:lScriptUseAddChild))
         if (lWebExScript)
             oChild:AddScript(oChild)
         endif

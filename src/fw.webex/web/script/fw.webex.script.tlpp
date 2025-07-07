@@ -14,32 +14,32 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExScript from WebExControl
-    public data cSrc as character
-    public data lUseAddChild as logical
+    public data cScriptSRC as character
+    public data lScriptUseAddChild as logical
     public data lScriptInPage as logical
-    public method New(lScriptInPage as logical,lUseAddChild as logical) as object
-    public method SetContent(cSrc as character,lAddScript as logical) as object
+    public method New(lScriptInPage as logical,lScriptUseAddChild as logical) as object
+    public method SetContent(cScriptSRC as character,lScriptAddScript as logical) as object
 endclass
 
-method New(lScriptInPage,lUseAddChild) class WebExScript
+method New(lScriptInPage,lScriptUseAddChild) class WebExScript
     paramtype 1 var lScriptInPage as logical optional default .T.
-    paramtype 2 var lUseAddChild as logical optional default (!lScriptInPage)
+    paramtype 2 var lScriptUseAddChild as logical optional default (!lScriptInPage)
     _Super:New("script")
     ::lScriptInPage:=lScriptInPage
-    ::lUseAddChild:=lUseAddChild
+    ::lScriptUseAddChild:=lScriptUseAddChild
 return(self)
 
-method SetContent(cSrc,lAddScript) class WebExScript
-    paramtype 1 var cSrc as character
-    paramtype 2 var lAddScript as logical optional default .T.
-    ::cSrc:=cSrc
+method SetContent(cScriptSRC,lScriptAddScript) class WebExScript
+    paramtype 1 var cScriptSRC as character
+    paramtype 2 var lScriptAddScript as logical optional default .T.
+    ::cScriptSRC:=cScriptSRC
     if (!::lScriptInPage)
-        ::SetAttr("src",::cSrc)
+        ::SetAttr("src",::cScriptSRC)
         ::SetAttr("defer")
     else
-        _Super:SetContent(::cSrc)
+        _Super:SetContent(::cScriptSRC)
     endif
-    if ((lAddScript).and.(!::lUseAddChild))
+    if ((lScriptAddScript).and.(!::lScriptUseAddChild))
         ::AddScript(self)
     endif
 return(self)
