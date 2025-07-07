@@ -91,7 +91,7 @@ static function FWWebExExample_005(cHTML as character) as character
     oFWWebExPage:=WebExPage():New("Exemplo 005 - Formul&aacute;rio ViaCEP")
     oFWWebExPage:AddChild(oFWWebExBody)
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExPage:Clean()
 

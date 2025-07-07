@@ -3,6 +3,43 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-06 22:25 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  * ChangeLog.txt
+  * README.md
+  * src/fw.webex/tools/fw.webex.file.tools.tlpp
+  * src/fw.webex/web/component/fw.webex.icon.tlpp
+  * src/fw.webex/web/component/fw.webex.template.bulk.action.table.tlpp
+  * src/fw.webex/web/control/fw.webex.control.tlpp
+  * src/fw.webex/web/layout/fw.webex.page.tlpp
+  * src/fw.webex/web/script/fw.webex.script.tlpp
+  * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
+  * src/fw.webex.examples/002/fw.webex.example.002.tlpp
+  * src/fw.webex.examples/002/README.md
+  * src/fw.webex.examples/003/fw.webex.example.003.tlpp
+  * src/fw.webex.examples/003/README.md
+  * src/fw.webex.examples/004/fw.webex.example.004.tlpp
+  * src/fw.webex.examples/004/README.md
+  * src/fw.webex.examples/005/fw.webex.example.005.tlpp
+  * src/fw.webex.examples/005/README.md
+  * src/fw.webex.examples/006/fw.webex.example.006.tlpp
+  * src/fw.webex.examples/006/README.md
+  * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  * src/fw.webex.examples/007/README.md
+  * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+  * src/fw.webex.examples/008/README.md
+  * src/fw.webex.examples/009/fw.webex.example.009.tlpp
+  * src/fw.webex.examples/009/README.md
+  * src/fw.webex.examples/010/fw.webex.example.010.tlpp
+  * src/fw.webex.examples/010/README.md
+  * src/fw.webex.examples/011/fw.webex.example.011.tlpp
+  * src/fw.webex.examples/011/README.md
+  * src/fw.webex.examples/012/fw.webex.example.012.tlpp
+  * src/fw.webex.examples/012/README.md
+  * src/fw.webex.examples/013/fw.webex.example.013.tlpp
+  * src/fw.webex.examples/013/README.md
+  * src/fw.webex.examples/014/fw.webex.example.014.tlpp
+  * src/fw.webex.examples/014/README.md
+
 2025-07-04 20:52 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   - src/fw.webex/web/layout/fw.webex.shell.tlpp
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
@@ -499,7 +536,7 @@
   * src/fw.webex.examples/fw.webex.example.003.tlpp
   * src/fw.webex.examples/fw.webex.example.004.tlpp
 
-2025-06-24 20:18 UTC naldodj (HasClass and RemoveClass)
+2025-06-24 20:18 UTC naldodj (HasClass and DelClass)
   * src/fw.webex/control/fw.webex.control.tlpp
   * src/fw.webex.examples/fw.webex.example.004.tlpp
 

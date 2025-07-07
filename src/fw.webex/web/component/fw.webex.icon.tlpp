@@ -50,13 +50,13 @@ method SetIcon(cIcon,cIconType) class WebExIcon
     if (::cIconType!=cIconType)
         do case
         case (::cIconType=="bootstrap")
-            ::RemoveClass("bi")
-            ::RemoveClass(::cIcon)
+            ::DelClass("bi")
+            ::DelClass(::cIcon)
         case (::cIconType=="material")
-            ::RemoveClass("material-icons")
+            ::DelClass("material-icons")
         case (::cIconType=="fontawesome")
-            ::RemoveClass("fa")
-            ::RemoveClass(::cIcon)
+            ::DelClass("fa")
+            ::DelClass(::cIcon)
         endcase
         ::cIconType:=cIconType
     endif

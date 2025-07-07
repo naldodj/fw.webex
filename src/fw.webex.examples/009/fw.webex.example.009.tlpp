@@ -172,7 +172,7 @@ static procedure FWWebExExample_009(cHTML as character) as character
     oFWWebExPage:=WebExPage():New("Drill-down Exemplo")
     oFWWebExPage:AddChild(oFWWebExBody)
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExPage:Clean()
 

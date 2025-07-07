@@ -152,7 +152,7 @@ static procedure FWWebExExample_006(cHTML as character) as character
     oFWWebExPage:EnableDataTable()
     oFWWebExPage:AddChild(oFWWebExBody)
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExPage:Clean()
 

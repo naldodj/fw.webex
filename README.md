@@ -46,37 +46,45 @@ Só que agora... **na web.**
 ```advpl
 #include "fw.webex.th"
 
-#include "tbiconn.ch"
-
 using namespace FWWebEx
 
 procedure u_FWWebExExample_001()
-    PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01"
-        FWWebExExample_001()
-    RESET ENVIRONMENT
-return
-
-static procedure FWWebExExample_001()
-
-    local cHTML as character
+    local bExecute as codeblock
     local cHTMLFile as character
     local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_001()},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (!Empty(cHTMLFile).and.File(cHTMLFile))
+        ShellExecute("open",cHTMLFile,"","",1)
+    endif
+return
+
+static function FWWebExExample_001() as character
+
+    local cHTML as character
+    local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
 
     local oFWWebExPage as object
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
-        WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName
-            .:FromSQL("SELECT TOP 10 * FROM SX5990")
+        WITH WEBEXOBJECT CLASS WebExBody
+            WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName+" (Tabela 32)"
+                .:FromSQL("SELECT * FROM SX5990 WHERE X5_TABELA='32' AND D_E_L_E_T_<>'*'")
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExHR
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName+" (Tabela 35)"
+                .:FromSQL("SELECT * FROM SX5990 WHERE X5_TABELA='35' AND D_E_L_E_T_<>'*'")
+            END WEBEXOBJECT
         END WEBEXOBJECT
     END WEBEXOBJECT
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLFromControl(oFWWebExPage,GetTempPath(),@cHTMLFile,@cHTML,.T.)
 
     WEBEXOBJECT CLEAN
 
-    ShellExecute("open",cHTMLFile,"","",1)
-
-return
+return(cHTMLFile)
 ````
 
 ![image](https://github.com/user-attachments/assets/65c4706b-420e-40c4-a0dc-8b9412cd186f)
@@ -88,113 +96,95 @@ return
 ```advpl
 #include "fw.webex.th"
 
-#include "shell.ch"
-
 using namespace FWWebEx
 
 procedure u_FWWebExExample_003()
-
-    local lMainWnd:=(Type("oMainWnd")=="O") as logical
-
-    private lRedefineBottom as logical
-
-    if (!lMainWnd)
-        private oMainWnd as object
-        lRedefineBottom:=.T.
-        DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE ProcName()
-        ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (FWWebExExample_003(),oMainWnd:End())
-        FreeObj(@oMainWnd)
-    else
-        lRedefineBottom:=.F.
-        FWWebExExample_003()
-    endif
-
-return
-
-static procedure FWWebExExample_003()
-
+    local bExecute as codeblock
     local cHTML as character
     local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_003(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (!Empty(cHTMLFile).and.File(cHTMLFile))
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        fErase(cHTMLFile)
+    endif
+return
+
+static function FWWebExExample_003(cHTML as character) as character
 
     local cScript as character
     local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
 
     local oFWWebExPage as object
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
-        WITH WEBEXOBJECT CLASS WebExForm ARGS "Consulta CEP"
-            .:SetMethod("get")
-            .:SetAction("javascript:buscarCEP()")
-            .:AddField("CEP","cep","text","Digite o CEP")
-            .:AddButton(WebExButton():New("Buscar CEP"))
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExScript
-            beginContent var cScript
+        WITH WEBEXOBJECT CLASS WebExBody
+            WITH WEBEXOBJECT CLASS WebExForm ARGS "Consulta CEP"
+                .:SetMethod("get")
+                .:SetAction("javascript:buscarCEP()")
+                .:AddField("CEP","cep","text","Digite o CEP")
+                .:AddButton(WebExButton():New("Buscar CEP"))
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExScript
+                beginContent var cScript
 
-                function buscarCEP() {
+                    function buscarCEP() {
 
-                const cep = document.querySelector("input[name='cep']").value.trim();
-                const url = `https://viacep.com.br/ws/${cep}/json/`;
+                    const cep = document.querySelector("input[name='cep']").value.trim();
+                    const url = `https://viacep.com.br/ws/${cep}/json/`;
 
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                    if (data.erro) {
-                        document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>CEP n&atilde;o encontrado.</div>";
-                    } else {
-                        document.getElementById("resultadoCEP").innerHTML = `
-                        <div class='card'>
-                            <div class='card-body'>
-                            <h5 class='card-title'>Endere&ccedil;o</h5>
-                            <p class='card-text'>
-                                <strong>CEP:</strong> ${data.cep}<br>
-                                <strong>Logradouro:</strong> ${data.logradouro} -
-                                <strong>Complemento:</strong> ${data.complemento} -
-                                <strong>Unidade:</strong> ${data.unidade}<br>
-                                <strong>Bairro:</strong> ${data.bairro} -
-                                <strong>Localidade:</strong> ${data.localidade}<br>
-                                <strong>UF:</strong> ${data.uf} -
-                                <strong>Estado:</strong> ${data.estado}<br>
-                                <strong>Regi&atilde;o:</strong> ${data.regiao} -
-                                <strong>IBGE:</strong> ${data.ibge}<br>
-                                <strong>GIA:</strong> ${data.gia} -
-                                <strong>DDD:</strong> ${data.ddd}<br>
-                                <strong>SIAFI:</strong> ${data.siafi}<br>
-                            </p>
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                        if (data.erro) {
+                            document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>CEP n&atilde;o encontrado.</div>";
+                        } else {
+                            document.getElementById("resultadoCEP").innerHTML = `
+                            <div class='card'>
+                                <div class='card-body'>
+                                <h5 class='card-title'>Endere&ccedil;o</h5>
+                                <p class='card-text'>
+                                    <strong>CEP:</strong> ${data.cep}<br>
+                                    <strong>Logradouro:</strong> ${data.logradouro} -
+                                    <strong>Complemento:</strong> ${data.complemento} -
+                                    <strong>Unidade:</strong> ${data.unidade}<br>
+                                    <strong>Bairro:</strong> ${data.bairro} -
+                                    <strong>Localidade:</strong> ${data.localidade}<br>
+                                    <strong>UF:</strong> ${data.uf} -
+                                    <strong>Estado:</strong> ${data.estado}<br>
+                                    <strong>Regi&atilde;o:</strong> ${data.regiao} -
+                                    <strong>IBGE:</strong> ${data.ibge}<br>
+                                    <strong>GIA:</strong> ${data.gia} -
+                                    <strong>DDD:</strong> ${data.ddd}<br>
+                                    <strong>SIAFI:</strong> ${data.siafi}<br>
+                                </p>
+                                </div>
                             </div>
-                        </div>
-                        `;
+                            `;
+                        }
+                        })
+                        .catch(() => {
+                        document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>Erro ao consultar o CEP.</div>";
+                        });
                     }
-                    })
-                    .catch(() => {
-                    document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>Erro ao consultar o CEP.</div>";
-                    });
-                }
 
-            endContent
-            .:SetContent(cScript)
+                endContent
+                .:SetContent(cScript)
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                .:SetAttr("id","resultadoCEP")
+                .:SetAttr("class","mt-4")
+            END WEBEXOBJECT
         END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExControl TYPE div
-            .:SetAttr("id","resultadoCEP")
-            .:SetAttr("class","mt-4")
-        END WEBEXOBJECT
-        cHTML:=oFWWebExPage:RenderHTML()
     END WEBEXOBJECT
+
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
     WEBEXOBJECT CLEAN
 
-    cHTML:=EncodeUTF8(cHTML)
-    if (!lIsDir("\web\tmp\"))
-        FWMakeDir("\web\tmp\",.F.)
-    endif
-    cHTMLFile:="\web\tmp\"+Lower(cProcName)+".html"
-    MemoWrite(cHTMLFile,cHTML)
-
-    htmlFileShow(cHTML,cProcName,cHTMLFile)
-
-    fErase(cHTMLFile)
-
-return
+return(cHTMLFile)
 ````
 
 ![WebExForm](https://github.com/user-attachments/assets/fcf7609f-a2be-43b4-b63e-af5aa2718d58)

@@ -15,21 +15,22 @@ namespace FWWebEx
 
 class WebFileTools
     static method HTMLFromControl(oFWWebExControl as object,cHTMLFilePath as character,cHTMLFileName as character,cHTMLContent as character,lEncodeUTF8 as logical) as logical
+    static method HTMLAssetsToFile(cAssetID as character,cAssetType as character,cAssetContent as character,cAssetFilePath as character,/*<@>*/cExternalAssetsPath,/*<@>*/cLocalAssetsFilePath) as logical
 end class
 
 static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLContent,lEncodeUTF8) class WebFileTools
 
     local cClassName as character
 
-    local cSPDrive as character
-    local cSPPath as character
-    local cSPFile as character
-    local cSPExt as character
+    local cSPPDrive as character
+    local cSPPPath as character
+    local cSPPFile as character
+    local cSPPExt as character
 
-    local lRet as logical
+    local lHTMLFromControl as logical
 
     paramtype 1 var oFWWebExControl as object
-    paramtype 2 var cHTMLFilePath as character optional default "\web\tmp\"
+    paramtype 2 var cHTMLFilePath as character optional
     paramtype 3 var cHTMLFileName as character optional
     paramtype 4 var cHTMLContent as character optional
     paramtype 5 var lEncodeUTF8 as logical optional default .T.
@@ -41,22 +42,159 @@ static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLC
         CLASSPARAMEXCEPTION PARAM 1 VAR oFWWebExControl TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
 
+    if (empty(cHTMLFilePath))
+        if (!Empty(oFWWebExControl:cFWWebExTmpPath))
+            cHTMLFilePath:=oFWWebExControl:cFWWebExTmpPath
+        else
+            cHTMLFilePath:="\web\fwwebex\tmp\"
+        endif
+    endif
+
+    if (Empty(cHTMLFileName))
+        cHTMLFileName:=oFWWebExControl:cID
+        cHTMLFileName+="."
+        cHTMLFileName+=UUIDRandomSeq()
+        cHTMLFileName+=".html"
+    endif
+
     cHTMLContent:=oFWWebExControl:RenderHTML()
     if (lEncodeUTF8)
         cHTMLContent:=EncodeUTF8(cHTMLContent)
     endif
 
     cHTMLFilePath:=Lower(cHTMLFilePath)
-    if (!lIsDir(cHTMLFilePath))
-        FWMakeDir(cHTMLFilePath,.F./*[lShowMsg]*/)
+
+    lHTMLFromControl:=lIsDir(cHTMLFilePath)
+    if (!lHTMLFromControl)
+        lHTMLFromControl:=FWMakeDir(cHTMLFilePath,.F./*[lShowMsg]*/)
     endif
 
-    cHTMLFileName:=(cHTMLFilePath+Lower(cHTMLFileName))
-    SplitPath(cHTMLFileName,@cSPDrive,@cSPPath,@cSPFile,@cSPExt)
-    if (Empty(cSPExt))
-        cHTMLFileName+=".html"
+    if (lHTMLFromControl)
+
+        cHTMLFileName:=(cHTMLFilePath+Lower(cHTMLFileName))
+        SplitPath(cHTMLFileName,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
+        cHTMLFileName:=cSPPDrive
+        cHTMLFileName+=cSPPPath
+        if (!oFWWebExControl:cID$cSPPFile)
+            cHTMLFileName+=cSPPFile
+            cHTMLFileName+="."+oFWWebExControl:cID
+        else
+            cHTMLFileName+=cSPPFile
+        endif
+        cHTMLFileName+="."
+        cHTMLFileName+=UUIDRandomSeq()
+        if ((Empty(cSPPExt).or.(!(cSPPExt==".html"))))
+            cHTMLFileName+=".html"
+        endif
+
+        lHTMLFromControl:=MemoWrite(cHTMLFileName,cHTMLContent)
+
     endif
 
-    lRet:=MemoWrite(cHTMLFileName,cHTMLContent)
+return(lHTMLFromControl)
 
-return(lRet)
+static method HTMLAssetsToFile(cAssetID,cAssetType,cAssetContent,cAssetPath,/*<@>*/cExternalAssetsFilePath,/*<@>*/cLocalAssetsFilePath) class WebFileTools
+
+    local bErrorBlock as codeblock
+
+    local cSPPDrive as character
+    local cSPPPath as character
+    local cSPPFile as character
+    local cSPPExt as character
+
+    local cHTMLAssetFileName as character
+    local cHTMLAssetFileNameServer as character
+
+    local lHTMLAssetsToFile as logical
+
+    paramtype 1 var cAssetID as character
+    paramtype 2 var cAssetType as character
+    paramtype 3 var cAssetContent as character
+    paramtype 4 var cAssetPath as character
+    paramtype 5 var /*<@>*/cExternalAssetsFilePath as character optional
+    paramtype 6 var /*<@>*/cLocalAssetsFilePath as character optional
+
+    begin sequence
+
+        cAssetType:=Lower(AllTrim(cAssetType))
+        lHTMLAssetsToFile:=(cAssetType$"script|style")
+        if (!lHTMLAssetsToFile)
+            break
+        endif
+
+        lHTMLAssetsToFile:=WebApp():WebAgentIsConnected()
+        if (!lHTMLAssetsToFile)
+            break
+        endif
+
+        cAssetPath:=Lower(cAssetPath)
+        if (!lIsDir(cAssetPath))
+            lHTMLAssetsToFile:=FWMakeDir(cAssetPath,.F./*[lShowMsg]*/)
+            if (!lHTMLAssetsToFile)
+                break
+            endif
+        endif
+
+        cAssetID+=("."+UUIDRandomSeq())
+        cAssetID:=Lower(cAssetID)
+
+        cHTMLAssetFileName:=cAssetPath
+        cHTMLAssetFileName+=cAssetID
+        cHTMLAssetFileName+=if(cAssetType=="script",".js",".css")
+
+        lHTMLAssetsToFile:=MemoWrite(cHTMLAssetFileName,cAssetContent)
+        if (!lHTMLAssetsToFile)
+            break
+        endif
+
+        bErrorBlock:=ErrorBlock({|oError|Break(oError)})
+        begin sequence
+            //CpyF2Web(<cOrigem>,[lIsUserDiskDir],[lCompactCopy],[lChangeCase],[lUnZipFile])
+            cExternalAssetsFilePath:=CpyF2Web(cHTMLAssetFileName,.T.,.T.,.F.,.F.)
+        recover
+            begin sequence
+                //CpyF2Web(<cOrigem>,[lIsUserDiskDir],[lCompactCopy],[lChangeCase],[lUnZipFile])
+                cExternalAssetsFilePath:=CpyF2Web(cHTMLAssetFileName,.F.,.T.,.F.,.F.)
+            end sequence
+        end sequence
+        ErrorBlock(bErrorBlock)
+        if ((Empty(cExternalAssetsFilePath)).and.(lIsDir(cAssetPath)))
+            splitPath(cHTMLAssetFileName,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
+            cHTMLAssetFileNameServer:=cAssetPath
+            cHTMLAssetFileNameServer+=cSPPFile
+            cHTMLAssetFileNameServer+=cSPPExt
+            cExternalAssetsFilePath:=cHTMLAssetFileNameServer
+            bErrorBlock:=ErrorBlock({|oError|Break(oError)})
+            begin sequence
+                //CpyF2Web(<cOrigem>,[lIsUserDiskDir],[lCompactCopy],[lChangeCase],[lUnZipFile])
+                cExternalAssetsFilePath:=CpyF2Web(cExternalAssetsFilePath,.T.,.T.,.F.,.F.)
+            recover
+                begin sequence
+                    //CpyF2Web(<cOrigem>,[lIsUserDiskDir],[lCompactCopy],[lChangeCase],[lUnZipFile])
+                    cExternalAssetsFilePath:=CpyF2Web(cExternalAssetsFilePath,.F.,.T.,.F.,.F.)
+                recover
+                    cExternalAssetsFilePath:=cHTMLAssetFileNameServer
+                end sequence
+            end sequence
+            ErrorBlock(bErrorBlock)
+        endif
+        splitPath(cHTMLAssetFileName,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
+        cLocalAssetsFilePath:=GetTempPath()
+        cLocalAssetsFilePath+=cSPPFile
+        cLocalAssetsFilePath+=cSPPExt
+
+        lHTMLAssetsToFile:=__CopyFile(cHTMLAssetFileName,cLocalAssetsFilePath)
+        if (!lHTMLAssetsToFile)
+            break
+        endif
+
+        lHTMLAssetsToFile:=(!Empty(cExternalAssetsFilePath).and.(File(cLocalAssetsFilePath)))
+        if (lHTMLAssetsToFile)
+            splitPath(cHTMLAssetFileName,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
+            cLocalAssetsFilePath:=cSPPFile
+            cLocalAssetsFilePath+=cSPPExt
+        endif
+
+    end sequence
+
+return(lHTMLAssetsToFile)

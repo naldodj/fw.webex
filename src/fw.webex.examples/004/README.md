@@ -44,7 +44,7 @@ static function FWWebExExample_004(cHTML as character) as character
                 WITH WEBEXOBJECT CLASS WebExControl TYPE p
                     .:AddClass("card-text teste")
                     .:AddClass("teste")
-                    .:RemoveClass("teste")
+                    .:DelClass("teste")
                     WITH WEBEXOBJECT CLASS WebExStrong ARGS "&nbsp;&nbsp;&nbsp;Nome:"
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE span
@@ -78,7 +78,7 @@ static function FWWebExExample_004(cHTML as character) as character
         END WEBEXOBJECT
     END WEBEXOBJECT
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
     WEBEXOBJECT CLEAN
 

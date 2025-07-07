@@ -85,7 +85,7 @@ static procedure FWWebExExample_010(cHTML as character) as character
     oFWWebExPage:=WebExPage():New("KPI Dashboard")
     oFWWebExPage:AddChild(oFWWebExBody)
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
     FreeObj(@oFWWebExCardKPI)
     FreeObj(@oFWWebExRow1)

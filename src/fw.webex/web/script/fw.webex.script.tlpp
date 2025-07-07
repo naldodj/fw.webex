@@ -16,16 +16,16 @@ namespace FWWebEx
 class WebExScript from WebExControl
     public data cSrc as character
     public data lUseAddChild as logical
-    public data lScriptInBody as logical
-    public method New(lScriptInBody as logical,lUseAddChild as logical) as object
+    public data lScriptInPage as logical
+    public method New(lScriptInPage as logical,lUseAddChild as logical) as object
     public method SetContent(cSrc as character,lAddScript as logical) as object
 endclass
 
-method New(lScriptInBody,lUseAddChild) class WebExScript
-    paramtype 1 var lScriptInBody as logical optional default .T.
-    paramtype 2 var lUseAddChild as logical optional default (!lScriptInBody)
+method New(lScriptInPage,lUseAddChild) class WebExScript
+    paramtype 1 var lScriptInPage as logical optional default .T.
+    paramtype 2 var lUseAddChild as logical optional default (!lScriptInPage)
     _Super:New("script")
-    ::lScriptInBody:=lScriptInBody
+    ::lScriptInPage:=lScriptInPage
     ::lUseAddChild:=lUseAddChild
 return(self)
 
@@ -33,7 +33,7 @@ method SetContent(cSrc,lAddScript) class WebExScript
     paramtype 1 var cSrc as character
     paramtype 2 var lAddScript as logical optional default .T.
     ::cSrc:=cSrc
-    if (!::lScriptInBody)
+    if (!::lScriptInPage)
         ::SetAttr("src",::cSrc)
         ::SetAttr("defer")
     else

@@ -18,6 +18,7 @@ static __cCRLF:=CRLF as character
 
 static __jHeader:=JSONObject():New() as json
 static __jScripts:=JSONObject():New() as json
+static __jAssets:=JSONObject():New() as json
 static __jFeatures:={;
     "lChartEnabled":.F.;
    ,"lIconsEnabled":.F.;
@@ -33,18 +34,24 @@ class WebExControl
     public data cType as character
     public data cContent as character
 
+    public data cFWWebExTmpPath as character
+
+    public data cLocalAssetsFilePath as character
+    public data cExternalAssetsFilePath as character
+
     public data jAttrs as json
     public data jChildren as json
 
     public data lChartEnabled as logical
     public data lIconsEnabled as logical
+    public data lExternalAssets as logical
     public data lRenderChildren as logical
     public data lDataTableEnabled as logical
 
     public method New(cType as character) as object
 
     public method Clone(lDetachChildren as logical) as object
-    protected Method __CloneNewInstance() as object
+    protected method __CloneNewInstance() as object
 
     public method DumpDOM(nLevel as numeric) as character
 
@@ -89,10 +96,16 @@ class WebExControl
 
     public method RenderHTML() as character
     public method SetRenderChildren(lRenderChildren as logical) as object
+    public method SetExternalAssets(lExternalAssets as logical) as object
+    public method ExternalAssetsIsEnabled() as logical
+
+    public method AddAssets(cType as character,cLocal as character,cRemote as character) as json
+    public method GetAssets() as json
+    public method DelAssets() as json
 
     public method AddClass(cNewClass as character) as object
     public method HasClass(/*[@]*/cClass as character,/*@*/aClasses as array) as logical
-    public method RemoveClass(cClassRemove as character) as logical
+    public method DelClass(cClassRemove as character) as logical
 
     public method EnableChart(lChartEnabled as logical) as object
     public method EnableIcons(lIconsEnabled as logical) as object
@@ -107,14 +120,16 @@ endclass
 method New(cType) class WebExControl
     paramtype 1 var cType as character optional default "div"
     ::cID:=self:NewID()
-    ::cType:=cType
+    ::cType:=Lower(cType)
     ::cContent:="__NULL__"
+    ::cFWWebExTmpPath:="\web\fwwebex\tmp\"
     ::jAttrs:=JSONObject():New()
     ::jChildren:=JSONObject():New()
     ::lChartEnabled:=__jFeatures["lChartEnabled"]
     ::lIconsEnabled:=__jFeatures["lIconsEnabled"]
     ::lDataTableEnabled:=__jFeatures["lDataTableEnabled"]
     ::SetRenderChildren(.T.)
+    ::SetExternalAssets(.F.)
 return(self)
 
 method Clone(lDetachChildren) class WebExControl
@@ -537,6 +552,8 @@ method GetPageScriptBundle() class WebExControl
 
     local jPageScripts as json
 
+    local lExternalAssets:=.F. as logical
+
     local nScript as numeric
     local nScripts as numeric
 
@@ -545,15 +562,19 @@ method GetPageScriptBundle() class WebExControl
     if (__jScripts:HasProperty("page"))
         aScripts:=__jScripts["page"]:GetNames()
         nScripts:=Len(aScripts)
-        if (nScripts>0)
+        if (nScripts>1)
             cSrc:=__cCRLF
             for nScript:=1 to nScripts
                 cID:=aScripts[nScript]
                 oWebExScript:=__jScripts["page"][cID]
                 cContent:=if(ValType(oWebExScript)=="O",oWebExScript:GetContent(),"__NULL__")
                 if (cContent=="__NULL__")
-                    //TODO: Rever quando Script Externo :SetAttr("src",...). Nao deve estar aqui.
                     loop
+                endif
+                if (::ExternalAssetsIsEnabled())
+                    if (!lExternalAssets)
+                        lExternalAssets:=oWebExScript:lExternalAssets
+                    endif
                 endif
                 cSrc+="/* --- script: ["+cID+"] --- */"
                 cSrc+=__cCRLF
@@ -562,15 +583,18 @@ method GetPageScriptBundle() class WebExControl
                 cSrc+="/* "+Replicate("-",(18+Len(cID)))+" */"
                 cSrc+=__cCRLF
             next nScript
+            //ScriptBundle
+            oWebExScript:=WebExScript():New()
+            oWebExScript:SetContent(cSrc,.F.)
+            if (::ExternalAssetsIsEnabled())
+                oWebExScript:SetExternalAssets(lExternalAssets)
+            endif
+            jPageScripts:=JSONObject():New()
+            jPageScripts[oWebExScript:cID]:=oWebExScript
         else
-            cSrc:=""
+            jPageScripts:=__jScripts["page"]
         endif
         FWFreeArray(@aScripts)
-        //ScriptBundle
-        oWebExScript:=WebExScript():New()
-        oWebExScript:SetContent(cSrc,.F.)
-        jPageScripts:=JSONObject():New()
-        jPageScripts[oWebExScript:cID]:=oWebExScript
     else
         jPageScripts:=JSONObject():New()
     endif
@@ -597,7 +621,7 @@ method AddScript(oScript) class WebExControl
     local cType as character
     paramtype 1 var oScript as object class WebExScript
     if (!::FindInHeader(oScript:cID))
-        cType:=if(oScript:lScriptInBody,"page","head")
+        cType:=if(oScript:lScriptInPage,"page","head")
         if (!__jScripts:HasProperty(cType))
             __jScripts[cType]:=JSONObject():New()
         endif
@@ -612,7 +636,10 @@ method RenderHTML() class WebExControl
 
     local cKey as character
     local cHTML as character
+    local cContent as character
     local cLowerType as character
+
+    local lHTMLAssetsToFile:=.F. as logical
 
     local nAttr as numeric
     local nAttrs as numeric
@@ -629,62 +656,86 @@ method RenderHTML() class WebExControl
             ::jAttrs["id"]:=::cID
         endif
 
+        cContent:=::cContent
         cLowerType:=Lower(::cType)
 
-        cHTML:="<"+::cType
-
-            if (cLowerType!="!--")
-                aAttrs:=::jAttrs:GetNames()
-                nAttrs:=Len(aAttrs)
-                for nAttr:=1 to nAttrs
-                    cKey:=aAttrs[nAttr]
-                    if (::jAttrs:HasProperty(cKey))
-                        xVal:=::jAttrs[cKey]
-                        if (valType(xVal)!="C")
-                            xVal:=cValToChar(xVal)
-                        endif
-                        if (cKey==xVal)
-                            cHTML+=" "+cKey
-                        else
-                            cHTML+=" "+cKey+'="'+xVal+'"'
-                        endif
-                    endif
-                next nAttr
+        if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets).and.(cLowerType$"script|style").and.(cContent!="__NULL__"))
+            lHTMLAssetsToFile:=WebFileTools():HTMLAssetsToFile(;
+                ::cID;
+                ,cLowerType;
+                ,::cContent;
+                ,::cFWWebExTmpPath;
+                ,@::cExternalAssetsFilePath;
+                ,@::cLocalAssetsFilePath;
+            )
+            if (lHTMLAssetsToFile)
+                cContent:="__NULL__"
+                ::AddAssets(::cID,cLowerType,::cLocalAssetsFilePath,::cExternalAssetsFilePath)
             endif
+        endif
 
-        if (aScan(__aVoidTags,{|cType|(cType==cLowerType)})>0)
+        if (lHTMLAssetsToFile)
 
-            cHTML+="/>"
+            cHTML:=""
 
         else
 
-            if (cLowerType!="!--")
-                cHTML+=">"
-            endif
+            cHTML:="<"+::cType
 
-            if (::cContent!="__NULL__")
-                cHTML+=::cContent
-            endif
-
-            aChildren:=::jChildren:GetNames()
-            nChilds:=Len(aChildren)
-            if (nChilds>0)
-                for nChild:=1 to nChilds
-                    cKey:=aChildren[nChild]
-                    if (::jChildren:HasProperty(cKey))
-                        oChild:=::jChildren[cKey]
-                        if (valType(oChild)=="O")
-                            ::SetRenderChildren(::lRenderChildren)
-                            cHTML+=oChild:RenderHTML()
+                if (cLowerType!="!--")
+                    aAttrs:=::jAttrs:GetNames()
+                    nAttrs:=Len(aAttrs)
+                    for nAttr:=1 to nAttrs
+                        cKey:=aAttrs[nAttr]
+                        if (::jAttrs:HasProperty(cKey))
+                            xVal:=::jAttrs[cKey]
+                            if (valType(xVal)!="C")
+                                xVal:=cValToChar(xVal)
+                            endif
+                            if (cKey==xVal)
+                                cHTML+=" "+cKey
+                            else
+                                cHTML+=" "+cKey+'="'+xVal+'"'
+                            endif
                         endif
-                    endif
-                next nChild
-            endif
+                    next nAttr
+                endif
 
-            if (cLowerType!="!--")
-                cHTML+="</"+::cType+">"
+            if (aScan(__aVoidTags,{|cType|(cType==cLowerType)})>0)
+
+                cHTML+="/>"
+
             else
-                cHTML+="-->"
+
+                if (cLowerType!="!--")
+                    cHTML+=">"
+                endif
+
+                if (cContent!="__NULL__")
+                    cHTML+=cContent
+                endif
+
+                aChildren:=::jChildren:GetNames()
+                nChilds:=Len(aChildren)
+                if (nChilds>0)
+                    for nChild:=1 to nChilds
+                        cKey:=aChildren[nChild]
+                        if (::jChildren:HasProperty(cKey))
+                            oChild:=::jChildren[cKey]
+                            if (valType(oChild)=="O")
+                                ::SetRenderChildren(::lRenderChildren)
+                                cHTML+=oChild:RenderHTML()
+                            endif
+                        endif
+                    next nChild
+                endif
+
+                if (cLowerType!="!--")
+                    cHTML+="</"+::cType+">"
+                else
+                    cHTML+="-->"
+                endif
+
             endif
 
         endif
@@ -704,6 +755,47 @@ method SetRenderChildren(lRenderChildren)  class WebExControl
     ::lRenderChildren:=lRenderChildren
 return(self)
 
+method SetExternalAssets(lExternalAssets) class WebExControl
+    paramtype 1 var lExternalAssets as logical optional default .F.
+    ::lExternalAssets:=(::ExternalAssetsIsEnabled()).and.((lExternalAssets).and.(Lower(::cType)$"script|style"))
+    ::cLocalAssetsFilePath:=""
+    ::cExternalAssetsFilePath:=""
+return(self)
+
+method ExternalAssetsIsEnabled() class WebExControl
+/*
+    TODO:
+    Protheus nao esta preparado para lExternalAssets.
+    Mesmo que o arquivo exista, o servidor ta respondendo com MIME type 'text/html'".
+    O problema esta confirmado header:
+    **content-type: text/html;charset=utf-8**
+    Ou seja, o Protheus (via SmartClient WebApp) esta devolvendo o arquivo .js como MIME type errado.
+    E ai o navegador mete o pe no freio com: "Refused to execute script [...] MIME type 'text/html'"
+*/
+return(.F.)
+
+method AddAssets(cID,cType,cLocal,cRemote) class WebExControl
+
+    paramtype 1 var cID as character
+    paramtype 2 var cType as character
+    paramtype 3 var cLocal as character
+    paramtype 4 var cRemote as character
+
+    __jAssets[cID]:=JSONObject():New()
+    __jAssets[cID]["id"]:=cID
+    __jAssets[cID]["type"]:=cType
+    __jAssets[cID]["local"]:=cLocal
+    __jAssets[cID]["remote"]:=cRemote
+
+return(__jAssets)
+
+method GetAssets() class WebExControl
+return(__jAssets)
+
+method DelAssets() class WebExControl
+    aEval(__jAssets:GetNames(),{|cName|__jAssets:DelName(cName)})
+return(__jAssets)
+
 method AddClass(cNewClass) class WebExControl
    local cClass as character
    paramtype 1 var cNewClass as character
@@ -720,15 +812,15 @@ method HasClass(cClass,aClasses) class WebExControl
     lHasClass:=::HasAttrValue("class",cClass,@aClasses)
 return(lHasClass)
 
-method RemoveClass(cClassRemove) class WebExControl
+method DelClass(cClassRemove) class WebExControl
     local aClasses as array
-    local lRemoveClass as logical
-    lRemoveClass:=::HasAttrValue("class",cClassRemove,@aClasses)
-    if (lRemoveClass)
-        lRemoveClass:=::DelAttrValue("class",cClassRemove,@aClasses)
+    local lDelClass as logical
+    lDelClass:=::HasAttrValue("class",cClassRemove,@aClasses)
+    if (lDelClass)
+        lDelClass:=::DelAttrValue("class",cClassRemove,@aClasses)
     endif
     FWFreeArray(@aClasses)
-return(lRemoveClass)
+return(lDelClass)
 
 method EnableChart(lChartEnabled) class WebExControl
 
@@ -1171,6 +1263,7 @@ return(self)
 
 method Clean(lSoftClean) class WebExControl
     ::ResetID()
+    ::DelAssets()
     ::RemoveScripts()
     ::DisableFeatures()
 return(nil)

@@ -38,7 +38,7 @@ static function FWWebExExample_002(cHTML as character) as character
         END WEBEXOBJECT
     END WEBEXOBJECT
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
     WEBEXOBJECT CLEAN
 

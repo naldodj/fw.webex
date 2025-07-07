@@ -147,9 +147,9 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile) class FWExampleTools
                     end sequence
                 end sequence
                 ErrorBlock(bErrorBlock)
-                if ((Empty(cHTMLFileNavigate)).and.(lIsDir("\web\tmp\")))
+                if ((Empty(cHTMLFileNavigate)).and.(lIsDir("\web\fwwebex\tmp\")))
                     splitPath(cHTMLFile,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
-                    cHTMLFileServer:="\web\tmp\"
+                    cHTMLFileServer:="\web\fwwebex\tmp\"
                     cHTMLFileServer+=cSPPFile
                     cHTMLFileServer+=cSPPExt
                     cHTMLFileNavigate:=cHTMLFileServer

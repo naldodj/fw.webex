@@ -209,6 +209,8 @@ method RenderHTML() class WebExTemplateBulkActionTable
 
         WITH WEBEXOBJECT CLASS WebExScript
 
+            .:SetExternalAssets(.T.)
+
             beginContent var cScript
 
                 /**

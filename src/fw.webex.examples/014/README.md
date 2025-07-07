@@ -68,7 +68,7 @@ static function FWWebExExample_014(cHTML as character) as character
 
     // Itens de menu
     oFWWebExHRDivider:=WebExHR():New("hr")
-    oFWWebExHRDivider:RemoveClass("my-4")
+    oFWWebExHRDivider:DelClass("my-4")
     oFWWebExHRDivider:AddClass("my-2") // Bem Bootstrap
 
     oMenuIcon:=WebExIcon():New("bi-speedometer2")
@@ -127,7 +127,7 @@ static function FWWebExExample_014(cHTML as character) as character
     oFWWebExPage:=WebExPage():New("FWWebEx SBAdmin Clone")
     oFWWebExPage:AddChild(oFWWebExBody)
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExPage:Clean()
 

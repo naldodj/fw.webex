@@ -99,8 +99,10 @@ method RenderHTML() class WebExPage
     local cHTML as character
     local cTheme as character
     local cStyle as character
+    local cScript as character
 
     local jHeader as json
+    local jAssets as json
     local jHeadScripts as json
     local jPageScripts as json
 
@@ -335,9 +337,50 @@ method RenderHTML() class WebExPage
         //Scripts
         jPageScripts:=oPage:GetPageScriptBundle()
         aEval(jPageScripts:GetNames(),{|cName|oPage:AddChild(jPageScripts[cName])})
+        if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets))
+            //External Assets (Do Not Use WebExScript Here)
+            WITH WEBEXOBJECT CLASS WebExControl TYPE script
+                .:SetContent("/*__EXTERNAL_ASSETS__*/")
+            END WEBEXOBJECT
+        endif
     END WEBEXOBJECT
 
     cHTML+=oPage:RenderHTML()
+
+    if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets))
+        jAssets:=::GetAssets()
+        if (Len(jAssets:GetNames())>0)
+            beginContent var cScript
+                (
+                    function(){
+                        var useLocal = (
+                            location.protocol === "file:"
+                        );
+                        var assets = __jAssets__;
+                        Object.keys(assets).forEach(function(id){
+                            var asset = assets[id];
+                            var el;
+                            if (asset.type === "style") {
+                                el = document.createElement("link");
+                                el.rel = "stylesheet";
+                                el.href = useLocal ? asset.local : asset.remote;
+                            } else if (asset.type === "script") {
+                                el = document.createElement("script");
+                                el.src = useLocal ? asset.local : asset.remote;
+                                el.type = "text/javascript";
+                            }
+                            if (el) {
+                                el.setAttribute("data-id", asset.id); // opcional, pra rastrear depois
+                                document.head.appendChild(el);
+                            }
+                        });
+                    }
+                )();
+            endContent
+            cScript:=StrTran(cScript,"__jAssets__",jAssets:ToJSON())
+            cHTML:=StrTran(cHTML,"/*__EXTERNAL_ASSETS__*/",cScript)
+        endif
+    endif
 
     FreeObj(@jHeader)
     FreeObj(@jHeadScripts)
