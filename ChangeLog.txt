@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-08 06:43 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  * src/fw.webex/web/control/fw.webex.control.tlpp
+
 2025-07-07 22:35 UTC naldodj (Fix Top Layout)
   * src/fw.webex.examples/012/README.md
   * src/fw.webex.examples/012/fw.webex.example.012.tlpp
