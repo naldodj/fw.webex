@@ -3,6 +3,12 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-07 22:35 UTC naldodj (Fix Top Layout)
+  * src/fw.webex.examples/012/README.md
+  * src/fw.webex.examples/012/fw.webex.example.012.tlpp
+  * src/fw.webex.examples/013/fw.webex.example.013.tlpp
+  * src/fw.webex.examples/013/README.md
+
 2025-07-07 19:17 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx and Fix Clone Method)
   * src/fw.webex/tools/fw.webex.context.tlpp
   * src/fw.webex/web/component/fw.webex.alert.tlpp

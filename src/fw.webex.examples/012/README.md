@@ -28,6 +28,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
 
     local oTopBar as object
     local oWrapper as object
+    local oTopContainer as object
     local oContentWrapper as object
 
     local oFWWebExBody as object
@@ -66,8 +67,6 @@ static procedure FWWebExExample_012(cHTML as character) as character
     oFWWebExIcon:=WebExIcon():New("bi-graph-up")
     oFWWebExNavSide:AddItem("Dashboard KPI 2","#",oFWWebExIcon):SetAttr("data-toggle-kpi","kpi2")
 
-    oFWWebExNavTop:=WebExNavTop():New("FWWebEx")
-    oFWWebExSideBar:AddChild(oFWWebExNavTop)
     oFWWebExSideBar:AddChild(oFWWebExNavSide)
 
     // KPI 1
@@ -84,9 +83,16 @@ static procedure FWWebExExample_012(cHTML as character) as character
     oFWWebExMain:AddChild(oFWWebExCardKPI1)
     oFWWebExMain:AddChild(oFWWebExCardKPI2)
 
+    oFWWebExNavTop:=WebExNavTop():New("")
+
+    oTopContainer:=WebExControl():New("div")
+    oTopContainer:AddClass("d-flex align-items-center gap-2") // gap-2 adiciona espaço
+    oTopContainer:AddChild(oFWWebExNavTop)
+    oTopContainer:AddChild(oTopBar)
+
     oContentWrapper:=WebExControl():New("div")
     oContentWrapper:AddClass("d-flex flex-column w-100")
-    oContentWrapper:AddChild(oTopBar)
+    oContentWrapper:AddChild(oTopContainer)
     oContentWrapper:AddChild(oFWWebExMain)
 
     oWrapper:=WebExControl():New("div")
@@ -151,6 +157,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
 
     FreeObj(@oTopBar)
     FreeObj(@oWrapper)
+    FreeObj(@oTopContainer)
     FreeObj(@oContentWrapper)
 
     FreeObj(@oFWWebExBody)
