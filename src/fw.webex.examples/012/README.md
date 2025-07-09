@@ -54,7 +54,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
 
     // Menu lateral com data-toggle-kpi
     oFWWebExNavSide:=WebExNavSide():New()
-    oFWWebExNavSide:cType:="div"
+    oFWWebExNavSide:SetType("div")
     oFWWebExNavSide:SetAttr("id","webex-sidebar")
     oFWWebExNavSide:AddClass("collapse")
     oFWWebExNavSide:AddClass("show")

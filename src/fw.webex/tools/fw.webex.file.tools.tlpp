@@ -15,6 +15,7 @@ namespace FWWebEx
 
 class WebFileTools
     static method HTMLFromControl(oFWWebExControl as object,cHTMLFilePath as character,cHTMLFileName as character,cHTMLContent as character,lEncodeUTF8 as logical) as logical
+    static method HTMLDumpDOMFromControl(oFWWebExControl as object,cHTMLFilePath as character,cHTMLFileName as character,cHTMLContent as character,lEncodeUTF8 as logical) as logical
     static method HTMLAssetsToFile(cAssetID as character,cAssetType as character,cAssetContent as character,cAssetFilePath as character,/*<@>*/cExternalAssetsPath,/*<@>*/cLocalAssetsFilePath) as logical
 end class
 
@@ -51,7 +52,7 @@ static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLC
     endif
 
     if (Empty(cHTMLFileName))
-        cHTMLFileName:=oFWWebExControl:cID
+        cHTMLFileName:=oFWWebExControl:GetID()
         cHTMLFileName+="."
         cHTMLFileName+=UUIDRandomSeq()
         cHTMLFileName+=".html"
@@ -75,9 +76,9 @@ static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLC
         SplitPath(cHTMLFileName,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
         cHTMLFileName:=cSPPDrive
         cHTMLFileName+=cSPPPath
-        if (!oFWWebExControl:cID$cSPPFile)
+        if (!oFWWebExControl:GetID()$cSPPFile)
             cHTMLFileName+=cSPPFile
-            cHTMLFileName+="."+oFWWebExControl:cID
+            cHTMLFileName+="."+oFWWebExControl:GetID()
         else
             cHTMLFileName+=cSPPFile
         endif
@@ -92,6 +93,44 @@ static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLC
     endif
 
 return(lHTMLFromControl)
+
+static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLContent,lEncodeUTF8) class WebFileTools
+
+    local cProcName:=ProcName() as character
+    local cDumpoFWWebExControl as character
+
+    local oFWWebExPage as object
+    local oFWWebExControlPage as object
+
+    paramtype 1 var oFWWebExControl as object
+    paramtype 2 var cHTMLFilePath as character optional
+    paramtype 3 var cHTMLFileName as character optional
+    paramtype 4 var cHTMLContent as character optional
+    paramtype 5 var lEncodeUTF8 as logical optional default .T.
+
+    oFWWebExControl:RenderHTML()
+    oFWWebExControlPage:=oFWWebExControl:GetPageAfterRender()
+
+    cDumpoFWWebExControl:=oFWWebExControlPage:DumpDom()
+
+    oFWWebExControl:Clean()
+    FreeObj(@oFWWebExControlPage)
+
+    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
+        WITH WEBEXOBJECT CLASS WebExBody
+            WITH WEBEXOBJECT CLASS WebExControl TYPE pre
+                .:SetContent(cDumpoFWWebExControl)
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+    END WEBEXOBJECT
+
+    lHTMLDumpDOMFromControl:=WebFileTools():HTMLFromControl(oFWWebExPage,@cHTMLFilePath,@cHTMLFileName,@cHTMLContent,@lEncodeUTF8)
+
+    WEBEXOBJECT CLEAN
+
+    FreeObj(@oFWWebExPage)
+
+return(lHTMLDumpDOMFromControl)
 
 static method HTMLAssetsToFile(cAssetID,cAssetType,cAssetContent,cAssetPath,/*<@>*/cExternalAssetsFilePath,/*<@>*/cLocalAssetsFilePath) class WebFileTools
 

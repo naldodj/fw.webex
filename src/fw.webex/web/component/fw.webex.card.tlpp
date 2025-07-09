@@ -25,9 +25,9 @@ endclass
 method New(cCardTitle,cCardBody) class WebExCard
     paramtype 1 var cCardTitle as character
     paramtype 2 var cCardBody as character optional default ""
-    _Super:New("div")
     ::cCardTitle:=cCardTitle
     ::cCardBody:=cCardBody
+    _Super:New("div")
     WITH WEBEXOBJECT self
         .:SetAttr("class","card")
         WITH WEBEXOBJECT CLASS WebExControl TYPE div

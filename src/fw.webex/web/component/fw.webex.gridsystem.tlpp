@@ -29,7 +29,7 @@ endclass
 
 method New(nColSize) class WebExCol
     paramtype 1 var nColSize as numeric optional default 12
-    _Super:New("div")
     ::nColSize:=nColSize
+    _Super:New("div")
     ::SetAttr("class", "col-md-"+cValToChar(nColSize))
 return(self)

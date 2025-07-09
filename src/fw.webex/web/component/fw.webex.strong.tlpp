@@ -22,7 +22,7 @@ class WebExStrong from WebExControl
 endclass
 
 method New(cStrongTextContent) class WebExStrong
-    _Super:New("strong")
     ::cStrongTextContent:=cStrongTextContent
-    ::SetContent(cStrongTextContent)
+    _Super:New("strong")
+    ::SetContent(::cStrongTextContent)
 return(self)

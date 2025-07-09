@@ -31,12 +31,12 @@ endclass
 
 method New(cTemplateBulkActionTableTitle) class WebExTemplateBulkActionTable
     paramtype 1 var cTemplateBulkActionTableTitle as character optional default ""
-    _Super:New("div")
-    ::SetAttr("style","overflow-x:auto")
     ::cTemplateBulkActionTableTitle:=cTemplateBulkActionTableTitle
     ::jTemplateBulkActionTableColumns:=JSONObject():New()
     ::jTemplateBulkActionTableItems:=JSONObject():New()
-    ::EnableDataTable()
+    _Super:New("div")
+    _Super:SetEnableDataTable()
+    ::SetAttr("style","overflow-x:auto")
 return(self)
 
 method FromSQL(cTemplateBulkActionTableSQL) class WebExTemplateBulkActionTable
@@ -95,7 +95,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
 
     local cIDTable as character
     local cIDModal:=self:NewID() as character
-    local cIDWrapper:=self:cID as character
+    local cIDWrapper:=self:GetID() as character
 
     local i as numeric
     local j as numeric
@@ -113,7 +113,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
             WITH WEBEXOBJECT CLASS WebExControl TYPE div
                 .:SetAttr("class","table-responsive")
                 WITH WEBEXOBJECT CLASS WebExControl TYPE table
-                    cIDTable:=.:cID
+                    cIDTable:=.:GetID()
                     .:SetAttr("class","table table-striped table-hover align-middle small")
                     // Cabecalho
                     WITH WEBEXOBJECT CLASS WebExControl TYPE thead
@@ -165,7 +165,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
 
         // Modal + JS
         WITH WEBEXOBJECT CLASS WebExControl TYPE div
-            .:cID:=cIDModal
+            .:SetID(cIDModal)
             .:SetAttr("id",cIDModal)
             .:SetAttr("class","modal fade")
             .:SetAttr("tabindex","-1")

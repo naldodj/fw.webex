@@ -38,11 +38,11 @@ endclass
 
 method New(cNavTopBrand) class WebExNavTop
     paramtype 1 var cNavTopBrand as character optional default ""
-    _Super:New("nav")
-    ::AddClass("navbar mb-4")
     ::cNavTopBrand:=cNavTopBrand
     ::jNavTopLinks:=JSONObject():New()
     ::jNavTopDropDowns:=JSONObject():New()
+    _Super:New("nav")
+    ::AddClass("navbar mb-4")
 return(self)
 
 method AddLink(cNavTopLabel,cNavTopHRef,oNavTopIcon) class WebExNavTop
@@ -58,7 +58,7 @@ method AddLink(cNavTopLabel,cNavTopHRef,oNavTopIcon) class WebExNavTop
         oLink:AddContent(" ")
     endif
     oLink:AddContent(cNavTopLabel)
-    ::jNavTopLinks[oLink:cID]:=oLink
+    ::jNavTopLinks[oLink:GetID()]:=oLink
 return(oLink)
 
 method AddDropDown(cNavTopLabel,aNavTopDropDownItems) class WebExNavTop
@@ -96,7 +96,7 @@ method AddDropDown(cNavTopLabel,aNavTopDropDownItems) class WebExNavTop
     oWrapper:AddChild(oToggle)
     oWrapper:AddChild(oMenu)
 
-    ::jNavTopDropDowns[oWrapper:cID]:=oWrapper
+    ::jNavTopDropDowns[oWrapper:GetID()]:=oWrapper
 
 return(oWrapper)
 
@@ -149,7 +149,7 @@ method RenderHTML() class WebExNavTop
         // Menu colapsavel da barra superior
         oCollapse:=WebExControl():New("div")
         oCollapse:SetAttr("class","collapse navbar-collapse p-0 m-0")
-        oCollapse:SetAttr("id",::cID+"_menu")
+        oCollapse:SetAttr("id",::GetID()+"_menu")
         oCollapse:AddChild(oUl)
         oContainer:AddChild(oCollapse)
     endif

@@ -40,18 +40,18 @@ endclass
 
 method New(cTableTitle) class WebExTable
     paramtype 1 var cTableTitle as character optional
-    _Super:New("table")
     ::SetTitle(cTableTitle)
     ::SetTitleBefore(.T.)
-    ::AddClass("table")
-    ::AddClass("table-striped")
-    ::AddClass("table-hover")
     ::jTableHeader:=JSONObject():New()
     ::jTableDetail:=JSONObject():New()
     ::lTableExpandable:=.F.
     ::oTableTBody:=WebExControl():New("tbody")
     ::oTableTHead:=WebExControl():New("thead")
-    ::EnableDataTable()
+    _Super:New("table")
+    _Super:SetEnableDataTable()
+    ::AddClass("table")
+    ::AddClass("table-striped")
+    ::AddClass("table-hover")
 return(self)
 
 method SetTitle(cTableTitle) class WebExTable
@@ -68,7 +68,7 @@ method AddColumnHeader(cTableColummLabel) class WebExTable
     local oTH:=WebExControl():New("th") as object
     paramtype 1 var cTableColummLabel as character
     oTH:SetContent(cTableColummLabel)
-    ::jTableHeader[oTH:cID]:=oTH
+    ::jTableHeader[oTH:GetID()]:=oTH
 return(oTH)
 
 method BuildHeader() class WebExTable
@@ -87,7 +87,7 @@ return(self)
 method AddCell(xTableCellValue) class WebExTable
     local oTD:=WebExControl():New("td") as object
     oTD:SetContent(cValToChar(xTableCellValue))
-    ::jTableDetail[oTD:cID]:=oTD
+    ::jTableDetail[oTD:GetID()]:=oTD
 return(oTD)
 
 method BuildBodyRow(cDataHTML) class WebExTable
@@ -97,7 +97,7 @@ method BuildBodyRow(cDataHTML) class WebExTable
     local oButton as object
     if (::lTableExpandable)
         paramtype 1 var cDataHTML as character optional
-        cIDPrefix:=::cID
+        cIDPrefix:=::GetID()
         oButton:=WebExControl():New("button")
         oButton:AddClass("btn")
         oButton:AddClass("btn-sm")
@@ -146,7 +146,7 @@ method RenderHTML() class WebExTable
         oFWWebExScript:=WebExScript():New()
         //TODO: fetch real content via AJAX and update td.innerHTML
         beginContent var cScript
-            function ::cID_expandRow(button) {
+            function __cID___expandRow(button) {
                 const tr = button.closest('tr');
                 if (tr.nextSibling && tr.nextSibling.classList.contains('child-row')) {
                     tr.nextSibling.remove();
@@ -163,7 +163,7 @@ method RenderHTML() class WebExTable
                 button.innerText = '-';
             }
         endContent
-        cScript:=StrTran(cScript,"::cID",::cID)
+        cScript:=StrTran(cScript,"__cID__",::GetID())
         oFWWebExScript:SetContent(cScript)
     endif
 

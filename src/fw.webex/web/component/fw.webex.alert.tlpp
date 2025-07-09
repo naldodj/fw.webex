@@ -25,9 +25,9 @@ endclass
 method New(cAlertText,cAlertType) class WebExAlert
     paramtype 1 var cAlertText as character optional default ""
     paramtype 2 var cAlertType as character optional default "info"
-    _Super:New("div")
     ::cAlertText:=cAlertText
     ::cAlertType:=Lower(cAlertType)
+    _Super:New("div")
     ::SetAttr("class","alert alert-"+::cAlertType)
     ::SetContent(::cAlertText)
 return(self)

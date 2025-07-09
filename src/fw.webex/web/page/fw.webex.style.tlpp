@@ -14,7 +14,7 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExStyle from WebExControl
-    public data cStyleContent as character
+    private data cStyleContent as character
     public method New() as object
     public method SetContent(cStyleContent as character) as object
 endclass

@@ -34,15 +34,15 @@ method New(cFieldLabel,cFieldName,cFieldType,cFieldFieldType,cFieldTitle) class 
     paramtype 3 var cFieldType as character
     paramtype 4 var cFieldFieldType as character
     paramtype 5 var cFieldTitle as character optional default cFieldFieldType
-    _Super:New("div")
     ::cFieldLabel:=cFieldLabel
     ::cFieldName:=cFieldName
     ::cFieldType:=cFieldType
     ::cFieldFieldType:=cFieldFieldType
     ::cFieldTitle:=cFieldTitle
+    _Super:New("div")
     ::SetAttr("class","mb-3")
     ::oWebExInput:=WebExInput():New(cFieldName,cFieldType,cFieldFieldType,cFieldTitle)
-    ::oWebExLabel:=WebExLabel():New(::oWebExInput:cID,cFieldLabel)
+    ::oWebExLabel:=WebExLabel():New(::oWebExInput:GetID(),cFieldLabel)
     ::AddChild(::oWebExLabel)
     ::AddChild(::oWebExInput)
 return(self)

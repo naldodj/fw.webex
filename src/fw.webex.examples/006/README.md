@@ -149,7 +149,7 @@ static procedure FWWebExExample_006(cHTML as character) as character
     oFWWebExBody:AddChild(oDivTable)
 
     oFWWebExPage:=WebExPage():New("Exemplo 006 - ViaCEP em DataTable")
-    oFWWebExPage:EnableDataTable()
+    oFWWebExPage:SetEnableDataTable()
     oFWWebExPage:AddChild(oFWWebExBody)
 
     WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)

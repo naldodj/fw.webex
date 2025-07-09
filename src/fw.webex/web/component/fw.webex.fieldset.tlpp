@@ -20,7 +20,7 @@ endclass
 
 method New(cFieldSetLegend) class WebExFieldSet
    paramtype 1 var cFieldSetLegend as character
-   _Super:New("fieldset")
    ::cFieldSetLegend:=cFieldSetLegend
-   ::AddChild(WebExLegend():New(cFieldSetLegend))
+   _Super:New("fieldset")
+   ::AddChild(WebExLegend():New(::cFieldSetLegend))
 return(self)

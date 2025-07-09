@@ -14,19 +14,30 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExScript from WebExControl
-    public data cScriptSRC as character
-    public data lScriptUseAddChild as logical
-    public data lScriptInPage as logical
+
+    private data cScriptSRC as character
+    private data lScriptUseAddChild as logical
+    private data lScriptInPage as logical
+
     public method New(lScriptInPage as logical,lScriptUseAddChild as logical) as object
     public method SetContent(cScriptSRC as character,lScriptAddScript as logical) as object
+
+    public method GetSrtiptSRC() as character
+
+    public method GetScriptInPage() as logical
+    public method SetScriptInPage() as object
+
+    public method GetScriptUseAddChild() as logical
+    public method SetScriptUseAddChild() as object
+
 endclass
 
 method New(lScriptInPage,lScriptUseAddChild) class WebExScript
     paramtype 1 var lScriptInPage as logical optional default .T.
     paramtype 2 var lScriptUseAddChild as logical optional default (!lScriptInPage)
-    _Super:New("script")
     ::lScriptInPage:=lScriptInPage
     ::lScriptUseAddChild:=lScriptUseAddChild
+    _Super:New("script")
 return(self)
 
 method SetContent(cScriptSRC,lScriptAddScript) class WebExScript
@@ -42,4 +53,23 @@ method SetContent(cScriptSRC,lScriptAddScript) class WebExScript
     if ((lScriptAddScript).and.(!::lScriptUseAddChild))
         ::AddScript(self)
     endif
+return(self)
+
+method GetSrtiptSRC() class WebExScript
+return(::cScriptSRC)
+
+method GetScriptInPage() class WebExScript
+return(::lScriptInPage)
+
+method SetScriptInPage(lScriptInPage) class WebExScript
+    paramtype 1 var lScriptInPage as logical optional default .T.
+    ::lScriptInPage:=lScriptInPage
+return(self)
+
+method GetScriptUseAddChild() class WebExScript
+return(::lScriptUseAddChild)
+
+method SetScriptUseAddChild(lScriptUseAddChild) class WebExScript
+    paramtype 1 var lScriptUseAddChild as logical optional default (!::lScriptInPage)
+    ::lScriptUseAddChild:=lScriptUseAddChild
 return(self)

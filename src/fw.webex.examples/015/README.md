@@ -1,80 +1,6 @@
-/*
-  __                            _
- / _|__      ____      __  ___ | |__    ___ __  __
-| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
-|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
-|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+# 💡 Exemplo de uso (15)
 
-+---> WebExPage
-      |
-      +---> oWrapper (div.d-flex)
-            |
-            +---> oFWWebExSideBar (WebExSideBar)
-            |     |
-            |     +---> oFWWebExNavTop (WebExNavTop)
-            |     |     |
-            |     |     +---> container-fluid.d-flex.flex-column.align-items-start
-            |     |           |
-            |     |           +---> oSidebarToggle (button.navbar-toggler)
-            |     |           |     |
-            |     |           |     +---> WebExIcon (bi-list)
-            |     |           |
-            |     |           +---> oBrand (a.navbar-brand com texto "FWWebEx")
-            |     |           |
-            |     |           +---> collapse.navbar-collapse (vazio ou com links)
-            |     |
-            |     +---> oFWWebExNavSide (div#webex-sidebar.collapse.show)
-            |           |
-            |           +---> Brand gerado internamente via SetBrand("Side Menu")
-            |           |
-            |           +---> Dashboard KPI (data-toggle-kpi="kpi")
-            |           |     |
-            |           |     +---> WebExIcon (bi-bar-chart)
-            |           |
-            |           +---> Dashboard KPI 2 (data-toggle-kpi="kpi2")
-            |                 |
-            |                 +---> WebExIcon (bi-graph-up)
-            |
-            +---> oContentWrapper (div.d-flex.flex-column.w-100)
-                  |
-                  +---> oTopBar (nav.navbar.shadow.mb-3)
-                  |     |
-                  |     +---> oH1 (h1.h4 com texto "Dashboard")
-                  |
-                  +---> oFWWebExMain (WebExMain)
-                        |
-                        +---> oFWWebExCardKPI1 (WebExContainer#kpi[style=display:none])
-                        |     |
-                        |     +---> WebExCardKPI "Faturamento"
-                        |     +---> WebExCardKPI "Clientes Ativos"
-                        |
-                        +---> oFWWebExCardKPI2 (WebExContainer#kpi2[style=display:none])
-                              |
-                              +---> oFWWebExRow1
-                              |     |
-                              |     +---> oFWWebExCol1 (4 cols)
-                              |     |     +---> WebExCardKPI "Faturamento"
-                              |     |
-                              |     +---> oFWWebExCol2 (4 cols).border-start
-                              |     |     +---> WebExCardKPI "Despesas"
-                              |     |
-                              |     +---> oFWWebExCol3 (4 cols).border-start
-                              |           +---> WebExCardKPI "Outros"
-                              |
-                              +---> WebExHR
-                              |
-                              +---> oFWWebExRow2
-                                    |
-                                    +---> oFWWebExCol4 (6 cols)
-                                    |     +---> WebExCardKPI "Clientes Ativos"
-                                    |
-                                    +---> oFWWebExCol5 (6 cols)
-                                          +---> WebExCardKPI "Ticket Medio"
-
-Released to Public Domain.
---------------------------------------------------------------------------------------
-*/
-
+```advpl
 #include "fw.webex.th"
 
 using namespace FWWebEx
@@ -160,7 +86,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
     oFWWebExNavTop:=WebExNavTop():New("")
 
     oTopContainer:=WebExControl():New("div")
-    oTopContainer:AddClass("d-flex align-items-center gap-2") // gap-2 adiciona espaco
+    oTopContainer:AddClass("d-flex align-items-center gap-2") // gap-2 adiciona espaço
     oTopContainer:AddChild(oFWWebExNavTop)
     oTopContainer:AddChild(oTopBar)
 
@@ -245,40 +171,10 @@ static procedure FWWebExExample_012(cHTML as character) as character
     FreeObj(@oFWWebExCardKPI2)
 
 return(cHTMLFile)
+````
 
-static function BuildKPI2Content()
+![image](https://github.com/user-attachments/assets/19ee0a9c-22c2-4459-9160-9fa6b5ca2a86)
 
-    local oFWWebExRow1:=WebExRow():New() as object
-    local oFWWebExRow2:=WebExRow():New() as object
-    local oFWWebExCol1:=WebExCol():New(4) as object
-    local oFWWebExCol2:=WebExCol():New(4) as object
-    local oFWWebExCol3:=WebExCol():New(4) as object
-    local oFWWebExCol4:=WebExCol():New(6) as object
-    local oFWWebExCol5:=WebExCol():New(6) as object
+![image](https://github.com/user-attachments/assets/c5328742-ec6f-42c6-9fab-5621d3df154e)
 
-    local oFWWebExContainer as object
-
-    oFWWebExCol1:AddChild(WebExCardKPI():New("Faturamento","R$ 125.000","bg-success",WebExIcon():New("bi-bar-chart")))
-    oFWWebExCol2:AddClass("border-start border-secondary ps-3")
-    oFWWebExCol2:AddChild(WebExCardKPI():New("Despesas","R$ 87.000","bg-danger",WebExIcon():New("bi-graph-up")))
-    oFWWebExCol3:AddClass("border-start border-secondary ps-3")
-    oFWWebExCol3:AddChild(WebExCardKPI():New("Outros","R$ 75.000","bg-info",WebExIcon():New("bi-currency-dollar")))
-
-    oFWWebExCol4:AddChild(WebExCardKPI():New("Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material")))
-    oFWWebExCol5:AddChild(WebExCardKPI():New("Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material")))
-
-    oFWWebExRow1:AddChild(oFWWebExCol1)
-    oFWWebExRow1:AddChild(oFWWebExCol2)
-    oFWWebExRow1:AddChild(oFWWebExCol3)
-
-    oFWWebExRow2:AddChild(oFWWebExCol4)
-    oFWWebExRow2:AddChild(oFWWebExCol5)
-
-    oFWWebExContainer=WebExContainer():New()
-    oFWWebExContainer:SetAttr("id","kpi2")
-    oFWWebExContainer:SetAttr("style","display:none")
-    oFWWebExContainer:AddChild(oFWWebExRow1)
-    oFWWebExContainer:AddChild(WebExHR():New())
-    oFWWebExContainer:AddChild(oFWWebExRow2)
-
-return(oFWWebExContainer)
+![image](https://github.com/user-attachments/assets/0a3464a6-908c-4eac-86af-27d4065345d7)

@@ -15,34 +15,50 @@ namespace FWWebEx
 
 class WebExIcon from WebExControl
 
-    public data cIconName as character
-    public data cIconType as character
+    private data cIconName as character
+    private data cIconType as character
+    private data cIconSize as character
 
     public method New(cIconName as character,cIconType as character) as object
 
+    public method GetIconType() as character
     public method SetIconType(cIconType as character) as object
-    public method SetSize(cIconSize as character) as object
-    public method SetIcon(cIconName as character) as object
+
+    public method GetIconSize() as character
+    public method SetIconSize(cIconSize as character) as object
+
+    public method GetIconName() as character
+    public method SetIconName(cIconName as character) as object
+
 
 endclass
 
 method New(cIconName,cIconType) class WebExIcon
     paramtype 1 var cIconName as character
     paramtype 2 var cIconType as character optional default "bootstrap"
-    _Super:New("i")
     ::SetIconType(cIconType)
-    ::SetIcon(cIconName,cIconType)
-    ::EnableIcons()
+    ::cIconName:=cIconName
+    _Super:New("i")
+    _Super:SetEnableIcons()
+    ::SetIconName(cIconName,cIconType)
 return(self)
+
+method GetIconType() class WebExIcon
+return(::cIconType)
 
 method SetIconType(cIconType) class WebExIcon
     ::cIconType:=Lower(AllTrim(cIconType))
 return(self)
 
-method SetIcon(cIconName,cIconType) class WebExIcon
+method GetIconName() class WebExIcon
+return(::cIconName)
+
+method SetIconName(cIconName,cIconType) class WebExIcon
 
     paramtype 1 var cIconName as character
     paramtype 2 var cIconType as character optional default ::cIconType
+
+    ::cIconName:=cIconName
 
     cIconType:=Lower(cIconType)
 
@@ -61,8 +77,6 @@ method SetIcon(cIconName,cIconType) class WebExIcon
         ::cIconType:=cIconType
     endif
 
-    ::cIconName:=cIconName
-
     // Adiciona classes novas conforme tipo
     do case
     case (::cIconType=="bootstrap")
@@ -78,14 +92,18 @@ method SetIcon(cIconName,cIconType) class WebExIcon
 
 return(self)
 
-method SetSize(cIconSize) class WebExIcon
+method GetIconSize() class WebExIcon
+return(::cIconSize)
+
+method SetIconSize(cIconSize) class WebExIcon
     paramtype 1 var cIconSize as character
+    ::cIconSize:=cIconSize
     if (::cIconType=="bootstrap")
-        ::AddClass("fs-"+cIconSize)
+        ::AddClass("fs-"+::cIconSize)
     elseif (::cIconType=="fontawesome")
         // aceita 1x, 2x, 3x ate 10x (validar antes?)
-        ::AddClass("fa-"+cIconSize)
+        ::AddClass("fa-"+::cIconSize)
     elseif (::cIconType=="material")
-        ::AddClass("md-"+cIconSize)
+        ::AddClass("md-"+::cIconSize)
     endif
 return(self)

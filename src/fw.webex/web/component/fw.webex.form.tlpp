@@ -37,9 +37,9 @@ endclass
 method New(cFormTitle,lFormButtonsFirst) class WebExForm
     paramtype 1 var cFormTitle as character
     paramtype 2 var lFormButtonsFirst as logical optional default .F.
-    _Super:New("form")
     ::cFormTitle:=cFormTitle
     ::lFormButtonsFirst:=lFormButtonsFirst
+    _Super:New("form")
     ::SetMethod("get")
     ::SetAction("#")
     ::jFormFields:=JSONObject():New()
@@ -63,12 +63,12 @@ method AddField(cLabel,cName,cType,cPlaceholder) class WebExForm
    paramtype 3 var cType as character
    paramtype 4 var cPlaceholder as character
    oField:=WebExField():New(cLabel,cName,cType,cPlaceholder)
-   ::jFormFields[oField:cID]:=oField
+   ::jFormFields[oField:GetID()]:=oField
 return(self)
 
 method AddButton(oButton) class WebExForm
    paramtype 1 var oButton as object class WEBEXBUTTON
-   ::jFormButtons[oButton:cID]:=oButton
+   ::jFormButtons[oButton:GetID()]:=oButton
 return(self)
 
 method RenderHTML() class WebExForm

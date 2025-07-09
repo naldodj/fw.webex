@@ -25,9 +25,9 @@ endclass
 method New(cLabelFor,cLabelText) class WebExLabel
     paramtype 1 var cLabelFor as character
     paramtype 2 var cLabelText as character
-    _Super:New("label")
     ::cLabelFor:=cLabelFor
     ::cLabelText:=cLabelText
+    _Super:New("label")
     ::SetAttr("for",cLabelFor)
     ::SetAttr("class","form-label")
     ::SetContent(cLabelText)

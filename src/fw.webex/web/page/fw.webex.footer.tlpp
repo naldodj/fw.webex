@@ -15,7 +15,7 @@ namespace FWWebEx
 
 class WebExFooter from WebExControl
 
-    public data cFooterContent as character
+    private data cFooterContent as character
 
     public method New(cFooterContent as character) as object
 
@@ -28,8 +28,8 @@ method New(cFooterContent) class WebExFooter
     endContent
     cDefault:=StrTran(cDefault,"__YEAR__",LTrim(Str(Year(Date()))))
     paramtype 1 var cFooterContent as character optional default cDefault
-    _Super:New("footer")
     ::cFooterContent:=cFooterContent
+    _Super:New("footer")
     WITH WEBEXOBJECT self
         .:AddClass("text-center")
         .:AddClass("text-muted")

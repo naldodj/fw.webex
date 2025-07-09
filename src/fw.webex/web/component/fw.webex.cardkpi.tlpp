@@ -36,12 +36,12 @@ method New(cCardKPITitle,cCardKPIValue,cCardKPITheme,oCardKPIIcon) class WebExCa
     paramtype 3 var cCardKPITheme as character optional default "bg-primary"
     paramtype 4 var oCardKPIIcon as object class WEBEXICON optional
 
-    _Super:New("div")
-
     ::cCardKPITitle:=cCardKPITitle
     ::cCardKPIValue:=cCardKPIValue
     ::cCardKPITheme:=cCardKPITheme
     ::oCardKPIIcon:=oCardKPIIcon
+
+    _Super:New("div")
 
     ::AddClass("card")
     ::AddClass("mb-3")
@@ -51,7 +51,7 @@ method New(cCardKPITitle,cCardKPIValue,cCardKPITheme,oCardKPIIcon) class WebExCa
     endif
 
     ::SetIconBefore()
-    ::EnableIcons()
+    ::SetEnableIcons()
 
 return(self)
 

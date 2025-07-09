@@ -22,9 +22,9 @@ endclass
 method New(cButtonLabel,cButtonType) class WebExButton
     paramtype 1 var cButtonLabel as character optional default ""
     paramtype 2 var cButtonType as character optional default "submit"
-    _Super:New("button")
     ::cButtonLabel:=cButtonLabel
     ::cButtonType:=cButtonType
+    _Super:New("button")
     ::SetAttr("type",cButtonType)
     ::SetAttr("class","btn btn-primary")
     ::SetContent(cButtonLabel)

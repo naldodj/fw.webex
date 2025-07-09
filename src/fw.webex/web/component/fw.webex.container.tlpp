@@ -20,8 +20,8 @@ endclass
 
 method New(lContainerFluid) class WebExContainer
     paramtype 1 var lContainerFluid as logical optional default .F.
-    _Super:New("div")
     ::lContainerFluid:=lContainerFluid
+    _Super:New("div")
     if(::lContainerFluid)
         ::SetAttr("class","container-fluid")
     else

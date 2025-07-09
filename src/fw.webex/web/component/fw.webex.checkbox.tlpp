@@ -30,18 +30,18 @@ method New(cCheckBoxLabel,cCheckBoxName,cCheckBoxTitle,cCheckBoxValue) class Web
     paramtype 2 var cCheckBoxName as character optional default ""
     paramtype 3 var cCheckBoxTitle as character optional default ""
     paramtype 4 var cCheckBoxValue as character optional default ""
-    _Super:New("div")
     ::cCheckBoxLabel:=cCheckBoxLabel
     ::cCheckBoxName:=cCheckBoxName
     ::cCheckBoxTitle:=cCheckBoxTitle
     ::cCheckBoxValue:=cCheckBoxValue
+    _Super:New("div")
     ::AddClass("form-check")
     ::oWebExInput:=WebExInput():New(cCheckBoxName,"checkbox","",cCheckBoxTitle)
     ::oWebExInput:AddClass("form-check-input")
     if (!Empty(cCheckBoxValue))
         ::oWebExInput:SetAttr("value",cCheckBoxValue)
     endif
-    ::oWebExLabel:=WebExLabel():New(::oWebExInput:cID,cCheckBoxLabel)
+    ::oWebExLabel:=WebExLabel():New(::oWebExInput:GetID(),cCheckBoxLabel)
     ::oWebExLabel:AddClass("form-check-label")
     ::AddChild(::oWebExLabel)
     ::AddChild(::oWebExInput)

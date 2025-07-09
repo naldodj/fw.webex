@@ -16,9 +16,9 @@ static __aVoidTags:={"area","base","br","col","embed","hr","img","input","link",
 static __cID as character
 static __cCRLF:=CRLF as character
 
+static __jAssets:=JSONObject():New() as json
 static __jHeader:=JSONObject():New() as json
 static __jScripts:=JSONObject():New() as json
-static __jAssets:=JSONObject():New() as json
 static __jFeatures:={;
     "lChartEnabled":.F.;
    ,"lIconsEnabled":.F.;
@@ -29,24 +29,24 @@ namespace FWWebEx
 
 class WebExControl
 
-    public data cID as character
-    public data cHTML as character
-    public data cType as character
-    public data cContent as character
+    private data cID as character
+    private data cHTML as character
+    private data cType as character
+    private data cContent as character
 
-    public data cFWWebExTmpPath as character
+    private data cFWWebExTmpPath as character
 
-    public data cLocalAssetsFilePath as character
-    public data cExternalAssetsFilePath as character
+    private data cLocalAssetsFilePath as character
+    private data cExternalAssetsFilePath as character
 
-    public data jAttrs as json
-    public data jChildren as json
+    private data jAttrs as json
+    private data jChildren as json
 
-    public data lChartEnabled as logical
-    public data lIconsEnabled as logical
-    public data lExternalAssets as logical
-    public data lRenderChildren as logical
-    public data lDataTableEnabled as logical
+    private data lChartEnabled as logical
+    private data lIconsEnabled as logical
+    private data lExternalAssets as logical
+    private data lRenderChildren as logical
+    private data lDataTableEnabled as logical
 
     public method New(cType as character) as object
 
@@ -58,7 +58,11 @@ class WebExControl
 
     public method NewID() as character
     public method GetID() as character
+    public method SetID(cID as character) as object
     public method ResetID() as object
+
+    public method GetType() as character
+    public method SetType(cType) as character
 
     public method IsKindOf(cClass as character,lParentTree as logical) as logical
 
@@ -77,8 +81,20 @@ class WebExControl
     public method HasAttrValue(cAttr as character,cAttrValue as character,/*@*/aAttr as array) as logical
     public method DelAttrValue(cAttr as character,cAttrValue as character,/*@*/aAttr as array,lDelAttrValue as logical) as object
 
-    public method SetContent(cContent as character) as object
     public method GetContent() as character
+    public method SetContent(cContent as character) as object
+
+    public method GetFWWebExTmpPath() as character
+    public method SetFWWebExTmpPath(cFWWebExTmpPath as character) as object
+
+    public method GetLocalAssetsFilePath() as character
+    public method SetLocalAssetsFilePath(cLocalAssetsFilePath as character) as character
+
+    public method GetExternalAssetsFilePath() as character
+    public method SetExternalAssetsFilePath(cExternalAssetsFilePath as character) as character
+
+    public method GetJSONAttrs() as json
+    public method GetJSONChildren() as json
 
     public method AddChild(oChild as object) as object
 
@@ -109,9 +125,14 @@ class WebExControl
     public method HasClass(/*[@]*/cClass as character,/*@*/aClasses as array) as logical
     public method DelClass(cClass as character,/*@*/lDelClass as logical) as object
 
-    public method EnableChart(lChartEnabled as logical) as object
-    public method EnableIcons(lIconsEnabled as logical) as object
-    public method EnableDataTable(lDataTableEnabled as logical) as object
+    public method GetEnableChart() as logical
+    public method SetEnableChart(lChartEnabled as logical) as object
+
+    public method GetEnableIcons() as logical
+    public method SetEnableIcons(lIconsEnabled as logical) as object
+
+    public method GetEnableDataTable() as logical
+    public method SetEnableDataTable(lDataTableEnabled as logical) as object
 
     public method Clean() as variant
     public method RemoveScripts() as variant
@@ -121,17 +142,17 @@ endclass
 
 method New(cType) class WebExControl
     paramtype 1 var cType as character optional default "div"
-    ::cID:=self:NewID()
-    ::cType:=Lower(cType)
-    ::cContent:="__NULL__"
-    ::cFWWebExTmpPath:="\web\fwwebex\tmp\"
     ::jAttrs:=JSONObject():New()
     ::jChildren:=JSONObject():New()
+    ::SetID(self:NewID())
+    ::SetType(cType)
+    ::SetContent("__NULL__")
+    ::SetFWWebExTmpPath("\web\fwwebex\tmp\")
     ::lChartEnabled:=__jFeatures["lChartEnabled"]
     ::lIconsEnabled:=__jFeatures["lIconsEnabled"]
     ::lDataTableEnabled:=__jFeatures["lDataTableEnabled"]
-    ::SetRenderChildren(.T.)
-    ::SetExternalAssets(.F.)
+    ::lRenderChildren:=.T.
+    ::lExternalAssets:=.F.
 return(self)
 
 method Clone(lDetachChildren) class WebExControl
@@ -155,13 +176,13 @@ method Clone(lDetachChildren) class WebExControl
     // Cria nova instancia do mesmo tipo
     oClone:=self:__CloneNewInstance()
 
-    private pSelf:=self as object
+    private pCloneSelf:=self as object
 
     // Copia dados da classe
     aMemberData:=aClone(ClassDataArr(self,.T.))
     for i:=1 to Len(aMemberData)
         cKey:=aMemberData[i][1]
-        cData:="pSelf"
+        cData:="pCloneSelf"
         cData+=":"
         cData+=cKey
         xValue:=&(cData)
@@ -311,7 +332,7 @@ method DumpDOM(nLevel) class WebExControl
     // Prefixo de identacao
     cPrefix:=Replicate("   ",nLevel)+"+---> "
     // Tipo do componente
-    cType:=Lower(::cType)
+    cType:=::cType
     // Monta linha do componente atual
     cDOM:=cPrefix+cType
 
@@ -319,7 +340,7 @@ method DumpDOM(nLevel) class WebExControl
     if (::jAttrs:HasProperty("id"))
         cID:=::jAttrs["id"]
     else
-        cID:=::cID
+        cID:=::GetID()
     endif
 
     // ID
@@ -381,6 +402,11 @@ return(cDOM)
 method GetID() class WebExControl
 return(::cID)
 
+method SetID(cID) class WebExControl
+    paramtype 1 var cID as character
+    ::cID:=Lower(cID)
+return(self)
+
 method NewID() class WebExControl
     if (Empty(__cID))
         ::ResetID()
@@ -390,6 +416,14 @@ return((self:ClassName()+"_"+__cID))
 
 method ResetID() class WebExControl
     __cID:=Replicate("0",FWWEBEX_ID_MAX_SIZE)
+return(self)
+
+method GetType() class WebExControl
+return(::cType)
+
+method SetType(cType) class WebExControl
+    paramtype 1 var cType as character
+    ::cType:=Lower(cType)
 return(self)
 
 method IsKindOf(cClass,lParentTree) class WebExControl
@@ -467,6 +501,7 @@ return(xValue)
 
 method SetMemberData(cMember,xValue,lSuperClass) class WebExControl
     local cType as character
+    local cData as character
     local lSetMemberData as logical
     paramtype 1 var cMember as character
     if (xValue!=nil)
@@ -475,22 +510,22 @@ method SetMemberData(cMember,xValue,lSuperClass) class WebExControl
     paramtype 3 var lSuperClass as logical optional default .T.
     lSetMemberData:=AttIsMemberOf(self,cMember,lSuperClass)
     if (lSetMemberData)
-        private pSelf:=self as object
-        cData:="pSelf"
+        private pSetMemberDataSelf:=self as object
+        cData:="pSetMemberDataSelf"
         cData+=":"
         cData+=cMember
         cType:=ValType(xValue)
         if ((cType$"A|J|O").and.(FWIsInCallStack("CLONE")))
-            &(cData):=self:__CloneCompexData(xValue)
-        else
-            &(cData):=xValue
+            xValue:=self:__CloneCompexData(xValue)
         endif
+        &(cData):=xValue
     endif
 return(lSetMemberData)
 
 method SetAttr(cAttr,cAttrValues) class WebExControl
    paramtype 1 var cAttr as character
    paramtype 2 var cAttrValues as character optional default cAttr
+   cAttr:=Lower(cAttr)
    ::jAttrs[cAttr]:=cAttrValues
 return(self)
 
@@ -580,13 +615,46 @@ method DelAttrValue(cAttr,cAttrValue,aAttr,lDelAttrValue) class WebExControl
 
 return(self)
 
+method GetContent() class WebExControl
+return(::cContent)
+
 method SetContent(cContent) class WebExControl
    paramtype 1 var cContent as character
    ::cContent:=cContent
 return(self)
 
-method GetContent() class WebExControl
-return(::cContent)
+method GetFWWebExTmpPath() class WebExControl
+return(::cFWWebExTmpPath)
+
+method SetFWWebExTmpPath(cFWWebExTmpPath)  class WebExControl
+    paramtype 1 var cFWWebExTmpPath as character
+    ::cFWWebExTmpPath:=cFWWebExTmpPath
+    if (!lIsDir(::cFWWebExTmpPath))
+        FWMakeDir(::cFWWebExTmpPath,.F.)
+    endif
+return(self)
+
+method GetLocalAssetsFilePath() class WebExControl
+    paramtype 1 var cLocalAssetsFilePath as character
+return(::cLocalAssetsFilePath)
+
+method SetLocalAssetsFilePath(cLocalAssetsFilePath) class WebExControl
+    paramtype 1 var cLocalAssetsFilePath as character
+return(self)
+
+method GetExternalAssetsFilePath() class WebExControl
+return(::cExternalAssetsFilePath)
+
+method SetExternalAssetsFilePath(cExternalAssetsFilePath) class WebExControl
+    paramtype 1 var cExternalAssetsFilePath as character
+    ::cExternalAssetsFilePath:=cExternalAssetsFilePath
+return(self)
+
+method GetJSONAttrs() class WebExControl
+return(::jAttrs)
+
+method GetJSONChildren()class WebExControl
+return(::jChildren)
 
 method AddChild(oChild) class WebExControl
     local cClassName as character
@@ -597,7 +665,7 @@ method AddChild(oChild) class WebExControl
     elseif ((!MethIsMemberOf(oChild,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
         CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
-    ::jChildren[oChild:cID]:=oChild
+    ::jChildren[oChild:GetID()]:=oChild
 return(self)
 
 method GetHeader() class WebExControl
@@ -611,7 +679,7 @@ method AddInHeader(oChild) class WebExControl
     elseif ((!MethIsMemberOf(oChild,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
         CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
-    __jHeader[oChild:cID]:=oChild
+    __jHeader[oChild:GetID()]:=oChild
 return(oChild)
 
 method FindInHeader(cID) class WebExControl
@@ -692,7 +760,7 @@ method GetPageScriptBundle() class WebExControl
                 oWebExScript:SetExternalAssets(lExternalAssets)
             endif
             jPageScripts:=JSONObject():New()
-            jPageScripts[oWebExScript:cID]:=oWebExScript
+            jPageScripts[oWebExScript:GetID()]:=oWebExScript
         else
             jPageScripts:=__jScripts["page"]
         endif
@@ -722,12 +790,12 @@ return(lFound)
 method AddScript(oScript) class WebExControl
     local cType as character
     paramtype 1 var oScript as object class WebExScript
-    if (!::FindInHeader(oScript:cID))
-        cType:=if(oScript:lScriptInPage,"page","head")
+    if (!::FindInHeader(oScript:GetID()))
+        cType:=if(oScript:GetScriptInPage(),"page","head")
         if (!__jScripts:HasProperty(cType))
             __jScripts[cType]:=JSONObject():New()
         endif
-        __jScripts[cType][oScript:cID]:=oScript
+        __jScripts[cType][oScript:GetID()]:=oScript
     endif
 return(oScript)
 
@@ -759,7 +827,7 @@ method RenderHTML() class WebExControl
         endif
 
         cContent:=::cContent
-        cLowerType:=Lower(::cType)
+        cLowerType:=::cType
 
         if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets).and.(cLowerType$"script|style").and.(cContent!="__NULL__"))
             lHTMLAssetsToFile:=WebFileTools():HTMLAssetsToFile(;
@@ -859,7 +927,7 @@ return(self)
 
 method SetExternalAssets(lExternalAssets) class WebExControl
     paramtype 1 var lExternalAssets as logical optional default .F.
-    ::lExternalAssets:=(::ExternalAssetsIsEnabled()).and.((lExternalAssets).and.(Lower(::cType)$"script|style"))
+    ::lExternalAssets:=(::ExternalAssetsIsEnabled()).and.((lExternalAssets).and.(::cType$"script|style"))
     ::cLocalAssetsFilePath:=""
     ::cExternalAssetsFilePath:=""
 return(self)
@@ -925,7 +993,10 @@ method DelClass(cClass,lDelClass) class WebExControl
     FWFreeArray(@aClasses)
 return(self)
 
-method EnableChart(lChartEnabled) class WebExControl
+method GetEnableChart() class WebExControl
+return(::lChartEnabled)
+
+method SetEnableChart(lChartEnabled) class WebExControl
 
     paramtype 1 var lChartEnabled as logical optional default .T.
 
@@ -949,7 +1020,10 @@ method EnableChart(lChartEnabled) class WebExControl
 
 return(self)
 
-method EnableIcons(lIconsEnabled) class WebExControl
+method GetEnableIcons() class WebExControl
+return(::lIconsEnabled)
+
+method SetEnableIcons(lIconsEnabled) class WebExControl
 
     paramtype 1 var lIconsEnabled as logical optional default .T.
 
@@ -1000,7 +1074,10 @@ method EnableIcons(lIconsEnabled) class WebExControl
 
 return(self)
 
-method EnableDataTable(lDataTableEnabled) class WebExControl
+method GetEnableDataTable() class WebExControl
+return(::lDataTableEnabled)
+
+method SetEnableDataTable(lDataTableEnabled) class WebExControl
 
     paramtype 1 var lDataTableEnabled as logical optional default .T.
 

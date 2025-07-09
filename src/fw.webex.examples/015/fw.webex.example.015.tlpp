@@ -5,72 +5,6 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
-+---> WebExPage
-      |
-      +---> oWrapper (div.d-flex)
-            |
-            +---> oFWWebExSideBar (WebExSideBar)
-            |     |
-            |     +---> oFWWebExNavTop (WebExNavTop)
-            |     |     |
-            |     |     +---> container-fluid.d-flex.flex-column.align-items-start
-            |     |           |
-            |     |           +---> oSidebarToggle (button.navbar-toggler)
-            |     |           |     |
-            |     |           |     +---> WebExIcon (bi-list)
-            |     |           |
-            |     |           +---> oBrand (a.navbar-brand com texto "FWWebEx")
-            |     |           |
-            |     |           +---> collapse.navbar-collapse (vazio ou com links)
-            |     |
-            |     +---> oFWWebExNavSide (div#webex-sidebar.collapse.show)
-            |           |
-            |           +---> Brand gerado internamente via SetBrand("Side Menu")
-            |           |
-            |           +---> Dashboard KPI (data-toggle-kpi="kpi")
-            |           |     |
-            |           |     +---> WebExIcon (bi-bar-chart)
-            |           |
-            |           +---> Dashboard KPI 2 (data-toggle-kpi="kpi2")
-            |                 |
-            |                 +---> WebExIcon (bi-graph-up)
-            |
-            +---> oContentWrapper (div.d-flex.flex-column.w-100)
-                  |
-                  +---> oTopBar (nav.navbar.shadow.mb-3)
-                  |     |
-                  |     +---> oH1 (h1.h4 com texto "Dashboard")
-                  |
-                  +---> oFWWebExMain (WebExMain)
-                        |
-                        +---> oFWWebExCardKPI1 (WebExContainer#kpi[style=display:none])
-                        |     |
-                        |     +---> WebExCardKPI "Faturamento"
-                        |     +---> WebExCardKPI "Clientes Ativos"
-                        |
-                        +---> oFWWebExCardKPI2 (WebExContainer#kpi2[style=display:none])
-                              |
-                              +---> oFWWebExRow1
-                              |     |
-                              |     +---> oFWWebExCol1 (4 cols)
-                              |     |     +---> WebExCardKPI "Faturamento"
-                              |     |
-                              |     +---> oFWWebExCol2 (4 cols).border-start
-                              |     |     +---> WebExCardKPI "Despesas"
-                              |     |
-                              |     +---> oFWWebExCol3 (4 cols).border-start
-                              |           +---> WebExCardKPI "Outros"
-                              |
-                              +---> WebExHR
-                              |
-                              +---> oFWWebExRow2
-                                    |
-                                    +---> oFWWebExCol4 (6 cols)
-                                    |     +---> WebExCardKPI "Clientes Ativos"
-                                    |
-                                    +---> oFWWebExCol5 (6 cols)
-                                          +---> WebExCardKPI "Ticket Medio"
-
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */
@@ -79,12 +13,12 @@ Released to Public Domain.
 
 using namespace FWWebEx
 
-procedure u_FWWebExExample_012()
+procedure u_FWWebExExample_015()
     local bExecute as codeblock
     local cHTML as character
     local cHTMLFile as character
     local cProcName:=ProcName() as character
-    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_012(@cHTML)},"Aguarde",cProcName)}
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_015(@cHTML)},"Aguarde",cProcName)}
     FWExampleTools():Execute(bExecute,cProcName,.T.)
     if (!Empty(cHTMLFile).and.File(cHTMLFile))
         FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
@@ -92,7 +26,7 @@ procedure u_FWWebExExample_012()
     endif
 return
 
-static procedure FWWebExExample_012(cHTML as character) as character
+static procedure FWWebExExample_015(cHTML as character) as character
 
     local cScript as character
     local cProcName:=ProcName() as character
@@ -223,7 +157,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
     oFWWebExPage:=WebExPage():New(cProcName)
     oFWWebExPage:AddChild(oFWWebExBody)
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLDumpDOMFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExPage:Clean()
 

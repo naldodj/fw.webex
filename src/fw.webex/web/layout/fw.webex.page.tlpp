@@ -28,26 +28,37 @@ namespace FWWebEx
 
 class WebExPage from WebExControl
 
-    public data cPageTitle as character
+    private data cPageTitle as character
 
-    public data jPageStyle as json
+    private data jPageStyle as json
 
-    public data oPageBody as object
+    private data oPageBody as object
+    private data oPageRender as object
 
     public method New(cPageTitle as character) as object
     public method AddChild(oPageChild as object) as object
-    public method AddStyle(cPageStyle) as object
-    public method SetBody(oPageBody as object) as object
+
+    public method GetPageTitle() as character
+    public method SetPageTitle(cPageTitle) as object
+
+    public method GetPageStyle() as json
+    public method AddPageStyle(cPageStyle) as object
+
+    public method GetPageBody() as object
+    public method SetPageBody(oPageBody as object) as object
+
+    public method GetPageAfterRender() as object
+
     public method RenderHTML() as character
 
 endclass
 
 method New(cPageTitle) class WebExPage
     paramtype cPageTitle as character optional default "FWWEBEX"
+    ::SetPageTitle(cPageTitle)
+    ::jPageStyle:=JSONObject():New()
     _Super:New("div")
     ::AddClass("main-div")
-    ::cPageTitle:=cPageTitle
-    ::jPageStyle:=JSONObject():New()
 return(self)
 
 method AddChild(oPageChild) class WebExPage
@@ -62,13 +73,39 @@ method AddChild(oPageChild) class WebExPage
         CLASSPARAMEXCEPTION PARAM 1 VAR oPageChild TEXT cClassName MESSAGE "Cannot nest a WebExPage inside another WebExPage. Received: "+cClassName+". A WebExPage must be the top-level container."
     endif
     if (oPageChild:IsKindOf("WEBEXBODY"))
-        ::SetBody(oPageChild)
+        ::SetPageBody(oPageChild)
     else
         _Super:AddChild(oPageChild)
     endif
 return(self)
 
-method SetBody(oPageBody) class WebExPage
+method GetPageTitle() class WebExPage
+return(::cPageTitle)
+
+method SetPageTitle(cPageTitle) class WebExPage
+    paramtype 1 var cPageTitle as character optional default "FWWEBEX"
+    if (Empty(cPageTitle))
+        cPageTitle:="FWWEBEX"
+    endif
+    ::cPageTitle:=cPageTitle
+return(self)
+
+method GetPageStyle() class WebExPage
+return(::jPageStyle)
+
+method AddPageStyle(cPageStyle) class WebExPage
+    local oStyle as object
+    paramtype 1 var cPageStyle as character
+    WITH WEBEXOBJECT oStyle CLASS WebExControl TYPE style
+        .:SetContent(cPageStyle)
+        ::jPageStyle[oStyle:GetID()]:=oStyle
+    END WEBEXOBJECT
+return(self)
+
+method GetPageBody() class WebExPage
+return(::oPageBody)
+
+method SetPageBody(oPageBody) class WebExPage
     local cClassName as character
     paramtype 1 var oPageBody as object
     cClassName:=GetClassName(oPageBody)
@@ -85,14 +122,8 @@ method SetBody(oPageBody) class WebExPage
     endif
 return(self)
 
-method AddStyle(cPageStyle) class WebExPage
-    local oStyle as object
-    paramtype 1 var cPageStyle as character
-    WITH WEBEXOBJECT oStyle CLASS WebExControl TYPE style
-        .:SetContent(cPageStyle)
-        ::jPageStyle[oStyle:cID]:=oStyle
-    END WEBEXOBJECT
-return(self)
+method GetPageAfterRender() class WebExPage
+return(::oPageRender)
 
 method RenderHTML() class WebExPage
 
@@ -227,7 +258,7 @@ method RenderHTML() class WebExPage
 
         endContent
 
-        ::AddStyle(cPageStyle)
+        ::AddPageStyle(cPageStyle)
 
     endif
 
@@ -346,6 +377,8 @@ method RenderHTML() class WebExPage
     END WEBEXOBJECT
 
     cHTML+=oPage:RenderHTML()
+
+    ::oPageRender:=oPage
 
     if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets))
         jAssets:=::GetAssets()

@@ -31,12 +31,12 @@ method New(cInputName,cInputType,cInputPlaceholder,cInputTitle) class WebExInput
     paramtype 3 var cInputPlaceholder as character
     paramtype 4 var cInputTitle as character optional default cInputPlaceholder
 
-    _Super:New("input")
-
     ::cInputName:=cInputName
     ::cInputType:=cInputType
     ::cInputPlaceholder:=cInputPlaceholder
     ::cInputTitle:=cInputTitle
+
+    _Super:New("input")
 
     if (!cInputType=="checkbox")
         ::SetAttr("class","form-control")

@@ -21,19 +21,31 @@ namespace FWWebEx
 
 class WebExMain from WebExControl
 
-    public data lMainFluid as logical
+    private data lMainFluid as logical
 
     public method New(lMainFluid as logical) as object
+
+    public method GetMainFluid() as logical
+    public method SetMainFluid(lMainFluid as logical) as object
+
     public method RenderHTML() as character
+
 
 end class
 
 method New(lMainFluid) class WebExMain
     paramtype 1 var lMainFluid as logical optional default .T. // default: container-fluid
+    ::SetMainFluid(lMainFluid)
     _Super:New("main")
     ::AddClass("main-content")
     ::AddClass("flex-grow-1")
-    ::lMainFluid:=lMainFluid
+return(self)
+
+method GetMainFluid() class WebExMain
+return(::lMainFluid)
+
+method SetMainFluid(lMainFluid) class WebExMain
+    paramtype 1 var lMainFluid as logical optional default .T.
 return(self)
 
 method RenderHTML() class WebExMain

@@ -20,7 +20,7 @@ endclass
 
 method New(cLegendContent) class WebExLegend
    paramtype 1 var cLegendContent as character
-   _Super:New("legend")
    ::cLegendContent:=cLegendContent
+   _Super:New("legend")
    ::SetContent(::cLegendContent)
 return(self)

@@ -15,7 +15,7 @@ namespace FWWebEx
 
 class WebExTitle from WebExControl
 
-    public data cTitleContent as character
+    private data cTitleContent as character
 
     public method New(cTitleContent as character) as object
 
@@ -23,7 +23,7 @@ endclass
 
 method New(cTitleContent) class WebExTitle
     paramtype 1 var cTitleContent as character optional default "FWWEBEX"
-    _Super:New("title")
     ::cTitleContent:=cTitleContent
+    _Super:New("title")
     ::SetContent(::cTitleContent)
 return(self)
