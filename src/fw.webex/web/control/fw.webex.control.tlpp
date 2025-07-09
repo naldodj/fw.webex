@@ -50,7 +50,7 @@ class WebExControl
 
     public method New(cType as character) as object
 
-    public method Clone(lDetachChildren as logical) as object
+    public method Clone() as object
     protected method __CloneNewInstance() as object
     protected method __CloneCompexData(xComplex as variant) as variant
 
@@ -155,23 +155,17 @@ method New(cType) class WebExControl
     ::lExternalAssets:=.F.
 return(self)
 
-method Clone(lDetachChildren) class WebExControl
+method Clone() class WebExControl
 
-    local aKeys as array
     local aMemberData as array
-
     local cKey as character
     local cData as character
 
     local i as numeric
 
     local oClone as object
-    local oChild as object
-    local oChildClone as object
 
     local xValue as variant
-
-    paramtype 1 var lDetachChildren as logical optional default .F.
 
     // Cria nova instancia do mesmo tipo
     oClone:=self:__CloneNewInstance()
@@ -189,36 +183,6 @@ method Clone(lDetachChildren) class WebExControl
         oClone:SetMemberData(cKey,xValue,.T.)
     next i
     FWFreeArray(@aMemberData)
-
-    // Copia atributos HTML
-    aKeys:=::jAttrs:GetNames()
-    for i:=1 to Len(aKeys)
-        cKey:=aKeys[i]
-        oClone:jAttrs[cKey]:=::jAttrs[cKey]
-    next i
-    FWFreeArray(@aKeys)
-
-    // Clona filhos recursivamente
-    aKeys:=::jChildren:GetNames()
-    for i:=1 to Len(aKeys)
-        cKey:=aKeys[i]
-        oChild:=::jChildren[cKey]
-        if (;
-                (valType(oChild)=="O");
-                .and.;
-                MethIsMemberOf(oChild,"ISKINDOF",.T.);
-                .and.;
-                oChild:IsKindOf("WEBEXCONTROL",.T.);
-        )
-            oChildClone:=oChild:Clone(lDetachChildren)
-            oClone:AddChild(oChildClone)
-            if (lDetachChildren)
-                FreeObj(@oChild)
-                ::jChildren:DelName(cKey)
-            endif
-        endif
-    next i
-    FWFreeArray(@aKeys)
 
 return(oClone)
 

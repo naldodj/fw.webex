@@ -97,10 +97,15 @@ return(lHTMLFromControl)
 static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLContent,lEncodeUTF8) class WebFileTools
 
     local cProcName:=ProcName() as character
-    local cDumpoFWWebExControl as character
+    local cDumpFWWebExControl as character
+    local cDumpFWWebExControlClone as character
+
+    local oDumpPre as object
+    local oDumpClonePre as object
 
     local oFWWebExPage as object
     local oFWWebExControlPage as object
+    local oFWWebExControlPageClone as object
 
     paramtype 1 var oFWWebExControl as object
     paramtype 2 var cHTMLFilePath as character optional
@@ -110,16 +115,33 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
 
     oFWWebExControl:RenderHTML()
     oFWWebExControlPage:=oFWWebExControl:GetPageAfterRender()
+    oFWWebExControlPageClone:=oFWWebExControlPage:Clone()
 
-    cDumpoFWWebExControl:=oFWWebExControlPage:DumpDom()
+    cDumpFWWebExControl:=oFWWebExControlPage:DumpDom()
+    oDumpPre:=WebExControl():New("pre")
+    oDumpPre:SetContent(cDumpFWWebExControl)
+    cDumpFWWebExControl:=oDumpPre:RenderHTML()
+    FreeObj(@oDumpPre)
+
+    cDumpFWWebExControlClone:=oFWWebExControlPage:DumpDom()
+    oDumpClonePre:=WebExControl():New("pre")
+    oDumpClonePre:SetContent(cDumpFWWebExControlClone)
+    cDumpFWWebExControlClone:=oDumpClonePre:RenderHTML()
+    FreeObj(@oDumpClonePre)
 
     oFWWebExControl:Clean()
     FreeObj(@oFWWebExControlPage)
 
+    oFWWebExControlPageClone:Clean()
+    FreeObj(@oFWWebExControlPageClone)
+
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
         WITH WEBEXOBJECT CLASS WebExBody
-            WITH WEBEXOBJECT CLASS WebExControl TYPE pre
-                .:SetContent(cDumpoFWWebExControl)
+            WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP",cDumpFWWebExControl,"bg-primary",WebExIcon():New("bi-list-nested")
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExHR
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP CLONE",cDumpFWWebExControlClone,"bg-secondary",WebExIcon():New("bi-list-nested")
             END WEBEXOBJECT
         END WEBEXOBJECT
     END WEBEXOBJECT
