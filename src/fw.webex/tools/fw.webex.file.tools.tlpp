@@ -96,6 +96,9 @@ return(lHTMLFromControl)
 
 static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLContent,lEncodeUTF8) class WebFileTools
 
+    local cStyle as character
+    local cScript as character
+
     local cProcName:=ProcName() as character
 
     local cIFrameID as character
@@ -108,6 +111,9 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
 
     local cHTMLDumpDOMFromControlHTMLFilePath as character
     local cHTMLDumpDOMFromControlHTMLFileName as character
+
+    local oWebExNavSide as object
+    local oWebExNavSideMenuItem as object
 
     local oDumpPre as object
     local oDumpClonePre as object
@@ -163,32 +169,137 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
 
         WEBEXOBJECT CLEAN
 
+        //Page
         WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
+            //Body
             WITH WEBEXOBJECT CLASS WebExBody
+                //Wrapper
                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                    .:AddClass("embed-responsive")
-                    .:AddClass("embed-responsive-21by9")
-                    WITH WEBEXOBJECT CLASS WebExControl TYPE iframe
-                        cIFrameID:=.:GetID()
-                        .:AddClass("embed-responsive-item")
-                        .:SetAttr("src",cLocalAssetsFilePath/*cExternalAssetsFilePath*/)
-                        .:SetAttr("style","width: 100%; height: 80vh; border: none; display: block; margin: 0 auto;")
+                    .:AddClass("d-flex")
+                    //Menu Lateral
+                    WITH WEBEXOBJECT CLASS WebExSideBar
+                        WITH WEBEXOBJECT oWebExNavSide CLASS WebExNavSide
+                            oWebExNavSide:SetType("div")
+                            oWebExNavSide:SetAttr("id","webex-sidebar")
+                            oWebExNavSide:AddClass("collapse")
+                            oWebExNavSide:AddClass("show")
+                            oWebExNavSide:SetAttr("class","collapse show")
+                            oWebExNavSide:SetBrand("Side Menu")
+                            oWebExNavSideMenuItem:=oWebExNavSide:AddItem("Data","#",WebExIcon():New("bi-window"))
+                            oWebExNavSideMenuItem:SetAttr("data-toggledump","dumpdata")
+                            oWebExNavSideMenuItem:=oWebExNavSide:AddItem("DumpDOM","#",WebExIcon():New("bi-list-nested"))
+                            oWebExNavSideMenuItem:SetAttr("data-toggledump","dump")
+                            oWebExNavSideMenuItem:=oWebExNavSide:AddItem("Clone","#",WebExIcon():New("bi-list-nested"))
+                            oWebExNavSideMenuItem:SetAttr("data-toggledump","dumpclone")
+                        END WEBEXOBJECT
+                    END WEBEXOBJECT
+                    //conteudo principal
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:AddClass("d-flex flex-column w-100")
+                        //TopContainer
+                        WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                            .:AddClass("d-flex align-items-center gap-2") // gap-2 adiciona espaco
+                            //NavTop
+                            WITH WEBEXOBJECT CLASS WebExNavTop
+                            END WEBEXOBJECT
+                            //Nav
+                            WITH WEBEXOBJECT CLASS WebExControl TYPE nav
+                                .:AddClass("navbar shadow mb-3")
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE h1
+                                    .:AddClass("h4")
+                                    .:SetContent(cProcName)
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                        //Main
+                        WITH WEBEXOBJECT CLASS WebExMain
+                            WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
+                                .:SetAttr("id","dumpdata")
+                                .:SetAttr("style","display:none")
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                                    .:AddClass("embed-responsive")
+                                    .:AddClass("embed-responsive-21by9")
+                                    WITH WEBEXOBJECT CLASS WebExIFrame
+                                        cIFrameID:=.:GetID()
+                                        .:SetAttr("src",cLocalAssetsFilePath/*cExternalAssetsFilePath*/)
+                                    END WEBEXOBJECT
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
+                                .:SetAttr("id","dump")
+                                .:SetAttr("style","display:none")
+                                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP",cDumpFWWebExControl,"bg-primary",WebExIcon():New("bi-list-nested")
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
+                                .:SetAttr("id","dumpclone")
+                                .:SetAttr("style","display:none")
+                                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP CLONE",cDumpFWWebExControlClone,"bg-secondary",WebExIcon():New("bi-list-nested")
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
                     END WEBEXOBJECT
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExHR
-                END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP",cDumpFWWebExControl,"bg-primary",WebExIcon():New("bi-list-nested")
-                END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExHR
-                END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP CLONE",cDumpFWWebExControlClone,"bg-secondary",WebExIcon():New("bi-list-nested")
-                END WEBEXOBJECT
+            END WEBEXOBJECT
+            //Style
+            WITH WEBEXOBJECT CLASS WebExStyle
+                beginContent var cStyle
+                    #webex-sidebar {
+                        transition: all 0.3s ease;
+                        width: 250px;
+                        overflow: hidden;
+                    }
+                    .navbar-brand.collapse-hide {
+                        display: none !important;
+                    }
+                endContent
+                .:SetContent(cStyle)
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExScript
+                // Script para alternar exibicao dos dumps
+                // Obs: JavaScript converte automaticamente atributos com hifen (-) para camelCase dentro do dataset
+                /*
+                    | HTML                     | JavaScript (`dataset`)  |
+                    | ------------------------ | ----------------------- |
+                    | `data-toggle-dump="x"`   | `el.dataset.toggleDump` |
+                    | `data-user-id="42"`      | `el.dataset.userId`     |
+                    | `data-coisa-louca="sim"` | `el.dataset.coisaLouca` |
+                */
+                beginContent var cScript
+                    document.addEventListener("DOMContentLoaded",()=>{
+                        document.querySelectorAll("[data-toggledump]").forEach(el=>{
+                            el.addEventListener("click",()=>{
+                            ["dumpdata","dump","dumpclone"].forEach(id=>{
+                                document.getElementById(id).style.display = (id === el.dataset.toggledump) ? "block" : "none";
+                                });
+                            });
+                        });
+                    });
+                    document.addEventListener("DOMContentLoaded", ()=>{
+                        const sidebar = document.getElementById("webex-sidebar");
+                        const brand = document.querySelector(".navbar-brand");
+
+                        const observer = new MutationObserver(() => {
+                            if (!sidebar.classList.contains("show")) {
+                                brand.classList.add("collapse-hide");
+                            } else {
+                                brand.classList.remove("collapse-hide");
+                            }
+                        });
+
+                        observer.observe(sidebar, { attributes: true, attributeFilter: ["class"] });
+                    });
+                endContent
+                .:SetContent(cScript)
             END WEBEXOBJECT
         END WEBEXOBJECT
 
         lHTMLDumpDOMFromControl:=WebFileTools():HTMLFromControl(oFWWebExPage,@cHTMLFilePath,@cHTMLFileName,@cHTMLContent,@lEncodeUTF8)
 
     end sequence
+
+    FreeObj(@oWebExNavSideMenuItem)
+    FreeObj(@oWebExNavSide)
 
     FreeObj(@oFWWebExPage)
 

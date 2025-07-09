@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-09 17:04 UTC naldodj (New Features)
+  + src/fw.webex/web/component/fw.webex.iframe.tlpp
+  * src/fw.webex/tools/fw.webex.file.tools.tlpp
+
 2025-07-09 11:06 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
   * src/fw.webex/web/layout/fw.webex.page.tlpp
