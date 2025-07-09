@@ -5,6 +5,144 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
++---> html [id=webexhtml_0000000095] [attr=(lang=pt-br),(data-bs-theme=dark)]
+   +---> head [id=webexhead_0000000096]
+      +---> title [id=webextitle_0000000097] [content=FWWEBEXEXAMPLE_015]
+      +---> meta [id=webexmeta_0000000098] [attr=(charset=UTF-8)]
+      +---> meta [id=webexmeta_0000000099] [attr=(application-name=FWWebEx)]
+      +---> meta [id=webexmeta_0000000100] [attr=(name=viewport),(content=width=device-width, initial-scale=1)]
+      +---> !-- [id=webexcomment_0000000101] [content=PO UI CSS]
+      +---> link [id=webexlink_0000000102] [attr=(href=https://cdn.jsdelivr.net/npm/@po-ui/style/css/po-theme-default.min.css),(rel=stylesheet)]
+      +---> !-- [id=webexcomment_0000000103] [content=Bootstrap CSS]
+      +---> link [id=webexlink_0000000104] [attr=(href=https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css),(rel=stylesheet)]
+      +---> !-- [id=webexcomment_0000000105] [content=Optional JavaScript]
+      +---> !-- [id=webexcomment_0000000106] [content=jQuery first, then Popper.js, then Bootstrap JS]
+      +---> script [id=webexscript_0000000107] [attr=(src=https://releases.jquery.com/git/jquery-git.slim.min.js),(defer=defer)]
+      +---> script [id=webexscript_0000000108] [attr=(src=https://releases.jquery.com/git/jquery-git.min.js),(defer=defer)]
+      +---> script [id=webexscript_0000000109] [attr=(src=https://cdn.jsdelivr.net/npm/@popperjs/core/dist/umd/popper.min.js),(defer=defer)]
+      +---> script [id=webexscript_0000000110] [attr=(src=https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js),(defer=defer)]
+      +---> !-- [id=webexcontrol_0000000006] [content=Bootstrap Icons]
+      +---> link [id=webexcontrol_0000000007] [attr=(href=https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css),(rel=stylesheet)]
+      +---> !-- [id=webexcontrol_0000000008] [content=font-awesome Icons]
+      +---> link [id=webexcontrol_0000000009] [attr=(href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/latest/css/all.min.css),(rel=stylesheet)]
+      +---> !-- [id=webexcontrol_0000000010] [content=Materialize Icons :: https://materializecss.com/icons.html]
+      +---> link [id=webexcontrol_0000000011] [attr=(href=https://fonts.googleapis.com/icon?family=Material+Icons),(rel=stylesheet)]
+      +---> style [id=webexstyle_0000000049] [content=    #webex-sidebar {
+        transition: all 0.3s ease;
+        width: 250px;
+        overflow: hidden;
+    }
+    .navbar-brand.collapse-hide {
+        display: none !important;
+    }
+]
+   +---> body [id=webexbody_0000000053] [attr=(class=p-4 d-flex flex-column min-vh-100)]
+      +---> main [id=webexmain_0000000052] [attr=(class=main-content flex-grow-1)]
+         +---> body [id=webexbody_0000000050] [attr=(class=p-4 d-flex flex-column min-vh-100)]
+            +---> div [id=webexcontrol_0000000047] [attr=(class=d-flex)]
+               +---> aside [id=webexsidebar_0000000003] [attr=(class=sidebar d-flex flex-column)]
+                  +---> div [id=webex-sidebar] [attr=(class=collapse show)]
+                     +---> div [id=webexcontrol_0000000059] [attr=(class=d-flex flex-column flex-shrink-0 p-3)]
+                        +---> a [id=webexcontrol_0000000060] [attr=(href=#),(class=navbar-brand mb-3)] [content=Side Menu]
+                        +---> ul [id=webexcontrol_0000000061] [attr=(class=nav nav-pills flex-column mb-auto)]
+                           +---> li [id=webexcontrol_0000000014] [attr=(class=nav-item),(data-toggle-kpi=kpi)]
+                              +---> a [id=webexcontrol_0000000013] [attr=(class=nav-link),(href=#)]
+                                 +---> i [id=webexicon_0000000005] [attr=(class=bi bi-bar-chart)]
+                                 +---> span [id=webexcontrol_0000000012] [content=Dashboard KPI]
+                           +---> li [id=webexcontrol_0000000018] [attr=(class=nav-item),(data-toggle-kpi=kpi2)]
+                              +---> a [id=webexcontrol_0000000017] [attr=(class=nav-link),(href=#)]
+                                 +---> i [id=webexicon_0000000015] [attr=(class=bi bi-graph-up)]
+                                 +---> span [id=webexcontrol_0000000016] [content=Dashboard KPI 2]
+               +---> div [id=webexcontrol_0000000046] [attr=(class=d-flex flex-column w-100)]
+                  +---> div [id=webexcontrol_0000000045] [attr=(class=d-flex align-items-center gap-2)]
+                     +---> nav [id=webexnavtop_0000000044] [attr=(class=navbar mb-4)]
+                        +---> div [id=webexcontrol_0000000065] [attr=(class=container-fluid d-flex flex-column align-items-start px-0)]
+                           +---> button [id=webexcontrol_0000000062] [attr=(class=navbar-toggler border-0 bg-transparent mb-1 ps-0 pe-0 ms-0 me-0),(type=button),(data-bs-toggle=collapse),(data-bs-target=#webex-sidebar),(aria-controls=webex-sidebar),(aria-expanded=false),(aria-label=Alternar menu),(style=margin-bottom: 2px; outline:none; box-shadow:none;)]
+                              +---> i [id=webexicon_0000000063] [attr=(class=bi bi-list fs-4 ms-0 me-0)]
+                           +---> a [id=webexcontrol_0000000064] [attr=(class=navbar-brand ps-0 pe-0 ms-0 me-0),(href=#)]
+                     +---> nav [id=webexcontrol_0000000002] [attr=(class=navbar shadow mb-3)]
+                        +---> h1 [id=webexcontrol_0000000001] [attr=(class=h4)] [content=Dashboard]
+                  +---> main [id=webexmain_0000000043] [attr=(class=main-content flex-grow-1)]
+                     +---> div [id=kpi] [attr=(class=container-fluid),(style=display:none)]
+                        +---> div [id=webexcardkpi_0000000021] [attr=(class=card mb-3 border-secondary bg-primary)]
+                           +---> div [id=webexcontrol_0000000070] [attr=(class=card-body)]
+                              +---> h5 [id=webexcontrol_0000000068] [attr=(class=card-cCardKPITitle)]
+                                 +---> i [id=webexicon_0000000020] [attr=(class=bi bi-cash)]
+                                 +---> strong [id=webexstrong_0000000067] [content=Faturamento]
+                              +---> p [id=webexcontrol_0000000069] [attr=(class=card-text)] [content=$10.000]
+                        +---> div [id=webexcardkpi_0000000023] [attr=(class=card mb-3 border-secondary bg-success)]
+                           +---> div [id=webexcontrol_0000000074] [attr=(class=card-body)]
+                              +---> h5 [id=webexcontrol_0000000072] [attr=(class=card-cCardKPITitle)]
+                                 +---> i [id=webexicon_0000000022] [attr=(class=bi bi-people)]
+                                 +---> strong [id=webexstrong_0000000071] [content=Clientes Ativos]
+                              +---> p [id=webexcontrol_0000000073] [attr=(class=card-text)] [content=152]
+                     +---> div [id=kpi2] [attr=(class=container),(style=display:none)]
+                        +---> div [id=webexrow_0000000024] [attr=(class=row g-3)]
+                           +---> div [id=webexcol_0000000026] [attr=(class=col-md-4)]
+                              +---> div [id=webexcardkpi_0000000032] [attr=(class=card mb-3 border-secondary bg-success)]
+                                 +---> div [id=webexcontrol_0000000078] [attr=(class=card-body)]
+                                    +---> h5 [id=webexcontrol_0000000076] [attr=(class=card-cCardKPITitle)]
+                                       +---> i [id=webexicon_0000000031] [attr=(class=bi bi-bar-chart)]
+                                       +---> strong [id=webexstrong_0000000075] [content=Faturamento]
+                                    +---> p [id=webexcontrol_0000000077] [attr=(class=card-text)] [content=R$ 125.000]
+                           +---> div [id=webexcol_0000000027] [attr=(class=col-md-4 border-start border-secondary ps-3)]
+                              +---> div [id=webexcardkpi_0000000034] [attr=(class=card mb-3 border-secondary bg-danger)]
+                                 +---> div [id=webexcontrol_0000000082] [attr=(class=card-body)]
+                                    +---> h5 [id=webexcontrol_0000000080] [attr=(class=card-cCardKPITitle)]
+                                       +---> i [id=webexicon_0000000033] [attr=(class=bi bi-graph-up)]
+                                       +---> strong [id=webexstrong_0000000079] [content=Despesas]
+                                    +---> p [id=webexcontrol_0000000081] [attr=(class=card-text)] [content=R$ 87.000]
+                           +---> div [id=webexcol_0000000028] [attr=(class=col-md-4 border-start border-secondary ps-3)]
+                              +---> div [id=webexcardkpi_0000000036] [attr=(class=card mb-3 border-secondary bg-info)]
+                                 +---> div [id=webexcontrol_0000000086] [attr=(class=card-body)]
+                                    +---> h5 [id=webexcontrol_0000000084] [attr=(class=card-cCardKPITitle)]
+                                       +---> i [id=webexicon_0000000035] [attr=(class=bi bi-currency-dollar)]
+                                       +---> strong [id=webexstrong_0000000083] [content=Outros]
+                                    +---> p [id=webexcontrol_0000000085] [attr=(class=card-text)] [content=R$ 75.000]
+                        +---> hr [id=webexhr_0000000042] [attr=(class=my-4)]
+                        +---> div [id=webexrow_0000000025] [attr=(class=row g-3)]
+                           +---> div [id=webexcol_0000000029] [attr=(class=col-md-6)]
+                              +---> div [id=webexcardkpi_0000000038] [attr=(class=card mb-3 border-secondary bg-info)]
+                                 +---> div [id=webexcontrol_0000000090] [attr=(class=card-body)]
+                                    +---> h5 [id=webexcontrol_0000000088] [attr=(class=card-cCardKPITitle)]
+                                       +---> i [id=webexicon_0000000037] [attr=(class=material-icons)] [content=analytics]
+                                       +---> strong [id=webexstrong_0000000087] [content=Clientes Ativos]
+                                    +---> p [id=webexcontrol_0000000089] [attr=(class=card-text)] [content=1.024]
+                           +---> div [id=webexcol_0000000030] [attr=(class=col-md-6)]
+                              +---> div [id=webexcardkpi_0000000040] [attr=(class=card mb-3 border-secondary bg-warning)]
+                                 +---> div [id=webexcontrol_0000000094] [attr=(class=card-body)]
+                                    +---> h5 [id=webexcontrol_0000000092] [attr=(class=card-cCardKPITitle)]
+                                       +---> i [id=webexicon_0000000039] [attr=(class=material-icons)] [content=insights]
+                                       +---> strong [id=webexstrong_0000000091] [content=Ticket Medio]
+                                    +---> p [id=webexcontrol_0000000093] [attr=(class=card-text)] [content=R$ 122,00]
+      +---> footer [id=webexfooter_0000000054] [attr=(class=text-center text-muted mt-auto small p-3)]
+         +---> div [id=webexcontrol_0000000055]
+            +---> hr [id=webexhr_0000000056] [attr=(class=my-4)]
+            +---> span [id=webexcontrol_0000000057] [content=(c) 2025 FWWebEx (DNATech). Licensed under MIT.
+]
+   +---> script [id=webexscript_0000000048] [content=    document.addEventListener("DOMContentLoaded",()=>{
+        document.querySelectorAll("[data-toggle-kpi]").forEach(el=>{
+            el.addEventListener("click",()=>{
+            ["kpi","kpi2"].forEach(id=>{
+                document.getElementById(id).style.display = (id === el.dataset.toggleKpi) ? "block" : "none";
+                });
+            });
+        });
+    });
+    document.addEventListener("DOMContentLoaded", ()=>{
+        const sidebar = document.getElementById("webex-sidebar");
+        const brand = document.querySelector(".navbar-brand");
+        const observer = new MutationObserver(() => {
+            if (!sidebar.classList.contains("show")) {
+                brand.classList.add("collapse-hide");
+            } else {
+                brand.classList.remove("collapse-hide");
+            }
+        });
+        observer.observe(sidebar, { attributes: true, attributeFilter: ["class"] });
+    });
+]
+
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */
