@@ -97,8 +97,17 @@ return(lHTMLFromControl)
 static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLContent,lEncodeUTF8) class WebFileTools
 
     local cProcName:=ProcName() as character
+
+    local cIFrameID as character
+
+    local cLocalAssetsFilePath as character
+    local cExternalAssetsFilePath as character
+
     local cDumpFWWebExControl as character
     local cDumpFWWebExControlClone as character
+
+    local cHTMLDumpDOMFromControlHTMLFilePath as character
+    local cHTMLDumpDOMFromControlHTMLFileName as character
 
     local oDumpPre as object
     local oDumpClonePre as object
@@ -113,42 +122,73 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
     paramtype 4 var cHTMLContent as character optional
     paramtype 5 var lEncodeUTF8 as logical optional default .T.
 
-    oFWWebExControl:RenderHTML()
-    oFWWebExControlPage:=oFWWebExControl:GetPageAfterRender()
-    oFWWebExControlPageClone:=oFWWebExControlPage:Clone()
+    begin sequence
 
-    cDumpFWWebExControl:=oFWWebExControlPage:DumpDom()
-    oDumpPre:=WebExControl():New("pre")
-    oDumpPre:SetContent(cDumpFWWebExControl)
-    cDumpFWWebExControl:=oDumpPre:RenderHTML()
-    FreeObj(@oDumpPre)
+        cHTMLDumpDOMFromControlHTMLFilePath:=cHTMLFilePath
+        cHTMLDumpDOMFromControlHTMLFileName:=cHTMLFileName
 
-    cDumpFWWebExControlClone:=oFWWebExControlPage:DumpDom()
-    oDumpClonePre:=WebExControl():New("pre")
-    oDumpClonePre:SetContent(cDumpFWWebExControlClone)
-    cDumpFWWebExControlClone:=oDumpClonePre:RenderHTML()
-    FreeObj(@oDumpClonePre)
+        lHTMLDumpDOMFromControl:=WebFileTools():HTMLFromControl(oFWWebExControl,@cHTMLDumpDOMFromControlHTMLFilePath,@cHTMLDumpDOMFromControlHTMLFileName,@cHTMLContent,@lEncodeUTF8)
+        if ((!Empty(cHTMLDumpDOMFromControlHTMLFileName)).and.(File(cHTMLDumpDOMFromControlHTMLFileName)))
+            fErase(cHTMLDumpDOMFromControlHTMLFileName)
+        endif
 
-    oFWWebExControl:Clean()
-    FreeObj(@oFWWebExControlPage)
+        if (!lHTMLDumpDOMFromControl)
+            break
+        endif
 
-    oFWWebExControlPageClone:Clean()
-    FreeObj(@oFWWebExControlPageClone)
+        lHTMLDumpDOMFromControl:=WebFileTools():HTMLAssetsToFile(oFWWebExControl:GetID(),"html",cHTMLContent,oFWWebExControl:GetFWWebExTmpPath(),@cExternalAssetsFilePath,@cLocalAssetsFilePath)
+        if (!lHTMLDumpDOMFromControl)
+            break
+        endif
 
-    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
-        WITH WEBEXOBJECT CLASS WebExBody
-            WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP",cDumpFWWebExControl,"bg-primary",WebExIcon():New("bi-list-nested")
-            END WEBEXOBJECT
-            WITH WEBEXOBJECT CLASS WebExHR
-            END WEBEXOBJECT
-            WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP CLONE",cDumpFWWebExControlClone,"bg-secondary",WebExIcon():New("bi-list-nested")
+        oFWWebExControlPage:=oFWWebExControl:GetPageAfterRender()
+        cDumpFWWebExControl:=oFWWebExControlPage:DumpDom()
+        oDumpPre:=WebExControl():New("pre")
+        oDumpPre:SetContent(cDumpFWWebExControl)
+        cDumpFWWebExControl:=oDumpPre:RenderHTML()
+        FreeObj(@oDumpPre)
+
+        oFWWebExControlPageClone:=oFWWebExControlPage:Clone()
+        cDumpFWWebExControlClone:=oFWWebExControlPage:DumpDom()
+        oDumpClonePre:=WebExControl():New("pre")
+        oDumpClonePre:SetContent(cDumpFWWebExControlClone)
+        cDumpFWWebExControlClone:=oDumpClonePre:RenderHTML()
+        FreeObj(@oDumpClonePre)
+
+        oFWWebExControl:Clean()
+        FreeObj(@oFWWebExControlPage)
+
+        oFWWebExControlPageClone:Clean()
+        FreeObj(@oFWWebExControlPageClone)
+
+        WEBEXOBJECT CLEAN
+
+        WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
+            WITH WEBEXOBJECT CLASS WebExBody
+                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                    .:AddClass("embed-responsive")
+                    .:AddClass("embed-responsive-21by9")
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE iframe
+                        cIFrameID:=.:GetID()
+                        .:AddClass("embed-responsive-item")
+                        .:SetAttr("src",cLocalAssetsFilePath/*cExternalAssetsFilePath*/)
+                        .:SetAttr("style","width: 100%; height: 80vh; border: none; display: block; margin: 0 auto;")
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExHR
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP",cDumpFWWebExControl,"bg-primary",WebExIcon():New("bi-list-nested")
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExHR
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP CLONE",cDumpFWWebExControlClone,"bg-secondary",WebExIcon():New("bi-list-nested")
+                END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
-    END WEBEXOBJECT
 
-    lHTMLDumpDOMFromControl:=WebFileTools():HTMLFromControl(oFWWebExPage,@cHTMLFilePath,@cHTMLFileName,@cHTMLContent,@lEncodeUTF8)
+        lHTMLDumpDOMFromControl:=WebFileTools():HTMLFromControl(oFWWebExPage,@cHTMLFilePath,@cHTMLFileName,@cHTMLContent,@lEncodeUTF8)
 
-    WEBEXOBJECT CLEAN
+    end sequence
 
     FreeObj(@oFWWebExPage)
 
@@ -178,7 +218,7 @@ static method HTMLAssetsToFile(cAssetID,cAssetType,cAssetContent,cAssetPath,/*<@
     begin sequence
 
         cAssetType:=Lower(AllTrim(cAssetType))
-        lHTMLAssetsToFile:=(cAssetType$"script|style")
+        lHTMLAssetsToFile:=(cAssetType$"html|script|style")
         if (!lHTMLAssetsToFile)
             break
         endif
@@ -201,7 +241,7 @@ static method HTMLAssetsToFile(cAssetID,cAssetType,cAssetContent,cAssetPath,/*<@
 
         cHTMLAssetFileName:=cAssetPath
         cHTMLAssetFileName+=cAssetID
-        cHTMLAssetFileName+=if(cAssetType=="script",".js",".css")
+        cHTMLAssetFileName+=if(cAssetType=="html",".html",if(cAssetType=="script",".js",".css"))
 
         lHTMLAssetsToFile:=MemoWrite(cHTMLAssetFileName,cAssetContent)
         if (!lHTMLAssetsToFile)

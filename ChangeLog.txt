@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-09 11:06 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  * src/fw.webex/tools/fw.webex.file.tools.tlpp
+  * src/fw.webex/web/layout/fw.webex.page.tlpp
+
 2025-07-09 08:24 UTC naldodj (Fix Clone Method)
   * Update
     * src/fw.webex/tools/fw.webex.file.tools.tlpp

@@ -138,6 +138,8 @@ method RenderHTML() class WebExPage
     local jPageScripts as json
 
     local lIsDark as logical
+    local lHasMain as logical
+    local lHasBody as logical
 
     local oPage as object
     local oPageBody as object
@@ -268,7 +270,8 @@ method RenderHTML() class WebExPage
         oPageBody:AddChild(oBodyMain)
     else
         lHasMain:=::oPageBody:IsKindOf("WEBEXMAIN")
-        if (lHasMain)
+        lHasBody:=::oPageBody:IsKindOf("WEBEXBODY")
+        if ((lHasMain).or.(lHasBody))
             oPageBody:=::oPageBody
         else
             oBodyMain:=WebExMain():New()
