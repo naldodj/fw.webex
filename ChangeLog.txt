@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-09 19:40 UTC naldodj (fix: adjusted ParamType for lDelAttrValue from 7 to 4)
+  ! adjusted ParamType for lDelAttrValue from 7 to 4
+    * src/fw.webex/web/control/fw.webex.control.tlpp
+
 2025-07-09 17:04 UTC naldodj (New Features)
   + src/fw.webex/web/component/fw.webex.iframe.tlpp
   * src/fw.webex/tools/fw.webex.file.tools.tlpp

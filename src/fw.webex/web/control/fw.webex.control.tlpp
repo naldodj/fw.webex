@@ -553,7 +553,7 @@ method DelAttrValue(cAttr,cAttrValue,aAttr,lDelAttrValue) class WebExControl
     paramtype 1 var cAttr as character
     paramtype 2 var cAttrValue as character optional default cAttr
     paramtype 3 var aAttr as array optional
-    paramtype 7 var lDelAttrValue as logical optional default .F.
+    paramtype 4 var lDelAttrValue as logical optional default .F.
 
     if (Empty(aAttr))
         lDelAttrValue:=::HasAttrValue(cAttr,cAttrValue,@aAttr)
