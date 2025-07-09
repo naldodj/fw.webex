@@ -5,12 +5,12 @@
 
 using namespace FWWebEx
 
-procedure u_FWWebExExample_012()
+procedure u_FWWebExExample_015()
     local bExecute as codeblock
     local cHTML as character
     local cHTMLFile as character
     local cProcName:=ProcName() as character
-    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_012(@cHTML)},"Aguarde",cProcName)}
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_015(@cHTML)},"Aguarde",cProcName)}
     FWExampleTools():Execute(bExecute,cProcName,.T.)
     if (!Empty(cHTMLFile).and.File(cHTMLFile))
         FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
@@ -18,7 +18,7 @@ procedure u_FWWebExExample_012()
     endif
 return
 
-static procedure FWWebExExample_012(cHTML as character) as character
+static procedure FWWebExExample_015(cHTML as character) as character
 
     local cScript as character
     local cProcName:=ProcName() as character
@@ -86,7 +86,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
     oFWWebExNavTop:=WebExNavTop():New("")
 
     oTopContainer:=WebExControl():New("div")
-    oTopContainer:AddClass("d-flex align-items-center gap-2") // gap-2 adiciona espaço
+    oTopContainer:AddClass("d-flex align-items-center gap-2") // gap-2 adiciona espaco
     oTopContainer:AddChild(oFWWebExNavTop)
     oTopContainer:AddChild(oTopBar)
 
@@ -149,7 +149,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
     oFWWebExPage:=WebExPage():New(cProcName)
     oFWWebExPage:AddChild(oFWWebExBody)
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLDumpDOMFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
     oFWWebExPage:Clean()
 
