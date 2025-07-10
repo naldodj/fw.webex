@@ -1,0 +1,207 @@
+/*
+                                       _                      _                  _
+ _ __    __ _  _ __   __ _  _ __ ___  | |__    ___  __  __   | |_   ___    ___  | | ___
+| '_ \  / _` || '__| / _` || '_ ` _ \ | '_ \  / _ \ \ \/ /   | __| / _ \  / _ \ | |/ __|
+| |_) || (_| || |   | (_| || | | | | || |_) || (_) | >  <  _ | |_ | (_) || (_) || |\__ \
+| .__/  \__,_||_|    \__,_||_| |_| |_||_.__/  \___/ /_/\_\(_) \__| \___/  \___/ |_||___/
+|_|
+
+*/
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+function u_ParamBoxLoadNew(/*@*/cLoad as character,lCanSave as logical,lUserSave as logical) as object
+return(ParamBoxLoad():New(@cLoad,@lCanSave,@lUserSave))
+
+class ParamBoxLoad
+
+    private data cLoad as character
+
+    private data lCanSave as logical
+    private data lUserSave as logical
+
+    public method New(/*@*/cLoad,lCanSave,lUserSave) as object
+    public method ClassName() as character
+
+    public method SetParamLoad(cLoad as character) as character
+    public method GetParamLoad() as character
+    public method __GetParamLoad() as character
+
+    public method SetCanSave(lCanSave as logical) as logical
+    public method GetCanSave() as logical
+
+    public method SetUserSave(lUserSave as logical) as logical
+    public method GetUserSave() as logical
+
+    public method ParamSave(aParametros,cBloq) as logical
+    public method ParamLoad(aParametros as array,nX as numeric,xDefault as variant,lDefault as logical) as variant
+
+end class
+
+method New(cLoad,lCanSave,lUserSave) class ParamBoxLoad
+
+    paramtype 1 var cLoad as character optional default ProcName(1)
+    paramtype 2 var lCanSave as logical optional default .F.
+    paramtype 3 var lUserSave as logical optional default .F.
+
+    self:cLoad:=cLoad
+    self:lCanSave:=lCanSave
+    self:lUserSave:=lUserSave
+
+return(self)
+
+method ClassName() class ParamBoxLoad
+return("PARAMLOAD")
+
+method SetParamLoad(cLoad) class ParamBoxLoad
+    paramtype 1 var cLoad as character
+    self:cLoad:=cLoad
+return(self:cLoad)
+
+method GetParamLoad() class ParamBoxLoad
+return(self:cLoad)
+
+method __GetParamLoad() class ParamBoxLoad
+
+    local cLoad
+
+    if (!self:lCanSave)
+        cLoad:="99_NOSAVE_"
+    elseif (self:lUserSave)
+        if (type("__cUserID")=="C")
+            cLoad:=(__cUserID+"_"+self:cLoad)
+        else
+            cLoad:=(__cUserID+"_"+self:cLoad)
+        endif
+    else
+        cLoad:=self:cLoad
+    endif
+
+return(cLoad)
+
+method SetCanSave(lCanSave) class ParamBoxLoad
+    paramtype 1 var lCanSave as logical
+    self:lCanSave:=lCanSave
+return(self:lCanSave)
+
+method GetCanSave() class ParamBoxLoad
+return(self:lCanSave)
+
+method SetUserSave(lUserSave) class ParamBoxLoad
+    paramtype 1 var lUserSave as logical
+    self:lUserSave:=lUserSave
+return(self:lUserSave)
+
+method GetUserSave() class ParamBoxLoad
+return(self:lUserSave)
+
+method ParamSave(aParametros,cBloq) class ParamBoxLoad
+    local cLoad as character
+    paramtype 1 var aParametros as array
+    paramtype 2 var cBloq as character optional default "1" /*1=Save/UnBlock;2=Save/Block*/
+    cLoad:=self:__GetParamLoad()
+return(ParamSave(@cLoad,@aParametros,@cBloq))
+
+method ParamLoad(aParametros,nX,xDefault,lDefault) class ParamBoxLoad
+
+    local cLoad as character
+
+    local xRet as variant
+
+    paramtype 1 var aParametros as array
+    paramtype 2 var nX as numeric
+    paramtype 3 var xDefault as array,character,date,logical,numeric optional
+    paramtype 4 var lDefault as logical optional
+
+    cLoad:=self:__GetParamLoad()
+
+    xRet:=ParamLoad(@cLoad,@aParametros,@nX,@xDefault,@lDefault)
+
+return(xRet)
+
+static function ParamSave(cLoad as character,aParametros as array,cBloq as character) as logical
+
+    local cWrite:=(cBloq+"Arquivo de configuracao - Parambox Protheus "+CRLF) as character
+    local cBarra:=If(issrvunix(), "/", "\") as character
+
+    local lSave as logical
+
+    local nX as numeric
+
+    for nX:=1 to Len(aParametros)
+        do case
+            case ValType(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))=="C"
+                cWrite+= "C"+&("MV_PAR"+AllTrim(STRZERO(nX,2,0)))+CRLF
+            case ValType(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))=="N"
+                cWrite+= "N"+Str(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))+CRLF
+            case ValType(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))=="L"
+                cWrite+= "L"+If(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))),"T","F")+CRLF
+            case ValType(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))=="D"
+                cWrite+= "D"+DTOC(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))+CRLF
+            otherwise
+                cWrite+= "X"+CRLF
+        endcase
+    next
+
+    if (!ExistDir(cBarra+"PROFILE"))
+        MakeDir(cBarra+"PROFILE")
+    endif
+
+    lSave:=MemoWrit(cBarra+"PROFILE"+cBarra+Alltrim(cLoad)+".PRB",cWrite)
+
+return(lSave)
+
+static Function ParamLoad(cLoad as character,aParametros as array,nX as numeric,xDefault as variant,lDefault as logical)
+
+    local cLinha as character
+    local cBarra:=If(issrvunix(), "/", "\") as character
+    local cTypeData as character
+
+    local nY as numeric
+
+    DEFAULT lDefault:=.F.
+
+    if (File(cBarra+"PROFILE"+cBarra+Alltrim(cLoad)+".PRB"))
+        if (ft_fUse(cBarra+"PROFILE"+cBarra+Alltrim(cLoad)+".PRB")<>-1)
+            ft_fGoTop()
+            if (nX==0)
+                cLinha:=ft_fReadLN()
+                ft_fUse()
+                return (Substr(cLinha,1,1))
+            endif
+            for nY:=1 to nX
+                ft_fSKIP()
+            next nY
+            cLinha:=ft_fReadLN()
+            if (!lDefault)
+                cTypeData:=ValType(xDefault)
+                do case
+                    case ((Substr(cLinha,1,1)=="L").and.(cTypeData=="L"))
+                        xRet:=If(Substr(cLinha,2,1)=="F",.F.,.T.)
+                    case (Substr(cLinha,1,1)=="D").and.(cTypeData=="D")
+                        xRet:=CToD(Substr(cLinha,2,10))
+                    case ((Substr(cLinha,1,1)=="C").and.(cTypeData=="C"))
+                        //**********************************************
+                        // Tratamento para aumentar o tamanha do campo *
+                        //**********************************************
+                        if (ValType(xDefault)=="C")
+                            xRet:=Padr(Substr(cLinha,2,Len(cLinha)),Len(xDefault))
+                        else
+                            xRet:=Substr(cLinha,2,Len(cLinha))
+                        endif
+                    case ((Substr(cLinha,1,1)=="N").and.(cTypeData=="N"))
+                        xRet:=Val(Substr(cLinha,2,Len(cLinha)))
+                    otherwise
+                        xRet:=xDefault
+                endcase
+            else
+                xRet:=xDefault
+            endif
+            ft_fUse()
+        endif
+    else
+        xRet:=xDefault
+    endif
+
+return(xRet)

@@ -25,6 +25,7 @@ class FWExampleTools
     static method Execute(bExecute as codeblock,cTitle as character,lPrepareEnvironment as logical) as variant
     static method HtmlFileShow(cHTML as character,cTitle as character,cHTMLFile as character) as variant
     static method GetRESTCredential(cUSR as character,cPDW as character,cRESTURL as character) as logical
+    static method ChangeCompanyAndBranch(cCompany as character,cBranch as character,lFirstAccess as logical,cStack as character)
 
     static method NoCheckUri() as array
     static method ValidaToken(cToken,cPath) as logical
@@ -40,6 +41,11 @@ endclass
 
 static method Execute(bExecute,cTitle,lPrepareEnvironment) class FWExampleTools
 
+    local bInit as codeblock
+
+    local cEmp as character
+    local cFil as character
+
     local lMainWnd as logical
 
     local oMainBmp as object
@@ -51,10 +57,21 @@ static method Execute(bExecute,cTitle,lPrepareEnvironment) class FWExampleTools
 
     private lRedefineBottom as logical
 
+    bInit:={||;
+         FWExampleTools():ChangeCompanyAndBranch(@cEmp,@cFil,.T.,ProcName());
+        ,Eval(bExecute);
+    }
+
     lMainWnd:=(Type("oMainWnd")=="O")
     if (!lMainWnd)
         if (lPrepareEnvironment)
-            FWMsgRun(nil,{||RPCSetEnv("99","01",GetEnvServer())},"Wait...","Preparing environment")
+            OpenSM0()
+            SM0->(dbGoTop())
+            cEmp:=SM0->M0_CODIGO
+            cFil:=SM0->M0_CODFIL
+            FWMsgRun(nil,{||RPCSetEnv(cEmp,cFil,GetEnvServer())},"Wait...","Preparing environment")
+            cEmp:=cEmpAnt
+            cFil:=cFilAnt
             if ((Type("__cInternet")=="C").and.(__cInternet=="AUTOMATICO"))
                 //Redefine modo Blind
                 __cInternet:=NIL
@@ -68,7 +85,7 @@ static method Execute(bExecute,cTitle,lPrepareEnvironment) class FWExampleTools
                 @ 000,000 BITMAP oMainBmp RESNAME "DNA_TECH_LOGO_BLACK_PANTER" SIZE 1024,1024 BORDER OF oMainPanel PIXEL
                 oMainBmp:Align:=CONTROL_ALIGN_ALLCLIENT
                 oMainBmp:SetCSS("{background-size: 100% 100%;}")
-            ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (Eval(bExecute),oMainWnd:End())
+            ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (Eval(bInit),oMainWnd:End())
             FreeObj(@oMainBmp)
             FreeObj(@oMainPanel)
             FreeObj(@oMainWnd)
@@ -77,7 +94,9 @@ static method Execute(bExecute,cTitle,lPrepareEnvironment) class FWExampleTools
         endif
     else
         lRedefineBottom:=(FWIsInCallStack("u_FWWebExExample_000"))
-        Eval(bExecute)
+        cEmp:=cEmpAnt
+        cFil:=cFilAnt
+        Eval(bInit)
     endif
 
 return
@@ -496,3 +515,319 @@ static method GetOAuth2Token(cURLOAuth2) class FWExampleTools
     joAuth2:FromJSON(cOAuth2)
 
 return(joAuth2)
+
+static method ChangeCompanyAndBranch(cCompany,cBranch,lFirstAccess,cStack) class FWExampleTools
+
+    local aPBoxPrm as array
+    local aPBoxRet as array
+    local aModulos as array
+    local aRetModName as array
+
+    local bParamBoxOK as codeblock
+
+    local aTCSQLToArr as array
+    local aSXBDBStruct as array
+    local aTCSQLSetFields as array
+
+    local cEnvServer:=GetEnvServer() as character
+
+    local cCSXBAlias as character
+    local cBSXBAlias as character
+    local cSXBAliasSeek as character
+    local cSXBTableName as character
+    local cSXBTableQuery as character
+
+    local nSXBItem as numeric
+    local nSXBItens as numeric
+    local nSXBField as numeric
+    local nSXBFields as numeric
+    local nTCSQLToArr as numeric
+    local nATModulo:=nModulo as numeric
+
+    local lIsBlind:=IsBlind() as logical
+    local lChangeOK as logical
+    local lRPCTools as logical
+    local lParamBox:=.T. as logical
+    local lAllModulos:=.F. as logical
+
+    local nPBox as numeric
+
+    local oParamBoxLoad as object
+
+    paramtype cCompany as character optional default cEmpAnt
+    paramtype cBranch as character optional default cFilAnt
+    paramtype lFirstAccess as logical optional default .F.
+    paramtype cStack as character optional default "fwwebex_"+Lower(ProcName())
+
+    if (!lIsBlind)
+
+        //Reseta UniqueKey do Filtro SXB
+        UniqueKey()
+
+        //Cria a Consulta Padrao %SM0_C se nao existir
+        SXB->(dbSetOrder(1))
+        cCSXBAlias:=PadR("%SM0_C",Len(SXB->XB_ALIAS))
+        cSXBAliasSeek:=cCSXBAlias
+        if (SXB->(!dbSeek(cSXBAliasSeek,.F.)))
+            cSXBAliasSeek:=PadR("YM0",Len(SXB->XB_ALIAS))
+            aSXBDBStruct:=SXB->(dbStruct())
+            nSXBFields:=Len(aSXBDBStruct)
+            cSXBFields:=""
+            for nSXBField:=1 to nSXBFields
+                cSXBFields+=aSXBDBStruct[nSXBField][DBS_NAME]
+                if (nSXBField<nSXBFields)
+                    cSXBFields+=","
+                endif
+            next nSXBField
+            if (SXB->(dbSeek(cSXBAliasSeek,.F.)))
+                cSXBTableName:="SXB"+cEmpAnt+"0"
+                beginContent var cSXBTableQuery
+SELECT cSXBFields
+  FROM cSXBTableName SXB
+ WHERE SXB.D_E_L_E_T_<>'*'
+   AND SXB.XB_ALIAS='cSXBAliasSeek'
+                endContent
+                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBFields",cSXBFields)
+                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBTableName",cSXBTableName)
+                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBAliasSeek",cSXBAliasSeek)
+                aTCSQLToArr:=Array(0)
+                aTCSQLSetFields:=Array(0)
+                aEval(aSXBDBStruct,{|e|if(e[DBS_TYPE]!="C",aAdd(aTCSQLSetFields,e),nil)})
+                nTCSQLToArr:=TCSQLToArr(cSXBTableQuery,@aTCSQLToArr,nil,aTCSQLSetFields,aSXBDBStruct)
+                nSXBItens:=Len(aTCSQLToArr)
+                for nSXBItem:=1 to nSXBItens
+                    if (SXB->(RecLock("SXB",.T.)))
+                        for nSXBField:=1 to nSXBFields
+                            if (SXB->(aSXBDBStruct[nSXBField][DBS_NAME]=="XB_ALIAS"))
+                                SXB->XB_ALIAS:=cCSXBAlias
+                            elseif (SXB->((aSXBDBStruct[nSXBField][DBS_NAME]=="XB_CONTEM").and.(SXB->XB_TIPO=="6")))
+                                SXB->(FieldPut(nSXBField,('SM0->(M0_CODFIL==MV_PAR02.AND.UniqueKey("M0_CODIGO","SM0"))')))
+                            else
+                                SXB->(FieldPut(nSXBField,aTCSQLToArr[nSXBItem][nSXBField]))
+                            endif
+                        next nSXBField
+                        SXB->(MsUnLock())
+                    endif
+                next nSXBItem
+                cSXBAliasSeek:=cCSXBAlias
+                cSXBAliasSeek+="2"
+                cSXBAliasSeek+="01"
+                cSXBAliasSeek+="01"
+                if (SXB->(!dbSeek(cSXBAliasSeek,.F.)))
+                    if (SXB->(RecLock("SXB",.T.)))
+                        SXB->XB_ALIAS:=cCSXBAlias
+                        SXB->XB_TIPO:="2"
+                        SXB->XB_SEQ:="01"
+                        SXB->XB_COLUNA:="01"
+                        SXB->XB_DESCRI:="Codigo"
+                        SXB->XB_DESCSPA:="Codigo"
+                        SXB->XB_DESCENG:="Code"
+                        SXB->(MsUnLock())
+                    endif
+                endif
+            endif
+        endif
+
+        //Cria a Consulta Padrao %SM0_B se nao existir
+        SXB->(dbSetOrder(1))
+        cBSXBAlias:=PadR("%SM0_B",Len(SXB->XB_ALIAS))
+        cSXBAliasSeek:=cBSXBAlias
+        if (SXB->(!dbSeek(cSXBAliasSeek,.F.)))
+            cSXBAliasSeek:=PadR("NGD",Len(SXB->XB_ALIAS))
+            aSXBDBStruct:=SXB->(dbStruct())
+            nSXBFields:=Len(aSXBDBStruct)
+            cSXBFields:=""
+            for nSXBField:=1 to nSXBFields
+                cSXBFields+=aSXBDBStruct[nSXBField][DBS_NAME]
+                if (nSXBField<nSXBFields)
+                    cSXBFields+=","
+                endif
+            next nSXBField
+            if (SXB->(dbSeek(cSXBAliasSeek,.F.)))
+                cSXBTableName:="SXB"+cEmpAnt+"0"
+                beginContent var cSXBTableQuery
+SELECT cSXBFields
+  FROM cSXBTableName SXB
+ WHERE SXB.D_E_L_E_T_<>'*'
+   AND SXB.XB_ALIAS='cSXBAliasSeek'
+                endContent
+                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBFields",cSXBFields)
+                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBTableName",cSXBTableName)
+                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBAliasSeek",cSXBAliasSeek)
+                aTCSQLToArr:=Array(0)
+                aTCSQLSetFields:=Array(0)
+                aEval(aSXBDBStruct,{|e|if(e[DBS_TYPE]!="C",aAdd(aTCSQLSetFields,e),nil)})
+                nTCSQLToArr:=TCSQLToArr(cSXBTableQuery,@aTCSQLToArr,nil,aTCSQLSetFields,aSXBDBStruct)
+                nSXBItens:=Len(aTCSQLToArr)
+                for nSXBItem:=1 to nSXBItens
+                    if (SXB->(RecLock("SXB",.T.)))
+                        for nSXBField:=1 to nSXBFields
+                            if (SXB->(aSXBDBStruct[nSXBField][DBS_NAME]=="XB_ALIAS"))
+                                SXB->XB_ALIAS:=cBSXBAlias
+                            else
+                                SXB->(FieldPut(nSXBField,aTCSQLToArr[nSXBItem][nSXBField]))
+                            endif
+                        next nSXBField
+                        SXB->(MsUnLock())
+                    endif
+                next nSXBItem
+                cSXBAliasSeek:=cBSXBAlias
+                cSXBAliasSeek+="2"
+                cSXBAliasSeek+="01"
+                cSXBAliasSeek+="01"
+                if (SXB->(!dbSeek(cSXBAliasSeek,.F.)))
+                    if (SXB->(RecLock("SXB",.T.)))
+                        SXB->XB_ALIAS:=cBSXBAlias
+                        SXB->XB_TIPO:="2"
+                        SXB->XB_SEQ:="01"
+                        SXB->XB_COLUNA:="01"
+                        SXB->XB_DESCRI:="Codigo"
+                        SXB->XB_DESCSPA:="Codigo"
+                        SXB->XB_DESCENG:="Code"
+                        SXB->(MsUnLock())
+                    endif
+                endif
+                cSXBAliasSeek:=cBSXBAlias
+                cSXBAliasSeek+="6"
+                cSXBAliasSeek+="01"
+                cSXBAliasSeek+="01"
+                if (SXB->(!dbSeek(cSXBAliasSeek,.F.)))
+                    SXB->(RecLock("SXB",.T.))
+                else
+                    SXB->(RecLock("SXB",.F.))
+                endif
+                SXB->XB_ALIAS:=cBSXBAlias
+                SXB->XB_TIPO:="6"
+                SXB->XB_SEQ:="01"
+                SXB->XB_COLUNA:="01"
+                SXB->XB_DESCRI:="Filtro da Consulta"
+                SXB->XB_DESCSPA:="Filtro de Consulta"
+                SXB->XB_DESCENG:="Look-up Filter"
+                SXB->XB_CONTEM:="SM0->M0_CODIGO==MV_PAR01"
+                SXB->(MsUnLock())
+            endif
+            FWFreeArray(@aTCSQLToArr)
+            FWFreeArray(@aSXBDBStruct)
+            FWFreeArray(@aTCSQLSetFields)
+        endif
+
+        aModulos:=Array(0)
+        aRetModName:=RetModName(lAllModulos)
+        nATModulo:=aScan(aRetModName,{|e|Right(e[2],Len(cModulo))==cModulo})
+        aEval(aRetModName,{|e|aAdd(aModulos,e[2]+" : "+e[3])})
+
+        aPBoxPrm:=Array(0)
+        //01----------------------------------------------------------------------------------------------
+        aAdd(aPBoxPrm,Array(9))
+        nPBox:=Len(aPBoxPrm)
+        aPBoxPrm[nPBox][1]:=1//[1]:1 - MsGet
+        aPBoxPrm[nPBox][2]:="Company"//[2]:Descricao
+        aPBoxPrm[nPBox][3]:=cCompany//[3]:String contendo o inicializador do campo
+        aPBoxPrm[nPBox][4]:="@!"//[4]:String contendo a Picture do campo
+        aPBoxPrm[nPBox][5]:="(UniqueKey(NIL,'SM0',.T.),ExistCpo('SM0',MV_PAR01,1))"//[5]:String contendo a validacao
+        aPBoxPrm[nPBox][6]:=cCSXBAlias//[6]:Consulta F3
+        aPBoxPrm[nPBox][7]:="(UniqueKey(NIL,'SM0',.T.),AllWaysTrue())"//[7]:String contendo a validacao When
+        aPBoxPrm[nPBox][8]:=(CalcFieldSize("C",SM0->(Len(M0_CODIGO)),0,aPBoxPrm[nPBox][4],aPBoxPrm[nPBox][2])+10)//[8]:Tamanho do MsGet
+        aPBoxPrm[nPBox][9]:=.T.//[9]:Flag .T./.F. Parametro Obrigatorio ?
+        //02----------------------------------------------------------------------------------------------
+        aAdd(aPBoxPrm,Array(9))
+        nPBox:=Len(aPBoxPrm)
+        aPBoxPrm[nPBox][1]:=1//[1]:1 - MsGet
+        aPBoxPrm[nPBox][2]:="Branch"//[2]:Descricao
+        aPBoxPrm[nPBox][3]:=cBranch//[3]:String contendo o inicializador do campo
+        aPBoxPrm[nPBox][4]:="@!"//[4]:String contendo a Picture do campo
+        aPBoxPrm[nPBox][5]:="(UniqueKey(NIL,'SM0',.T.),ExistCpo('SM0',MV_PAR01+MV_PAR02,1))"//[5]:String contendo a validacao
+        aPBoxPrm[nPBox][6]:=cBSXBAlias//[6]:Consulta F3
+        aPBoxPrm[nPBox][7]:="(AllWaysTrue())"//[7]:String contendo a validacao When
+        aPBoxPrm[nPBox][8]:=(CalcFieldSize("C",FWSizeFilial(),0,aPBoxPrm[nPBox][4],aPBoxPrm[nPBox][2])+10)//[8]:Tamanho do MsGet
+        aPBoxPrm[nPBox][9]:=.T.//[9]:Flag .T./.F. Parametro Obrigatorio ?
+        //03----------------------------------------------------------------------------------------------
+        aAdd(aPBoxPrm,Array(8))
+        nPBox:=Len(aPBoxPrm)
+        aPBoxPrm[nPBox][1]:=3//[1]:3 - Radio
+        aPBoxPrm[nPBox][2]:="Select the system module"//[2] : Descricao
+        aPBoxPrm[nPBox][3]:=nATModulo //[3] : Numerico contendo a opcao inicial do Radio
+        aPBoxPrm[nPBox][4]:=aModulos//[4] : Array contendo as opcoes do Radio
+        aPBoxPrm[nPBox][5]:=150//[5] : Tamanho do Radio
+        aPBoxPrm[nPBox][6]:="AllWaysTrue()"//[6] : Validacao
+        aPBoxPrm[nPBox][7]:=.T. //[7] : Flag .T./.F. Parametro Obrigatorio ?
+        aPBoxPrm[nPBox][8]:="AllWaysTrue()"//[8] : String contendo a validacao When
+
+        saveInter()
+            oParamBoxLoad:=ParamBoxLoad():New(cStack/*cLoad*/,.T./*lCanSave*/,.T./*lUserSave*/)
+            MV_PAR01:=oParamBoxLoad:ParamLoad(aPBoxPrm,1,cCompany/*xDefault*/,.F./*lDefault*/)
+            MV_PAR02:=oParamBoxLoad:ParamLoad(aPBoxPrm,2,cBranch/*xDefault*/,.F./*lDefault*/)
+            bParamBoxOK:={||ExistCpo("SM0",MV_PAR01,1).and.ExistCpo("SM0",MV_PAR01+MV_PAR02,1)}
+            lParamBox:=ParamBox(@aPBoxPrm,ProcName(),@aPBoxRet,bParamBoxOK/*bOk*/,/*aButtons*/,.T./*lCentered*/,/*nPosx*/,/*nPosy*/,/*oDlgWizard*/,oParamBoxLoad:GetParamLoad()/*cLoad*/,oParamBoxLoad:GetCanSave()/*lCanSave*/,oParamBoxLoad:GetUserSave()/*lUserSave*/)
+            oParamBoxLoad:ParamSave(aPBoxPrm)
+            if (lParamBox)
+                SM0->(dbSetOrder(1))
+                if (SM0->(!dbSeek(MV_PAR01+MV_PAR02,.F.)))
+                    lParamBox:=ApMsgYesNo("Empresa ("+MV_PAR01+") e/ou Filial ("+MV_PAR02+") Invalida(s). Deseja selecionar novamente?","ATENCAO")
+                    if (lParamBox)
+                        if (lParamBox:=ChangeCompanyAndBranch(MV_PAR01,MV_PAR02,.F.))
+                            aPBoxRet:=Array(Len(aPBoxPrm))
+                            MV_PAR01:=oParamBoxLoad:ParamLoad(aPBoxPrm,1,cCompany/*xDefault*/,.F./*lDefault*/)
+                            aPBoxRet[1]:=MV_PAR01
+                            MV_PAR02:=oParamBoxLoad:ParamLoad(aPBoxPrm,2,cBranch/*xDefault*/,.F./*lDefault*/)
+                            aPBoxRet[2]:=MV_PAR02
+                            oParamBoxLoad:ParamSave(aPBoxPrm)
+                        endif
+                    endif
+                else
+                    MV_PAR01:=oParamBoxLoad:ParamLoad(aPBoxPrm,1,cCompany/*xDefault*/,.F./*lDefault*/)
+                    aPBoxRet[1]:=MV_PAR01
+                    MV_PAR02:=oParamBoxLoad:ParamLoad(aPBoxPrm,2,cBranch/*xDefault*/,.F./*lDefault*/)
+                    aPBoxRet[2]:=MV_PAR02
+                endif
+                oParamBoxLoad:ParamSave(aPBoxPrm)
+                if (lParamBox)
+                    cCompany:=aPBoxRet[1]
+                    cBranch:=aPBoxRet[2]
+                    nATModulo:=aPBoxRet[3]
+                else
+                    MV_PAR01:=cEmpAnt
+                    MV_PAR02:=cFilAnt
+                    MV_PAR02:=nModulo
+                    oParamBoxLoad:ParamSave(aPBoxPrm)
+                endif
+            endif
+        restInter()
+
+        FreeObj(@oParamBoxLoad)
+
+        FWFreeArray(@aPBoxPrm)
+        FWFreeArray(@aPBoxRet)
+        FWFreeArray(@aModulos)
+        FWFreeArray(@aRetModName)
+
+        DelClassIntF()
+
+        //Reseta UniqueKey do Filtro SXB
+        UniqueKey()
+
+    endif
+
+    if (lParamBox)
+        lRPCTools:=FindClass("dna.tech.RPCTools")
+        if (lRPCTools)
+            if (lIsBlind)
+                lChangeOK:=dna.tech.RPCTools():RPCSetEnv(cCompany,cBranch,cEnvServer)
+            else
+                FWMsgRun(nil,{||lChangeOK:=dna.tech.RPCTools():RPCSetEnv(cCompany,cBranch,cEnvServer)},"Wait...","Changing Company and Branch")
+            endif
+        else
+            if (lIsBlind)
+                lChangeOK:=dna.tech.RPCTools():RPCSetEnv(cCompany,cBranch,cEnvServer)
+            else
+                FWMsgRun(nil,{||lChangeOK:=RPCSetEnv(cCompany,cBranch,cEnvServer)},"Wait...","Changing Company and Branch")
+            endif
+        endif
+        if (!Empty(nATModulo))
+            aRetModName:=RetModName(lAllModulos)
+            SetModulo(aRetModName[nATModulo][2],Right(aRetModName[nATModulo][2],Len(cModulo)))
+            FWFreeArray(@aRetModName)
+        endif
+    endif
+
+return(lChangeOK)
