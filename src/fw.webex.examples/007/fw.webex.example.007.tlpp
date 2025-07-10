@@ -92,6 +92,7 @@ static procedure FWWebExExample_007(cHTML as character) as character
     local oTableStyle as object
 
     local oFWWebExPage as object
+    local oFWWebExMain as object
     local oFWWebExBody as object
     local oFWWebExScript as object
 
@@ -302,8 +303,11 @@ static procedure FWWebExExample_007(cHTML as character) as character
 
     oFWWebExScript:SetContent(cScript)
 
+    oFWWebExMain:=WebExMain():New()
+    oFWWebExMain:AddChild(oDivTable)
+
     oFWWebExBody:=WebExBody():New()
-    oFWWebExBody:AddChild(oDivTable)
+    oFWWebExBody:AddChild(oFWWebExMain)
 
     oFWWebExPage:=WebExPage():New("Exemplo 007 - Funcionarios (REST + DataTable)")
     oFWWebExPage:SetEnableDataTable()
@@ -314,6 +318,7 @@ static procedure FWWebExExample_007(cHTML as character) as character
     oFWWebExPage:Clean()
 
     FreeObj(@oFWWebExPage)
+    FreeObj(@oFWWebExMain)
     FreeObj(@oFWWebExBody)
     FreeObj(@oFWWebExScript)
     FreeObj(@oDivTable)

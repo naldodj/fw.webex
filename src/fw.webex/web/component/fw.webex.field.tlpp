@@ -42,7 +42,7 @@ method New(cFieldLabel,cFieldName,cFieldType,cFieldFieldType,cFieldTitle) class 
     _Super:New("div")
     ::SetAttr("class","mb-3")
     ::oWebExInput:=WebExInput():New(cFieldName,cFieldType,cFieldFieldType,cFieldTitle)
-    ::oWebExLabel:=WebExLabel():New(::oWebExInput:GetID(),cFieldLabel)
+    ::oWebExLabel:=WebExLabel():New(::oWebExInput:GetFixedID(),cFieldLabel)
     ::AddChild(::oWebExLabel)
     ::AddChild(::oWebExInput)
 return(self)

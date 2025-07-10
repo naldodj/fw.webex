@@ -69,13 +69,15 @@ static function FWWebExExample_001() as character
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
         WITH WEBEXOBJECT CLASS WebExBody
-            WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName+" (Tabela 32)"
-                .:FromSQL("SELECT * FROM SX5990 WHERE X5_TABELA='32' AND D_E_L_E_T_<>'*'")
-            END WEBEXOBJECT
-            WITH WEBEXOBJECT CLASS WebExHR
-            END WEBEXOBJECT
-            WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName+" (Tabela 35)"
-                .:FromSQL("SELECT * FROM SX5990 WHERE X5_TABELA='35' AND D_E_L_E_T_<>'*'")
+            WITH WEBEXOBJECT CLASS WebExMain
+                WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName+" (Tabela 32)"
+                    .:FromSQL("SELECT * FROM SX5990 WHERE X5_TABELA='32' AND D_E_L_E_T_<>'*'")
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExHR
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName+" (Tabela 35)"
+                    .:FromSQL("SELECT * FROM SX5990 WHERE X5_TABELA='35' AND D_E_L_E_T_<>'*'")
+                END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
     END WEBEXOBJECT
@@ -121,61 +123,63 @@ static function FWWebExExample_003(cHTML as character) as character
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
         WITH WEBEXOBJECT CLASS WebExBody
-            WITH WEBEXOBJECT CLASS WebExForm ARGS "Consulta CEP"
-                .:SetMethod("get")
-                .:SetAction("javascript:buscarCEP()")
-                .:AddField("CEP","cep","text","Digite o CEP")
-                .:AddButton(WebExButton():New("Buscar CEP"))
-            END WEBEXOBJECT
-            WITH WEBEXOBJECT CLASS WebExScript
-                beginContent var cScript
+            WITH WEBEXOBJECT CLASS WebExMain
+                WITH WEBEXOBJECT CLASS WebExForm ARGS "Consulta CEP"
+                    .:SetMethod("get")
+                    .:SetAction("javascript:buscarCEP()")
+                    .:AddField("CEP","cep","text","Digite o CEP")
+                    .:AddButton(WebExButton():New("Buscar CEP"))
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExScript
+                    beginContent var cScript
 
-                    function buscarCEP() {
+                        function buscarCEP() {
 
-                    const cep = document.querySelector("input[name='cep']").value.trim();
-                    const url = `https://viacep.com.br/ws/${cep}/json/`;
+                        const cep = document.querySelector("input[name='cep']").value.trim();
+                        const url = `https://viacep.com.br/ws/${cep}/json/`;
 
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-                        if (data.erro) {
-                            document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>CEP n&atilde;o encontrado.</div>";
-                        } else {
-                            document.getElementById("resultadoCEP").innerHTML = `
-                            <div class='card'>
-                                <div class='card-body'>
-                                <h5 class='card-title'>Endere&ccedil;o</h5>
-                                <p class='card-text'>
-                                    <strong>CEP:</strong> ${data.cep}<br>
-                                    <strong>Logradouro:</strong> ${data.logradouro} -
-                                    <strong>Complemento:</strong> ${data.complemento} -
-                                    <strong>Unidade:</strong> ${data.unidade}<br>
-                                    <strong>Bairro:</strong> ${data.bairro} -
-                                    <strong>Localidade:</strong> ${data.localidade}<br>
-                                    <strong>UF:</strong> ${data.uf} -
-                                    <strong>Estado:</strong> ${data.estado}<br>
-                                    <strong>Regi&atilde;o:</strong> ${data.regiao} -
-                                    <strong>IBGE:</strong> ${data.ibge}<br>
-                                    <strong>GIA:</strong> ${data.gia} -
-                                    <strong>DDD:</strong> ${data.ddd}<br>
-                                    <strong>SIAFI:</strong> ${data.siafi}<br>
-                                </p>
+                        fetch(url)
+                            .then(response => response.json())
+                            .then(data => {
+                            if (data.erro) {
+                                document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>CEP n&atilde;o encontrado.</div>";
+                            } else {
+                                document.getElementById("resultadoCEP").innerHTML = `
+                                <div class='card'>
+                                    <div class='card-body'>
+                                    <h5 class='card-title'>Endere&ccedil;o</h5>
+                                    <p class='card-text'>
+                                        <strong>CEP:</strong> ${data.cep}<br>
+                                        <strong>Logradouro:</strong> ${data.logradouro} -
+                                        <strong>Complemento:</strong> ${data.complemento} -
+                                        <strong>Unidade:</strong> ${data.unidade}<br>
+                                        <strong>Bairro:</strong> ${data.bairro} -
+                                        <strong>Localidade:</strong> ${data.localidade}<br>
+                                        <strong>UF:</strong> ${data.uf} -
+                                        <strong>Estado:</strong> ${data.estado}<br>
+                                        <strong>Regi&atilde;o:</strong> ${data.regiao} -
+                                        <strong>IBGE:</strong> ${data.ibge}<br>
+                                        <strong>GIA:</strong> ${data.gia} -
+                                        <strong>DDD:</strong> ${data.ddd}<br>
+                                        <strong>SIAFI:</strong> ${data.siafi}<br>
+                                    </p>
+                                    </div>
                                 </div>
-                            </div>
-                            `;
+                                `;
+                            }
+                            })
+                            .catch(() => {
+                            document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>Erro ao consultar o CEP.</div>";
+                            });
                         }
-                        })
-                        .catch(() => {
-                        document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>Erro ao consultar o CEP.</div>";
-                        });
-                    }
 
-                endContent
-                .:SetContent(cScript)
-            END WEBEXOBJECT
-            WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                .:SetAttr("id","resultadoCEP")
-                .:SetAttr("class","mt-4")
+                    endContent
+                    .:SetContent(cScript)
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                    .:SetAttr("id","resultadoCEP")
+                    .:SetAttr("class","mt-4")
+                END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
     END WEBEXOBJECT

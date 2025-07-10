@@ -68,7 +68,7 @@ method AddColumnHeader(cTableColummLabel) class WebExTable
     local oTH:=WebExControl():New("th") as object
     paramtype 1 var cTableColummLabel as character
     oTH:SetContent(cTableColummLabel)
-    ::jTableHeader[oTH:GetID()]:=oTH
+    ::jTableHeader[oTH:GetFixedID()]:=oTH
 return(oTH)
 
 method BuildHeader() class WebExTable
@@ -87,7 +87,7 @@ return(self)
 method AddCell(xTableCellValue) class WebExTable
     local oTD:=WebExControl():New("td") as object
     oTD:SetContent(cValToChar(xTableCellValue))
-    ::jTableDetail[oTD:GetID()]:=oTD
+    ::jTableDetail[oTD:GetFixedID()]:=oTD
 return(oTD)
 
 method BuildBodyRow(cDataHTML) class WebExTable
@@ -97,7 +97,7 @@ method BuildBodyRow(cDataHTML) class WebExTable
     local oButton as object
     if (::lTableExpandable)
         paramtype 1 var cDataHTML as character optional
-        cIDPrefix:=::GetID()
+        cIDPrefix:=::GetFixedID()
         oButton:=WebExControl():New("button")
         oButton:AddClass("btn")
         oButton:AddClass("btn-sm")
@@ -163,7 +163,7 @@ method RenderHTML() class WebExTable
                 button.innerText = '-';
             }
         endContent
-        cScript:=StrTran(cScript,"__cID__",::GetID())
+        cScript:=StrTran(cScript,"__cID__",::GetFixedID())
         oFWWebExScript:SetContent(cScript)
     endif
 

@@ -62,6 +62,7 @@ static function FWWebExExample_005(cHTML as character) as character
     local oDiv as object
 
     local oFWWebExPage as object
+    local oFWWebExMain as object
     local oFWWebExBody as object
     local oFWWebExForm as object
     local oFWWebExButton as object
@@ -120,8 +121,11 @@ static function FWWebExExample_005(cHTML as character) as character
     oFWWebExScript:=WebExScript():New()
     oFWWebExScript:SetContent(cScript)
 
+    oFWWebExMain:=WebExMain():New()
+    oFWWebExMain:AddChild(oFWWebExForm)
+
     oFWWebExBody:=WebExBody():New()
-    oFWWebExBody:AddChild(oFWWebExForm)
+    oFWWebExBody:AddChild(oFWWebExMain)
 
     oFWWebExPage:=WebExPage():New("Exemplo 005 - Formul&aacute;rio ViaCEP")
     oFWWebExPage:AddChild(oFWWebExBody)
@@ -132,6 +136,7 @@ static function FWWebExExample_005(cHTML as character) as character
 
     FreeObj(@oDiv)
     FreeObj(@oFWWebExPage)
+    FreeObj(@oFWWebExMain)
     FreeObj(@oFWWebExBody)
     FreeObj(@oFWWebExForm)
     FreeObj(@oFWWebExScript)

@@ -98,7 +98,7 @@ method AddPageStyle(cPageStyle) class WebExPage
     paramtype 1 var cPageStyle as character
     WITH WEBEXOBJECT oStyle CLASS WebExControl TYPE style
         .:SetContent(cPageStyle)
-        ::jPageStyle[oStyle:GetID()]:=oStyle
+        ::jPageStyle[oStyle:GetFixedID()]:=oStyle
     END WEBEXOBJECT
 return(self)
 

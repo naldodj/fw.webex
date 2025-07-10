@@ -72,6 +72,7 @@ static procedure FWWebExExample_010(cHTML as character) as character
     local cHTMLFile:=cProcName as character
 
     local oFWWebExPage as object
+    local oFWWebExMain as object
     local oFWWebExBody as object
 
     local oFWWebExRow1 as object
@@ -125,23 +126,31 @@ static procedure FWWebExExample_010(cHTML as character) as character
     oFWWebExRow2:AddChild(oFWWebExCol3)
     oFWWebExRow2:AddChild(oFWWebExCol4)
 
+    oFWWebExMain:=WebExMain():New()
+    oFWWebExMain:AddChild(oFWWebExRow1)
+    oFWWebExMain:AddChild(WebExHR():New()) // separador horizontal
+    oFWWebExMain:AddChild(oFWWebExRow2)
+
     oFWWebExBody:=WebExBody():New()
-    oFWWebExBody:AddChild(oFWWebExRow1)
-    oFWWebExBody:AddChild(WebExHR():New()) // separador horizontal
-    oFWWebExBody:AddChild(oFWWebExRow2)
+    oFWWebExBody:AddChild(oFWWebExMain)
 
     oFWWebExPage:=WebExPage():New("KPI Dashboard")
     oFWWebExPage:AddChild(oFWWebExBody)
 
     WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
 
-    FreeObj(@oFWWebExCardKPI)
+    FreeObj(@oFWWebExPage)
+    FreeObj(@oFWWebExMain)
+    FreeObj(@oFWWebExBody)
+
     FreeObj(@oFWWebExRow1)
     FreeObj(@oFWWebExRow2)
+
     FreeObj(@oFWWebExCol1)
     FreeObj(@oFWWebExCol2)
     FreeObj(@oFWWebExCol3)
     FreeObj(@oFWWebExCol4)
-    FreeObj(@oFWWebExPage)
+
+    FreeObj(@oFWWebExCardKPI)
 
 return(cHTMLFile)

@@ -95,7 +95,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
 
     local cIDTable as character
     local cIDModal:=self:NewID() as character
-    local cIDWrapper:=self:GetID() as character
+    local cIDWrapper:=self:GetFixedID() as character
 
     local i as numeric
     local j as numeric
@@ -113,7 +113,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
             WITH WEBEXOBJECT CLASS WebExControl TYPE div
                 .:SetAttr("class","table-responsive")
                 WITH WEBEXOBJECT CLASS WebExControl TYPE table
-                    cIDTable:=.:GetID()
+                    cIDTable:=.:GetFixedID()
                     .:SetAttr("class","table table-striped table-hover align-middle small")
                     // Cabecalho
                     WITH WEBEXOBJECT CLASS WebExControl TYPE thead
@@ -165,7 +165,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
 
         // Modal + JS
         WITH WEBEXOBJECT CLASS WebExControl TYPE div
-            .:SetID(cIDModal)
+            .:SetFixedID(cIDModal)
             .:SetAttr("id",cIDModal)
             .:SetAttr("class","modal fade")
             .:SetAttr("tabindex","-1")

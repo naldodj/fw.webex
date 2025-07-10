@@ -33,6 +33,7 @@ class WebExControl
     private data cHTML as character
     private data cType as character
     private data cContent as character
+    private data cFixedID as character
 
     private data cFWWebExTmpPath as character
 
@@ -50,16 +51,13 @@ class WebExControl
 
     public method New(cType as character) as object
 
-    public method Clone() as object
-    protected method __CloneNewInstance() as object
-    protected method __CloneCompexData(xComplex as variant) as variant
-
-    public method DumpDOM(nLevel as numeric) as character
-
     public method NewID() as character
     public method GetID() as character
     public method SetID(cID as character) as object
     public method ResetID() as object
+
+    public method SetFixedID(cFixedID as character) as character
+    public method GetFixedID() as character
 
     public method GetType() as character
     public method SetType(cType) as character
@@ -138,13 +136,19 @@ class WebExControl
     public method RemoveScripts() as variant
     public method DisableFeatures() as variant
 
+    public method Clone() as object
+    protected method __CloneNewInstance() as object
+    protected method __CloneCompexData(xComplex as variant) as variant
+
+    public method DumpDOM(nLevel as numeric) as character
+
 endclass
 
 method New(cType) class WebExControl
     paramtype 1 var cType as character optional default "div"
     ::jAttrs:=JSONObject():New()
     ::jChildren:=JSONObject():New()
-    ::SetID(self:NewID())
+    ::SetID(::NewID())
     ::SetType(cType)
     ::SetContent("__NULL__")
     ::SetFWWebExTmpPath("\web\fwwebex\tmp\")
@@ -155,220 +159,20 @@ method New(cType) class WebExControl
     ::lExternalAssets:=.F.
 return(self)
 
-method Clone() class WebExControl
-
-    local aMemberData as array
-    local cKey as character
-    local cData as character
-
-    local i as numeric
-
-    local oClone as object
-
-    local xValue as variant
-
-    // Cria nova instancia do mesmo tipo
-    oClone:=self:__CloneNewInstance()
-
-    private pCloneSelf:=self as object
-
-    // Copia dados da classe
-    aMemberData:=aClone(ClassDataArr(self,.T.))
-    for i:=1 to Len(aMemberData)
-        cKey:=aMemberData[i][1]
-        cData:="pCloneSelf"
-        cData+=":"
-        cData+=cKey
-        xValue:=&(cData)
-        oClone:SetMemberData(cKey,xValue,.T.)
-    next i
-    FWFreeArray(@aMemberData)
-
-return(oClone)
-
-method __CloneNewInstance() class WebExControl
-
-    local aClassMethArr as array
-
-    local cParam as character
-    local cClassName as character
-    local cNewInstanceMethod as character
-
-    local nATParam as numeric
-    local nATMethod as numeric
-
-    local nParam as numeric
-    local nParams as numeric
-
-    local oClone as object
-
-    aClassMethArr:=ClassMethArr(self,.F.)
-    nATMethod:=aScan(aClassMethArr,{|aMethod|aMethod[1]=="NEW"})
-
-    if (nATMethod>0)
-        cClassName:=GetClassName(self)
-        private __aClassDataArrValue__:=ClassDataArr(self,.T.)
-        nParams:=Len(aClassMethArr[nATMethod][2])
-        cNewInstanceMethod:=cClassName+"():New("
-        if (nParams>0)
-            for nParam:=1 to nParams
-                cParam:=aClassMethArr[nATMethod][2][nParam]
-                nATParam:=aScan(__aClassDataArrValue__,{|aParam|aParam[1]==cParam})
-                cNewInstanceMethod+=if(nATParam>0,"__aClassDataArrValue__["+LTrim(Str(nATParam))+"][2]","nil")
-                if (nParam<nParams)
-                    cNewInstanceMethod+=","
-                endif
-            next nParam
-        endif
-        cNewInstanceMethod+=")"
-        oClone:=&(cNewInstanceMethod)
-        FWFreeArray(@__aClassDataArrValue__)
-    endif
-
-    FWFreeArray(@aClassMethArr)
-
-return(oClone)
-
-method __CloneCompexData(xComplex) class WebExControl
-    local aNames as array
-    local cKey as character
-    local cType as character
-    local i as numeric
-    local j as numeric
-    local xClone as variant
-    cType:=ValType(xComplex)
-    do case
-    case (cType=="A")
-        j:=Len(xComplex)
-        xClone:=Array(j)
-        for i:=1 to Len(xComplex)
-            xClone[i]:=self:__CloneCompexData(xComplex[i])
-        next i
-    case (cType=="J")
-        xClone:=JSONObject():New()
-        aNames:=xComplex:GetNames()
-        j:=Len(aNames)
-        for i:=1 to j
-            cKey:=aNames[i]
-            xClone[cKey]:=self:__CloneCompexData(xComplex[cKey])
-        next i
-    case (cType=="O")
-        cClassName:=GetClassName(xComplex)
-        if(;
-            (!Left(cClassName,8)=="FWWEBEX.");
-            .or.;
-            (!MethIsMemberOf(xComplex,"CLONE",.T.));
-            .or.;
-            (!MethIsMemberOf(xComplex,"ISKINDOF",.T.));
-            .or.;
-            (!xComplex:IsKindOf("WEBEXCONTROL",.T.));
-        )
-            xClone:=xComplex
-        else
-            xClone:=xComplex:Clone()
-        endif
-    otherwise
-        xClone:=xComplex
-    end case
-return(xClone)
-
-method DumpDOM(nLevel) class WebExControl
-
-    local aAttr as array
-    local aChildren as array
-
-    local cDOM as character
-
-    local cID as character
-    local cKey as character
-    local cAttr as character
-    local cType as character
-    local cPrefix as character
-    local cContent as character
-
-    local i as numeric
-    local nAttr as numeric
-
-    local oChild as object
-
-    paramtype 1 var nLevel as numeric optional default 0
-
-    // Prefixo de identacao
-    cPrefix:=Replicate("   ",nLevel)+"+---> "
-    // Tipo do componente
-    cType:=::cType
-    // Monta linha do componente atual
-    cDOM:=cPrefix+cType
-
-    // ID, se existir
-    if (::jAttrs:HasProperty("id"))
-        cID:=::jAttrs["id"]
-    else
-        cID:=::GetID()
-    endif
-
-    // ID
-    if (!Empty(cID))
-        cDOM+=" [id="+cID+"]"
-    endif
-
-    // Atributos
-    aAttr:=::jAttrs:GetNames()
-    nAttr:=Len(aAttr)
-    cAttr:=""
-    for i:=1 to nAttr
-        cKey:=aAttr[i]
-        if (cKey=="id")
-            loop
-        endif
-        cAttr+="("+cKey+"="+::jAttrs[cKey]+")"
-        if (i<nAttr)
-            cAttr+=","
-        endif
-    next i
-    FWFreeArray(@aAttr)
-    if (Right(cAttr,1)=",")
-        cAttr:=SubStr(cAttr,1,(Len(cAttr)-1))
-    endif
-    if (!Empty(cAttr))
-        cDOM+=" [attr="+cAttr+"]"
-    endif
-
-    // Content
-    cContent:=::GetContent()
-    if (!Empty(cContent).and.(cContent!="__NULL__"))
-        cDOM+=" [content="+cContent+"]"
-    endif
-
-    cDOM+=__cCRLF
-
-    // Varre os filhos
-    aChildren:=::jChildren:GetNames()
-    for i:=1 to Len(aChildren)
-        cKey:=aChildren[i]
-        if (::jChildren:HasProperty(cKey))
-            oChild:=::jChildren[cKey]
-            if (;
-                    (valType(oChild)=="O");
-                    .and.;
-                    MethIsMemberOf(oChild,"ISKINDOF",.T.);
-                    .and.;
-                    oChild:IsKindOf("WEBEXCONTROL",.T.);
-            )
-               cDOM+=oChild:DumpDOM(nLevel+1)
-            endif
-        endif
-    next i
-    FWFreeArray(@aChildren)
-
-return(cDOM)
-
 method GetID() class WebExControl
-return(::cID)
+    local cID:=::cID as character
+    if (Empty(cID))
+        cID:=::NewID()
+        ::cID:=cID
+    endif
+return(cID)
 
 method SetID(cID) class WebExControl
-    paramtype 1 var cID as character
-    ::cID:=Lower(cID)
+    paramtype 1 var cID as character optional default ::GetID()
+    if (Empty(cID))
+        cID:=::GetID()
+    endif
+    ::cID:=cID
 return(self)
 
 method NewID() class WebExControl
@@ -381,6 +185,16 @@ return((self:ClassName()+"_"+__cID))
 method ResetID() class WebExControl
     __cID:=Replicate("0",FWWEBEX_ID_MAX_SIZE)
 return(self)
+
+method SetFixedID(cFixedID) class WebExControl
+    paramtype 1 var cFixedID as character optional default ::GetID()
+    ::cFixedID:=cFixedID
+return(self)
+
+method GetFixedID() class WebExControl
+    local cFixedID as character
+    cFixedID:=if(Empty(::cFixedID),::GetID(),::cFixedID)
+return(cFixedID)
 
 method GetType() class WebExControl
 return(::cType)
@@ -487,10 +301,13 @@ method SetMemberData(cMember,xValue,lSuperClass) class WebExControl
 return(lSetMemberData)
 
 method SetAttr(cAttr,cAttrValues) class WebExControl
-   paramtype 1 var cAttr as character
-   paramtype 2 var cAttrValues as character optional default cAttr
-   cAttr:=Lower(cAttr)
-   ::jAttrs[cAttr]:=cAttrValues
+    paramtype 1 var cAttr as character
+    paramtype 2 var cAttrValues as character optional default cAttr
+    cAttr:=Lower(cAttr)
+    if (cAttr=="id")
+        ::SetFixedID(cAttrValues)
+    endif
+    ::jAttrs[cAttr]:=cAttrValues
 return(self)
 
 method GetAttr(cAttr) class WebExControl
@@ -629,7 +446,7 @@ method AddChild(oChild) class WebExControl
     elseif ((!MethIsMemberOf(oChild,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
         CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
-    ::jChildren[oChild:GetID()]:=oChild
+    ::jChildren[oChild:GetFixedID()]:=oChild
 return(self)
 
 method GetHeader() class WebExControl
@@ -643,7 +460,7 @@ method AddInHeader(oChild) class WebExControl
     elseif ((!MethIsMemberOf(oChild,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
         CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
-    __jHeader[oChild:GetID()]:=oChild
+    __jHeader[oChild:GetFixedID()]:=oChild
 return(oChild)
 
 method FindInHeader(cID) class WebExControl
@@ -724,7 +541,7 @@ method GetPageScriptBundle() class WebExControl
                 oWebExScript:SetExternalAssets(lExternalAssets)
             endif
             jPageScripts:=JSONObject():New()
-            jPageScripts[oWebExScript:GetID()]:=oWebExScript
+            jPageScripts[oWebExScript:GetFixedID()]:=oWebExScript
         else
             jPageScripts:=__jScripts["page"]
         endif
@@ -754,12 +571,12 @@ return(lFound)
 method AddScript(oScript) class WebExControl
     local cType as character
     paramtype 1 var oScript as object class WebExScript
-    if (!::FindInHeader(oScript:GetID()))
+    if (!::FindInHeader(oScript:GetFixedID()))
         cType:=if(oScript:GetScriptInPage(),"page","head")
         if (!__jScripts:HasProperty(cType))
             __jScripts[cType]:=JSONObject():New()
         endif
-        __jScripts[cType][oScript:GetID()]:=oScript
+        __jScripts[cType][oScript:GetFixedID()]:=oScript
     endif
 return(oScript)
 
@@ -787,7 +604,7 @@ method RenderHTML() class WebExControl
 
         // Garante que tenha um ID unico
         if (!::jAttrs:HasProperty("id"))
-            ::jAttrs["id"]:=::cID
+            ::jAttrs["id"]:=::GetID()
         endif
 
         cContent:=::cContent
@@ -795,7 +612,7 @@ method RenderHTML() class WebExControl
 
         if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets).and.(cLowerType$"script|style").and.(cContent!="__NULL__"))
             lHTMLAssetsToFile:=WebFileTools():HTMLAssetsToFile(;
-                ::cID;
+                ::GetID();
                 ,cLowerType;
                 ,::cContent;
                 ,::cFWWebExTmpPath;
@@ -804,7 +621,7 @@ method RenderHTML() class WebExControl
             )
             if (lHTMLAssetsToFile)
                 cContent:="__NULL__"
-                ::AddAssets(::cID,cLowerType,::cLocalAssetsFilePath,::cExternalAssetsFilePath)
+                ::AddAssets(::GetID(),cLowerType,::cLocalAssetsFilePath,::cExternalAssetsFilePath)
             endif
         endif
 
@@ -1423,3 +1240,203 @@ method DisableFeatures() class WebExControl
     aEval(__jHeader:GetNames(),{|cName|__jHeader:DelName(cName)})
     aEval(__jFeatures:GetNames(),{|cFeature|__jFeatures[cFeature]:=.F.,self:SetMemberData(cFeature,.T.)})
 return(nil)
+
+method Clone() class WebExControl
+
+    local aMemberData as array
+    local cKey as character
+    local cData as character
+
+    local i as numeric
+
+    local oClone as object
+
+    local xValue as variant
+
+    // Cria nova instancia do mesmo tipo
+    oClone:=self:__CloneNewInstance()
+
+    private pCloneSelf:=self as object
+
+    // Copia dados da classe
+    aMemberData:=aClone(ClassDataArr(self,.T.))
+    for i:=1 to Len(aMemberData)
+        cKey:=aMemberData[i][1]
+        cData:="pCloneSelf"
+        cData+=":"
+        cData+=cKey
+        xValue:=&(cData)
+        oClone:SetMemberData(cKey,xValue,.T.)
+    next i
+    FWFreeArray(@aMemberData)
+
+return(oClone)
+
+method __CloneNewInstance() class WebExControl
+
+    local aClassMethArr as array
+
+    local cParam as character
+    local cClassName as character
+    local cNewInstanceMethod as character
+
+    local nATParam as numeric
+    local nATMethod as numeric
+
+    local nParam as numeric
+    local nParams as numeric
+
+    local oClone as object
+
+    aClassMethArr:=ClassMethArr(self,.F.)
+    nATMethod:=aScan(aClassMethArr,{|aMethod|aMethod[1]=="NEW"})
+
+    if (nATMethod>0)
+        cClassName:=GetClassName(self)
+        private __aClassDataArrValue__:=ClassDataArr(self,.T.)
+        nParams:=Len(aClassMethArr[nATMethod][2])
+        cNewInstanceMethod:=cClassName+"():New("
+        if (nParams>0)
+            for nParam:=1 to nParams
+                cParam:=aClassMethArr[nATMethod][2][nParam]
+                nATParam:=aScan(__aClassDataArrValue__,{|aParam|aParam[1]==cParam})
+                cNewInstanceMethod+=if(nATParam>0,"__aClassDataArrValue__["+LTrim(Str(nATParam))+"][2]","nil")
+                if (nParam<nParams)
+                    cNewInstanceMethod+=","
+                endif
+            next nParam
+        endif
+        cNewInstanceMethod+=")"
+        oClone:=&(cNewInstanceMethod)
+        FWFreeArray(@__aClassDataArrValue__)
+    endif
+
+    FWFreeArray(@aClassMethArr)
+
+return(oClone)
+
+method __CloneCompexData(xComplex) class WebExControl
+    local aNames as array
+    local cKey as character
+    local cType as character
+    local i as numeric
+    local j as numeric
+    local xClone as variant
+    cType:=ValType(xComplex)
+    do case
+    case (cType=="A")
+        j:=Len(xComplex)
+        xClone:=Array(j)
+        for i:=1 to Len(xComplex)
+            xClone[i]:=self:__CloneCompexData(xComplex[i])
+        next i
+    case (cType=="J")
+        xClone:=JSONObject():New()
+        aNames:=xComplex:GetNames()
+        j:=Len(aNames)
+        for i:=1 to j
+            cKey:=aNames[i]
+            xClone[cKey]:=self:__CloneCompexData(xComplex[cKey])
+        next i
+    case (cType=="O")
+        cClassName:=GetClassName(xComplex)
+        if(;
+            (!Left(cClassName,8)=="FWWEBEX.");
+            .or.;
+            (!MethIsMemberOf(xComplex,"CLONE",.T.));
+            .or.;
+            (!MethIsMemberOf(xComplex,"ISKINDOF",.T.));
+            .or.;
+            (!xComplex:IsKindOf("WEBEXCONTROL",.T.));
+        )
+            xClone:=xComplex
+        else
+            xClone:=xComplex:Clone()
+        endif
+    otherwise
+        xClone:=xComplex
+    end case
+return(xClone)
+
+method DumpDOM(nLevel) class WebExControl
+
+    local aAttr as array
+    local aChildren as array
+
+    local cDOM as character
+
+    local cID as character
+    local cKey as character
+    local cAttr as character
+    local cType as character
+    local cPrefix as character
+    local cContent as character
+
+    local i as numeric
+    local nAttr as numeric
+
+    local oChild as object
+
+    paramtype 1 var nLevel as numeric optional default 0
+
+    // Prefixo de identacao
+    cPrefix:=Replicate("   ",nLevel)+"+---> "
+    // Tipo do componente
+    cType:=::cType
+    // Monta linha do componente atual
+    cDOM:=cPrefix+cType
+
+    // ID, se existir
+    if (::jAttrs:HasProperty("id"))
+        cID:=::jAttrs["id"]
+    else
+        cID:=::GetFixedID()
+    endif
+
+    // Atributos
+    aAttr:=::jAttrs:GetNames()
+    nAttr:=Len(aAttr)
+    cAttr:=""
+    for i:=1 to nAttr
+        cKey:=aAttr[i]
+        cAttr+="("+cKey+"="+::jAttrs[cKey]+")"
+        if (i<nAttr)
+            cAttr+=","
+        endif
+    next i
+    FWFreeArray(@aAttr)
+    if (Right(cAttr,1)=",")
+        cAttr:=SubStr(cAttr,1,(Len(cAttr)-1))
+    endif
+    if (!Empty(cAttr))
+        cDOM+=" [attr="+cAttr+"]"
+    endif
+
+    // Content
+    cContent:=::GetContent()
+    if (!Empty(cContent).and.(cContent!="__NULL__"))
+        cDOM+=" [content="+cContent+"]"
+    endif
+
+    cDOM+=__cCRLF
+
+    // Varre os filhos
+    aChildren:=::jChildren:GetNames()
+    for i:=1 to Len(aChildren)
+        cKey:=aChildren[i]
+        if (::jChildren:HasProperty(cKey))
+            oChild:=::jChildren[cKey]
+            if (;
+                    (valType(oChild)=="O");
+                    .and.;
+                    MethIsMemberOf(oChild,"ISKINDOF",.T.);
+                    .and.;
+                    oChild:IsKindOf("WEBEXCONTROL",.T.);
+            )
+               cDOM+=oChild:DumpDOM(nLevel+1)
+            endif
+        endif
+    next i
+    FWFreeArray(@aChildren)
+
+return(cDOM)

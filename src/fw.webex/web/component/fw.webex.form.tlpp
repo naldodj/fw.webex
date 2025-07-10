@@ -63,12 +63,12 @@ method AddField(cLabel,cName,cType,cPlaceholder) class WebExForm
    paramtype 3 var cType as character
    paramtype 4 var cPlaceholder as character
    oField:=WebExField():New(cLabel,cName,cType,cPlaceholder)
-   ::jFormFields[oField:GetID()]:=oField
+   ::jFormFields[oField:GetFixedID()]:=oField
 return(self)
 
 method AddButton(oButton) class WebExForm
    paramtype 1 var oButton as object class WEBEXBUTTON
-   ::jFormButtons[oButton:GetID()]:=oButton
+   ::jFormButtons[oButton:GetFixedID()]:=oButton
 return(self)
 
 method RenderHTML() class WebExForm

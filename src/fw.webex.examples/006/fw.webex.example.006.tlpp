@@ -78,6 +78,7 @@ static procedure FWWebExExample_006(cHTML as character) as character
     local oTableStyle as object
 
     local oFWWebExPage as object
+    local oFWWebExMain as object
     local oFWWebExBody as object
 
     local oFWWebExForm as object
@@ -192,9 +193,12 @@ static procedure FWWebExExample_006(cHTML as character) as character
     oFWWebExScript:=WebExScript():New()
     oFWWebExScript:SetContent(cScript)
 
+    oFWWebExMain:=WebExMain():New()
+    oFWWebExMain:AddChild(oFWWebExForm)
+    oFWWebExMain:AddChild(oDivTable)
+
     oFWWebExBody:=WebExBody():New()
-    oFWWebExBody:AddChild(oFWWebExForm)
-    oFWWebExBody:AddChild(oDivTable)
+    oFWWebExBody:AddChild(oFWWebExMain)
 
     oFWWebExPage:=WebExPage():New("Exemplo 006 - ViaCEP em DataTable")
     oFWWebExPage:SetEnableDataTable()
@@ -205,6 +209,7 @@ static procedure FWWebExExample_006(cHTML as character) as character
     oFWWebExPage:Clean()
 
     FreeObj(@oFWWebExPage)
+    FreeObj(@oFWWebExMain)
     FreeObj(@oFWWebExBody)
     FreeObj(@oFWWebExForm)
     FreeObj(@oFWWebExButton)

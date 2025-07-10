@@ -41,7 +41,7 @@ method New(cCheckBoxLabel,cCheckBoxName,cCheckBoxTitle,cCheckBoxValue) class Web
     if (!Empty(cCheckBoxValue))
         ::oWebExInput:SetAttr("value",cCheckBoxValue)
     endif
-    ::oWebExLabel:=WebExLabel():New(::oWebExInput:GetID(),cCheckBoxLabel)
+    ::oWebExLabel:=WebExLabel():New(::oWebExInput:GetFixedID(),cCheckBoxLabel)
     ::oWebExLabel:AddClass("form-check-label")
     ::AddChild(::oWebExLabel)
     ::AddChild(::oWebExInput)

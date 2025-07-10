@@ -69,53 +69,55 @@ static function FWWebExExample_004(cHTML as character) as character
 
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName
         WITH WEBEXOBJECT CLASS WebExBody
-            // ALERTA DE ERRO
-            WITH WEBEXOBJECT CLASS WebExAlert ARGS "Erro ao carregar os dados do cliente.","danger"
-            END WEBEXOBJECT
-            // SEPARADOR HORIZONTAL
-            WITH WEBEXOBJECT CLASS WebExHR
-            END WEBEXOBJECT
-            // ALERTA DE SUCESSO
-            WITH WEBEXOBJECT CLASS WebExAlert ARGS "Opera&ccedil;&atilde;o realizada com sucesso!","success"
-            END WEBEXOBJECT
-            // SEPARADOR HORIZONTAL
-            WITH WEBEXOBJECT CLASS WebExHR
-            END WEBEXOBJECT
-            // CARD COM TEXTO ENCORPADO
-            WITH WEBEXOBJECT CLASS WebExCard ARGS "Cliente Encontrado",""
-                WITH WEBEXOBJECT CLASS WebExControl TYPE p
-                    .:AddClass("card-text teste")
-                    .:AddClass("teste")
-                    .:DelClass("teste")
-                    WITH WEBEXOBJECT CLASS WebExStrong ARGS "&nbsp;&nbsp;&nbsp;Nome:"
+            WITH WEBEXOBJECT CLASS WebExMain
+                // ALERTA DE ERRO
+                WITH WEBEXOBJECT CLASS WebExAlert ARGS "Erro ao carregar os dados do cliente.","danger"
+                END WEBEXOBJECT
+                // SEPARADOR HORIZONTAL
+                WITH WEBEXOBJECT CLASS WebExHR
+                END WEBEXOBJECT
+                // ALERTA DE SUCESSO
+                WITH WEBEXOBJECT CLASS WebExAlert ARGS "Opera&ccedil;&atilde;o realizada com sucesso!","success"
+                END WEBEXOBJECT
+                // SEPARADOR HORIZONTAL
+                WITH WEBEXOBJECT CLASS WebExHR
+                END WEBEXOBJECT
+                // CARD COM TEXTO ENCORPADO
+                WITH WEBEXOBJECT CLASS WebExCard ARGS "Cliente Encontrado",""
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE p
+                        .:AddClass("card-text teste")
+                        .:AddClass("teste")
+                        .:DelClass("teste")
+                        WITH WEBEXOBJECT CLASS WebExStrong ARGS "&nbsp;&nbsp;&nbsp;Nome:"
+                        END WEBEXOBJECT
+                        WITH WEBEXOBJECT CLASS WebExControl TYPE span
+                            .:SetContent("&nbsp;Jo&atilde;o da Silva")
+                        END WEBEXOBJECT
                     END WEBEXOBJECT
-                    WITH WEBEXOBJECT CLASS WebExControl TYPE span
-                        .:SetContent("&nbsp;Jo&atilde;o da Silva")
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE p
+                        .:SetAttr("class","card-text")
+                        WITH WEBEXOBJECT CLASS WebExStrong ARGS "&nbsp;&nbsp;&nbsp;Cidade:"
+                        END WEBEXOBJECT
+                        WITH WEBEXOBJECT CLASS WebExControl TYPE span
+                            .:SetContent("&nbsp;Vit&oacute;ria - ES")
+                        END WEBEXOBJECT
                     END WEBEXOBJECT
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExControl TYPE p
-                    .:SetAttr("class","card-text")
-                    WITH WEBEXOBJECT CLASS WebExStrong ARGS "&nbsp;&nbsp;&nbsp;Cidade:"
-                    END WEBEXOBJECT
-                    WITH WEBEXOBJECT CLASS WebExControl TYPE span
-                        .:SetContent("&nbsp;Vit&oacute;ria - ES")
-                    END WEBEXOBJECT
+                // SEPARADOR HORIZONTAL
+                WITH WEBEXOBJECT CLASS WebExHR
                 END WEBEXOBJECT
-            END WEBEXOBJECT
-            // SEPARADOR HORIZONTAL
-            WITH WEBEXOBJECT CLASS WebExHR
-            END WEBEXOBJECT
-            // CARD COM BODY
-            WITH WEBEXOBJECT CLASS WebExCard ARGS "TITLE","BODY"
-            END WEBEXOBJECT
-            // SEPARADOR HORIZONTAL
-            WITH WEBEXOBJECT CLASS WebExHR
-            END WEBEXOBJECT
-            // CARD KPI
-            WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Turnover Geral","12,5%","bg-danger",WebExIcon():New("bi-bar-chart")
-            END WEBEXOBJECT
-            // SEPARADOR HORIZONTAL
-            WITH WEBEXOBJECT CLASS WebExHR
+                // CARD COM BODY
+                WITH WEBEXOBJECT CLASS WebExCard ARGS "TITLE","BODY"
+                END WEBEXOBJECT
+                // SEPARADOR HORIZONTAL
+                WITH WEBEXOBJECT CLASS WebExHR
+                END WEBEXOBJECT
+                // CARD KPI
+                WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Turnover Geral","12,5%","bg-danger",WebExIcon():New("bi-bar-chart")
+                END WEBEXOBJECT
+                // SEPARADOR HORIZONTAL
+                WITH WEBEXOBJECT CLASS WebExHR
+                END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
     END WEBEXOBJECT
