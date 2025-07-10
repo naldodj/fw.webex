@@ -3,6 +3,12 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-10 16:36 UTC naldodj (Refactor: use :ContentIsNull() or FWWEBEX_WEB_NULL_CONTENT constant to avoid hardcoded null content values)
+  * Refactor: use :ContentIsNull() or FWWEBEX_WEB_NULL_CONTENT constant to avoid hardcoded null content values
+    * include/fw.webex.th
+    * src/fw.webex/web/control/fw.webex.control.tlpp
+  * src/fw.webex/web/component/fw.webex.template.bulk.action.table.tlpp -> src/fw.webex.examples/000/fw.webex.template.bulk.action.table.tlpp
+
 2025-07-10 11:25 UTC naldodj (Refactor: use :GetFWWebExTmpPath() or FWWEBEX_WEB_TMP_PATH constant to avoid hardcoded temp paths)
   * include/fw.webex.th
   * README.md

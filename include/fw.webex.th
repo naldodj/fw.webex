@@ -25,6 +25,7 @@ Released to Public Domain.
     #define FWWEBEX_ID_MAX_SIZE 10
 
     #define FWWEBEX_WEB_TMP_PATH "\web\fwwebex\tmp\"
+    #define FWWEBEX_WEB_NULL_CONTENT "__NULL__"
 
     #IFNDEF _PROTHEUS_CH
         #include "totvs.ch"

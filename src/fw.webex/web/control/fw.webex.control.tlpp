@@ -81,6 +81,7 @@ class WebExControl
 
     public method GetContent() as character
     public method SetContent(cContent as character) as object
+    public method ContentIsNull() as logical
 
     public method GetFWWebExTmpPath() as character
     public method SetFWWebExTmpPath(cFWWebExTmpPath as character) as object
@@ -150,8 +151,8 @@ method New(cType) class WebExControl
     ::jChildren:=JSONObject():New()
     ::SetID(::NewID())
     ::SetType(cType)
-    ::SetContent("__NULL__")
-    ::SetFWWebExTmpPath(FWWEBEX_WEB_TMP_PATH)
+    ::SetContent(FWWEBEX_WEB_NULL_CONTENT)
+    ::SetFWWebExTmpPath()
     ::lChartEnabled:=__jFeatures["lChartEnabled"]
     ::lIconsEnabled:=__jFeatures["lIconsEnabled"]
     ::lDataTableEnabled:=__jFeatures["lDataTableEnabled"]
@@ -404,11 +405,19 @@ method SetContent(cContent) class WebExControl
    ::cContent:=cContent
 return(self)
 
+method ContentIsNull() class WebExControl
+    local lContentIsNull as logical
+    lContentIsNull:=((::cContent==FWWEBEX_WEB_NULL_CONTENT).or.(Empty(::cContent)))
+return(lContentIsNull)
+
 method GetFWWebExTmpPath() class WebExControl
+    if (Empty(::cFWWebExTmpPath))
+        ::SetFWWebExTmpPath()
+    endif
 return(::cFWWebExTmpPath)
 
 method SetFWWebExTmpPath(cFWWebExTmpPath)  class WebExControl
-    paramtype 1 var cFWWebExTmpPath as character
+    paramtype 1 var cFWWebExTmpPath as character optional default FWWEBEX_WEB_TMP_PATH
     ::cFWWebExTmpPath:=cFWWebExTmpPath
     if (!lIsDir(::cFWWebExTmpPath))
         FWMakeDir(::cFWWebExTmpPath,.F.)
@@ -518,8 +527,8 @@ method GetPageScriptBundle() class WebExControl
             for nScript:=1 to nScripts
                 cID:=aScripts[nScript]
                 oWebExScript:=__jScripts["page"][cID]
-                cContent:=if(ValType(oWebExScript)=="O",oWebExScript:GetContent(),"__NULL__")
-                if (cContent=="__NULL__")
+                cContent:=if(ValType(oWebExScript)=="O",oWebExScript:GetContent(),FWWEBEX_WEB_NULL_CONTENT)
+                if (cContent==FWWEBEX_WEB_NULL_CONTENT)
                     loop
                 endif
                 if (::ExternalAssetsIsEnabled())
@@ -610,7 +619,7 @@ method RenderHTML() class WebExControl
         cContent:=::cContent
         cLowerType:=::cType
 
-        if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets).and.(cLowerType$"script|style").and.(cContent!="__NULL__"))
+        if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets).and.(cLowerType$"script|style").and.(cContent!=FWWEBEX_WEB_NULL_CONTENT))
             lHTMLAssetsToFile:=WebFileTools():HTMLAssetsToFile(;
                 ::GetID();
                 ,cLowerType;
@@ -620,7 +629,7 @@ method RenderHTML() class WebExControl
                 ,@::cLocalAssetsFilePath;
             )
             if (lHTMLAssetsToFile)
-                cContent:="__NULL__"
+                cContent:=FWWEBEX_WEB_NULL_CONTENT
                 ::AddAssets(::GetID(),cLowerType,::cLocalAssetsFilePath,::cExternalAssetsFilePath)
             endif
         endif
@@ -662,7 +671,7 @@ method RenderHTML() class WebExControl
                     cHTML+=">"
                 endif
 
-                if (cContent!="__NULL__")
+                if (cContent!=FWWEBEX_WEB_NULL_CONTENT)
                     cHTML+=cContent
                 endif
 
@@ -1414,7 +1423,7 @@ method DumpDOM(nLevel) class WebExControl
 
     // Content
     cContent:=::GetContent()
-    if (!Empty(cContent).and.(cContent!="__NULL__"))
+    if (!Empty(cContent).and.(cContent!=FWWEBEX_WEB_NULL_CONTENT))
         cDOM+=" [content="+cContent+"]"
     endif
 
