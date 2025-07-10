@@ -295,7 +295,7 @@ static procedure FWWebExExample_015(cHTML as character) as character
     oFWWebExPage:=WebExPage():New(cProcName)
     oFWWebExPage:AddChild(oFWWebExBody)
 
-    WebFileTools():HTMLDumpDOMFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLDumpDOMFromControl(oFWWebExPage,oFWWebExPage:GetFWWebExTmpPath(),@cHTMLFile,@cHTML,.T.)
 
     oFWWebExPage:Clean()
 

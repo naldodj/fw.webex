@@ -340,7 +340,7 @@ static procedure FWWebExExample_008(cHTML as character) as character
         oFWWebExPage:SetEnableDataTable()
     END WEBEXOBJECT
 
-    WebFileTools():HTMLFromControl(oFWWebExPage,"\web\fwwebex\tmp\",@cHTMLFile,@cHTML,.T.)
+    WebFileTools():HTMLFromControl(oFWWebExPage,oFWWebExPage:GetFWWebExTmpPath(),@cHTMLFile,@cHTML,.T.)
 
     WEBEXOBJECT CLEAN
 

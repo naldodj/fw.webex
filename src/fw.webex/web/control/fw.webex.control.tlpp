@@ -151,7 +151,7 @@ method New(cType) class WebExControl
     ::SetID(::NewID())
     ::SetType(cType)
     ::SetContent("__NULL__")
-    ::SetFWWebExTmpPath("\web\fwwebex\tmp\")
+    ::SetFWWebExTmpPath(FWWEBEX_WEB_TMP_PATH)
     ::lChartEnabled:=__jFeatures["lChartEnabled"]
     ::lIconsEnabled:=__jFeatures["lIconsEnabled"]
     ::lDataTableEnabled:=__jFeatures["lDataTableEnabled"]

@@ -44,10 +44,10 @@ static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLC
     endif
 
     if (empty(cHTMLFilePath))
-        if (!Empty(oFWWebExControl:cFWWebExTmpPath))
-            cHTMLFilePath:=oFWWebExControl:cFWWebExTmpPath
+        if (!Empty(oFWWebExControl:GetFWWebExTmpPath()))
+            cHTMLFilePath:=oFWWebExControl::GetFWWebExTmpPath()
         else
-            cHTMLFilePath:="\web\fwwebex\tmp\"
+            cHTMLFilePath:=FWWEBEX_WEB_TMP_PATH
         endif
     endif
 
