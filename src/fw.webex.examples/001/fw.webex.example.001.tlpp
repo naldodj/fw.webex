@@ -58,7 +58,7 @@ procedure u_FWWebExExample_001()
     local cHTMLFile as character
     local cProcName:=ProcName() as character
     bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_001()},"Aguarde",cProcName)}
-    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    FWExampleTools():Execute(bExecute,cProcName,.T.,.T.)
     if (!Empty(cHTMLFile).and.File(cHTMLFile))
         ShellExecute("open",cHTMLFile,"","",1)
     endif

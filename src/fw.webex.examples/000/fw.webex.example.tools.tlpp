@@ -22,7 +22,7 @@ static __cUserPassWord as character
 
 class FWExampleTools
 
-    static method Execute(bExecute as codeblock,cTitle as character,lPrepareEnvironment as logical) as variant
+    static method Execute(bExecute as codeblock,cTitle as character,lPrepareEnvironment as logical,lChangeCompanyAndBranch as logical) as variant
     static method HtmlFileShow(cHTML as character,cTitle as character,cHTMLFile as character) as variant
     static method GetRESTCredential(cUSR as character,cPDW as character,cRESTURL as character) as logical
     static method ChangeCompanyAndBranch(cCompany as character,cBranch as character,lFirstAccess as logical,cStack as character)
@@ -39,7 +39,7 @@ class FWExampleTools
 
 endclass
 
-static method Execute(bExecute,cTitle,lPrepareEnvironment) class FWExampleTools
+static method Execute(bExecute,cTitle,lPrepareEnvironment,lChangeCompanyAndBranch) class FWExampleTools
 
     local bInit as codeblock
 
@@ -54,11 +54,12 @@ static method Execute(bExecute,cTitle,lPrepareEnvironment) class FWExampleTools
     paramtype 1 var bExecute as block
     paramtype 2 var cTitle as character optional default ProcName(1)
     paramtype 3 var lPrepareEnvironment as logical optional default .F.
+    paramtype 4 var lChangeCompanyAndBranch as logical optional default .F.
 
     private lRedefineBottom as logical
 
     bInit:={||;
-         FWExampleTools():ChangeCompanyAndBranch(@cEmp,@cFil,.T.,ProcName());
+         if(lChangeCompanyAndBranch,FWExampleTools():ChangeCompanyAndBranch(@cEmp,@cFil,.T.,ProcName()),nil);
         ,Eval(bExecute);
     }
 
