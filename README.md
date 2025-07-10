@@ -283,3 +283,5 @@ Utilizamos padrão Harbour: [How to Participate](https://github.com/naldodj/nald
 [MIT](LICENSE)
 
 ---
+
+<img width="1024" height="1024" alt="dna_tech_logo_black_panter" src="https://github.com/user-attachments/assets/9b39a407-31ca-4a86-a1df-f76790e2036a" />
