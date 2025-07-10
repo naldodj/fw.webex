@@ -69,6 +69,7 @@ static function FWWebExExample_001() as character
     local cHTML as character
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
+    local cSX5TableName:=RetSQLName("SX5") as character
 
     local oFWWebExPage as object
 
@@ -76,12 +77,12 @@ static function FWWebExExample_001() as character
         WITH WEBEXOBJECT CLASS WebExBody
             WITH WEBEXOBJECT CLASS WebExMain
                 WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName+" (Tabela 32)"
-                    .:FromSQL("SELECT * FROM SX5990 WHERE X5_TABELA='32' AND D_E_L_E_T_<>'*'")
+                    .:FromSQL("SELECT * FROM "+cSX5TableName+" WHERE X5_TABELA='32' AND D_E_L_E_T_<>'*'")
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExHR
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExTemplateBulkActionTable ARGS cProcName+" (Tabela 35)"
-                    .:FromSQL("SELECT * FROM SX5990 WHERE X5_TABELA='35' AND D_E_L_E_T_<>'*'")
+                    .:FromSQL("SELECT * FROM "+cSX5TableName+" WHERE X5_TABELA='35' AND D_E_L_E_T_<>'*'")
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT

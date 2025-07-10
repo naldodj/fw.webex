@@ -3,6 +3,11 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-10 17:12 UTC naldodj (Refactor: use RetSQLName() to avoid hardcoded table name)
+  * README.md
+  * src/fw.webex.examples/001/fw.webex.example.001.tlpp
+  * src/fw.webex.examples/002/fw.webex.example.002.tlpp
+
 2025-07-10 16:36 UTC naldodj (Refactor: use :ContentIsNull() or FWWEBEX_WEB_NULL_CONTENT constant to avoid hardcoded null content values)
   * Refactor: use :ContentIsNull() or FWWEBEX_WEB_NULL_CONTENT constant to avoid hardcoded null content values
     * include/fw.webex.th
