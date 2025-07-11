@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-11 20:49 UTC naldodj (Fix ClientSecret update)
+  * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
+
 2025-07-11 18:01 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + src/fw.webex/tools/fw.webex.webapp.auth.tlpp
   * include/fw.webex.th
