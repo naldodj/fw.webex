@@ -12,12 +12,19 @@ Released to Public Domain.
 
 namespace FWWebEx
 
-#include "parmtype.ch"
+#include "fw.webex.th"
+
 #include "tlpp-core.th"
+#include "tlpp-rest.th"
 
 class WebApp
+
     static method ThemeIsDark(cTheme as character) as logical
     static method WebAgentIsConnected() as logical
+
+    static method FixHeaderRouter(cFile as character) as character
+    static method GetMimeType(cFile) as character
+
 end class
 
 static method ThemeIsDark(cTheme) class WebApp
@@ -43,3 +50,158 @@ static method WebAgentIsConnected() class WebApp
     local lWebAgentIsConnected as logical
     lWebAgentIsConnected:=((Len(aWebAgentInfo)>=2).and.(!Empty(aWebAgentInfo[1])))
 return(lWebAgentIsConnected)
+
+static method FixHeaderRouter(cFile) class WebApp
+
+    local cMimeType as character
+    local cContentFile as character
+
+    local jQuery as json
+    local jHeader as json
+
+    local nLine as numeric
+    local nLines as numeric
+
+    local oFile as object
+
+    cMimeType:=""
+    cContentFile:=""
+
+    begin sequence
+
+        if (Type("oRest")!="O")
+            paramtype 1 var cFile as character
+            cMimeType:=WebApp():GetMimeType(cFile)
+            break
+        endif
+
+        jQuery:=oRest:GetQueryRequest()
+
+        // Verifica se veio o parametro 'file'
+        if (!((valType(jQuery)=="J").and.(jQuery:HasProperty("file"))))
+            oRest:setStatusCode(400)
+            oRest:setResponse("Parametro 'file' nao informado")
+            break
+        endif
+
+        cFile:=jQuery["file"]
+        cFile:=AllTrim(cFile)
+
+        // Verifica se o arquivo existe
+        if (!File(cFile))
+            oRest:setStatusCode(404)
+            oRest:setResponse("Arquivo nao encontrado: "+cFile)
+            break
+        endif
+
+        // Le o conteudo do arquivo
+        oFile:=FWFileReader():New(cFile)
+        begin sequence
+
+            if (!oFile:Open())
+                oRest:setStatusCode(500)
+                oRest:setResponse("Erro ao abir o arquivo: "+cFile)
+                break
+            endif
+
+            if (oFile:getFileSize()==0)
+                oFile:Close()
+                oRest:setStatusCode(500)
+                oRest:setResponse("Erro ao ler o arquivo: "+cFile)
+                break
+            endif
+
+            // Define o tipo
+            cMimeType:=WebApp():GetMimeType(cFile)
+
+            // Monta cabecalhos
+            jHeader:=JSONObject():New()
+            jHeader["Content-Type"]:=cMimeType
+            jHeader["Cache-Control"]:="no-cache"
+            jHeader["Content-Length"]:=LTrim(Str(oFile:getFileSize()))
+
+            // Define resposta
+            oRest:setHeaderResponse(jHeader)
+            aLines:=oFile:GetAllLines()
+            nLines:=Len(aLines)
+            for nLine:=1 to nLines
+                cContentFile:=aLines[nLine]
+                if(nLine==nLines)
+                    oRest:setLastChunkedResponse(cContentFile)
+                else
+                    oRest:setChunkedResponse(cContentFile)
+                endif
+            next nLine
+
+        end sequence
+
+        oFile:Close()
+        FreeObj(@oFile)
+
+        FreeObj(@jQuery)
+        FreeObj(@jHeader)
+
+    end sequence
+
+return(cMimeType)
+
+static method GetMimeType(cFile) class WebApp
+
+    static __jMimeType:=JSONObject():New() as json
+
+    local cSPPDrive as character
+    local cSPPPath as character
+    local cSPPFile as character
+    local cSPPExt as character
+
+    local cMimeType as character
+
+    if (Empty(__jMimeType:GetNames()))
+        __jMimeType[".7z"]:="application/x-7z-compressed"
+        __jMimeType[".css"]:="text/css; charset=UTF-8"
+        __jMimeType[".csv"]:="text/csv; charset=UTF-8"
+        __jMimeType[".eot"]:="application/vnd.ms-fontobject"
+        __jMimeType[".gif"]:="image/gif"
+        __jMimeType[".htm"]:="text/html; charset=UTF-8"
+        __jMimeType[".html"]:="text/html; charset=UTF-8"
+        __jMimeType[".ico"]:="image/x-icon"
+        __jMimeType[".jpeg"]:="image/jpeg"
+        __jMimeType[".jpg"]:="image/jpeg"
+        __jMimeType[".js"]:="application/javascript; charset=UTF-8"
+        __jMimeType[".json"]:="application/json; charset=UTF-8"
+        __jMimeType[".md"]:="text/markdown; charset=UTF-8"
+        __jMimeType[".mp4"]:="video/mp4"
+        __jMimeType[".odt"]:="application/vnd.oasis.opendocument.text"
+        __jMimeType[".ogv"]:="video/ogg"
+        __jMimeType[".otf"]:="font/otf"
+        __jMimeType[".pdf"]:="application/pdf"
+        __jMimeType[".png"]:="image/png"
+        __jMimeType[".rar"]:="application/vnd.rar"
+        __jMimeType[".svg"]:="image/svg+xml"
+        __jMimeType[".tsv"]:="text/tab-separated-values; charset=UTF-8"
+        __jMimeType[".ttf"]:="font/ttf"
+        __jMimeType[".txt"]:="text/plain; charset=UTF-8"
+        __jMimeType[".webm"]:="video/webm"
+        __jMimeType[".webp"]:="image/webp"
+        __jMimeType[".woff"]:="font/woff"
+        __jMimeType[".woff2"]:="font/woff2"
+        __jMimeType[".xls"]:="application/vnd.ms-excel"
+        __jMimeType[".xlsx"]:="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        __jMimeType[".xml"]:="application/xml; charset=UTF-8"
+        __jMimeType[".zip"]:="application/zip"
+    endif
+
+    SplitPath(cFile,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
+    cSPPExt:=Lower(cSPPExt)
+    if (__jMimeType:HasProperty(cSPPExt))
+        cMimeType:=__jMimeType[cSPPExt]
+    else
+        cMimeType:="application/octet-stream"
+    endif
+
+return(cMimeType)
+
+*******************************************************************************************************
+@Get(endpoint="/fwwebex/webapp/FixHeaderRouter/query",description="Fix Header Router")
+function u_FixHeaderRouter(cFile as character) as character
+return(WebApp():FixHeaderRouter(cFile))

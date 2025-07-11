@@ -3,6 +3,25 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-11 18:01 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  + src/fw.webex/tools/fw.webex.webapp.auth.tlpp
+  * include/fw.webex.th
+  * src/fw.webex/tools/fw.webex.helper.tlpp
+  * src/fw.webex/tools/fw.webex.webapp.tools.tlpp
+  * src/fw.webex/web/component/fw.webex.icon.tlpp
+  * src/fw.webex/web/control/fw.webex.control.tlpp
+  * src/fw.webex/web/layout/fw.webex.main.tlpp
+  * src/fw.webex/web/layout/fw.webex.page.tlpp
+  * src/fw.webex/web/page/fw.webex.footer.tlpp
+  * src/fw.webex/web/page/fw.webex.style.tlpp
+  * src/fw.webex/web/page/fw.webex.title.tlpp
+  * src/fw.webex/web/script/fw.webex.script.tlpp
+  * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
+  * src/fw.webex.examples/006/fw.webex.example.006.tlpp
+  * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+  * src/tools/switch.tlpp
+
 2025-07-10 18:28 UTC naldodj (Fix lChangeCompanyAndBranch)
   !Fix lChangeCompanyAndBranch
     * src/fw.webex.examples/009/fw.webex.example.009.tlpp

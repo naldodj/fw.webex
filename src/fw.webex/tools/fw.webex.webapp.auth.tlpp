@@ -1,0 +1,138 @@
+/*
+
+                 _                              _                  _
+__      __  ___ | |__    __ _  _ __   _ __     | |_   ___    ___  | | ___
+\ \ /\ / / / _ \| '_ \  / _` || '_ \ | '_ \    | __| / _ \  / _ \ | |/ __|
+ \ V  V / |  __/| |_) || (_| || |_) || |_) | _ | |_ | (_) || (_) || |\__ \
+  \_/\_/   \___||_.__/  \__,_|| .__/ | .__/ (_) \__| \___/  \___/ |_||___/
+                              |_|    |_|
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+#include "tlpp-core.th"
+#include "tlpp-rest.th"
+
+class WebAuthorization
+
+    static method ParamsProvider() as json
+    static method GetAuthorization() as json
+
+end class
+
+//https://tdn.totvs.com/display/tec/onAuthparams
+static method ParamsProvider() class WebAuthorization
+    local cSRVIniName:=GetSrvIniName() as character
+    local jParams := {;
+         "client_id" : GetPvProfString("FWWEBEX","ClientID","",cSRVIniName); //string
+        ,"client_secret" : GetPvProfString("FWWEBEX","ClientSecret","",cSRVIniName);  // string
+        ,"username" : GetPvProfString("FWWEBEX","UserName","",cSRVIniName);   // string
+        ,"password" : GetPvProfString("FWWEBEX","Password","",cSRVIniName);   // string
+        ,"grant_type" : "password"; //string este conteudo deve ser fixo por enquanto
+        ,"access_expires" : 36000000;   //integer tempo em milissegundos
+        ,"refresh_expires" : Date()+1;  // ou para o caso de data fixa, o formato de data: "mm/dd/yyyy" -> "12/31/2021"
+    }
+return(jParams)
+
+static method GetAuthorization(cUserName,cPassWord,cOAuth2URL) class WebAuthorization
+
+    local aNames as array
+    local aHeadStr as array
+
+    local cOAuth2 as character
+    local cBasicAuth as character
+    local cSRVIniName:=GetSrvIniName() as character
+
+    local joAuth2 as json
+    local jGetAuthorization:=JSONObject():New() as json
+
+    local lContinue:=.T. as logical
+
+    local nNames as numeric
+
+    local oFWRest as object
+
+    paramtype 1 var cUserName as character
+    paramtype 2 var cPassWord as character
+    paramtype 3 var cOAuth2URL as character optional default ""
+
+    begin sequence
+
+        begin sequence
+
+            if (Empty(cUserName))
+                cUserName:=GetPvProfString("FWWEBEX","UserName","",cSRVIniName)
+                if (Empty(cUserName))
+                    lContinue:=.F.
+                    break
+                endif
+            endif
+
+            if (Empty(cPassWord))
+                cPassWord:=GetPvProfString("FWWEBEX","Password","",cSRVIniName)
+                if (Empty(cPassWord))
+                    lContinue:=.F.
+                    break
+                endif
+            endif
+
+            cBasicAuth:="Authorization: Basic "+Encode64(cUserName+":"+cPassWord)
+
+            if (empty(cOAuth2URL))
+                cOAuth2URL:=GetPvProfString("FWWEBEX","OAuth2URL","",cSRVIniName)
+                if (empty(cOAuth2URL))
+                    break
+                endif
+            endif
+
+            joAuth2:=JSONObject():New()
+            joAuth2["grant_type"]:="password"
+            joAuth2["username"]:=cUserName
+            joAuth2["password"]:=cPassWord
+
+            cGetParam:="?"
+            aNames:=joAuth2:GetNames()
+            nNames:=Len(aNames)
+            aEval(aNames,{|cName,i|cGetParam+=cName+"="+joAuth2[cName]+if(i<nNames,"&","")})
+            FWFreeArray(@aNames)
+
+            cOAuth2URL+=cGetParam
+
+            aHeadStr:=Array(0)
+            aAdd(aHeadStr,"Content-Type: application/json")
+            aAdd(aHeadStr,"Content-Encoding: gzip")
+            aAdd(aHeadStr,cBasicAuth)
+
+            oFWRest:=FWRest():New(cOAuth2URL)
+            oFWRest:SetPath("")
+            oFWRest:SetChkStatus(.F.)
+            oFWRest:Get(aHeadStr,"")
+            FWFreeArray(@aHeadStr)
+
+            cOAuth2:=oFWRest:GetResult()
+            FreeObj(@oFWRest)
+
+            FreeObj(@joAuth2)
+            joAuth2:=JSONObject():New()
+            joAuth2:FromJSON(cOAuth2)
+
+            if ((valType(joAuth2)=="J").and.(joAuth2:HasProperty("access_token")))
+                cOAuth2:="Authorization: Bearer "+joAuth2["access_token"]
+                jGetAuthorization["Bearer"]:=cOAuth2
+            endif
+
+            FreeObj(@joAuth2)
+
+        end sequence
+
+        if (lContinue)
+            jGetAuthorization["Basic"]:=cBasicAuth
+        endif
+
+    end sequence
+
+return(jGetAuthorization)

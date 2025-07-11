@@ -28,12 +28,12 @@ namespace FWWebEx
 
 class WebExPage from WebExControl
 
-    private data cPageTitle as character
+    protected data cPageTitle as character
 
-    private data jPageStyle as json
+    protected data jPageStyle as json
 
-    private data oPageBody as object
-    private data oPageRender as object
+    protected data oPageBody as object
+    protected data oPageRender as object
 
     public method New(cPageTitle as character) as object
     public method AddChild(oPageChild as object) as object

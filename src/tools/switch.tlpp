@@ -16,9 +16,9 @@ Released to Public Domain.
 
 class Switch
 
-    public data xKey as variant
-    public data jHCases as json
-    public data bDefault as codeblock
+    private data xKey as variant
+    private data jHCases as json
+    private data bDefault as codeblock
 
     public method New(xKey as variant) as object
     public method AddCase(xMatch as variant,bAction as codeblock) as object

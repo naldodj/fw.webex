@@ -21,7 +21,7 @@ namespace FWWebEx
 
 class WebExMain from WebExControl
 
-    private data lMainFluid as logical
+    protected data lMainFluid as logical
 
     public method New(lMainFluid as logical) as object
 

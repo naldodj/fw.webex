@@ -29,25 +29,25 @@ namespace FWWebEx
 
 class WebExControl
 
-    private data cID as character
-    private data cHTML as character
-    private data cType as character
-    private data cContent as character
-    private data cFixedID as character
+    protected data cID as character
+    protected data cHTML as character
+    protected data cType as character
+    protected data cContent as character
+    protected data cFixedID as character
 
-    private data cFWWebExTmpPath as character
+    protected data cFWWebExTmpPath as character
 
-    private data cLocalAssetsFilePath as character
-    private data cExternalAssetsFilePath as character
+    protected data cLocalAssetsFilePath as character
+    protected data cExternalAssetsFilePath as character
 
-    private data jAttrs as json
-    private data jChildren as json
+    protected data jAttrs as json
+    protected data jChildren as json
 
-    private data lChartEnabled as logical
-    private data lIconsEnabled as logical
-    private data lExternalAssets as logical
-    private data lRenderChildren as logical
-    private data lDataTableEnabled as logical
+    protected data lChartEnabled as logical
+    protected data lIconsEnabled as logical
+    protected data lExternalAssets as logical
+    protected data lRenderChildren as logical
+    protected data lDataTableEnabled as logical
 
     public method New(cType as character) as object
 
@@ -113,6 +113,8 @@ class WebExControl
 
     public method RenderHTML() as character
     public method SetRenderChildren(lRenderChildren as logical) as object
+
+    public method GetExternalAssets() as logical
     public method SetExternalAssets(lExternalAssets as logical) as object
     public method ExternalAssetsIsEnabled() as logical
 
@@ -533,7 +535,7 @@ method GetPageScriptBundle() class WebExControl
                 endif
                 if (::ExternalAssetsIsEnabled())
                     if (!lExternalAssets)
-                        lExternalAssets:=oWebExScript:lExternalAssets
+                        lExternalAssets:=oWebExScript:GetExternalAssets()
                     endif
                 endif
                 cSrc+="/* --- script: ["+cID+"] --- */"
@@ -715,6 +717,9 @@ method SetRenderChildren(lRenderChildren)  class WebExControl
     ::lRenderChildren:=lRenderChildren
 return(self)
 
+method GetExternalAssets() class WebExControl
+return(::lExternalAssets)
+
 method SetExternalAssets(lExternalAssets) class WebExControl
     paramtype 1 var lExternalAssets as logical optional default .F.
     ::lExternalAssets:=(::ExternalAssetsIsEnabled()).and.((lExternalAssets).and.(::cType$"script|style"))
@@ -727,12 +732,11 @@ method ExternalAssetsIsEnabled() class WebExControl
     TODO:
     Protheus nao esta preparado para lExternalAssets.
     Mesmo que o arquivo exista, o servidor ta respondendo com MIME type 'text/html'".
-    O problema esta confirmado header:
-    **content-type: text/html;charset=utf-8**
+    O problema esta confirmado header: **content-type: text/html;charset=utf-8**
     Ou seja, o Protheus (via SmartClient WebApp) esta devolvendo o arquivo .js como MIME type errado.
     E ai o navegador mete o pe no freio com: "Refused to execute script [...] MIME type 'text/html'"
 */
-return(.F.)
+return(FWWEBEX_EXTERNAL_ASSETS_IS_ENABLED)
 
 method AddAssets(cID,cType,cLocal,cRemote) class WebExControl
 

@@ -15,9 +15,9 @@ namespace FWWebEx
 
 class WebExIcon from WebExControl
 
-    private data cIconName as character
-    private data cIconType as character
-    private data cIconSize as character
+    protected data cIconName as character
+    protected data cIconType as character
+    protected data cIconSize as character
 
     public method New(cIconName as character,cIconType as character) as object
 

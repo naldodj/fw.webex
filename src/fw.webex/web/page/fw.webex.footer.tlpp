@@ -15,7 +15,7 @@ namespace FWWebEx
 
 class WebExFooter from WebExControl
 
-    private data cFooterContent as character
+    protected data cFooterContent as character
 
     public method New(cFooterContent as character) as object
 

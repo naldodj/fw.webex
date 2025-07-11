@@ -24,6 +24,8 @@ class WebExHelper
     static method EscapeJavaScript(cCode as character) as character
     static method EscapeHTMLAttribute(cValue as character) as character
 
+    static method ConvertHeaderToJSObject(cHeaderString as character) as character
+
 end class
 
 static method EscapeAll(cValue) class WebExHelper
@@ -55,3 +57,18 @@ static method EscapeHTMLAttribute(cValue) class WebExHelper
     cValue:=StrTran(cValue,'"',"&quot;")
     cValue:=StrTran(cValue,"'","&#39;")
 return(cValue)
+
+static method ConvertHeaderToJSObject(cHeaderString) class WebExHelper
+
+    local aHeaderString as array
+
+    paramtype 1 var cHeaderString as character
+
+    aHeaderString:=StrTokArr2(cHeaderString,":")
+    if (Len(aHeaderString)==2)
+        cHeaderString:="'"+AllTrim(aHeaderString[1])+"'"
+        cHeaderString+=":"
+        cHeaderString+="'"+AllTrim(aHeaderString[2])+"'"
+    endif
+
+return(cHeaderString)

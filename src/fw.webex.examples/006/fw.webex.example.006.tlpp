@@ -53,8 +53,6 @@ Released to Public Domain.
 
 using namespace FWWebEx
 
-using namespace FWWebEx
-
 procedure u_FWWebExExample_006()
     local bExecute as codeblock
     local cHTML as character

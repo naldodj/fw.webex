@@ -15,7 +15,7 @@ namespace FWWebEx
 
 class WebExTitle from WebExControl
 
-    private data cTitleContent as character
+    protected data cTitleContent as character
 
     public method New(cTitleContent as character) as object
 
