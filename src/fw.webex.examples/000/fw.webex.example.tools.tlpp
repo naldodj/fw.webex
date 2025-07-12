@@ -108,6 +108,8 @@ static method Execute(bExecute,cTitle,lPrepareEnvironment,lChangeCompanyAndBranc
         Eval(bInit)
     endif
 
+    WebFileTools():ObliterateFWWebExTmpFiles(.T.)
+
 return
 
 static method HtmlFileShow(cHTML,cTitle,cHTMLFile) class FWExampleTools

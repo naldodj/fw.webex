@@ -17,6 +17,7 @@ class WebFileTools
     static method HTMLFromControl(oFWWebExControl as object,cHTMLFilePath as character,cHTMLFileName as character,cHTMLContent as character,lEncodeUTF8 as logical) as logical
     static method HTMLDumpDOMFromControl(oFWWebExControl as object,cHTMLFilePath as character,cHTMLFileName as character,cHTMLContent as character,lEncodeUTF8 as logical) as logical
     static method HTMLAssetsToFile(cAssetID as character,cAssetType as character,cAssetContent as character,cAssetFilePath as character,/*<@>*/cExternalAssetsPath,/*<@>*/cLocalAssetsFilePath) as logical
+    static method ObliterateFWWebExTmpFiles(lNoMercy as logical) as logical
 end class
 
 static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLContent,lEncodeUTF8) class WebFileTools
@@ -413,3 +414,11 @@ static method HTMLAssetsToFile(cAssetID,cAssetType,cAssetContent,cAssetPath,/*<@
     end sequence
 
 return(lHTMLAssetsToFile)
+
+static method ObliterateFWWebExTmpFiles(lNoMercy) class WebFileTools
+    local oFWWebExControl as object
+    paramtype 1 var lNoMercy as logical optional default .F.
+    oFWWebExControl:=WebExControl():New()
+    oFWWebExControl:ObliterateFWWebExTmpFiles(lNoMercy)
+    FreeObj(@oFWWebExControl)
+return(.T.)

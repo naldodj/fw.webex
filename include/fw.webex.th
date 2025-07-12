@@ -32,6 +32,10 @@ Released to Public Domain.
         #include "totvs.ch"
     #ENDIF
 
+    #IFNDEF _DIRECTRY_CH
+        #include "directry.ch"
+    #ENDIF
+
     #IFNDEF _PARMTYPE_CH
         #DEFINE _PARMTYPE_CH
         #include "parmtype.ch"

@@ -128,6 +128,8 @@ static procedure FWWebExExample_000()
 
     ACTIVATE DIALOG oTDlg
 
+    WebFileTools():ObliterateFWWebExTmpFiles(.T.)
+
     FreeObj(@jExamples)
 
     FreeObj(@oFWDefSize)

@@ -3,6 +3,14 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-12 10:02 UTC naldodj (Add method ObliterateFWWebExTmpFiles to WebExControl – cleanup of temp files with optional full wipe)
+  + include/directry.ch
+  * include/fw.webex.th
+  * src/fw.webex/tools/fw.webex.file.tools.tlpp
+  * src/fw.webex/web/control/fw.webex.control.tlpp
+  * src/fw.webex.examples/000/fw.webex.example.000.tlpp
+  * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
+
 2025-07-11 20:49 UTC naldodj (Fix ClientSecret update)
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 

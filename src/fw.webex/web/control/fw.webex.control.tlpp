@@ -15,6 +15,7 @@ static __aVoidTags:={"area","base","br","col","embed","hr","img","input","link",
 
 static __cID as character
 static __cCRLF:=CRLF as character
+static __cTmpPathUserInfo as character
 
 static __jAssets:=JSONObject():New() as json
 static __jHeader:=JSONObject():New() as json
@@ -85,6 +86,7 @@ class WebExControl
 
     public method GetFWWebExTmpPath() as character
     public method SetFWWebExTmpPath(cFWWebExTmpPath as character) as object
+    public method ObliterateFWWebExTmpFiles(lNoMercy as logical) as object
 
     public method GetLocalAssetsFilePath() as character
     public method SetLocalAssetsFilePath(cLocalAssetsFilePath as character) as character
@@ -419,11 +421,94 @@ method GetFWWebExTmpPath() class WebExControl
 return(::cFWWebExTmpPath)
 
 method SetFWWebExTmpPath(cFWWebExTmpPath)  class WebExControl
+    local aUserInfo as array
+    local cEnvServer as character
+    local nUserInfo as numeric
     paramtype 1 var cFWWebExTmpPath as character optional default FWWEBEX_WEB_TMP_PATH
     ::cFWWebExTmpPath:=cFWWebExTmpPath
+    if ((Type("cEmpAnt")=="C").and.(!Empty(cEmpAnt)))
+        if (Right(::cFWWebExTmpPath,1)!="\")
+            ::cFWWebExTmpPath+="\"
+        endif
+        ::cFWWebExTmpPath+=AllTrim(cEmpAnt)
+        ::cFWWebExTmpPath+="\"
+    endif
+    if ((Type("__cUserID")=="C").and.(!Empty(AllTrim(__cUserID))))
+        if (Right(::cFWWebExTmpPath,1)!="\")
+            ::cFWWebExTmpPath+="\"
+        endif
+        ::cFWWebExTmpPath+=AllTrim(__cUserID)
+        ::cFWWebExTmpPath+="\"
+    endif
+    if (Empty(__cTmpPathUserInfo))
+        aUserInfo:=GetUserInfoArray()
+        if (!Empty(aUserInfo))
+            cEnvServer:=Upper(AllTrim(GetEnvServer()))
+            nUserInfo:=aScan(;
+                aUserInfo;
+                ,{|x|;
+                    (;
+                        (!Empty(x[1]));
+                        .and.;
+                        (!Empty(x[2]));
+                        .and.;
+                        (!"JOB"$Upper(x[15]));
+                        .and.;
+                        (AllTrim(Upper(x[6]))==cEnvServer);
+                    );
+                };
+            )
+            if (nUserInfo>0)
+                __cTmpPathUserInfo:=AllTrim(aUserInfo[nUserInfo][2])
+                __cTmpPathUserInfo+="\"
+                __cTmpPathUserInfo+=AllTrim(aUserInfo[nUserInfo][1])
+                __cTmpPathUserInfo+="\"
+            endif
+        endif
+        FWFreeArray(@aUserInfo)
+    endif
+    if (!Empty(__cTmpPathUserInfo))
+        if (Right(::cFWWebExTmpPath,1)!="\")
+            ::cFWWebExTmpPath+="\"
+        endif
+        ::cFWWebExTmpPath+=__cTmpPathUserInfo
+    endif
+    if (IsSrvUnix())
+        ::cFWWebExTmpPath:=StrTran(::cFWWebExTmpPath,"\","/")
+    endif
+    ::cFWWebExTmpPath:=Lower(::cFWWebExTmpPath)
     if (!lIsDir(::cFWWebExTmpPath))
         FWMakeDir(::cFWWebExTmpPath,.F.)
     endif
+return(self)
+
+method ObliterateFWWebExTmpFiles(lNoMercy) class WebExControl
+    local aFiles as array
+    local cNow:=Time() as character
+    local cFWWebExTmpPath:=::GetFWWebExTmpPath() as character
+    local dToday:=Date() as date
+    paramtype 1 var lNoMercy as logical optional default .F.
+    aFiles:=directory(cFWWebExTmpPath+"*.*")
+    if (lNoMercy)
+        aEval(aFiles,{|e|fErase(cFWWebExTmpPath+e[F_NAME])})
+    else
+        aEval(aFiles;
+            ,{|e|;
+                if(;
+                    (e[F_DATE]<dToday);
+                    .or.;
+                    (;
+                        (e[F_DATE]==dToday);
+                        .and.;
+                        (ElapTime(e[F_TIME],cNow)>="03:00:00");
+                    );
+                    ,fErase(cFWWebExTmpPath+e[F_NAME]);
+                    ,nil;
+                );
+            };
+        )
+    endif
+    FWFreeArray(@aFiles)
 return(self)
 
 method GetLocalAssetsFilePath() class WebExControl
