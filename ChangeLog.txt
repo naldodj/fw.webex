@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-12 10:24 UTC naldodj (Issue: Protheus AppServer returns wrong MIME type for external assets #2)
+  * src/fw.webex/web/control/fw.webex.control.tlpp
+
 2025-07-12 10:02 UTC naldodj (Add method ObliterateFWWebExTmpFiles to WebExControl – cleanup of temp files with optional full wipe)
   + include/directry.ch
   * include/fw.webex.th

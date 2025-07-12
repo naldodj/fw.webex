@@ -820,6 +820,8 @@ method ExternalAssetsIsEnabled() class WebExControl
     O problema esta confirmado header: **content-type: text/html;charset=utf-8**
     Ou seja, o Protheus (via SmartClient WebApp) esta devolvendo o arquivo .js como MIME type errado.
     E ai o navegador mete o pe no freio com: "Refused to execute script [...] MIME type 'text/html'"
+    ------------------------------------------------------------------------------------------------
+    ### Issue: Protheus AppServer returns wrong MIME type for external assets #2
 */
 return(FWWEBEX_EXTERNAL_ASSETS_IS_ENABLED)
 
