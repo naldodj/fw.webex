@@ -1,0 +1,1077 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+#include "fw.webex.th"
+
+using namespace FWWebEx
+
+procedure u_FWWebExExample_016()
+    local bExecute as codeblock
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_016(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.)
+    if (!Empty(cHTMLFile).and.File(cHTMLFile))
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        fErase(cHTMLFile)
+    endif
+    WebFileTools():ObliterateFWWebExTmpFiles(.T.)
+return
+
+static procedure FWWebExExample_016(cHTML as character) as character
+
+    local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
+
+    local cStyle as character
+    local cScript as character
+
+    local cAlarmClockPage as character
+    local cAlarmClockPageFilePath as character
+    local cAlarmClockPageFileName as character
+    local cAlarmClockPageExternalAssetsFilePath as character
+    local cAlarmClockPageLocalAssetsFilePath as character
+
+    local cRealTimeClockPage as character
+    local cRealTimeClockPageFilePath as character
+    local cRealTimeClockPageFileName as character
+    local cRealTimeClockPageExternalAssetsFilePath as character
+    local cRealTimeClockPageLocalAssetsFilePath as character
+
+    local cZodiacSignsPage as character
+    local cZodiacSignsPageFilePath as character
+    local cZodiacSignsPageFileName as character
+    local cZodiacSignsPageExternalAssetsFilePath as character
+    local cZodiacSignsPageLocalAssetsFilePath as character
+
+    local oWebExNavSide as object
+    local oWebExNavSideMenuItem as object
+
+    local oFWWebExPage as object
+
+    oAlarmClockPage:=AlarmClockPage()
+    cAlarmClockPage:=oAlarmClockPage:RenderHTML()
+    WebFileTools():HTMLFromControl(oAlarmClockPage,@cAlarmClockPageFilePath,@cAlarmClockPageFileName,@cAlarmClockPage,.T.)
+    WebFileTools():HTMLAssetsToFile(oAlarmClockPage:GetFixedID(),"html",cAlarmClockPage,oAlarmClockPage:GetFWWebExTmpPath(),@cAlarmClockPageExternalAssetsFilePath,@cAlarmClockPageLocalAssetsFilePath)
+
+    oAlarmClockPage:Clean()
+
+    WEBEXOBJECT CLEAN
+
+    FreeObj(@oAlarmClockPage)
+
+    oRealTimeClockPage:=RealTimeClockPage()
+    cRealTimeClockPage:=oRealTimeClockPage:RenderHTML()
+    WebFileTools():HTMLFromControl(oRealTimeClockPage,@cRealTimeClockPageFilePath,@cRealTimeClockPageFileName,@cRealTimeClockPage,.T.)
+    WebFileTools():HTMLAssetsToFile(oRealTimeClockPage:GetFixedID(),"html",cRealTimeClockPage,oRealTimeClockPage:GetFWWebExTmpPath(),@cRealTimeClockPageExternalAssetsFilePath,@cRealTimeClockPageLocalAssetsFilePath)
+
+    oRealTimeClockPage:Clean()
+
+    WEBEXOBJECT CLEAN
+
+    FreeObj(@oRealTimeClockPage)
+
+    oZodiacSignsPage:=ZodiacSignsPage()
+    cZodiacSignsPage:=oZodiacSignsPage:RenderHTML()
+    WebFileTools():HTMLFromControl(oZodiacSignsPage,@cZodiacSignsPageFilePath,@cZodiacSignsPageFileName,@cZodiacSignsPage,.T.)
+    WebFileTools():HTMLAssetsToFile(oZodiacSignsPage:GetFixedID(),"html",cZodiacSignsPage,oZodiacSignsPage:GetFWWebExTmpPath(),@cZodiacSignsPageExternalAssetsFilePath,@cZodiacSignsPageLocalAssetsFilePath)
+
+    oZodiacSignsPage:Clean()
+
+    WEBEXOBJECT CLEAN
+
+    FreeObj(@oZodiacSignsPage)
+
+    //Page
+    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName+" (iFrame Pages)"
+        //Body
+        WITH WEBEXOBJECT CLASS WebExBody
+            //Main
+            WITH WEBEXOBJECT CLASS WebExMain
+                //Wrapper
+                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                    .:AddClass("d-flex")
+                    //Menu Lateral
+                    WITH WEBEXOBJECT CLASS WebExSideBar
+                        WITH WEBEXOBJECT oWebExNavSide CLASS WebExNavSide
+                            oWebExNavSide:SetType("div")
+                            oWebExNavSide:SetAttr("id","webex-sidebar")
+                            oWebExNavSide:AddClass("collapse")
+                            oWebExNavSide:AddClass("show")
+                            oWebExNavSide:SetAttr("class","collapse show")
+                            oWebExNavSide:SetBrand("Side Menu")
+                            .:AddDivider()
+                            oWebExNavSideMenuItem:=oWebExNavSide:AddItem(WebExHelper():GetEmojiHtmlCode("alarm_clock")+"AlarmClock","#")
+                            oWebExNavSideMenuItem:SetAttr("data-togglepages","alarmclock")
+                            oWebExNavSideMenuItem:=oWebExNavSide:AddItem(WebExHelper():GetEmojiHtmlCode("clock")+"RealTimeClock","#")
+                            oWebExNavSideMenuItem:SetAttr("data-togglepages","realtimeclock")
+                            oWebExNavSideMenuItem:=oWebExNavSide:AddItem(WebExHelper():GetEmojiHtmlCode("crystal_ball")+"ZodiacSigns","#")
+                            oWebExNavSideMenuItem:SetAttr("data-togglepages","zodiacsigns")
+                            .:AddDivider()
+                            oWebExNavSideMenuItem:=oWebExNavSide:AddItem(WebExHelper():GetEmojiHtmlCode("alarm_clock")+"BTDN::AlarmClock","#")
+                            oWebExNavSideMenuItem:SetAttr("data-togglepages","btdn_alarmclock")
+                            oWebExNavSideMenuItem:=oWebExNavSide:AddItem(WebExHelper():GetEmojiHtmlCode("clock")+"BTDN::RealTimeClock","#")
+                            oWebExNavSideMenuItem:SetAttr("data-togglepages","btdn_realtimeclock")
+                            oWebExNavSideMenuItem:=oWebExNavSide:AddItem(WebExHelper():GetEmojiHtmlCode("crystal_ball")+"BTDN::ZodiacSigns","#")
+                            oWebExNavSideMenuItem:SetAttr("data-togglepages","btdn_zodiacsigns")
+                            .:AddDivider()
+                        END WEBEXOBJECT
+                    END WEBEXOBJECT
+                    //conteudo principal
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:AddClass("d-flex flex-column w-100")
+                        //TopContainer
+                        WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                            .:AddClass("d-flex align-items-center gap-2") // gap-2 adiciona espaco
+                            //NavTop
+                            WITH WEBEXOBJECT CLASS WebExNavTop
+                            END WEBEXOBJECT
+                            //Nav
+                            WITH WEBEXOBJECT CLASS WebExControl TYPE nav
+                                .:AddClass("navbar shadow mb-3")
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE h1
+                                    .:AddClass("h4")
+                                    .:SetContent(cProcName+" (iFrame Pages)")
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                        //Main
+                        WITH WEBEXOBJECT CLASS WebExMain
+                            //Local
+                            WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
+                                .:SetAttr("id","alarmclock")
+                                .:SetAttr("style","display:none")
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                                    .:AddClass("embed-responsive")
+                                    .:AddClass("embed-responsive-21by9")
+                                    WITH WEBEXOBJECT CLASS WebExIFrame
+                                        .:SetAttr("src",cAlarmClockPageLocalAssetsFilePath)
+                                    END WEBEXOBJECT
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
+                                .:SetAttr("id","realtimeclock")
+                                .:SetAttr("style","display:none")
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                                    .:AddClass("embed-responsive")
+                                    .:AddClass("embed-responsive-21by9")
+                                    WITH WEBEXOBJECT CLASS WebExIFrame
+                                        .:SetAttr("src",cRealTimeClockPageLocalAssetsFilePath)
+                                    END WEBEXOBJECT
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
+                                .:SetAttr("id","zodiacsigns")
+                                .:SetAttr("style","display:none")
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                                    .:AddClass("embed-responsive")
+                                    .:AddClass("embed-responsive-21by9")
+                                    WITH WEBEXOBJECT CLASS WebExIFrame
+                                        .:SetAttr("src",cZodiacSignsPageLocalAssetsFilePath)
+                                    END WEBEXOBJECT
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                            //BlackTDN
+                            WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
+                                .:SetAttr("id","btdn_alarmclock")
+                                .:SetAttr("style","display:none")
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                                    .:AddClass("embed-responsive")
+                                    .:AddClass("embed-responsive-21by9")
+                                    WITH WEBEXOBJECT CLASS WebExIFrame
+                                        .:SetAttr("src","https://www.blacktdn.com.br/p/alarme-em-tempo-real.html")
+                                    END WEBEXOBJECT
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
+                                .:SetAttr("id","btdn_realtimeclock")
+                                .:SetAttr("style","display:none")
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                                    .:AddClass("embed-responsive")
+                                    .:AddClass("embed-responsive-21by9")
+                                    WITH WEBEXOBJECT CLASS WebExIFrame
+                                        .:SetAttr("src","https://www.blacktdn.com.br/p/relogio-em-tempo-real.html")
+                                    END WEBEXOBJECT
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
+                                .:SetAttr("id","btdn_zodiacsigns")
+                                .:SetAttr("style","display:none")
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                                    .:AddClass("embed-responsive")
+                                    .:AddClass("embed-responsive-21by9")
+                                    WITH WEBEXOBJECT CLASS WebExIFrame
+                                        .:SetAttr("src","https://www.blacktdn.com.br/p/descubra-seu-signo_18.html")
+                                    END WEBEXOBJECT
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+        //Style
+        WITH WEBEXOBJECT CLASS WebExStyle
+            beginContent var cStyle
+                #webex-sidebar {
+                    transition: all 0.3s ease;
+                    width: 250px;
+                    overflow: hidden;
+                }
+                .navbar-brand.collapse-hide {
+                    display: none !important;
+                }
+            endContent
+            .:SetContent(cStyle)
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExScript
+            // Script para alternar exibicao dos dumps
+            // Obs: JavaScript converte automaticamente atributos com hifen (-) para camelCase dentro do dataset
+            /*
+                | HTML                     | JavaScript (`dataset`)  |
+                | ------------------------ | ----------------------- |
+                | `data-toggle-dump="x"`   | `el.dataset.toggleDump` |
+                | `data-user-id="42"`      | `el.dataset.userId`     |
+                | `data-coisa-louca="sim"` | `el.dataset.coisaLouca` |
+            */
+            beginContent var cScript
+                document.addEventListener("DOMContentLoaded",()=>{
+                    document.querySelectorAll("[data-togglepages]").forEach(el=>{
+                        el.addEventListener("click",()=>{
+                            [
+                                 "alarmclock"
+                                ,"realtimeclock"
+                                ,"zodiacsigns"
+                                ,"btdn_alarmclock"
+                                ,"btdn_realtimeclock"
+                                ,"btdn_zodiacsigns"
+                            ].forEach(id=>{
+                                document.getElementById(id).style.display = (id === el.dataset.togglepages) ? "block" : "none";
+                            });
+                        });
+                    });
+                });
+                document.addEventListener("DOMContentLoaded", ()=>{
+                    const sidebar = document.getElementById("webex-sidebar");
+                    const brand = document.querySelector(".navbar-brand");
+
+                    const observer = new MutationObserver(() => {
+                        if (!sidebar.classList.contains("show")) {
+                            brand.classList.add("collapse-hide");
+                        } else {
+                            brand.classList.remove("collapse-hide");
+                        }
+                    });
+
+                    observer.observe(sidebar, { attributes: true, attributeFilter: ["class"] });
+                });
+            endContent
+            .:SetContent(cScript)
+        END WEBEXOBJECT
+    END WEBEXOBJECT
+
+    WebFileTools():HTMLFromControl(oFWWebExPage,oFWWebExPage:GetFWWebExTmpPath(),@cHTMLFile,@cHTML,.T.)
+
+    WEBEXOBJECT CLEAN
+
+    FreeObj(@oWebExNavSideMenuItem)
+    FreeObj(@oWebExNavSide)
+
+    FreeObj(@oFWWebExPage)
+
+return(cHTMLFile)
+
+static function AlarmClockPage()
+
+    local cTitle:=(WebExHelper():GetEmojiHtmlCode("alarm_clock")+"Alarme em Tempo Real") as character
+
+    local cStyle as character
+    local cScript as character
+
+    local oFWWebExPage as object
+
+    beginContent var cStyle
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #00e5ff;
+        }
+
+        #clock {
+            font-size: 5rem;
+            font-weight: bold;
+            background: #1e1e1e;
+            padding: 30px 50px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,255,255,0.3);
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        input[type="text"], select {
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: none;
+            background: #333;
+            color: #fff;
+            width: 200px;
+        }
+
+        button {
+            font-size: 1.2rem;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #00e5ff;
+            color: #000;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #00bcd4;
+        }
+
+        #alarmStatus {
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+        #alerta {
+            color: #ff5252;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        #stopButton {
+            display: none;
+            margin-top: 1rem;
+        }
+
+    endContent
+
+    beginContent var cScript
+
+        let alarmTime = null;
+        let alarmTriggered = false;
+        let selectedSound = 'alarm_clock';
+        let beepAudio = null;
+
+        const soundURLs = {
+            alarm_clock: 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg',
+            bicycle_bell: 'https://actions.google.com/sounds/v1/alarms/bicycle_bell.ogg',
+            airhorn: 'https://actions.google.com/sounds/v1/alarms/airhorn.ogg',
+            bugle: 'https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg'
+        };
+
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+
+            const currentTime = `${h}:${m}:${s}`;
+            document.getElementById('clock').textContent = currentTime;
+
+            if (alarmTime === currentTime && !alarmTriggered) {
+                alarmTriggered = true;
+                document.getElementById('alerta').innerHTML = '&#9200; Alarme disparado!';
+                document.getElementById('stopButton').style.display = 'inline-block';
+                playBeep(selectedSound);
+            }
+        }
+
+        function playBeep(soundKey) {
+            beepAudio = new Audio(soundURLs[soundKey]);
+            beepAudio.loop = true;
+            beepAudio.play();
+        }
+
+        function stopAlarm() {
+            if (beepAudio) {
+                beepAudio.pause();
+                beepAudio.currentTime = 0;
+            }
+            document.getElementById('alerta').textContent = '';
+            document.getElementById('stopButton').style.display = 'none';
+            alarmTime = null;
+            alarmTriggered = false;
+            document.getElementById('alarmStatus').textContent = 'Nenhum alarme definido.';
+        }
+
+        document.getElementById('alarmForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const timeInput = document.getElementById('alarmTime').value.trim();
+            const soundInput = document.getElementById('sound').value;
+
+            const regex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+            if (regex.test(timeInput)) {
+                alarmTime = timeInput;
+                selectedSound = soundInput;
+                alarmTriggered = false;
+                document.getElementById('alarmStatus').textContent = `Alarme definido para ${alarmTime} com som: ${soundInput}`;
+                document.getElementById('alerta').textContent = '';
+                document.getElementById('stopButton').style.display = 'none';
+            } else {
+                alert('Formato inv&aacute;lido! Use hh:mm:ss');
+            }
+        });
+
+        document.getElementById('stopButton').addEventListener('click', stopAlarm);
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    endContent
+
+    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cTitle
+        WITH WEBEXOBJECT CLASS WebExControl TYPE meta
+            .:SetAttr("name","description")
+            .:SetAttr("content",cTitle)
+            .:AddInHeader(.this)
+        END WEBEXOBJECT NOADDCHILD
+        WITH WEBEXOBJECT CLASS WebExBody
+            WITH WEBEXOBJECT CLASS WebExMain
+                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                    .:AddClass("container")
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE h1
+                        .:SetContent(cTitle)
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:SetAttr("id","clock")
+                        .:SetContent("--:--:--")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE form
+                        .:SetAttr("id","alarmForm")
+                        WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                            WITH WEBEXOBJECT CLASS WebExControl TYPE label
+                                .:SetAttr("for","alarmTime")
+                                .:SetContent("Definir alarme (hh:mm:ss):")
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExControl TYPE br
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExControl TYPE input
+                                .:SetAttr("type","text")
+                                .:SetAttr("id","alarmTime")
+                                .:SetAttr("placeholder","Ex: 15:12:00")
+                                .:SetAttr("required","required")
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                        WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                            WITH WEBEXOBJECT CLASS WebExControl TYPE label
+                                .:SetAttr("for","sound")
+                                .:SetContent("Som:")
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExControl TYPE br
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExControl TYPE select
+                                .:SetAttr("id","sound")
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE option
+                                    .:SetAttr("value","alarm_clock")
+                                    .:SetContent("Rel&oacute;gio")
+                                END WEBEXOBJECT
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE option
+                                    .:SetAttr("value","bicycle_bell")
+                                    .:SetContent("Sino")
+                                END WEBEXOBJECT
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE option
+                                    .:SetAttr("value","airhorn")
+                                    .:SetContent("Corneta")
+                                END WEBEXOBJECT
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE option
+                                    .:SetAttr("value","bugle")
+                                    .:SetContent("Trompete")
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                        WITH WEBEXOBJECT CLASS WebExControl TYPE button
+                            .:SetAttr("type","submit")
+                            .:SetContent("Ativar")
+                        END WEBEXOBJECT
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:SetAttr("id","alarmStatus")
+                        .:SetContent("Nenhum alarme definido.")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:SetAttr("id","alerta")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE button
+                        .:SetAttr("id","stopButton")
+                        .:SetContent("Desligar Alarme")
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExStyle
+            .:SetContent(cStyle)
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExScript
+            .:SetContent(cScript)
+        END WEBEXOBJECT
+    END WEBEXOBJECT
+
+return(oFWWebExPage)
+
+static function RealTimeClockPage()
+
+    local cTitle:=(WebExHelper():GetEmojiHtmlCode("clock")+"Rel&oacute;gio em Tempo Real") as character
+
+    local cStyle as character
+    local cScript as character
+
+    local oFWWebExPage as object
+
+    beginContent var cStyle
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px; /* Espa&ccedil;o vertical para evitar que nada fique colado no topo */
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #00e5ff;
+        }
+
+        #date {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        #clock {
+            font-size: 5rem;
+            font-weight: bold;
+            background: #1e1e1e;
+            padding: 30px 50px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,255,255,0.3);
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        #counter {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 1rem;
+        }
+
+    endContent
+
+    beginContent var cScript
+
+        function updateClock() {
+            const now = new Date();
+
+            // Rel&oacute;gio
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+
+            // Data por extenso
+            const dias = ['Domingo','Segunda-feira','Ter&ccedil;a-feira','Quarta-feira','Quinta-feira','Sexta-feira','S&aacute;bado'];
+            const meses = ['janeiro','fevereiro','mar&ccedil;o','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+            const dia = dias[now.getDay()];
+            const numero = now.getDate();
+            const mes = meses[now.getMonth()];
+            const ano = now.getFullYear();
+            document.getElementById('date').textContent = `${dia}, ${numero} de ${mes} de ${ano}`;
+        }
+
+        function updateVisitorCounter() {
+            let visits = localStorage.getItem('visits');
+            visits = visits ? parseInt(visits) + 1 : 1;
+            localStorage.setItem('visits', visits);
+            document.getElementById('counter').textContent = `Visitantes: ${visits.toLocaleString('pt-BR')}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+        updateVisitorCounter();
+
+    endContent
+
+    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cTitle
+        WITH WEBEXOBJECT CLASS WebExControl TYPE meta
+            .:SetAttr("name","description")
+            .:SetAttr("content",cTitle)
+            .:AddInHeader(.this)
+        END WEBEXOBJECT NOADDCHILD
+        WITH WEBEXOBJECT CLASS WebExBody
+            WITH WEBEXOBJECT CLASS WebExMain
+                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                    .:AddClass("container")
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE h1
+                        .:SetContent(cTitle)
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:SetAttr("id","date")
+                        .:SetContent("--")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:SetAttr("id","clock")
+                        .:SetContent("--:--:--")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:SetAttr("id","counter")
+                        .:SetContent("Visitantes: --")
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExStyle
+            .:SetContent(cStyle)
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExScript
+            .:SetContent(cScript)
+        END WEBEXOBJECT
+    END WEBEXOBJECT
+
+return(oFWWebExPage)
+
+static function ZodiacSignsPage()
+
+    local aEmogis as array
+
+    local cTitle:=(WebExHelper():GetEmojiHtmlCode("crystal_ball")+"Descubra seu Signo") as character
+
+    local cStyle as character
+    local cScript as character
+
+    local jEmojis as json
+
+    local i as numeric
+
+    local oFWWebExPage as object
+
+    beginContent var cStyle
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #f0f0f0;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #1e1e1e;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00e5ff;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="date"] {
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #00e5ff;
+            background: #2a2a2a;
+            color: #fff;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="date"]:focus {
+            border-color: #00ffff;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+
+        button {
+            font-size: 1.2rem;
+            padding: 0.6rem 1.5rem;
+            margin-top: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #00e5ff;
+            color: #000;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #00ffff;
+            transform: scale(1.02);
+        }
+
+        #resultado {
+            margin-top: 2rem;
+            font-size: 1.8rem;
+            color: #00ffff;
+        }
+
+        #descricao,
+        #extra,
+        #horoscopo-daily {
+            margin-top: 1rem;
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        .signo-img {
+            width: 64px;
+            height: 64px;
+            vertical-align: middle;
+            margin-right: 10px;
+            filter: drop-shadow(0 0 4px cyan);
+        }
+
+        .signo-nome {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+    endContent
+
+    beginContent var cScript
+
+        const signos = [
+            { nome: '&aacute;ries', nomeEn: 'aries', emoji: '__aries__', img: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Aries.svg', inicio: '03-21', fim: '04-19', descricao: 'Impulsivo, energ&eacute;tico e corajoso.', elemento: 'Fogo', compatibilidade: 'Le&atilde;o, Sagit&aacute;rio' },
+            { nome: 'Touro', nomeEn: 'taurus', emoji: '__taurus__', img: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Taurus.svg', inicio: '04-20', fim: '05-20', descricao: 'Paciente, confi&aacute;vel e persistente.', elemento: 'Terra', compatibilidade: 'Virgem, Capric&oacute;rnio' },
+            { nome: 'G&ecirc;meos', nomeEn: 'gemini', emoji: '__gemini__', img: 'https://upload.wikimedia.org/wikipedia/commons/1/15/Gemini.svg', inicio: '05-21', fim: '06-20', descricao: 'Comunicativo, curioso e vers&aacute;til.', elemento: 'Ar', compatibilidade: 'Libra, Aqu&aacute;rio' },
+            { nome: 'C&acirc;ncer', nomeEn: 'cancer', emoji: '__cancer__', img: 'https://upload.wikimedia.org/wikipedia/commons/2/29/Cancer.svg', inicio: '06-21', fim: '07-22', descricao: 'Sens&iacute;vel, protetor e intuitivo.', elemento: '&aacute;gua', compatibilidade: 'Escorpi&atilde;o, Peixes' },
+            { nome: 'Le&atilde;o', nomeEn: 'leo', emoji: '__leo__', img: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Leo.svg', inicio: '07-23', fim: '08-22', descricao: 'Orgulhoso, criativo e leal.', elemento: 'Fogo', compatibilidade: '&aacute;ries, Sagit&aacute;rio' },
+            { nome: 'Virgem', nomeEn: 'virgo', emoji: '__virgo__', img: 'https://upload.wikimedia.org/wikipedia/commons/0/0c/Virgo.svg', inicio: '08-23', fim: '09-22', descricao: 'Detalhista, l&oacute;gico e dedicado.', elemento: 'Terra', compatibilidade: 'Touro, Capric&oacute;rnio' },
+            { nome: 'Libra', nomeEn: 'libra', emoji: '__libra__', img: 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Libra.svg', inicio: '09-23', fim: '10-22', descricao: 'Diplom&aacute;tico, justo e soci&aacute;vel.', elemento: 'Ar', compatibilidade: 'G&ecirc;meos, Aqu&aacute;rio' },
+            { nome: 'Escorpi&atilde;o', nomeEn: 'scorpio', emoji: '__scorpio__', img: 'https://upload.wikimedia.org/wikipedia/commons/e/ea/Scorpio.svg', inicio: '10-23', fim: '11-21', descricao: 'Intenso, determinado e misterioso.', elemento: '&aacute;gua', compatibilidade: 'C&acirc;ncer, Peixes' },
+            { nome: 'Sagit&aacute;rio', nomeEn: 'sagittarius', emoji: '__sagittarius__', img: 'https://upload.wikimedia.org/wikipedia/commons/8/80/Sagittarius.svg', inicio: '11-22', fim: '12-21', descricao: 'Aventureiro, otimista e sincero.', elemento: 'Fogo', compatibilidade: '&aacute;ries, Le&atilde;o' },
+            { nome: 'Capric&oacute;rnio', nomeEn: 'capricorn', emoji: '__capricorn__', img: 'https://upload.wikimedia.org/wikipedia/commons/7/76/Capricorn.svg', inicio: '12-22', fim: '01-19', descricao: 'Respons&aacute;vel, disciplinado e ambicioso.', elemento: 'Terra', compatibilidade: 'Touro, Virgem' },
+            { nome: 'Aqu&aacute;rio', nomeEn: 'aquarius', emoji: '__aquarius__', img: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Aquarius.svg', inicio: '01-20', fim: '02-18', descricao: 'Original, humanit&aacute;rio e independente.', elemento: 'Ar', compatibilidade: 'G&ecirc;meos, Libra' },
+            { nome: 'Peixes', nomeEn: 'pisces', emoji: '__pisces__', img: 'https://upload.wikimedia.org/wikipedia/commons/9/95/Pisces.svg', inicio: '02-19', fim: '03-20', descricao: 'Sonhador, sens&iacute;vel e emp&aacute;tico.', elemento: '&aacute;gua', compatibilidade: 'C&acirc;ncer, Escorpi&atilde;o' }
+        ];
+
+        const notasMusicais = ['D&oacute;', 'R&eacute;', 'Mi', 'F&aacute;', 'Sol', 'L&aacute;', 'Si'];
+
+        const horoscoposAleatorios = [
+            { texto: "Hoje &eacute; dia de agir com ousadia, mesmo que o medo sussurre o contr&aacute;rio.", sorte: "7", cor: "Vermelho", nota: "R&eacute;" },
+            { texto: "Confie nos seus instintos. Eles sabem o caminho.", sorte: "3", cor: "Azul", nota: "Mi" },
+            { texto: "Uma reviravolta inesperada pode ser um presente disfar&ccedil;ado.", sorte: "9", cor: "Dourado", nota: "Sol" },
+            { texto: "Evite decis&otilde;es precipitadas. O sil&ecirc;ncio tamb&eacute;m fala.", sorte: "1", cor: "Cinza", nota: "L&aacute;" },
+            { texto: "Seja leve. A vida j&aacute; tem pesos demais.", sorte: "5", cor: "Verde", nota: "D&oacute;" },
+            { texto: "A palavra certa na hora certa pode transformar o dia de algu&eacute;m.", sorte: "2", cor: "Lil&aacute;s", nota: "Si" },
+            { texto: "Desapegar n&atilde;o &eacute; perder. &eacute; abrir espa&ccedil;o.", sorte: "6", cor: "Bege", nota: "F&aacute;" },
+            { texto: "A energia que voc&ecirc; emana hoje ser&aacute; seu reflexo amanh&atilde;.", sorte: "8", cor: "Turquesa", nota: "Mi" },
+            { texto: "A sorte sorri para os corajosos. Ent&atilde;o, sorria de volta.", sorte: "4", cor: "Amarelo", nota: "L&aacute;" },
+            { texto: "O caos de hoje pode ser a clareza de amanh&atilde;.", sorte: "11", cor: "Roxo", nota: "D&oacute;" },
+            { texto: "N&atilde;o subestime o poder de um bom caf&eacute; e uma boa conversa.", sorte: "12", cor: "Preto", nota: "Sol" },
+            { texto: "Escute a sua intui&ccedil;&atilde;o, ela &eacute; sua melhor guia hoje.", sorte: "15", cor: "Rosa", nota: "R&eacute;" },
+            { texto: "Pequenos passos hoje levam a grandes conquistas amanh&atilde;.", sorte: "10", cor: "Laranja", nota: "Mi" },
+            { texto: "Abrace a mudan&ccedil;a, ela traz novas possibilidades.", sorte: "13", cor: "Azul Escuro", nota: "F&aacute;" },
+            { texto: "A paci&ecirc;ncia ser&aacute; sua maior aliada hoje.", sorte: "14", cor: "Branco", nota: "Sol" },
+            { texto: "Deixe a criatividade fluir sem barreiras.", sorte: "16", cor: "Violeta", nota: "L&aacute;" },
+            { texto: "Um sorriso pode abrir portas que voc&ecirc; nem imagina.", sorte: "17", cor: "Ciano", nota: "Si" },
+            { texto: "A gratid&atilde;o transforma o comum em extraordin&aacute;rio.", sorte: "18", cor: "Magenta", nota: "D&oacute;" },
+            { texto: "Confie no processo, tudo est&aacute; se alinhando.", sorte: "19", cor: "Marrom", nota: "R&eacute;" },
+            { texto: "Hoje &eacute; um bom dia para perdoar e seguir em frente.", sorte: "20", cor: "Prata", nota: "Mi" },
+            { texto: "A autenticidade &eacute; sua maior for&ccedil;a hoje.", sorte: "21", cor: "Dourado Escuro", nota: "F&aacute;" },
+            { texto: "Ou&ccedil;a mais do que fala, a sabedoria est&aacute; nos detalhes.", sorte: "22", cor: "Verde Escuro", nota: "Sol" },
+            { texto: "A coragem de come&ccedil;ar &eacute; o primeiro passo para o sucesso.", sorte: "23", cor: "Azul Claro", nota: "L&aacute;" },
+            { texto: "A simplicidade traz clareza para suas escolhas.", sorte: "24", cor: "Amarelo Claro", nota: "Si" },
+            { texto: "Hoje, sua energia atrai as pessoas certas.", sorte: "25", cor: "Roxo Escuro", nota: "D&oacute;" },
+            { texto: "Aproveite o momento presente, ele &eacute; &uacute;nico.", sorte: "26", cor: "Coral", nota: "R&eacute;" },
+            { texto: "A determina&ccedil;&atilde;o hoje abre novos caminhos.", sorte: "27", cor: "Turquesa Clara", nota: "Mi" },
+            { texto: "Seja gentil consigo mesmo, voc&ecirc; est&aacute; fazendo o seu melhor.", sorte: "28", cor: "Lavanda", nota: "F&aacute;" },
+            { texto: "As estrelas guiam, mas voc&ecirc; escolhe o caminho.", sorte: "29", cor: "Ocre", nota: "Sol" },
+            { texto: "Um pequeno gesto de bondade pode mudar tudo.", sorte: "30", cor: "Esmeralda", nota: "L&aacute;" },
+            { texto: "A confian&ccedil;a em si mesmo &eacute; a chave para hoje.", sorte: "31", cor: "Safira", nota: "Si" },
+            { texto: "O universo est&aacute; conspirando a seu favor.", sorte: "32", cor: "&iacute;ndigo", nota: "D&oacute;" },
+            { texto: "A harmonia come&ccedil;a com a aceita&ccedil;&atilde;o de si.", sorte: "33", cor: "P&eacute;rola", nota: "R&eacute;" },
+            { texto: "Hoje &eacute; dia de ouvir o cora&ccedil;&atilde;o e agir com coragem.", sorte: "34", cor: "Rubi", nota: "Mi" },
+            { texto: "A mudan&ccedil;a come&ccedil;a com um &uacute;nico passo.", sorte: "35", cor: "Ametista", nota: "F&aacute;" },
+            { texto: "A energia positiva atrai oportunidades incr&iacute;veis.", sorte: "36", cor: "Creme", nota: "Sol" },
+            { texto: "Seja a luz que ilumina o caminho dos outros.", sorte: "37", cor: "Jade", nota: "L&aacute;" },
+            { texto: "A paci&ecirc;ncia hoje revelar&aacute; grandes surpresas.", sorte: "38", cor: "Vermelho Escuro", nota: "Si" },
+            { texto: "Acredite nos seus sonhos, eles est&atilde;o mais perto do que pensa.", sorte: "39", cor: "Azul Marinho", nota: "D&oacute;" },
+            { texto: "A resili&ecirc;ncia &eacute; sua maior virtude hoje.", sorte: "40", cor: "Lil&aacute;s Escuro", nota: "R&eacute;" },
+            { texto: "Hoje &eacute; um dia para novas conex&otilde;es.", sorte: "41", cor: "Verde Claro", nota: "Mi" },
+            { texto: "O equil&iacute;brio &eacute; a chave para sua paz interior.", sorte: "42", cor: "Rosa Claro", nota: "F&aacute;" },
+            { texto: "Abrace o desconhecido, ele traz crescimento.", sorte: "43", cor: "Cobalto", nota: "Sol" },
+            { texto: "Sua intui&ccedil;&atilde;o est&aacute; mais afiada do que nunca.", sorte: "44", cor: "Ambar", nota: "L&aacute;" },
+            { texto: "A generosidade hoje retorna em dobro.", sorte: "45", cor: "Violeta Claro", nota: "Si" },
+            { texto: "Confie no tempo, ele organiza tudo.", sorte: "46", cor: "Cinza Claro", nota: "D&oacute;" },
+            { texto: "Hoje &eacute; dia de celebrar suas conquistas.", sorte: "47", cor: "Turmalina", nota: "R&eacute;" },
+            { texto: "A clareza vem quando voc&ecirc; silencia a mente.", sorte: "48", cor: "Verde Musgo", nota: "Mi" },
+            { texto: "A autenticidade atrai as melhores energias.", sorte: "49", cor: "Azul C&eacute;u", nota: "F&aacute;" },
+            { texto: "O amor-pr&oacute;prio &eacute; o primeiro passo para a felicidade.", sorte: "50", cor: "Rosa Escuro", nota: "Sol" },
+            { texto: "Hoje, sua voz tem o poder de inspirar.", sorte: "51", cor: "Dourado Claro", nota: "L&aacute;" },
+            { texto: "A jornada &eacute; t&atilde;o importante quanto o destino.", sorte: "52", cor: "Verde Jade", nota: "Si" },
+            { texto: "A sabedoria est&aacute; em ouvir antes de agir.", sorte: "53", cor: "Roxo Claro", nota: "D&oacute;" },
+            { texto: "A coragem de ser voc&ecirc; mesmo abre novas portas.", sorte: "54", cor: "Azul Turquesa", nota: "R&eacute;" },
+            { texto: "Hoje, o universo responde &agrave; sua energia.", sorte: "55", cor: "Vermelho Claro", nota: "Mi" },
+            { texto: "A gratid&atilde;o transforma desafios em li&ccedil;&otilde;es.", sorte: "56", cor: "Lil&aacute;s Claro", nota: "F&aacute;" },
+            { texto: "Seja o farol em meio &agrave; tempestade.", sorte: "57", cor: "Amarelo Escuro", nota: "Sol" },
+            { texto: "A paci&ecirc;ncia hoje revela oportunidades escondidas.", sorte: "58", cor: "Cinza Escuro", nota: "L&aacute;" },
+            { texto: "Confie na sua for&ccedil;a interior, ela &eacute; inabal&aacute;vel.", sorte: "59", cor: "Verde Esmeralda", nota: "Si" },
+            { texto: "Hoje &eacute; dia de plantar sementes para o futuro.", sorte: "60", cor: "Roxo Escuro", nota: "D&oacute;" },
+            { texto: "A simplicidade traz paz ao cora&ccedil;&atilde;o.", sorte: "61", cor: "Azul Claro", nota: "R&eacute;" },
+            { texto: "Abrace suas imperfei&ccedil;&otilde;es, elas te tornam &uacute;nico.", sorte: "62", cor: "Rosa P&aacute;lido", nota: "Mi" },
+            { texto: "A intui&ccedil;&atilde;o hoje &eacute; sua b&uacute;ssola.", sorte: "63", cor: "Vermelho Rubi", nota: "F&aacute;" },
+            { texto: "A energia do dia favorece novos come&ccedil;os.", sorte: "64", cor: "Dourado Brilhante", nota: "Sol" },
+            { texto: "A bondade &eacute; a chave para conex&otilde;es verdadeiras.", sorte: "65", cor: "Verde Lima", nota: "L&aacute;" },
+            { texto: "Hoje, o sil&ecirc;ncio traz respostas profundas.", sorte: "66", cor: "Azul Safira", nota: "Si" },
+            { texto: "A determina&ccedil;&atilde;o move montanhas hoje.", sorte: "67", cor: "Roxo Vibrante", nota: "D&oacute;" },
+            { texto: "A confian&ccedil;a em si mesmo ilumina seu caminho.", sorte: "68", cor: "Amarelo Brilhante", nota: "R&eacute;" },
+            { texto: "Hoje &eacute; dia de ouvir o cora&ccedil;&atilde;o e agir.", sorte: "69", cor: "Verde Floresta", nota: "Mi" },
+            { texto: "A paci&ecirc;ncia hoje abre novas perspectivas.", sorte: "70", cor: "Rosa Vibrante", nota: "F&aacute;" },
+            { texto: "A criatividade &eacute; sua maior aliada hoje.", sorte: "71", cor: "Azul Profundo", nota: "Sol" },
+            { texto: "A gratid&atilde;o atrai b&ecirc;n&ccedil;&atilde;os inesperadas.", sorte: "72", cor: "Dourado Suave", nota: "L&aacute;" },
+            { texto: "Hoje, sua energia inspira quem est&aacute; ao seu redor.", sorte: "73", cor: "Verde Claro", nota: "Si" },
+            { texto: "A resili&ecirc;ncia transforma obst&aacute;culos em degraus.", sorte: "74", cor: "Roxo Suave", nota: "D&oacute;" },
+            { texto: "A autenticidade &eacute; sua maior for&ccedil;a hoje.", sorte: "75", cor: "Azul Mar", nota: "R&eacute;" },
+            { texto: "O equil&iacute;brio hoje traz paz e clareza.", sorte: "76", cor: "Vermelho Intenso", nota: "Mi" },
+            { texto: "Abrace o novo, ele traz crescimento.", sorte: "77", cor: "Amarelo Suave", nota: "F&aacute;" },
+            { texto: "A intui&ccedil;&atilde;o guia seus passos com precis&atilde;o.", sorte: "78", cor: "Verde Musgo", nota: "Sol" },
+            { texto: "A generosidade hoje retorna em abund&acirc;ncia.", sorte: "79", cor: "Roxo Brilhante", nota: "L&aacute;" },
+            { texto: "Confie no fluxo, tudo se resolve no tempo certo.", sorte: "80", cor: "Azul Celeste", nota: "Si" },
+            { texto: "Hoje &eacute; dia de celebrar quem voc&ecirc; &eacute;.", sorte: "81", cor: "Rosa Suave", nota: "D&oacute;" },
+            { texto: "A clareza vem com a calma interior.", sorte: "82", cor: "Dourado Vibrante", nota: "R&eacute;" },
+            { texto: "A autenticidade atrai oportunidades &uacute;nicas.", sorte: "83", cor: "Verde Esmeralda", nota: "Mi" },
+            { texto: "O amor-pr&oacute;prio &eacute; a base do seu sucesso.", sorte: "84", cor: "Roxo Claro", nota: "F&aacute;" },
+            { texto: "Sua voz hoje tem o poder de transformar.", sorte: "85", cor: "Azul Turquesa", nota: "Sol" },
+            { texto: "A jornada de hoje &eacute; sobre autodescoberta.", sorte: "86", cor: "Vermelho Escuro", nota: "L&aacute;" },
+            { texto: "A sabedoria est&aacute; em ouvir o cora&ccedil;&atilde;o.", sorte: "87", cor: "Amarelo Claro", nota: "Si" },
+            { texto: "A coragem hoje abre novos horizontes.", sorte: "88", cor: "Verde Jade", nota: "D&oacute;" },
+            { texto: "O universo alinha tudo a seu favor.", sorte: "89", cor: "Roxo Escuro", nota: "R&eacute;" },
+            { texto: "A gratid&atilde;o transforma o comum em m&aacute;gico.", sorte: "90", cor: "Azul Claro", nota: "Mi" },
+            { texto: "Hoje &eacute; dia de brilhar com autenticidade.", sorte: "91", cor: "Rosa Claro", nota: "F&aacute;" },
+            { texto: "A paci&ecirc;ncia revela o que est&aacute; oculto.", sorte: "92", cor: "Dourado Escuro", nota: "Sol" },
+            { texto: "Confie na sua for&ccedil;a, ela &eacute; ilimitada.", sorte: "93", cor: "Verde Floresta", nota: "L&aacute;" },
+            { texto: "Hoje &eacute; dia de plantar sonhos para o futuro.", sorte: "94", cor: "Roxo Vibrante", nota: "Si" },
+            { texto: "A simplicidade traz clareza &agrave;s suas escolhas.", sorte: "95", cor: "Azul Marinho", nota: "D&oacute;" },
+            { texto: "Abrace suas emo&ccedil;&otilde;es, elas s&atilde;o sua for&ccedil;a.", sorte: "96", cor: "Vermelho Rubi", nota: "R&eacute;" },
+            { texto: "A energia do dia favorece novos come&ccedil;os.", sorte: "97", cor: "Amarelo Brilhante", nota: "Mi" },
+            { texto: "A bondade hoje cria la&ccedil;os duradouros.", sorte: "98", cor: "Verde Claro", nota: "F&aacute;" },
+            { texto: "O sil&ecirc;ncio hoje traz respostas profundas.", sorte: "99", cor: "Roxo Suave", nota: "Sol" },
+            { texto: "A determina&ccedil;&atilde;o &eacute; sua maior aliada hoje.", sorte: "100", cor: "Azul Celeste", nota: "L&aacute;" }
+        ];
+
+        function verificarSigno() {
+            const audio = document.getElementById("mysticSound");
+            const data = document.getElementById('birthDate').value;
+            if (!data) {
+                document.getElementById('resultado').textContent = 'Por favor, selecione sua data de nascimento.';
+                document.getElementById('descricao').textContent = '';
+                document.getElementById('extra').textContent = '';
+                document.getElementById('horoscopo-daily').textContent = '';
+                return;
+        }
+
+        const [ano, mes, dia] = data.split('-');
+        const dataFormatada = `${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+        const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD
+
+        const signo = signos.find(s => {
+
+            return (dataFormatada >= s.inicio && dataFormatada <= s.fim) ||
+                (s.inicio > s.fim && (dataFormatada >= s.inicio || dataFormatada <= s.fim));
+            });
+
+            if (signo) {
+                document.getElementById('resultado').innerHTML = `
+                <div class="signo-nome">
+                    <img src="${signo.img}" alt="${signo.img}" class="signo-img" />
+                    <strong>${signo.nome} ${signo.emoji}</strong>
+                </div>
+                `;
+                document.getElementById('descricao').textContent = signo.descricao;
+                document.getElementById('extra').innerHTML = `
+                __glowing_star__ Elemento: <strong>${signo.elemento}</strong><br/>
+                __heart_with_arrow__ Compat&iacute;vel com: <strong>${signo.compatibilidade}</strong><br/>
+                `;
+
+                // Check for stored horoscope message for this sign and date
+                const storageKey = `horoscopo_${signo.nomeEn}_${currentDate}`;
+                let horoscopoAleatorio;
+                const storedIndex = localStorage.getItem(storageKey);
+
+                if (storedIndex !== null && horoscoposAleatorios[storedIndex]) {
+                    horoscopoAleatorio = horoscoposAleatorios[storedIndex];
+                } else {
+                    const randomIndex = Math.floor(Math.random() * horoscoposAleatorios.length);
+                    horoscopoAleatorio = horoscoposAleatorios[randomIndex];
+                    localStorage.setItem(storageKey, randomIndex);
+                }
+
+                // Display musical note and fallback horoscope
+                document.getElementById('horoscopo-daily').innerHTML = `
+                __musical_note__ Hoje seu signo vibra na nota musical <strong>${horoscopoAleatorio.nota}</strong>.<br/>
+                __crystal_ball__ Hor&oacute;scopo de hoje: <strong>${horoscopoAleatorio.texto}</strong><br/>
+                Sorte: <strong>${horoscopoAleatorio.sorte}</strong>, Cor: <strong>${horoscopoAleatorio.cor}</strong>
+                `;
+
+                // Fetch daily horoscope via Aztro API
+                const proxyUrl = 'https://corsproxy.io/?';
+                const apiUrl = `https://aztro.sameerkumar.website/?sign=${signo.nomeEn}&day=today`;
+
+                fetch(proxyUrl + encodeURIComponent(apiUrl), { method: 'GET' })
+                .then(response => {
+                    if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.description) throw new Error('Resposta da API inv&aacute;lida');
+                    document.getElementById('horoscopo-daily').innerHTML = `
+                    __musical_note__ Hoje seu signo vibra na nota musical <strong>${horoscopoAleatorio.nota}</strong>.<br/>
+                    __crystal_ball__ Hor&oacute;scopo de hoje: <strong>${data.description}</strong><br/>
+                    Sorte: <strong>${data.lucky_number}</strong>, Cor: <strong>${data.color}</strong>
+                    `;
+                })
+                .catch(error => {
+                    // Fallback to stored or random horoscope if API fails
+                    document.getElementById('horoscopo-daily').innerHTML = `
+                    __musical_note__ Hoje seu signo vibra na nota musical <strong>${horoscopoAleatorio.nota}</strong>.<br/>
+                    __crystal_ball__ Hor&oacute;scopo de hoje: <strong>${horoscopoAleatorio.texto}</strong><br/>
+                    Sorte: <strong>${horoscopoAleatorio.sorte}</strong>, Cor: <strong>${horoscopoAleatorio.cor}</strong>
+                    `;
+                });
+
+                // Try to play audio with error handling
+                try {
+                audio.play().catch(err => console.warn('Erro ao reproduzir &aacute;udio:', err));
+                } catch (err) {
+                console.warn('Erro ao acessar &aacute;udio:', err);
+                }
+            } else {
+                document.getElementById('resultado').textContent = 'Signo n&atilde;o encontrado.';
+                document.getElementById('descricao').textContent = '';
+                document.getElementById('extra').textContent = '';
+                document.getElementById('horoscopo-daily').textContent = '';
+            }
+        }
+
+    endContent
+
+    jEmojis:=WebExHelper():GetEmojiHtmlJSON()
+    aEmogis:=jEmojis:GetNames()
+    for i:=1 to Len(aEmogis)
+        if (aEmogis[i]$cScript)
+            cScript:=StrTran(cScript,"__"+aEmogis[i]+"__",jEmojis[aEmogis[i]])
+        endif
+    next i
+
+    FWFreeArray(@aEmogis)
+    FreeObj(@jEmojis)
+
+    WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cTitle
+        WITH WEBEXOBJECT CLASS WebExControl TYPE meta
+            .:SetAttr("name","description")
+            .:SetAttr("content",cTitle)
+            .:AddInHeader(.this)
+        END WEBEXOBJECT NOADDCHILD
+        WITH WEBEXOBJECT CLASS WebExBody
+            WITH WEBEXOBJECT CLASS WebExMain
+                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                    .:AddClass("container")
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE h1
+                        .:SetContent(cTitle)
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExInput ARGS "birthDate","date","birthDate"
+                        .:SetFixedID("birthDate")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE br
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExButton ARGS "Ver meu signo","button"
+                        .:DelAttr("class")
+                        .:SetAttr("type","button")
+                        .:SetAttr("onclick","verificarSigno()")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:SetAttr("id","resultado")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:SetAttr("id","descricao")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:SetAttr("id","extra")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:SetAttr("id","horoscopo-daily")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE audio
+                        .:SetAttr("id","mysticSound")
+                        .:SetAttr("src","https://www.soundjay.com/misc/magic-chime-02.mp3")
+                        .:SetAttr("preload","auto")
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExStyle
+            .:SetContent(cStyle)
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExScript
+            .:SetContent(cScript)
+        END WEBEXOBJECT
+    END WEBEXOBJECT
+
+return(oFWWebExPage)

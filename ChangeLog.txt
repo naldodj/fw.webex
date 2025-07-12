@@ -3,6 +3,13 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-12 19:09 UTC naldodj (New Example: iFrame)
+  + src/fw.webex.examples/016/fw.webex.example.016.tlpp
+  + src/fw.webex.examples/016/README.md
+  * src/fw.webex/tools/fw.webex.file.tools.tlpp
+  * src/fw.webex/tools/fw.webex.helper.tlpp
+  * src/fw.webex.examples/000/fw.webex.example.000.tlpp
+
 2025-07-12 11:12 UTC naldodj (Fix: Restore usage of GetID() where dynamic object identification is required)
   ! (Fix: Restore usage of GetID() where dynamic object identification is required)
     * src/fw.webex/web/control/fw.webex.control.tlpp

@@ -46,7 +46,7 @@ static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLC
 
     if (empty(cHTMLFilePath))
         if (!Empty(oFWWebExControl:GetFWWebExTmpPath()))
-            cHTMLFilePath:=oFWWebExControl::GetFWWebExTmpPath()
+            cHTMLFilePath:=oFWWebExControl:GetFWWebExTmpPath()
         else
             cHTMLFilePath:=FWWEBEX_WEB_TMP_PATH
         endif
@@ -101,8 +101,6 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
     local cScript as character
 
     local cProcName:=ProcName() as character
-
-    local cIFrameID as character
 
     local cLocalAssetsFilePath as character
     local cExternalAssetsFilePath as character
@@ -223,7 +221,6 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
                                         .:AddClass("embed-responsive")
                                         .:AddClass("embed-responsive-21by9")
                                         WITH WEBEXOBJECT CLASS WebExIFrame
-                                            cIFrameID:=.:GetFixedID()
                                             .:SetAttr("src",cLocalAssetsFilePath/*cExternalAssetsFilePath*/)
                                         END WEBEXOBJECT
                                     END WEBEXOBJECT
@@ -299,6 +296,8 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
         END WEBEXOBJECT
 
         lHTMLDumpDOMFromControl:=WebFileTools():HTMLFromControl(oFWWebExPage,@cHTMLFilePath,@cHTMLFileName,@cHTMLContent,@lEncodeUTF8)
+
+        WEBEXOBJECT CLEAN
 
     end sequence
 
