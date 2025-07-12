@@ -542,7 +542,7 @@ method AddChild(oChild) class WebExControl
     elseif ((!MethIsMemberOf(oChild,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
         CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
-    ::jChildren[oChild:GetFixedID()]:=oChild
+    ::jChildren[oChild:GetID()]:=oChild
 return(self)
 
 method GetHeader() class WebExControl
@@ -556,7 +556,7 @@ method AddInHeader(oChild) class WebExControl
     elseif ((!MethIsMemberOf(oChild,"ISKINDOF",.T.)).or.(!oChild:IsKindOf("WEBEXCONTROL",.T.)))
         CLASSPARAMEXCEPTION PARAM 1 VAR oChild TEXT cClassName MESSAGE "Object must inherit from FWWEBEX.WebExControl. Received: "+cClassName+"."
     endif
-    __jHeader[oChild:GetFixedID()]:=oChild
+    __jHeader[oChild:GetID()]:=oChild
 return(oChild)
 
 method FindInHeader(cID) class WebExControl
@@ -637,7 +637,7 @@ method GetPageScriptBundle() class WebExControl
                 oWebExScript:SetExternalAssets(lExternalAssets)
             endif
             jPageScripts:=JSONObject():New()
-            jPageScripts[oWebExScript:GetFixedID()]:=oWebExScript
+            jPageScripts[oWebExScript:GetID()]:=oWebExScript
         else
             jPageScripts:=__jScripts["page"]
         endif
@@ -667,12 +667,12 @@ return(lFound)
 method AddScript(oScript) class WebExControl
     local cType as character
     paramtype 1 var oScript as object class WebExScript
-    if (!::FindInHeader(oScript:GetFixedID()))
+    if (!::FindInHeader(oScript:GetID()))
         cType:=if(oScript:GetScriptInPage(),"page","head")
         if (!__jScripts:HasProperty(cType))
             __jScripts[cType]:=JSONObject():New()
         endif
-        __jScripts[cType][oScript:GetFixedID()]:=oScript
+        __jScripts[cType][oScript:GetID()]:=oScript
     endif
 return(oScript)
 
