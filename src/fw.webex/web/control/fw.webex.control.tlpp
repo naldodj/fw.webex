@@ -700,7 +700,7 @@ method RenderHTML() class WebExControl
 
         // Garante que tenha um ID unico
         if (!::jAttrs:HasProperty("id"))
-            ::jAttrs["id"]:=::GetID()
+            ::jAttrs["id"]:=::GetFixedID()
         endif
 
         cContent:=::cContent

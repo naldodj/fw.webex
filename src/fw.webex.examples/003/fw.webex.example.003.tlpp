@@ -40,6 +40,7 @@ procedure u_FWWebExExample_003()
         FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
         fErase(cHTMLFile)
     endif
+    WebFileTools():ObliterateFWWebExTmpFiles(.T.)
 return
 
 static function FWWebExExample_003(cHTML as character) as character

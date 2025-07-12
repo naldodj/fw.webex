@@ -65,6 +65,7 @@ procedure u_FWWebExExample_014()
         FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
         fErase(cHTMLFile)
     endif
+    WebFileTools():ObliterateFWWebExTmpFiles(.T.)
 return
 
 // Dashboard basico com layout SBAdmin
