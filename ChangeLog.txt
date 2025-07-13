@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-13 17:35 UTC naldodj (Update Emogi Table)
+  * src/fw.webex/tools/fw.webex.helper.tlpp
+
 2025-07-13 17:22 UTC naldodj (New Alarm URL)
   * src/fw.webex.examples/016/fw.webex.example.016.tlpp
 
