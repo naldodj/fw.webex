@@ -403,9 +403,11 @@ static function AlarmClockPage()
 
         const soundURLs = {
             alarm_clock: 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg',
-            bicycle_bell: 'https://actions.google.com/sounds/v1/alarms/bicycle_bell.ogg',
-            airhorn: 'https://actions.google.com/sounds/v1/alarms/airhorn.ogg',
-            bugle: 'https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg'
+            dosimeter_alarm: 'https://actions.google.com/sounds/v1/alarms/dosimeter_alarm.ogg',
+            medium_bell_ringing_near: 'https://actions.google.com/sounds/v1/alarms/medium_bell_ringing_near.ogg',
+            bugle_tune: 'https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg',
+            spaceship_alarm: 'https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg',
+            phone_alerts_and_rings: 'https://actions.google.com/sounds/v1/alarms/phone_alerts_and_rings.ogg'
         };
 
         function updateClock() {
@@ -498,6 +500,7 @@ static function AlarmClockPage()
                                 .:SetAttr("id","alarmTime")
                                 .:SetAttr("placeholder","Ex: 15:12:00")
                                 .:SetAttr("required","required")
+                                .:SetAttr("onchange","stopAlarm()")
                             END WEBEXOBJECT
                         END WEBEXOBJECT
                         WITH WEBEXOBJECT CLASS WebExControl TYPE div
@@ -509,21 +512,31 @@ static function AlarmClockPage()
                             END WEBEXOBJECT
                             WITH WEBEXOBJECT CLASS WebExControl TYPE select
                                 .:SetAttr("id","sound")
+                                .:SetAttr("onchange","stopAlarm()")
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE option
                                     .:SetAttr("value","alarm_clock")
+                                    .:SetAttr("selected","selected")
                                     .:SetContent("Rel&oacute;gio")
                                 END WEBEXOBJECT
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE option
-                                    .:SetAttr("value","bicycle_bell")
+                                    .:SetAttr("value","dosimeter_alarm")
+                                    .:SetContent("Radi&ocirc;metro")
+                                END WEBEXOBJECT
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE option
+                                    .:SetAttr("value","medium_bell_ringing_near")
                                     .:SetContent("Sino")
                                 END WEBEXOBJECT
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE option
-                                    .:SetAttr("value","airhorn")
-                                    .:SetContent("Corneta")
+                                    .:SetAttr("value","bugle_tune")
+                                    .:SetContent("Trompete")
                                 END WEBEXOBJECT
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE option
-                                    .:SetAttr("value","bugle")
-                                    .:SetContent("Trompete")
+                                    .:SetAttr("value","spaceship_alarm")
+                                    .:SetContent("Espacial")
+                                END WEBEXOBJECT
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE option
+                                    .:SetAttr("value","phone_alerts_and_rings")
+                                    .:SetContent("Toques")
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
                         END WEBEXOBJECT
