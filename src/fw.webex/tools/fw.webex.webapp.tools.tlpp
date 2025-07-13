@@ -17,6 +17,8 @@ namespace FWWebEx
 #include "tlpp-core.th"
 #include "tlpp-rest.th"
 
+static __oTWebChannel as object
+
 class WebApp
 
     static method ThemeIsDark(cTheme as character) as logical
@@ -24,6 +26,10 @@ class WebApp
 
     static method FixHeaderRouter(cFile as character) as character
     static method GetMimeType(cFile) as character
+
+    static method GetTWebChannel(lConnect as logical) as object
+    static method GetRemoteOrigin() as character
+    static method ExtendUrlWithParams(cUrl as character) as character
 
 end class
 
@@ -200,6 +206,112 @@ static method GetMimeType(cFile) class WebApp
     endif
 
 return(cMimeType)
+
+static method GetTWebChannel(lConnect) class WebApp
+    local cTWebChannelType:=ValType(__oTWebChannel)
+    paramtype lConnect as logical optional default .T.
+    if (;
+            (cTWebChannelType!="O");
+            .or.;
+            (;
+                (cTWebChannelType=="O");
+                .and.;
+                (GetClassName(__oTWebChannel)!="TWEBCHANNEL");
+            );
+    )
+        __oTWebChannel:=TWebChannel():New()
+        if (lConnect)
+            __oTWebChannel:Connect()
+        endif
+    elseif ((!__oTWebChannel:lConnected).and.(lConnect))
+        __oTWebChannel:Connect()
+    endif
+return(__oTWebChannel)
+
+//TODO: Utilizar a funcao padrao para retornar esta informacao
+static method GetRemoteOrigin() class WebApp
+
+    local cHost as character
+    local cProtocol as character
+    local cWebAppPort as character
+    local cRemoteOrigin as character
+    local cGetSrvIniName:=GetSrvIniName() as character
+
+    local oTWebChannel:=WebApp():GetTWebChannel(.T.) as object
+
+    cHost:=oTWebChannel:cHost
+    cProtocol:=if((Upper(AllTrim(GetPvProfString("WEBAPP","SSLMethod","",cGetSrvIniName)))=="SSL/TLS"),"https","http")
+    cWebAppPort:=GetPvProfString("WEBAPP","port","",cGetSrvIniName)
+
+    cRemoteOrigin:=cProtocol
+    cRemoteOrigin+="://"
+    cRemoteOrigin+=cHost
+    cRemoteOrigin+=":"
+    cRemoteOrigin+=cWebAppPort
+
+return(cRemoteOrigin)
+
+static method ExtendUrlWithParams(cUrl) class WebApp
+
+    local aParams as array
+
+    local cSep:="?" as character
+    local cParam as character
+    local cNewUrl as character
+
+    local jParams:=JSONObject():New() as json
+
+    local i as numeric
+    local nRemoteType as numeric
+
+    local oTWebChannel:=WebApp():GetTWebChannel(.T.) as object
+
+    paramtype 1 var cUrl as character
+
+    cNewUrl:=cUrl
+
+    begin sequence
+
+        // Garante que o canal esta conectado
+        if !((ValType(oTWebChannel)=="O").and.(oTWebChannel:lConnected))
+            __oTWebChannel:Connect()
+            if (!oTWebChannel:lConnected)
+                // Falha, retorna original
+                break
+            endif
+        endif
+
+        nRemoteType:=GetRemoteType()
+        if (nRemoteType==1)
+            nRemoteType:=5
+        endif
+
+        // Monta os parametros que normalmente o TWebEngine injeta
+        jParams["totvstec_websocket_port"]:=LTrim(Str(oTWebChannel:nPort))
+        jParams["totvstec_remote_type"]:=LTrim(Str(nRemoteType))
+        jParams["totvstec_remote_origin"]:=WebApp():GetRemoteOrigin()
+
+        // Verifica se a URL ja tem parametros
+        if ("?"$cUrl)
+            cSep:="&"
+        endif
+
+        // Concatena os parametros
+        aParams:=jParams:GetNames()
+        for i:=1 to Len(aParams)
+            cParam:=aParams[i]
+            cNewUrl+=cSep+cParam+"="+jParams[cParam]
+            if (cSep=="?")
+                cSep:="&"
+            endif
+        next i
+        FWFreeArray(@aParams)
+        FreeObj(@jParams)
+
+    end sequence
+
+return(cNewUrl)
+
 
 *******************************************************************************************************
 @Get(endpoint="/fwwebex/webapp/FixHeaderRouter/query",description="Fix Header Router")

@@ -62,6 +62,7 @@ procedure u_FWWebExExample_001()
     if (!Empty(cHTMLFile).and.File(cHTMLFile))
         ShellExecute("open",cHTMLFile,"","",1)
     endif
+    WebFileTools():ObliterateFWWebExTmpFiles(.T.)
 return
 
 static function FWWebExExample_001() as character

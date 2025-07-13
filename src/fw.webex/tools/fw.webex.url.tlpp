@@ -1,0 +1,76 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+The source code `fw.webex.url.tlpp` is based on a more detailed and feature-rich
+source code, `dna.tech.url.tlpp`, and implements part of the functionalities
+present in the latter.
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class URL
+
+    static method Encode(cString as character) as character
+    static method Decode(cString as character) as character
+
+end class
+
+static method Encode(cString) class URL
+
+   local cI as character
+   local cRet:="" as character
+
+   local nI as numeric
+   local nAsc as numeric
+
+   paramtype 1 var cString as character
+
+   for nI:=1 to Len(cString)
+      cI:=SubStr(cString,nI,1)
+      if (cI==" ")
+         cRet+="+"
+      elseif ((nAsc:=Asc(cI),((nAsc>=127).or.(nAsc<=31))).or.(cI$'=&%+'))
+         cRet+="%"+__dectohex(nAsc)
+      else
+         cRet+=cI
+      endif
+   next nI
+
+return(cRet)
+
+static method Decode(cString) class URL
+
+    local cRet as character
+    local nI as numeric
+    local nLen as numeric
+
+    paramtype 1 var cString as character
+
+    cRet:=StrTran(cString,"+"," ")
+    nI:=1
+    nLen:=Len(cRet)
+    while (nI<=nLen)
+        nI:=AT("%",cRet,nI)
+        if (nI==0)
+            exit
+        endif
+        if (;
+                (Upper(SubStr(cRet,nI+1,1))$"0123456789ABCDEF");
+                .and.;
+                (Upper(SubStr(cRet,nI+2,1))$"0123456789ABCDEF");
+        )
+            cRet:=Stuff(cRet,nI,3,__hextodec(SubStr(cRet,nI+1,2)))
+        endif
+        nI++
+    end while
+
+return(cRet)

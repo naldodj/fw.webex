@@ -18,10 +18,14 @@ procedure u_FWWebExExample_016()
     local cHTML as character
     local cHTMLFile as character
     local cProcName:=ProcName() as character
+    local oTWebChannel:=WebApp():GetTWebChannel() as object
+    if (!oTWebChannel:lConnected)
+        __oTWebChannel:Connect()
+    endif
     bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_016(@cHTML)},"Aguarde",cProcName)}
     FWExampleTools():Execute(bExecute,cProcName,.T.)
     if (!Empty(cHTMLFile).and.File(cHTMLFile))
-        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile)
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile,oTWebChannel)
         fErase(cHTMLFile)
     endif
     WebFileTools():ObliterateFWWebExTmpFiles(.T.)
@@ -176,7 +180,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                                     .:AddClass("embed-responsive")
                                     .:AddClass("embed-responsive-21by9")
                                     WITH WEBEXOBJECT CLASS WebExIFrame
-                                        .:SetAttr("src",cZodiacSignsPageLocalAssetsFilePath)
+                                        .:SetAttr("src",cZodiacSignsPageLocalAssetsFilePath/*cZodiacSignsPageExternalAssetsFilePath*/)
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
