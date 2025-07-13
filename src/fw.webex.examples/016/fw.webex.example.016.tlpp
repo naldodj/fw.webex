@@ -404,6 +404,7 @@ static function AlarmClockPage()
         const soundURLs = {
             alarm_clock: 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg',
             dosimeter_alarm: 'https://actions.google.com/sounds/v1/alarms/dosimeter_alarm.ogg',
+            bell_ringing_01c: 'https://www.soundjay.com/misc/bell-ringing-01c.mp3',
             medium_bell_ringing_near: 'https://actions.google.com/sounds/v1/alarms/medium_bell_ringing_near.ogg',
             bugle_tune: 'https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg',
             spaceship_alarm: 'https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg',
@@ -523,8 +524,12 @@ static function AlarmClockPage()
                                     .:SetContent("Radi&ocirc;metro")
                                 END WEBEXOBJECT
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE option
+                                    .:SetAttr("value","bell_ringing_01c")
+                                    .:SetContent("Sino Pequeno")
+                                END WEBEXOBJECT
+                                WITH WEBEXOBJECT CLASS WebExControl TYPE option
                                     .:SetAttr("value","medium_bell_ringing_near")
-                                    .:SetContent("Sino")
+                                    .:SetContent("Sino M&eacute;dio")
                                 END WEBEXOBJECT
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE option
                                     .:SetAttr("value","bugle_tune")
