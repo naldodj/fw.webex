@@ -68,7 +68,7 @@ method AddColumnHeader(cTableColummLabel) class WebExTable
     local oTH:=WebExControl():New("th") as object
     paramtype 1 var cTableColummLabel as character
     oTH:SetContent(cTableColummLabel)
-    ::jTableHeader[oTH:GetFixedID()]:=oTH
+    ::jTableHeader[oTH:GetID()]:=oTH
 return(oTH)
 
 method BuildHeader() class WebExTable
@@ -87,7 +87,7 @@ return(self)
 method AddCell(xTableCellValue) class WebExTable
     local oTD:=WebExControl():New("td") as object
     oTD:SetContent(cValToChar(xTableCellValue))
-    ::jTableDetail[oTD:GetFixedID()]:=oTD
+    ::jTableDetail[oTD:GetID()]:=oTD
 return(oTD)
 
 method BuildBodyRow(cDataHTML) class WebExTable

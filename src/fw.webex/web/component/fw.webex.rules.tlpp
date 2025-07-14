@@ -13,21 +13,28 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
+/***********************************************************************************************************
+    WebExHR
+***********************************************************************************************************/
 class WebExHR from WebExControl
     public method New() as object
 endclass
 
 method New() class WebExHR
     _Super:New("hr")
-    ::SetAttr("class","my-4")
+    ::AddClass("my-4")
 return(self)
 
+/***********************************************************************************************************
+    WebExVR
+***********************************************************************************************************/
 class WebExVR from WebExControl
     public method New() as object
 endclass
 
 method New() class WebExVR
     _Super:New("div")
-    ::SetAttr("class","vr mx-2")
+    ::AddClass("vr")
+    ::AddClass("mx-2")
     ::SetAttr("style","height: 100%; border-left: 1px solid #dee2e6;")
 return(self)

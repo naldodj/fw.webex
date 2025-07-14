@@ -13,23 +13,65 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
+/***********************************************************************************************************
+    WebExRow
+***********************************************************************************************************/
 class WebExRow from WebExControl
-    public method New() as object
+
+    protected data nGutterSize as numeric
+
+    public method New(nGutterSize as numeric) as object
+
+    public method GetGutterSize() as numeric
+    public method SetGutterSize(nGutterSize as numeric) as object
+
 endclass
 
-method New() class WebExRow
+method New(nGutterSize) class WebExRow
+    paramtype 1 var nGutterSize as numeric optional default 3
+    ::nGutterSize:=nGutterSize
     _Super:New("div")
-    ::SetAttr("class","row g-3")
+    ::AddClass("row")
+    ::SetGutterSize()
 return(self)
 
+method GetGutterSize() class WebExRow
+return(::nGutterSize)
+
+method SetGutterSize(nGutterSize) class WebExRow
+    paramtype nGutterSize as numeric optional default ::nGutterSize
+    ::nGutterSize:=nGutterSize
+    ::DelClassRegex("g-[0-9]+") // remove qualquer g-* anterior (se tiver)
+    ::AddClass("g-"+cValToChar(::nGutterSize))
+return(self)
+
+/***********************************************************************************************************
+    WEBExCol
+***********************************************************************************************************/
 class WebExCol from WebExControl
-    public data nColSize as numeric
+
+    protected data nColSize as numeric
+
     public method New(nColSize as numeric) as object
+
+    public method GetColSize() as numeric
+    public method SetColSize(nColSize as numeric) as object
+
 endclass
 
 method New(nColSize) class WebExCol
     paramtype 1 var nColSize as numeric optional default 12
     ::nColSize:=nColSize
     _Super:New("div")
-    ::SetAttr("class", "col-md-"+cValToChar(nColSize))
+    ::SetColSize()
+return(self)
+
+method GetColSize() class WebExCol
+return(::nColSize)
+
+method SetColSize(nColSize) class WebExCol
+    paramtype 1 var nColSize as numeric optional default ::nColSize
+    ::nColSize:=nColSize
+    ::DelClassRegex("col-md-[0-9]+") // remove qualquer col-md-* anterior (se tiver)
+    ::AddClass("col-md-"+cValToChar(::nColSize))
 return(self)

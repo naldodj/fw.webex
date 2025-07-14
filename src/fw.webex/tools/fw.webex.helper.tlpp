@@ -141,7 +141,7 @@ static method GetEmojiHtmlCode(cName) class WebExHelper
 
     local jEmojis:=WebExHelper():GetEmojiHtmlJSON() as json
 
-    paramtype cName as character
+    paramtype 1 var cName as character
 
     cName:=Lower(AllTrim(cName))
     if (jEmojis:HasProperty(cName))

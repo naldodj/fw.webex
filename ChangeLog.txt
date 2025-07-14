@@ -3,6 +3,25 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-14 19:08 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  + New Example
+    + src/fw.webex.examples/017/fw.webex.example.017.tlpp
+    + src/fw.webex.examples/017/README.md
+  % refactor: multiple structural and layout improvements across FWWebEx
+    * src/fw.webex/tools/fw.webex.helper.tlpp
+    * src/fw.webex/tools/fw.webex.webapp.tools.tlpp
+    * src/fw.webex/web/component/fw.webex.form.tlpp
+    * src/fw.webex/web/component/fw.webex.gridsystem.tlpp
+    * src/fw.webex/web/component/fw.webex.navside.tlpp
+    * src/fw.webex/web/component/fw.webex.navtop.tlpp
+    * src/fw.webex/web/component/fw.webex.rules.tlpp
+    * src/fw.webex/web/component/fw.webex.table.tlpp
+    * src/fw.webex/web/control/fw.webex.control.tlpp
+    * src/fw.webex/web/layout/fw.webex.page.tlpp
+    * src/fw.webex.examples/000/fw.webex.example.000.tlpp
+    * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
+    * src/fw.webex.examples/005/fw.webex.example.005.tlpp
+
 2025-07-13 17:35 UTC naldodj (Update Emogi Table)
   * src/fw.webex/tools/fw.webex.helper.tlpp
 

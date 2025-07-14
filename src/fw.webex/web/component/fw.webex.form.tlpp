@@ -24,10 +24,14 @@ class WebExForm from WebExControl
 
     public data lFormButtonsFirst as logical
 
+    public data oFieldSet as object
+
     public method New(cFormTitle as character,lFormButtonsFirst as logical) as object
     public method SetMethod(cFormMethod as character) as object
     public method SetAction(cFormAction as character) as object
     public method AddField(cLabel as character,cName as character,cType as character,cPlaceholder as character) as object
+    public method AddFieldToRow(oFormRowFields,cLabel as character,cName as character,cType as character,cPlaceholder as character) as object
+    public method AddGroupToRow(oFormRowFields,cLabel as character,cName as character,cType as character,cPlaceholder as character,nColSize as numeric,/*@*/oGroupRef as object) as object
     public method AddButton(oButton as object) as object
 
     public method RenderHTML() as character
@@ -42,34 +46,90 @@ method New(cFormTitle,lFormButtonsFirst) class WebExForm
     _Super:New("form")
     ::SetMethod("get")
     ::SetAction("#")
+    ::SetAttr("class","p-3 border rounded")
     ::jFormFields:=JSONObject():New()
     ::jFormButtons:=JSONObject():New()
+    ::oFieldSet:=WebExFieldSet():New(::cFormTitle)
 return(self)
 
 method SetMethod(cFormMethod) class WebExForm
-   paramtype 1 var cFormMethod as character
-   ::cFormMethod:=Lower(AllTrim(cFormMethod))
+    paramtype 1 var cFormMethod as character optional default ::cFormMethod
+    ::cFormMethod:=Lower(AllTrim(cFormMethod))
+    ::SetAttr("method",::cFormMethod)
 return(self)
 
 method SetAction(cFormAction) class WebExForm
-   paramtype 1 var cFormAction as character
-   ::cFormAction:=AllTrim(cFormAction)
+    paramtype 1 var cFormAction as character optional default ::cFormAction
+    ::cFormAction:=AllTrim(cFormAction)
+    ::SetAttr("action",::cFormAction)
 return(self)
 
 method AddField(cLabel,cName,cType,cPlaceholder) class WebExForm
-   local oField as object
-   paramtype 1 var cLabel as character
-   paramtype 2 var cName as character
-   paramtype 3 var cType as character
-   paramtype 4 var cPlaceholder as character
-   oField:=WebExField():New(cLabel,cName,cType,cPlaceholder)
-   ::jFormFields[oField:GetFixedID()]:=oField
-return(self)
+    local oField as object
+    paramtype 1 var cLabel as character
+    paramtype 2 var cName as character
+    paramtype 3 var cType as character
+    paramtype 4 var cPlaceholder as character
+    oField:=WebExField():New(cLabel,cName,cType,cPlaceholder)
+    ::jFormFields[oField:GetID()]:=oField
+return(oField)
+
+method AddFieldToRow(oFormRowFields,cLabel,cName,cType,cPlaceholder) class WebExForm
+    local oField as object
+    paramtype 1 var oFormRowFields as object class WEBEXROW
+    paramtype 2 var cLabel as character
+    paramtype 3 var cName as character
+    paramtype 4 var cType as character
+    paramtype 5 var cPlaceholder as character
+    oField:=WebExField():New(cLabel,cName,cType,cPlaceholder)
+    oFormRowFields:AddChild(oField)
+    ::jFormFields[oFormRowFields:GetID()]:=oFormRowFields
+return(oField)
+
+method AddGroupToRow(oFormRowFields,cLabel,cName,cType,cPlaceholder,nColSize,/*@*/oGroupRef) class WebExForm
+
+    local oCol as object
+    local oLabel as object
+    local oInput as object
+
+    paramtype 1 var oFormRowFields as object class WebExRow
+    paramtype 2 var cLabel as character
+    paramtype 3 var cName as character
+    paramtype 4 var cType as character
+    paramtype 5 var cPlaceholder as character
+    paramtype 6 var nColSize as numeric optional
+    paramtype 7 var oGroupRef as object optional
+
+    // Cria o input
+    oInput:=WebExControl():New("input")
+    oInput:SetAttr("type",cType)
+    oInput:SetAttr("name",cName)
+    oInput:SetAttr("placeholder",cPlaceholder)
+    oInput:AddClass("form-control")
+
+    // Cria o grupo que retornara por referencia
+    oGroupRef:=WebExControl():New("div")
+    oGroupRef:AddClass("input-group")
+    oGroupRef:AddChild(oInput)
+
+    //Monta o Label
+    oLabel:=WebExLabel():New(cName,cLabel)
+
+    // Monta estrutura
+    oCol:=WebExCol():New(nColSize)
+    oCol:AddChild(oLabel)
+    oCol:AddChild(oGroupRef)
+    oFormRowFields:AddChild(oCol)
+
+    // Registra no form
+    ::jFormFields[oFormRowFields:GetID()]:=oFormRowFields
+
+return(oCol)
 
 method AddButton(oButton) class WebExForm
-   paramtype 1 var oButton as object class WEBEXBUTTON
-   ::jFormButtons[oButton:GetFixedID()]:=oButton
-return(self)
+    paramtype 1 var oButton as object class WEBEXBUTTON
+    ::jFormButtons[oButton:GetID()]:=oButton
+return(oButton)
 
 method RenderHTML() class WebExForm
 
@@ -81,13 +141,9 @@ method RenderHTML() class WebExForm
     local jChilds as json
 
     local oChild as object
-    local oFieldSet as object
 
-    ::SetAttr("method",::cFormMethod)
-    ::SetAttr("action",::cFormAction)
-    ::SetAttr("class","p-3 border rounded")
-
-    oFieldSet:=WebExFieldSet():New(::cFormTitle)
+    ::SetMethod()
+    ::SetAction()
 
     jChilds:=if(::lFormButtonsFirst,::jFormButtons,::jFormFields)
 
@@ -96,7 +152,7 @@ method RenderHTML() class WebExForm
     for nName:=1 to nNames
         cName:=aNames[nName]
         oChild:=jChilds[cName]
-        oFieldSet:AddChild(oChild)
+        ::oFieldSet:AddChild(oChild)
     next nName
 
     FWFreeArray(@aNames)
@@ -107,9 +163,9 @@ method RenderHTML() class WebExForm
     for nName:=1 to nNames
         cName:=aNames[nName]
         oChild:=jChilds[cName]
-        oFieldSet:AddChild(oChild)
+        ::oFieldSet:AddChild(oChild)
     next nName
 
-    ::AddChild(oFieldSet)
+    ::AddChild(::oFieldSet)
 
 return(_Super:RenderHTML())

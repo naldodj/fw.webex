@@ -209,7 +209,7 @@ return(cMimeType)
 
 static method GetTWebChannel(lConnect) class WebApp
     local cTWebChannelType:=ValType(__oTWebChannel)
-    paramtype lConnect as logical optional default .T.
+    paramtype 1 var lConnect as logical optional default .T.
     if (;
             (cTWebChannelType!="O");
             .or.;

@@ -73,6 +73,7 @@ class WebExControl
 
     public method SetAttr(cAttr as character,cAttrValues as variant) as object
     public method GetAttr(cAttr as character) as character
+    public method GetAttrArray(cAttr as character) as array
     public method HasAttr(cAttr as character,/*@*/aAttr as array) as logical
     public method DelAttr(cAttr as character,/*@*/lDelAttr as logical) as object
     public method DelAllAttr(/*@*/lDelAllAttr as logical) as object
@@ -127,6 +128,7 @@ class WebExControl
     public method AddClass(cNewClass as character) as object
     public method HasClass(/*[@]*/cClass as character,/*@*/aClasses as array) as logical
     public method DelClass(cClass as character,/*@*/lDelClass as logical) as object
+    public method DelClassRegex(cClassRegex as character,/*@*/lDelClass as logical) as object
 
     public method GetEnableChart() as logical
     public method SetEnableChart(lChartEnabled as logical) as object
@@ -325,6 +327,12 @@ method GetAttr(cAttr) class WebExControl
     endif
 return(cAttrValues)
 
+method GetAttrArray(cAttr) class WebExControl
+    local aAttrValues as array
+    paramtype 1 var cAttr as character
+    aAttrValues:=StrTokArr2(Lower(AllTrim(::GetAttr(cAttr)))," ")
+return(aAttrValues)
+
 method HasAttr(cAttr,cAttrValue,aAttr) class WebExControl
     local lHasAttr as logical
     paramtype 1 var cAttr as character
@@ -358,7 +366,7 @@ method HasAttrValue(cAttr,cAttrValue,aAttr) class WebExControl
     paramtype 1 var cAttr as character
     paramtype 2 var cAttrValue as character optional default cAttr
     paramtype 3 var aAttr as array optional
-    aAttr:=StrTokArr2(Lower(AllTrim(::GetAttr(cAttr)))," ")
+    aAttr:=::GetAttrArray(cAttr)
     cAttrValue:=Lower(AllTrim(cAttrValue))
     nHasAttr:=aScan(aAttr,{|cToken as character|(cToken==cAttrValue)})
     lHasAttrValue:=(nHasAttr>0)
@@ -872,6 +880,35 @@ method DelClass(cClass,lDelClass) class WebExControl
         ::DelAttrValue("class",cClass,@aClasses,@lDelClass)
     endif
     FWFreeArray(@aClasses)
+return(self)
+
+method DelClassRegex(cClassRegex,lDelClass) class WebExControl
+    local aClasses as array
+    local cClass as character
+    local lDeleted:=.F. as logical
+    local nClass as numeric
+    local nClasses as numeric
+    local oTRegEx as object
+    paramtype 1 var cClassRegex as character
+    paramtype 2 var lDelClass as logical optional default .F.
+    aClasses:=::GetAttrArray("class")
+    nClasses:=Len(aClasses)
+    lDeleted:=(nClasses>0)
+    if (lDeleted)
+        oTRegEx:=TRegEx():New(cClassRegex)
+        for nClass:=1 to nClasses
+            cClass:=aClasses[nClass]
+            if (oTRegEx:Search(cClass))
+                ::DelClass(cClass,@lDelClass)
+                if (!lDeleted)
+                    lDeleted:=lDelClass
+                endif
+            endif
+        next nClass
+        FreeObj(@oTRegEx)
+    endif
+    FWFreeArray(@aClasses)
+    lDelClass:=lDeleted
 return(self)
 
 method GetEnableChart() class WebExControl

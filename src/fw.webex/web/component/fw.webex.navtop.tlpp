@@ -58,7 +58,7 @@ method AddLink(cNavTopLabel,cNavTopHRef,oNavTopIcon) class WebExNavTop
         oLink:AddContent(" ")
     endif
     oLink:AddContent(cNavTopLabel)
-    ::jNavTopLinks[oLink:GetFixedID()]:=oLink
+    ::jNavTopLinks[oLink:GetID()]:=oLink
 return(oLink)
 
 method AddDropDown(cNavTopLabel,aNavTopDropDownItems) class WebExNavTop
@@ -96,7 +96,7 @@ method AddDropDown(cNavTopLabel,aNavTopDropDownItems) class WebExNavTop
     oWrapper:AddChild(oToggle)
     oWrapper:AddChild(oMenu)
 
-    ::jNavTopDropDowns[oWrapper:GetFixedID()]:=oWrapper
+    ::jNavTopDropDowns[oWrapper:GetID()]:=oWrapper
 
 return(oWrapper)
 

@@ -66,14 +66,14 @@ method AddItem(cNavSideLabel,cNavSideHRef,oNavIcon) class WebExNavSide
     oItem:SetAttr("class","nav-item")
     oItem:AddChild(oLink)
 
-    ::jNavSideItems[oItem:GetFixedID()]:=oItem
+    ::jNavSideItems[oItem:GetID()]:=oItem
 
 return(oItem)
 
 method AddDivider() class WebExNavSide
     local oDivider:=WebExControl():New("hr")
     oDivider:SetAttr("class","my-2")
-    ::jNavSideItems[oDivider:GetFixedID()]:=oDivider
+    ::jNavSideItems[oDivider:GetID()]:=oDivider
 return(oDivider)
 
 method AddHeader(cNavSideHeaderText) class WebExNavSide
@@ -82,7 +82,7 @@ method AddHeader(cNavSideHeaderText) class WebExNavSide
     oHeader:=WebExControl():New("div")
     oHeader:SetAttr("class","text-muted text-uppercase px-3 small fw-bold")
     oHeader:SetContent(cNavSideHeaderText)
-    ::jNavSideItems[oHeader:GetFixedID()]:=oHeader
+    ::jNavSideItems[oHeader:GetID()]:=oHeader
 return(oHeader)
 
 method RenderHTML() class WebExNavSide

@@ -571,10 +571,10 @@ static method ChangeCompanyAndBranch(cCompany,cBranch,lFirstAccess,cStack) class
 
     local oParamBoxLoad as object
 
-    paramtype cCompany as character optional default cEmpAnt
-    paramtype cBranch as character optional default cFilAnt
-    paramtype lFirstAccess as logical optional default .F.
-    paramtype cStack as character optional default "fwwebex_"+Lower(ProcName())
+    paramtype 1 var cCompany as character optional default cEmpAnt
+    paramtype 2 var cBranch as character optional default cFilAnt
+    paramtype 3 var lFirstAccess as logical optional default .F.
+    paramtype 4 var cStack as character optional default "fwwebex_"+Lower(ProcName())
 
     if (!lIsBlind)
 

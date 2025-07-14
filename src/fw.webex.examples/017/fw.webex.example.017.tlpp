@@ -40,7 +40,7 @@ Released to Public Domain.
 
 using namespace FWWebEx
 
-procedure u_FWWebExExample_005()
+procedure u_FWWebExExample_017()
     local bExecute as codeblock
     local cHTML as character
     local cHTMLFile as character
@@ -49,7 +49,7 @@ procedure u_FWWebExExample_005()
     if (!oTWebChannel:lConnected)
         __oTWebChannel:Connect()
     endif
-    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_005(@cHTML)},"Aguarde",cProcName)}
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_017(@cHTML)},"Aguarde",cProcName)}
     FWExampleTools():Execute(bExecute,cProcName,.T.,.T.)
     if (!Empty(cHTMLFile).and.File(cHTMLFile))
         FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile,oTWebChannel)
@@ -58,14 +58,17 @@ procedure u_FWWebExExample_005()
     WebFileTools():ObliterateFWWebExTmpFiles(.T.)
 return
 
-static function FWWebExExample_005(cHTML as character) as character
+static function FWWebExExample_017(cHTML as character) as character
 
     local cScript as character
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
 
     local oDiv as object
+    local oGroupRef as object
 
+    local oFWWebExRow1 as object
+    local oFWWebExRow2 as object
     local oFWWebExPage as object
     local oFWWebExMain as object
     local oFWWebExBody as object
@@ -75,27 +78,33 @@ static function FWWebExExample_005(cHTML as character) as character
 
     //https://getbootstrap.com/docs/5.0/forms/form-control/
     oFWWebExForm:=WebExForm():New("Consulta de CEP")
+    oFWWebExForm:DelAttr("class"):AddClass("row g-3")
     oFWWebExForm:SetMethod("get")
     oFWWebExForm:SetAction("#")
 
     // Campo de busca
-    oFWWebExForm:AddField("CEP","cep","text","Digite o CEP")
+    oFWWebExRow1:=WebExRow():New()
+    oFWWebExForm:AddGroupToRow(oFWWebExRow1,"CEP","cep","text","Digite o CEP",4,@oGroupRef)
+
+    //Carrega o Botao para Buscar os Dados ao Grupo
+    oFWWebExButton:=WebExButton():New("Buscar")
+    oFWWebExButton:SetAttr("onclick","buscarCEP(); return false;")
+    oGroupRef:AddChild(oFWWebExButton)
+
+    //Adiciona um Separador Horizontal
+    oFWWebExRow1:AddChild(WebExHR():New())
 
     // Campos que serao atualizados via Ajax (ja definidos)
-    oFWWebExForm:AddField("Logradouro","logradouro","text","")
-    oFWWebExForm:AddField("Bairro","bairro","text","")
-    oFWWebExForm:AddField("Cidade","localidade","text","")
-    oFWWebExForm:AddField("UF","uf","text","")
-    oFWWebExForm:AddField("C&oacute;digo IBGE","ibge","text","")
+    oFWWebExRow2:=WebExRow():New()
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Logradouro","logradouro","text",""):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Bairro","bairro","text",""):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Cidade","localidade","text",""):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"UF","uf","text",""):DelAttr("class"):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"C&oacute;digo IBGE","ibge","text",""):AddClass("mb-3 col-md-4")
 
     oDiv:=WebExControl():New("div")
     oDiv:SetAttr("id","resultadoCEP")
-
-    oFWWebExButton:=WebExButton():New("Buscar")
-    oFWWebExButton:SetAttr("onclick","buscarCEP(); return false;")
-
     oFWWebExForm:AddChild(oDiv)
-    oFWWebExForm:AddChild(oFWWebExButton)
 
     // Adiciona o script para consulta Ajax do ViaCEP
     beginContent var cScript
@@ -141,11 +150,15 @@ static function FWWebExExample_005(cHTML as character) as character
     oFWWebExPage:Clean()
 
     FreeObj(@oDiv)
+    FreeObj(@oGroupRef)
+
+    FreeObj(@oFWWebExRow1)
+    FreeObj(@oFWWebExRow2)
     FreeObj(@oFWWebExPage)
     FreeObj(@oFWWebExMain)
     FreeObj(@oFWWebExBody)
     FreeObj(@oFWWebExForm)
-    FreeObj(@oFWWebExScript)
     FreeObj(@oFWWebExButton)
+    FreeObj(@oFWWebExScript)
 
 return(cHTMLFile)
