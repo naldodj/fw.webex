@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-14 19:16 UTC naldodj (Disable lChangeCompanyAndBranch)
+  * src/fw.webex.examples/005/fw.webex.example.005.tlpp
+  * src/fw.webex.examples/017/fw.webex.example.017.tlpp
+
 2025-07-14 19:08 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + New Example
     + src/fw.webex.examples/017/fw.webex.example.017.tlpp
