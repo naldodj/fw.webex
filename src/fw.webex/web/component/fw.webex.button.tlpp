@@ -14,18 +14,46 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExButton from WebExControl
+
     protected data cButtonLabel
     protected data cButtonType
+
     public method New(cButtonLabel as character,cButtonType as character) as object
+
+    public method GetButtonLabel() as character
+    public method SetButtonLabel(cButtonLabel as character) as character
+
+    public method GetButtonType() as character
+    public method SetButtonType(cButtonType as character) as character
+
 endclass
 
 method New(cButtonLabel,cButtonType) class WebExButton
     paramtype 1 var cButtonLabel as character optional default ""
     paramtype 2 var cButtonType as character optional default "submit"
     ::cButtonLabel:=cButtonLabel
-    ::cButtonType:=cButtonType
+    ::cButtonType:=Lower(cButtonType)
     _Super:New("button")
+    ::AddClass("btn")
+    ::AddClass("btn-primary")
+    ::SetButtonLabel()
+    ::SetButtonType()
+return(self)
+
+method GetButtonLabel() class WebExButton
+return(::cButtonLabel)
+
+method SetButtonLabel(cButtonLabel) class WebExButton
+    paramtype 1 var cButtonLabel as character optional default ::cButtonLabel
+    ::cButtonLabel:=cButtonLabel
+    ::SetContent(::cButtonLabel)
+return(self)
+
+method GetButtonType() class WebExButton
+return(::cButtonType)
+
+method SetButtonType(cButtonType) class WebExButton
+    paramtype 1 var cButtonType as character optional default ::cButtonType
+    ::cButtonType:=Lower(cButtonType)
     ::SetAttr("type",cButtonType)
-    ::SetAttr("class","btn btn-primary")
-    ::SetContent(cButtonLabel)
 return(self)

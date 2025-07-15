@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-15 07:46 UTC naldodj (refactor: multiple structural and layout improvements across fw.webex.button.tlpp)
+  * src/fw.webex/web/component/fw.webex.button.tlpp
+
 2025-07-14 22:57 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/web/component/fw.webex.alert.tlpp
   * src/fw.webex/web/component/fw.webex.button.tlpp
