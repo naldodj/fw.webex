@@ -82,6 +82,7 @@ class WebExControl
 
     public method HasAttrValue(cAttr as character,cAttrValue as character,/*@*/aAttr as array) as logical
     public method DelAttrValue(cAttr as character,cAttrValue as character,/*@*/aAttr as array,lDelAttrValue as logical) as object
+    public method DelAttrValueRegex(cAttr as character,cAttrValueRegex as character,/*@*/aAttr as array,lDelAttrValue as logical) as object
 
     public method GetContent() as character
     public method SetContent(cContent as character) as object
@@ -444,6 +445,49 @@ method DelAttrValue(cAttr,cAttrValue,aAttr,lDelAttrValue) class WebExControl
         FWFreeArray(@aAttr)
         lDelAttrValue:=(!::HasAttrValue(cAttr,cAttrValue,@aAttr))
     endif
+
+return(self)
+
+method DelAttrValueRegex(cAttr,cAttrValueRegex,/*@*/aAttr,lDelAttrValue) class WebExControl
+
+    local aAttrRemained as array
+
+    local cAttrValue as character
+    local lDeleted:=.F. as logical
+    local nAttr as numeric
+    local nAttrs as numeric
+    local oTRegEx as object
+
+    paramtype 1 var cAttr as character
+    paramtype 2 var cAttrValueRegex as character optional default cAttr
+    paramtype 3 var aAttr as array optional
+    paramtype 4 var lDelAttrValue as logical optional default .F.
+
+    aAttr:=::GetAttrArray(cAttr)
+    nAttrs:=Len(aAttr)
+    lDeleted:=(nAttrs>0)
+    if (lDeleted)
+        lDeleted:=.F.
+        oTRegEx:=TRegEx():New(cAttrValueRegex)
+        for nAttr:=1 to nAttrs
+            cAttrValue:=aAttr[nAttr]
+            if (oTRegEx:Search(cAttrValue))
+                ::DelAttrValue(cAttr,cAttrValue,@aAttrRemained,@lDelAttrValue)
+                if (!lDeleted)
+                    lDeleted:=lDelAttrValue
+                endif
+            endif
+        next nAttr
+        FreeObj(@oTRegEx)
+    endif
+
+    if ((ValType(aAttrRemained)=="A"))
+        FWFreeArray(@aAttr)
+        aAttr:=aClone(aAttrRemained)
+        FWFreeArray(@aAttrRemained)
+    endif
+
+    lDelClass:=lDeleted
 
 return(self)
 
@@ -941,33 +985,7 @@ method DelClass(cClass,lDelClass) class WebExControl
 return(self)
 
 method DelClassRegex(cClassRegex,lDelClass) class WebExControl
-    local aClasses as array
-    local cClass as character
-    local lDeleted:=.F. as logical
-    local nClass as numeric
-    local nClasses as numeric
-    local oTRegEx as object
-    paramtype 1 var cClassRegex as character
-    paramtype 2 var lDelClass as logical optional default .F.
-    aClasses:=::GetAttrArray("class")
-    nClasses:=Len(aClasses)
-    lDeleted:=(nClasses>0)
-    if (lDeleted)
-        oTRegEx:=TRegEx():New(cClassRegex)
-        for nClass:=1 to nClasses
-            cClass:=aClasses[nClass]
-            if (oTRegEx:Search(cClass))
-                ::DelClass(cClass,@lDelClass)
-                if (!lDeleted)
-                    lDeleted:=lDelClass
-                endif
-            endif
-        next nClass
-        FreeObj(@oTRegEx)
-    endif
-    FWFreeArray(@aClasses)
-    lDelClass:=lDeleted
-return(self)
+return(::DelAttrValueRegex("class",cClassRegex,@lDelClass))
 
 method GetEnableChart() class WebExControl
 return(::lChartEnabled)
