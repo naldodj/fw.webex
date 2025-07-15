@@ -14,7 +14,7 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExLegend from WebExControl
-   public data cLegendContent
+   protected data cLegendContent
    public method New(cLegendContent as character) as object
 endclass
 

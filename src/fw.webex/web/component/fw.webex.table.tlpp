@@ -15,16 +15,16 @@ namespace FWWebEx
 
 class WebExTable from WebExControl
 
-    public data cTableTitle as character
+    protected data cTableTitle as character
 
-    public data jTableHeader as json
-    public data jTableDetail as json
+    protected data jTableHeader as json
+    protected data jTableDetail as json
 
-    public data lTableExpandable as logical
-    public data lTableTitleBefore as logical
+    protected data lTableExpandable as logical
+    protected data lTableTitleBefore as logical
 
-    public data oTableTHead as object
-    public data oTableTBody as object
+    protected data oTableTHead as object
+    protected data oTableTBody as object
 
     public method New(cTableTitle) as object
     public method SetTitle(cTableTitle) as object

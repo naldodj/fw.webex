@@ -15,13 +15,13 @@ namespace FWWebEx
 
 class WebExCardKPI from WebExControl
 
-    public data cCardKPITitle as character
-    public data cCardKPIValue as character
-    public data cCardKPITheme as character
+    protected data cCardKPITitle as character
+    protected data cCardKPIValue as character
+    protected data cCardKPITheme as character
 
-    public data lIconBefore as logical
+    protected data lIconBefore as logical
 
-    public data oCardKPIIcon as character
+    protected data oCardKPIIcon as character
 
     public method New(cCardKPITitle as character,cCardKPIValue as character,cCardKPITheme as character,oCardKPIIcon as object) as object
     public method SetIconBefore(lIconBefore) as object

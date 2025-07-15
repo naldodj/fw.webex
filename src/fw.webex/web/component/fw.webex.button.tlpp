@@ -14,8 +14,8 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExButton from WebExControl
-    public data cButtonLabel
-    public data cButtonType
+    protected data cButtonLabel
+    protected data cButtonType
     public method New(cButtonLabel as character,cButtonType as character) as object
 endclass
 

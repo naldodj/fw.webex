@@ -15,9 +15,9 @@ namespace FWWebEx
 
 class WebExNavSide from WebExControl
 
-    public data cNavSideBrand as character
+    protected data cNavSideBrand as character
 
-    public data jNavSideItems as json
+    protected data jNavSideItems as json
 
     public method New(cNavSideBrand as character) as object
     public method SetBrand(cNavSideBrand as character) as object

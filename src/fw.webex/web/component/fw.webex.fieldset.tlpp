@@ -14,7 +14,7 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExFieldSet from WebExControl
-   public data cFieldSetLegend as character
+   protected data cFieldSetLegend as character
    public method New(cFieldSetLegend as character) as object
 endclass
 

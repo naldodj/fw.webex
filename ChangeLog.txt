@@ -3,6 +3,25 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-14 22:57 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  * src/fw.webex/web/component/fw.webex.alert.tlpp
+  * src/fw.webex/web/component/fw.webex.button.tlpp
+  * src/fw.webex/web/component/fw.webex.card.tlpp
+  * src/fw.webex/web/component/fw.webex.cardkpi.tlpp
+  * src/fw.webex/web/component/fw.webex.checkbox.tlpp
+  * src/fw.webex/web/component/fw.webex.container.tlpp
+  * src/fw.webex/web/component/fw.webex.field.tlpp
+  * src/fw.webex/web/component/fw.webex.fieldset.tlpp
+  * src/fw.webex/web/component/fw.webex.form.tlpp
+  * src/fw.webex/web/component/fw.webex.input.tlpp
+  * src/fw.webex/web/component/fw.webex.label.tlpp
+  * src/fw.webex/web/component/fw.webex.legend.tlpp
+  * src/fw.webex/web/component/fw.webex.navside.tlpp
+  * src/fw.webex/web/component/fw.webex.navtop.tlpp
+  * src/fw.webex/web/component/fw.webex.strong.tlpp
+  * src/fw.webex/web/component/fw.webex.table.tlpp
+  * src/fw.webex.examples/000/fw.webex.template.bulk.action.table.tlpp
+
 2025-07-14 19:16 UTC naldodj (Disable lChangeCompanyAndBranch)
   * src/fw.webex.examples/005/fw.webex.example.005.tlpp
   * src/fw.webex.examples/017/fw.webex.example.017.tlpp

@@ -15,16 +15,16 @@ namespace FWWebEx
 
 class WebExForm from WebExControl
 
-    public data cFormTitle as character
-    public data cFormMethod as character
-    public data cFormAction as character
+    protected data cFormTitle as character
+    protected data cFormMethod as character
+    protected data cFormAction as character
 
-    public data jFormFields as json
-    public data jFormButtons as json
+    protected data jFormFields as json
+    protected data jFormButtons as json
 
-    public data lFormButtonsFirst as logical
+    protected data lFormButtonsFirst as logical
 
-    public data oFieldSet as object
+    protected data oFieldSet as object
 
     public method New(cFormTitle as character,lFormButtonsFirst as logical) as object
     public method SetMethod(cFormMethod as character) as object

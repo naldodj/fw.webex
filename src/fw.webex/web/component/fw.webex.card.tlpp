@@ -15,8 +15,8 @@ namespace FWWebEx
 
 class WebExCard from WebExControl
 
-    public data cCardTitle as character
-    public data cCardBody as character
+    protected data cCardTitle as character
+    protected data cCardBody as character
 
     public method New(cCardTitle as character,cCardBody as character) as object
 

@@ -24,10 +24,10 @@ namespace FWWebEx
 
 class WebExNavTop from WebExControl
 
-    public data cNavTopBrand as character
+    protected data cNavTopBrand as character
 
-    public data jNavTopLinks as json
-    public data jNavTopDropDowns as json
+    protected data jNavTopLinks as json
+    protected data jNavTopDropDowns as json
 
     public method New(cNavTopBrand as character) as object
     public method AddLink(cNavTopLabel as character,cNavTopHRef as character,oNavTopIcon as object) as object

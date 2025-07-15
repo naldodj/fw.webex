@@ -14,7 +14,7 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExContainer from WebExControl
-    public data lContainerFluid as logical
+    protected data lContainerFluid as logical
     public method New(lContainerFluid as logical) as object
 endclass
 
