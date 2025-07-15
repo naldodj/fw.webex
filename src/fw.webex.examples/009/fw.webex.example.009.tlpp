@@ -166,6 +166,7 @@ static procedure FWWebExExample_009(cHTML as character) as character
     next nEmpresa
 
     oFWWebExContainer:=WebExContainer():New()
+    oFWWebExContainer:SetContainerFluid(.T.)
     oFWWebExContainer:AddChild(oFWWebExTable)
 
     oFWWebExMain:=WebExMain():New()

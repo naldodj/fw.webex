@@ -14,17 +14,33 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExContainer from WebExControl
+
     protected data lContainerFluid as logical
+
     public method New(lContainerFluid as logical) as object
+
+    public method GetContainerFluid() as logical
+    public method SetContainerFluid(lContainerFluid as logical) as object
+
 endclass
 
 method New(lContainerFluid) class WebExContainer
     paramtype 1 var lContainerFluid as logical optional default .F.
     ::lContainerFluid:=lContainerFluid
     _Super:New("div")
-    if(::lContainerFluid)
-        ::SetAttr("class","container-fluid")
+return(self)
+
+method GetContainerFluid() class WebExContainer
+return(::lContainerFluid)
+
+method SetContainerFluid(lContainerFluid) class WebExContainer
+    paramtype 1 var lContainerFluid as logical optional default ::lContainerFluid
+    ::lContainerFluid:=lContainerFluid
+    if (::lContainerFluid)
+        ::DelClass("container")
+        ::AddClass("container-fluid")
     else
-        ::SetAttr("class","container")
+        ::DelClass("container-fluid")
+        ::AddClass("container")
     endif
 return(self)

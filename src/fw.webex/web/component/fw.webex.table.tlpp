@@ -211,6 +211,7 @@ return(::jTableDetail)
 
 method SetJSONTableDetail(jTableDetail) class WebExTable
     paramtype 1 var jTableDetail as json default ::jTableDetail
+    ::jTableDetail:=jTableDetail
 return(self)
 
 method GetTableExpandable() class WebExTable
