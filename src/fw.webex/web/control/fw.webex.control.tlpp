@@ -68,6 +68,8 @@ class WebExControl
     public method ClassName() as character
     public method ClassFullName() as character
 
+    public method SetFromObject(oSource as object) as object
+
     public method GetMemberData(cMember as character,xDefault as variant,lSuperClass as logical) as variant
     public method SetMemberData(cMember as character,xValue as variant,lSuperClass as logical) as variant
 
@@ -110,7 +112,10 @@ class WebExControl
     public method GetPageScriptBundle() as json
 
     public method FindInHeadScripts(cID as character) as logical
-    public method FindInBodyScripts(cID as character) as logical
+    public method FindInPageScripts(cID as character) as logical
+
+    public method ChangeInHeadScripts(cID as character,oScript as object) as logical
+    public method ChangeInPageScripts(cID as character,oScript as object) as logical
 
     public method AddScript(oScript as object) as object
 
@@ -250,6 +255,39 @@ return(cClassName)
 
 method ClassFullName() class WebExControl
 return(GetClassName(self))
+
+method SetFromObject(oSource) class WebExControl
+
+    local aMemberData as array
+
+    local cKey as character
+    local cData as character
+
+    local cSourceClass as character
+    local cTargetClass as character
+
+    local i as numeric
+
+    local xValue as variant
+
+    cSourceClass:=GetClassName(oSource)
+    cTargetClass:=GetClassName(self)
+
+    if (cTargetClass==cSourceClass)
+        private pFromObjSelf:=oSource as object
+        aMemberData:=aClone(ClassDataArr(oSource,.T.))
+        for i:=1 to Len(aMemberData)
+            cKey:=aMemberData[i][1]
+            cData:="pFromObjSelf"
+            cData+=":"
+            cData+=cKey
+            xValue:=&(cData)
+            self:SetMemberData(cKey,xValue,.T.)
+        next i
+        FWFreeArray(@aMemberData)
+    endif
+
+return(self)
 
 method GetMemberData(cMember,xDefault,lSuperClass) class WebExControl
 
@@ -664,13 +702,33 @@ method FindInHeadScripts(cID) class WebExControl
     lFound:=jHeadScripts:HasProperty(cID)
 return(lFound)
 
-method FindInBodyScripts(cID) class WebExControl
+method FindInPageScripts(cID) class WebExControl
     local jPageScripts as json
     local lFound as logical
     paramtype 1 var cID as character
     jPageScripts:=::GetPageScripts()
     lFound:=jPageScripts:HasProperty(cID)
 return(lFound)
+
+method ChangeInHeadScripts(cID,oScript) class WebExControl
+    local jHeadScripts as json
+    paramtype 1 var cID as character
+    paramtype 2 var oScript as object class WebExScript
+    if (::FindInHeadScripts(cID))
+        jHeadScripts:=::GetHeadScripts()
+        jHeadScripts[cID]:=oScript
+    endif
+return(self)
+
+method ChangeInPageScripts(cID,oScript) class WebExControl
+    local jPageScripts as json
+    paramtype 1 var cID as character
+    paramtype 2 var oScript as object class WebExScript
+    if (::FindInPageScripts(cID))
+        jPageScripts:=::GetPageScripts()
+        jPageScripts[cID]:=oScript
+    endif
+return(self)
 
 method AddScript(oScript) class WebExControl
     local cType as character
@@ -1379,34 +1437,11 @@ method DisableFeatures() class WebExControl
 return(nil)
 
 method Clone() class WebExControl
-
-    local aMemberData as array
-    local cKey as character
-    local cData as character
-
-    local i as numeric
-
     local oClone as object
-
-    local xValue as variant
-
     // Cria nova instancia do mesmo tipo
     oClone:=self:__CloneNewInstance()
-
-    private pCloneSelf:=self as object
-
     // Copia dados da classe
-    aMemberData:=aClone(ClassDataArr(self,.T.))
-    for i:=1 to Len(aMemberData)
-        cKey:=aMemberData[i][1]
-        cData:="pCloneSelf"
-        cData+=":"
-        cData+=cKey
-        xValue:=&(cData)
-        oClone:SetMemberData(cKey,xValue,.T.)
-    next i
-    FWFreeArray(@aMemberData)
-
+    oClone:SetFromObject(self)
 return(oClone)
 
 method __CloneNewInstance() class WebExControl

@@ -26,6 +26,17 @@ class WebExTable from WebExControl
     protected data oTableTHead as object
     protected data oTableTBody as object
 
+    protected data oTableTHeadTH as object
+    protected data oTableTHeadTR as object
+
+    protected data oTableTBodyRowTD as object
+    protected data oTableTBodyRowTR as object
+    protected data oTableTBodyRowTDButton as object
+
+    protected data oTableCaption as object
+
+    protected data oTableScript as object
+
     public method New(cTableTitle) as object
     public method SetTitle(cTableTitle) as object
     public method SetTitleBefore(lTableTitleBefore) as object
@@ -36,114 +47,244 @@ class WebExTable from WebExControl
     public method EnableDrillDown() as object
     public method RenderHTML() as character
 
+    public method GetTableTitle() as character
+    public method SetTableTitle(cTableTitle as character) as character
+
+    public method GetJSONTableHeader() as json
+    public method SetJSONTableHeader(jTableHeader as json) as object
+
+    public method GetJSONTableDetail() as json
+    public method SetJSONTableDetail(jTableDetail as json) as object
+
+    public method GetTableExpandable() as logical
+    public method SetTableExpandable(lTableExpandable as logical) as object
+
+    public method GetTableTitleBefore() as logical
+    public method SetTableTitleBefore(lTableTitleBefore as logical) as object
+
+    public method GetObjTableTHead() as object
+    public method SetObjTableTHead(oTableTHead as object) as object
+
+    public method GetObjTableTBody() as object
+    public method SetObjTableTBody(oTableTBody as object) as object
+
+    public method GetObjTableTHeadTH() as object
+    public method GetObjTableTHeadTR() as object
+
+    public method GetObjTableTBodyRowTD() as object
+    public method GetObjTableTBodyRowTR() as object
+    public method GetObjTableTBodyRowTDButton() as object
+
+    public method GetObjTableCaption() as object
+
+    public method GetObjTableScript() as object
+    public method SetObjTableScript(oTableScript as object) as object
+
 endclass
 
 method New(cTableTitle) class WebExTable
     paramtype 1 var cTableTitle as character optional
-    ::SetTitle(cTableTitle)
-    ::SetTitleBefore(.T.)
+    ::cTableTitle:=cTableTitle
+    ::lTableTitleBefore:=.T.
     ::jTableHeader:=JSONObject():New()
     ::jTableDetail:=JSONObject():New()
     ::lTableExpandable:=.F.
-    ::oTableTBody:=WebExControl():New("tbody")
-    ::oTableTHead:=WebExControl():New("thead")
+    ::oTableTBody:=WebExTBody():New()
+    ::oTableTHead:=WebExTHead():New()
     _Super:New("table")
     _Super:SetEnableDataTable()
     ::AddClass("table")
     ::AddClass("table-striped")
     ::AddClass("table-hover")
+    ::SetTableTitleBefore()
+    ::SetTableTitle()
 return(self)
 
 method SetTitle(cTableTitle) class WebExTable
-    paramtype 1 var cTableTitle as character optional default ""
-    ::cTableTitle:=cTableTitle
+    ::SetTableTitle(cTableTitle)
 return(self)
 
 method SetTitleBefore(lTableTitleBefore) class WebExTable
-    paramtype 1 var lTableTitleBefore as logical optional default .F.
-    ::lTableTitleBefore:=lTableTitleBefore
+    ::SetTableTitleBefore(lTableTitleBefore)
 return(self)
 
 method AddColumnHeader(cTableColummLabel) class WebExTable
-    local oTH:=WebExControl():New("th") as object
+    local oTH:=WebExTH():New() as object
     paramtype 1 var cTableColummLabel as character
     oTH:SetContent(cTableColummLabel)
     ::jTableHeader[oTH:GetID()]:=oTH
 return(oTH)
 
 method BuildHeader() class WebExTable
-    local oTH as object
-    local oTR:=WebExControl():New("tr") as object
+    ::oTableTHeadTR:=WebExTR():New()
     if (::lTableExpandable)
-        oTH:=WebExControl():New("th")
-        oTH:SetContent("")
-        oTR:AddChild(oTH)
+        ::oTableTHeadTH:=WebExTH():New()
+        ::oTableTHeadTH:SetContent("")
+        ::oTableTHeadTR:AddChild(::oTableTHeadTH)
     endif
-    aEval(::jTableHeader:GetNames(),{|cName|oTR:AddChild(::jTableHeader[cName])})
-    ::oTableTHead:AddChild(oTR)
-    ::jTableHeader:=JSONObject():New()
+    aEval(::jTableHeader:GetNames(),{|cName|::GetObjTableTHeadTR():AddChild(::GetJSONTableHeader()[cName])})
+    ::oTableTHead:AddChild(::oTableTHeadTR)
+    ::SetJSONTableHeader(JSONObject():New())
 return(self)
 
 method AddCell(xTableCellValue) class WebExTable
-    local oTD:=WebExControl():New("td") as object
+    local oTD:=WebExTD():New() as object
     oTD:SetContent(cValToChar(xTableCellValue))
     ::jTableDetail[oTD:GetID()]:=oTD
 return(oTD)
 
 method BuildBodyRow(cDataHTML) class WebExTable
     local cIDPrefix as character
-    local oTD as object
-    local oTR:=WebExControl():New("tr") as object
-    local oButton as object
+    ::oTableTBodyRowTR:=WebExTR():New()
     if (::lTableExpandable)
         paramtype 1 var cDataHTML as character optional
         cIDPrefix:=::GetFixedID()
-        oButton:=WebExControl():New("button")
-        oButton:AddClass("btn")
-        oButton:AddClass("btn-sm")
-        oButton:AddClass("btn-primary")
-        oButton:SetAttr("onclick",cIDPrefix+"_expandRow(this)")
+        ::oTableTBodyRowTDButton:=WebExButton():New()
+        ::oTableTBodyRowTDButton:AddClass("btn-sm")
+        ::oTableTBodyRowTDButton:SetAttr("onclick",cIDPrefix+"_expandRow(this)")
         if (!Empty(cDataHTML))
-            oButton:SetAttr("data-html",cDataHTML)
+            ::oTableTBodyRowTDButton:SetAttr("data-html",cDataHTML)
         endif
-        oButton:SetContent("+")
-        oTD:=WebExControl():New("td")
-        oTD:AddChild(oButton)
-        oTR:AddChild(oTD)
+        ::oTableTBodyRowTDButton:SetContent("+")
+        ::oTableTBodyRowTD:=WebExControl():New("td")
+        ::oTableTBodyRowTD:AddChild(::oTableTBodyRowTDButton)
+        ::oTableTBodyRowTR:AddChild(::oTableTBodyRowTD)
     endif
-    aEval(::jTableDetail:GetNames(),{|cName|oTR:AddChild(::jTableDetail[cName])})
-    ::oTableTBody:AddChild(oTR)
-    ::jTableDetail:=JSONObject():New()
-return(self)
+    aEval(::jTableDetail:GetNames(),{|cName|::GetObjTableTBodyRowTR():AddChild(::GetJSONTableDetail()[cName])})
+    ::oTableTBody:AddChild(::oTableTBodyRowTR)
+    ::SetJSONTableDetail(JSONObject():New())
+return(::oTableTBodyRowTR)
 
 method EnableDrillDown() class WebExTable
     ::lTableExpandable:=.T.
+    ::SetObjTableScript()
 return(self)
 
 method RenderHTML() class WebExTable
 
     local cHTML as character
-    local cScript as character
-
-    local oCaption as object
-
-    local oFWWebExScript as object
 
     if (!Empty(::cTableTitle))
-        ::AddClass(if(::lTableTitleBefore,"caption-top","caption-bottom"))
-        oCaption:=WebExControl():New("caption")
-        oCaption:AddClass("text-center")
-        oCaption:AddClass("fw-bold")
-        oCaption:SetContent(::cTableTitle)
-        ::AddChild(oCaption)
+        ::SetTableTitle()
+        ::AddChild(::oTableCaption)
     endif
 
     ::AddChild(::oTableTHead)
     ::AddChild(::oTableTBody)
 
     if (::lTableExpandable)
-        // Adiciona script de expandRow com ID prefixado
-        oFWWebExScript:=WebExScript():New()
+        ::SetObjTableScript()
+    endif
+
+    cHTML:=_Super:RenderHTML()
+
+return(cHTML)
+
+method GetTableTitle() class WebExTable
+return(::cTableTitle)
+
+method SetTableTitle(cTableTitle) class WebExTable
+    paramtype 1 var cTableTitle as character optional default ::cTableTitle
+    ::cTableTitle:=cTableTitle
+    if (!Empty(::cTableTitle))
+        ::DelClassRegex("caption-(top|bottom)") // remove qualquer caption-* anterior (se tiver))
+        ::AddClass(if(::lTableTitleBefore,"caption-top","caption-bottom"))
+        if ((ValType(::oTableCaption)!="O").or.(::oTableCaption:ClassName()=="WEBEXCAPTION"))
+            ::oTableCaption:=WebExCaption():New()
+            ::oTableCaption:AddClass("text-center")
+            ::oTableCaption:AddClass("fw-bold")
+        endif
+        ::oTableCaption:SetContent(::cTableTitle)
+    endif
+return(self)
+
+method GetJSONTableHeader() class WebExTable
+return(::jTableHeader)
+
+method SetJSONTableHeader(jTableHeader) class WebExTable
+    paramtype 1 var jTableHeader as json default ::jTableHeader
+    ::jTableHeader:=jTableHeader
+return(self)
+
+method GetJSONTableDetail() class WebExTable
+return(::jTableDetail)
+
+method SetJSONTableDetail(jTableDetail) class WebExTable
+    paramtype 1 var jTableDetail as json default ::jTableDetail
+return(self)
+
+method GetTableExpandable() class WebExTable
+return(::lTableExpandable)
+
+method SetTableExpandable(lTableExpandable) class WebExTable
+    paramtype 1 var lTableExpandable as logical optional default ::lTableExpandable
+    ::lTableExpandable:=lTableExpandable
+return(self)
+
+method GetTableTitleBefore() class WebExTable
+return(::lTableTitleBefore)
+
+method SetTableTitleBefore(lTableTitleBefore) class WebExTable
+    paramtype 1 var lTableTitleBefore as logical optional default ::lTableTitleBefore
+    ::lTableTitleBefore:=lTableTitleBefore
+return(self)
+
+method GetObjTableTHead() class WebExTable
+return(::oTableTHead)
+
+method SetObjTableTHead(oTableTHead) class WebExTable
+    paramtype 1 var oTableTHead as object class WebExControl optional
+    if (ValType(oTableTHead)!="O")
+        oTableTHead:=::oTableTHead
+    endif
+    ::oTableTHead:=oTableTHead
+return(self)
+
+method GetObjTableTBody() class WebExTable
+return(::oTableTBody)
+
+method SetObjTableTBody(oTableTBody) class WebExTable
+    paramtype 1 var oTableTBody as object class WebExControl optional
+    if (ValType(oTableTBody)!="O")
+        oTableTBody:=::oTableTBody
+    endif
+    ::oTableTBody:=oTableTBody
+return(self)
+
+method GetObjTableTHeadTH() class WebExTable
+return(::oTableTHeadTH)
+
+method GetObjTableTHeadTR() class WebExTable
+return(::oTableTHeadTR)
+
+method GetObjTableTBodyRowTD() class WebExTable
+return(::oTableTBodyRowTD)
+
+method GetObjTableTBodyRowTR() class WebExTable
+return(::oTableTBodyRowTR)
+
+method GetObjTableTBodyRowTDButton() class WebExTable
+return(::oTableTBodyRowTDButton)
+
+method GetObjTableCaption() class WebExTable
+return(::oTableCaption)
+
+method GetObjTableScript() class WebExTable
+return(::oTableScript)
+
+method SetObjTableScript(oTableScript) class WebExTable
+    local cScript as character
+    local lTableScript as logical
+    paramtype 1 var oTableScript as object class WebExScript optional
+    lTableScript:=(valType(::oTableScript)=="O")
+    if (ValType(oTableScript)=="O")
+        if (lTableScript)
+            oTableScript:SetID(::oTableScript:GetID())
+            oTableScript:SetFixedID(::oTableScript:GetFixedID())
+        endif
+        ::oTableScript:SetFromObject(oTableScript)
+    elseif ((::lTableExpandable).and.(!lTableScript))
+        ::oTableScript:=WebExScript():New()
         //TODO: fetch real content via AJAX and update td.innerHTML
         beginContent var cScript
             function __cID___expandRow(button) {
@@ -164,9 +305,7 @@ method RenderHTML() class WebExTable
             }
         endContent
         cScript:=StrTran(cScript,"__cID__",::GetFixedID())
-        oFWWebExScript:SetContent(cScript)
+        ::oTableScript:SetContent(cScript)
     endif
 
-    cHTML:=_Super:RenderHTML()
-
-return(cHTML)
+return(self)

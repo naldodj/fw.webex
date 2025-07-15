@@ -1,0 +1,118 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+/***********************************************************************************************************
+    WebExTHead
+***********************************************************************************************************/
+class WebExTHead from WebExControl
+
+    public method New() as object
+
+endclass
+
+method New() class WebExTHead
+    _Super:New("thead")
+return(self)
+
+/***********************************************************************************************************
+    WebExTBody
+***********************************************************************************************************/
+class WebExTBody from WebExControl
+
+    public method New() as object
+
+endclass
+
+method New() class WebExTBody
+    _Super:New("tbody")
+return(self)
+
+/***********************************************************************************************************
+    WebExTFoot
+***********************************************************************************************************/
+class WebExTFoot from WebExControl
+
+    public method New() as object
+
+endclass
+
+method New() class WebExTFoot
+    _Super:New("tfoot")
+return(self)
+
+/***********************************************************************************************************
+    WebExTR
+***********************************************************************************************************/
+class WebExTR from WebExControl
+
+    public method New() as object
+
+endclass
+
+method New() class WebExTR
+    _Super:New("tr")
+return(self)
+
+/***********************************************************************************************************
+    WebExTH
+***********************************************************************************************************/
+class WebExTH from WebExControl
+
+    public method New() as object
+
+endclass
+
+method New() class WebExTH
+    _Super:New("th")
+return(self)
+
+/***********************************************************************************************************
+    WebExTD
+***********************************************************************************************************/
+class WebExTD from WebExControl
+
+    public method New() as object
+
+endclass
+
+method New() class WebExTD
+    _Super:New("td")
+return(self)
+
+/***********************************************************************************************************
+    WebExCaption
+***********************************************************************************************************/
+class WebExCaption from WebExControl
+
+    public method New() as object
+
+endclass
+
+method New() class WebExCaption
+    _Super:New("caption")
+return(self)
+
+/***********************************************************************************************************
+    WebExColgroup
+***********************************************************************************************************/
+class WebExColgroup from WebExControl
+
+    public method New() as object
+
+endclass
+
+method New() class WebExColgroup
+    _Super:New("colgroup")
+return(self)

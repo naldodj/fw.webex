@@ -17,7 +17,13 @@ class WebExNavSide from WebExControl
 
     protected data cNavSideBrand as character
 
-    protected data jNavSideItems as json
+    protected data oNavSideItem as object
+    protected data oNavSideLink as object
+    protected data oNavSideSpan as object
+
+    protected data oNavSideList as object
+    protected data oNavSideBrand as object
+    protected data oNavSideWrapper as object
 
     public method New(cNavSideBrand as character) as object
     public method SetBrand(cNavSideBrand as character) as object
@@ -26,92 +32,127 @@ class WebExNavSide from WebExControl
     public method AddHeader(cNavSideHeaderText as character) as object
     public method RenderHTML() as character
 
+    public method GetNavSideBrand() as character
+    public method SetNavSideBrand(cNavSideBrand as character) as object
+
+    public method GetJSONNavSideItems() as json
+
+    public method GetObjNavSideItem() as object
+    public method GetObjNavSideLink() as object
+    public method GetObjNavSideSpan() as object
+
+    public method GetObjNavSideList() as object
+    public method GetObjNavSideBrand() as object
+    public method GetObjNavSideWrapper() as object
+
 endclass
 
 method New(cNavSideBrand) class WebExNavSide
     paramtype 1 var cNavSideBrand as character optional default ""
-    ::jNavSideItems:=JSONObject():New()
     ::cNavSideBrand:=cNavSideBrand
+    ::oNavSideList:=WebExUL():New()
+    ::oNavSideList:AddClass("nav nav-pills flex-column mb-auto")
+    ::oNavSideWrapper:=WebExDiv():New()
+    ::oNavSideWrapper:AddClass("d-flex flex-column flex-shrink-0 p-3")
     _Super:New("nav")
-    ::SetAttr("class","sidebar bg-body border-end")
+    ::AddClass("sidebar bg-body border-end")
     ::SetAttr("id",::GetFixedID())
+    ::SetNavSideBrand()
 return(self)
 
 method SetBrand(cNavSideBrand) class WebExNavSide
-    ::cNavSideBrand:=cNavSideBrand
+    ::SetNavSideBrand(cNavSideBrand)
 return(self)
 
 method AddItem(cNavSideLabel,cNavSideHRef,oNavIcon) class WebExNavSide
-
-    local oItem as object
-    local oLink as object
-    local oSpan as object
 
     paramtype 1 var cNavSideLabel as character
     paramtype 2 var cNavSideHRef as character
     paramtype 3 var oNavIcon as object class WEBEXICON optional
 
-    oSpan:=WebExControl():New("span")
-    oSpan:SetContent(cNavSideLabel)
+    ::oNavSideSpan:=WebExSpan():New()
+    ::oNavSideSpan:SetContent(cNavSideLabel)
 
-    oLink:=WebExControl():New("a")
-    oLink:SetAttr("class","nav-link")
-    oLink:SetAttr("href",cNavSideHRef)
+    ::oNavSideLink:=WebExAnchor():New()
+    ::oNavSideLink:AddClass("nav-link")
+    ::oNavSideLink:SetAttr("href",cNavSideHRef)
     if (oNavIcon!=nil)
-        oLink:AddChild(oNavIcon)
+        ::oNavSideLink:AddChild(oNavIcon)
     endif
-    oLink:AddChild(oSpan)
+    ::oNavSideLink:AddChild(::oNavSideSpan)
 
-    oItem:=WebExControl():New("li")
-    oItem:SetAttr("class","nav-item")
-    oItem:AddChild(oLink)
+    ::oNavSideItem:=WebExLI():New()
+    ::oNavSideItem:AddClass("nav-item")
+    ::oNavSideItem:AddChild(::oNavSideLink)
+    ::oNavSideList:AddChild(::oNavSideItem)
 
-    ::jNavSideItems[oItem:GetID()]:=oItem
-
-return(oItem)
+return(::oNavSideItem)
 
 method AddDivider() class WebExNavSide
-    local oDivider:=WebExControl():New("hr")
-    oDivider:SetAttr("class","my-2")
-    ::jNavSideItems[oDivider:GetID()]:=oDivider
+    local oDivider:=WebExHR():New()
+    oDivider:DelClassRegex("my-[0-9]+") // remove qualquer my-* anterior (se tiver)
+    oDivider:AddClass("my-2")
+    ::oNavSideList:AddChild(oDivider)
 return(oDivider)
 
 method AddHeader(cNavSideHeaderText) class WebExNavSide
     local oHeader as object
     paramtype 1 var cNavSideHeaderText as character
-    oHeader:=WebExControl():New("div")
-    oHeader:SetAttr("class","text-muted text-uppercase px-3 small fw-bold")
+    oHeader:=WebExDiv():New()
+    oHeader:AddClass("text-muted text-uppercase px-3 small fw-bold")
     oHeader:SetContent(cNavSideHeaderText)
-    ::jNavSideItems[oHeader:GetID()]:=oHeader
+    ::oNavSideList:AddChild(oHeader)
 return(oHeader)
 
 method RenderHTML() class WebExNavSide
 
     local cHTML as character
 
-    local oList as object
-    local oBrand as object
-    local oWrapper as object
-
-    oWrapper:=WebExControl():New("div")
-    oWrapper:SetAttr("class","d-flex flex-column flex-shrink-0 p-3")
-    //oWrapper:SetAttr("style","min-height: 100vh")
-
     if (!Empty(::cNavSideBrand))
-        oBrand:=WebExControl():New("a")
-        oBrand:SetAttr("href","#")
-        oBrand:SetAttr("class","navbar-brand mb-3")
-        oBrand:SetContent(::cNavSideBrand)
-        oWrapper:AddChild(oBrand)
+        ::oNavSideWrapper:AddChild(::oNavSideBrand)
     endif
 
-    oList:=WebExControl():New("ul")
-    oList:SetAttr("class","nav nav-pills flex-column mb-auto")
-    aEval(::jNavSideItems:GetNames(),{|k|oList:AddChild(::jNavSideItems[k])})
-    oWrapper:AddChild(oList)
+    ::oNavSideWrapper:AddChild(::oNavSideList)
 
-    ::AddChild(oWrapper)
+    ::AddChild(::oNavSideWrapper)
 
     cHTML:=_Super:RenderHTML()
 
 return(cHTML)
+
+method GetNavSideBrand() class WebExNavSide
+return(::cNavSideBrand)
+
+method SetNavSideBrand(cNavSideBrand) class WebExNavSide
+    paramtype 1 var cNavSideBrand as character optional default ::cNavSideBrand
+    ::cNavSideBrand:=cNavSideBrand
+    if (!Empty(::cNavSideBrand))
+        if (valType(::oNavSideBrand)!="O")
+            ::oNavSideBrand:=WebExAnchor():New()
+            ::oNavSideBrand:SetAttr("href","#")
+            ::oNavSideBrand:AddClass("navbar-brand mb-3")
+        endif
+        ::oNavSideBrand:SetContent(::cNavSideBrand)
+    endif
+return(self)
+
+method GetJSONNavSideItems() class WebExNavSide
+return(::jNavSideItems)
+
+method GetObjNavSideItem() class WebExNavSide
+return(::oNavSideItem)
+
+method GetObjNavSideLink() class WebExNavSide
+return(::oNavSideItem)
+
+method GetObjNavSideSpan() class WebExNavSide
+return(::oNavSideSpan)
+
+method GetObjNavSideList() class WebExNavSide
+return(::oNavSideList)
+
+method GetObjNavSideBrand() class WebExNavSide
+return(::oNavSideBrand)
+
+method GetObjNavSideWrapper() class WebExNavSide
+return(::oNavSideWrapper)
