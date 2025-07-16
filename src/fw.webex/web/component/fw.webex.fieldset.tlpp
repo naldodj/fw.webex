@@ -14,13 +14,44 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExFieldSet from WebExControl
-   protected data cFieldSetLegend as character
-   public method New(cFieldSetLegend as character) as object
+
+    protected data cFieldSetLegend as character
+
+    protected data oWebExLegendFieldSet as object
+
+    public method New(cFieldSetLegend as character) as object
+
+    public method GetFieldSetLegend() as character
+    public method SetFieldSetLegend(cFieldSetLegend as character) as object
+
+    public method GetWebExLegendFieldSet() as object
+    public method SetWebExLegendFieldSet(oWebExLegendFieldSet as object) as object
+
 endclass
 
 method New(cFieldSetLegend) class WebExFieldSet
-   paramtype 1 var cFieldSetLegend as character
-   ::cFieldSetLegend:=cFieldSetLegend
-   _Super:New("fieldset")
-   ::AddChild(WebExLegend():New(::cFieldSetLegend))
+    paramtype 1 var cFieldSetLegend as character
+    ::cFieldSetLegend:=cFieldSetLegend
+    _Super:New("fieldset")
+    ::oWebExLegendFieldSet:=WebExLegend():New(::cFieldSetLegend)
+    ::AddChild(::oWebExLegendFieldSet)
+return(self)
+
+method GetFieldSetLegend() class WebExFieldSet
+return(::cFieldSetLegend)
+
+method SetFieldSetLegend(cFieldSetLegend) class WebExFieldSet
+    paramtype 1 var cFieldSetLegend as character optional default ::cFieldSetLegend
+    ::cFieldSetLegend:=cFieldSetLegend
+    ::oWebExLegendFieldSet:SetLetend(::cFieldSetLegend)
+return(self)
+
+method GetWebExLegendFieldSet() class WebExFieldSet
+return(::oWebExLegendFieldSet)
+
+method SetWebExLegendFieldSet(oWebExLegendFieldSet) class WebExFieldSet
+    paramtype 1 var oWebExLegendFieldSet as object class WebExLegend
+    oWebExLegendFieldSet:SetID(::oWebExLegendFieldSet:GetID())
+    oWebExLegendFieldSet:SetFixedID(::oWebExLegendFieldSet:GetFixedID())
+    ::oWebExLegendFieldSet:SetFromObject(oWebExLegendFieldSet)
 return(self)

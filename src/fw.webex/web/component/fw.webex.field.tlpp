@@ -18,31 +18,118 @@ class WebExField from WebExControl
     protected data cFieldLabel as character
     protected data cFieldName as character
     protected data cFieldType as character
-    protected data cFieldFieldType as character
+    protected data cFieldPlaceHolder as character
     protected data cFieldTitle as character
 
-    protected data oWebExInput as object
-    protected data oWebExLabel as object
+    protected data oWebExInputField as object
+    protected data oWebExLabelField as object
 
-    public method New(cFieldLabel as character,cFieldName as character,cFieldType as character,cFieldFieldType as character,cFieldTitle as character) as object
+    public method New(cFieldLabel as character,cFieldName as character,cFieldType as character,cFieldPlaceHolder as character,cFieldTitle as character) as object
+
+    public method GetFieldLabel() as character
+    public method SetFieldLabel(cFieldLabel as character) as object
+
+    public method GetFieldName() as character
+    public method SetFieldName(cFieldName as character) as object
+
+    public method GetFieldType() as character
+    public method SetFieldType(cFieldType as character) as object
+
+    public method GetFieldPlaceHolder() as character
+    public method SetFieldPlaceHolder(cFieldPlaceHolder as character) as object
+
+    public method GetFieldTitle() as character
+    public method SetFieldTitle(cFieldTitle as character) as object
+
+    public method GetObjWebExInputField() as object
+    public method SetObjWebExInputField(oWebExInputField as object) as object
+
+    public method GetObjWebExLabelField() as object
+    public method SetObjWebExLabelField(oWebExLabelField as object) as object
 
 endclass
 
-method New(cFieldLabel,cFieldName,cFieldType,cFieldFieldType,cFieldTitle) class WebExField
+method New(cFieldLabel,cFieldName,cFieldType,cFieldPlaceHolder,cFieldTitle) class WebExField
     paramtype 1 var cFieldLabel as character
     paramtype 2 var cFieldName as character
     paramtype 3 var cFieldType as character
-    paramtype 4 var cFieldFieldType as character
-    paramtype 5 var cFieldTitle as character optional default cFieldFieldType
+    paramtype 4 var cFieldPlaceHolder as character
+    paramtype 5 var cFieldTitle as character optional default cFieldPlaceHolder
     ::cFieldLabel:=cFieldLabel
     ::cFieldName:=cFieldName
     ::cFieldType:=cFieldType
-    ::cFieldFieldType:=cFieldFieldType
+    ::cFieldPlaceHolder:=cFieldPlaceHolder
     ::cFieldTitle:=cFieldTitle
     _Super:New("div")
-    ::SetAttr("class","mb-3")
-    ::oWebExInput:=WebExInput():New(cFieldName,cFieldType,cFieldFieldType,cFieldTitle)
-    ::oWebExLabel:=WebExLabel():New(::oWebExInput:GetFixedID(),cFieldLabel)
-    ::AddChild(::oWebExLabel)
-    ::AddChild(::oWebExInput)
+    ::AddClass("mb-3")
+    ::oWebExInputField:=WebExInput():New(cFieldName,cFieldType,cFieldPlaceHolder,cFieldTitle)
+    ::oWebExLabelField:=WebExLabel():New(::oWebExInputField:GetFixedID(),cFieldLabel)
+    ::AddChild(::oWebExLabelField)
+    ::AddChild(::oWebExInputField)
+return(self)
+
+method GetFieldLabel() class WebExField
+return(::cFieldLabel)
+
+method SetFieldLabel(cFieldLabel) class WebExField
+    paramtype 1 var cFieldLabel as character optional default ::cFieldLabel
+    ::cFieldLabel:=cFieldLabel
+    ::oWebExLabelField:SetLabelFor(::oWebExInputField:GetFixedID())
+    ::oWebExLabelField:SetLabelText(::cFieldLabel)
+return(self)
+
+method GetFieldName() class WebExField
+return(::cFieldName)
+
+method SetFieldName(cFieldName) class WebExField
+    paramtype 1 var cFieldName as character optional default ::cFieldName
+    ::cFieldName:=cFieldName
+    ::oWebExInputField:SetInputName(::cFieldType)
+return(self)
+
+method GetFieldType() class WebExField
+return(::cFieldType)
+
+method SetFieldType(cFieldType) class WebExField
+    paramtype cFieldType as character optional default ::cFieldType
+    ::cFieldType:=cFieldType
+    ::oWebExInputField:SetInputType(::cFieldType)
+return(self)
+
+method GetFieldPlaceHolder() class WebExField
+return(::cFieldPlaceHolder)
+
+method SetFieldPlaceHolder(cFieldPlaceHolder) class WebExField
+    paramtype 1 var cFieldPlaceHolder as character optional default ::cFieldPlaceHolder
+    ::cFieldPlaceHolder:=cFieldPlaceHolder
+    ::oWebExInputField:SetInputPlaceHolder(::cFieldPlaceHolder)
+return(self)
+
+method GetFieldTitle() class WebExField
+return(::cFieldTitle)
+
+method SetFieldTitle(cFieldTitle) class WebExField
+    paramtype 1 var cFieldTitle as character optional default ::cFieldTitle
+    ::cFieldTitle:=cFieldTitle
+    ::oWebExInputField:SetInputTitle(::cFieldTitle)
+return(self)
+
+method GetObjWebExInputField() class WebExField
+return(::oWebExInputField)
+
+method SetObjWebExInputField(oWebExInputField) class WebExField
+    paramtype 1 var oWebExInputField as object class WebExInput
+    oWebExInputField:SetID(::oWebExInputField:GetID())
+    oWebExInputField:SetFixedID(::oWebExInputField:GetFixedID())
+    ::oWebExInputField:SetFromObject(oWebExInputField)
+return(self)
+
+method GetObjWebExLabelField() class WebExField
+return(::oWebExLabelField)
+
+method SetObjWebExLabelField(oWebExLabelField) class WebExField
+    paramtype 1 var oWebExLabelField as object class WebExLabel
+    oWebExLabelField:SetID(::oWebExLabelField:GetID())
+    oWebExLabelField:SetFixedID(::oWebExLabelField:GetFixedID())
+    ::oWebExLabelField:SetFromObject(oWebExLabelField)
 return(self)

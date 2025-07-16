@@ -17,39 +17,91 @@ class WebExInput from WebExControl
 
     protected data cInputName as character
     protected data cInputType as character
-    protected data cInputPlaceholder as character
+    protected data cInputPlaceHolder as character
     protected data cInputTitle as character
 
-    public method New(cInputName as character,cInputType as character,cInputPlaceholder as character,cInputTitle as character) as object
+    public method New(cInputName as character,cInputType as character,cInputPlaceHolder as character,cInputTitle as character) as object
+
+    public method GetInPutName() as character
+    public method SetInPutName(cInputName as character) as object
+
+    public method GetInputType() as character
+    public method SetInputType(cInputType as character) as object
+
+    public method GetInputPlaceHolder() as character
+    public method SetInputPlaceHolder(cInputPlaceHolder as character) as object
+
+    public method GetInputTitle() as character
+    public method SetInputTitle(cInputTitle as character) as object
 
 endclass
 
-method New(cInputName,cInputType,cInputPlaceholder,cInputTitle) class WebExInput
+method New(cInputName,cInputType,cInputPlaceHolder,cInputTitle) class WebExInput
 
     paramtype 1 var cInputName as character
     paramtype 2 var cInputType as character
-    paramtype 3 var cInputPlaceholder as character
-    paramtype 4 var cInputTitle as character optional default cInputPlaceholder
+    paramtype 3 var cInputPlaceHolder as character
+    paramtype 4 var cInputTitle as character optional default cInputPlaceHolder
 
     ::cInputName:=cInputName
     ::cInputType:=cInputType
-    ::cInputPlaceholder:=cInputPlaceholder
+    ::cInputPlaceHolder:=cInputPlaceHolder
     ::cInputTitle:=cInputTitle
 
     _Super:New("input")
 
+    ::SetInPutName()
+    ::SetInputType()
+    ::SetInputPlaceHolder()
+    ::SetInputTitle()
+
+return(self)
+
+method GetInPutName() class WebExInput
+return(::cInPutName)
+
+method SetInPutName(cInputName) class WebExInput
+    paramtype 1 var cInputName as character optional default ::cInputName
+    ::cInputName:=cInputName
+    ::SetAttr("name",::cInputName)
+return(self)
+
+method GetInputType() class WebExInput
+return(::cInputType)
+
+method SetInputType(cInputType) class WebExInput
+    paramtype 1 var cInputType as character optional default ::cInputType
+    ::cInputType:=cInputType
+    ::SetAttr("type",::cInputType)
     if (!cInputType=="checkbox")
-        ::SetAttr("class","form-control")
+        ::AddClass("form-control")
+    else
+        ::DelClass("form-control")
     endif
+return(self)
 
-    ::SetAttr("name",cInputName)
-    ::SetAttr("type",cInputType)
+method GetInputPlaceHolder() class WebExInput
+return(::cInputPlaceHolder)
 
-    if (!Empty(cInputPlaceholder))
-        ::SetAttr("placeholder",cInputPlaceholder)
+method SetInputPlaceHolder(cInputPlaceHolder) class WebExInput
+    paramtype 1 var cInputPlaceHolder as character optional default ::cInputPlaceHolder
+    ::cInputPlaceHolder:=cInputPlaceHolder
+    if (!Empty(cInputPlaceHolder))
+        ::SetAttr("placeholder",::cInputPlaceHolder)
+    else
+        ::DelAttr("placeholder")
     endif
+return(self)
+
+method GetInputTitle() class WebExInput
+return(::cInputTitle)
+
+method SetInputTitle(cInputTitle) class WebExInput
+    paramtype 1 var cInputTitle as character optional default ::cInputTitle
+    ::cInputTitle:=cInputTitle
     if (!Empty(cInputTitle))
-        ::SetAttr("title",cInputTitle)
+        ::SetAttr("title",::cInputTitle)
+    else
+        ::DelAttr("title")
     endif
-
 return(self)

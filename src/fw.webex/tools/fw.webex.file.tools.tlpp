@@ -146,7 +146,7 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
             break
         endif
 
-        oFWWebExControlPage:=oFWWebExControl:GetPageAfterRender()
+        oFWWebExControlPage:=oFWWebExControl:GetObjPageAfterRender()
         cDumpFWWebExControl:=oFWWebExControlPage:DumpDom()
         oDumpPre:=WebExControl():New("pre")
         oDumpPre:SetContent(cDumpFWWebExControl)

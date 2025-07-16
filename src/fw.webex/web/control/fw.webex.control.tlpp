@@ -453,9 +453,12 @@ method DelAttrValueRegex(cAttr,cAttrValueRegex,/*@*/aAttr,lDelAttrValue) class W
     local aAttrRemained as array
 
     local cAttrValue as character
+
     local lDeleted:=.F. as logical
+
     local nAttr as numeric
     local nAttrs as numeric
+
     local oTRegEx as object
 
     paramtype 1 var cAttr as character

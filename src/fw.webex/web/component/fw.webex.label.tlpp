@@ -20,6 +20,12 @@ class WebExLabel from WebExControl
 
     public method New(cLabelFor as character,cLabelText as character) as object
 
+    public method GetLabelFor() as character
+    public method SetLabelFor(cLabelFor as character) as object
+
+    public method GetLabelText() as character
+    public method SetLabelText(cLabelText as character) as object
+
 endclass
 
 method New(cLabelFor,cLabelText) class WebExLabel
@@ -28,7 +34,25 @@ method New(cLabelFor,cLabelText) class WebExLabel
     ::cLabelFor:=cLabelFor
     ::cLabelText:=cLabelText
     _Super:New("label")
+    ::AddClass("form-label")
+    ::SetLabelFor()
+    ::SetLabelText()
+return(self)
+
+method GetLabelFor() class WebExLabel
+return(::cLabelFor)
+
+method SetLabelFor(cLabelFor) class WebExLabel
+    paramtype 1 var cLabelFor as character optional default ::cLabelFor
+    ::cLabelFor:=cLabelFor
     ::SetAttr("for",cLabelFor)
-    ::SetAttr("class","form-label")
+return(self)
+
+method GetLabelText() class WebExLabel
+return(::cLabelText)
+
+method SetLabelText(cLabelText) class WebExLabel
+    paramtype 1 var cLabelText as character optional default ::cLabelText
+    ::cLabelText:=cLabelText
     ::SetContent(cLabelText)
 return(self)
