@@ -5,7 +5,7 @@
 |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
 |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 
-+---> WebExPage ("Exemplo 005 - Formulario ViaCEP")
++---> WebExPage ("Exemplo 017 - Formulario ViaCEP")
       |
       +---> WebExForm ("Consulta de CEP")
             |
@@ -20,13 +20,13 @@
             |
             +---> WebExButton ("Buscar")
                   |
-                  +---> onclick="buscarCEP(); return false;"
+                  +---> onclick="buscarCEP_Formulario(); return false;"
       |
       +---> WebExScript
             |
             +---> <script>
                   |
-                  +---> funcao JS buscarCEP()
+                  +---> funcao JS buscarCEP_Formulario()
                           |
                           +--->  faz fetch para ViaCEP
                           |
@@ -88,7 +88,7 @@ static function FWWebExExample_017(cHTML as character) as character
 
     //Carrega o Botao para Buscar os Dados ao Grupo
     oFWWebExButton:=WebExButton():New("Buscar")
-    oFWWebExButton:SetAttr("onclick","buscarCEP(); return false;")
+    oFWWebExButton:SetAttr("onclick","buscarCEP_Formulario(); return false;")
     oGroupRef:AddChild(oFWWebExButton)
 
     //Adiciona um Separador Horizontal
@@ -108,28 +108,42 @@ static function FWWebExExample_017(cHTML as character) as character
 
     // Adiciona o script para consulta Ajax do ViaCEP
     beginContent var cScript
-        function buscarCEP() {
-            const cep = document.getElementsByName('cep')[0].value.replace(/[^0-9]/g,'');
+        function buscarCEP_Formulario() {
+            const cep = document.getElementsByName('cep')[0].value.replace(/\D/g, '');
             if (cep.length !== 8) {
-                document.getElementById('resultadoCEP').innerHTML = '<div class=\"alert alert-danger\">CEP inv&aacute;lido.</div>';
+                document.getElementById('resultadoCEP').innerHTML = '<div class="alert alert-danger">CEP inv&aacute;lido.</div>';
                 return;
             }
-            fetch('https://viacep.com.br/ws/' + cep + '/json/')
-                .then(response => response.json())
+
+            const preencherCampos = (data, origem) => {
+                document.getElementsByName('logradouro')[0].value = data.logradouro || '';
+                document.getElementsByName('bairro')[0].value = data.bairro || '';
+                document.getElementsByName('localidade')[0].value = data.localidade || data.city || '';
+                document.getElementsByName('uf')[0].value = data.uf || data.state || '';
+                document.getElementsByName('ibge')[0].value = data.ibge || '';
+                document.getElementById('resultadoCEP').innerHTML = `<div class="alert alert-success">Dados carregados via ${origem}</div>`;
+            };
+
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(res => {
+                    if (!res.ok) throw new Error("ViaCEP falhou");
+                    return res.json();
+                })
                 .then(data => {
-                if (data.erro) {
-                    document.getElementById('resultadoCEP').innerHTML = '<div class=\"alert alert-danger\">CEP n&atilde;o encontrado.</div>';
-                } else {
-                    document.getElementsByName('logradouro')[0].value = data.logradouro || '';
-                    document.getElementsByName('bairro')[0].value = data.bairro || '';
-                    document.getElementsByName('localidade')[0].value = data.localidade || '';
-                    document.getElementsByName('uf')[0].value = data.uf || '';
-                    document.getElementsByName('ibge')[0].value = data.ibge || '';
-                    document.getElementById('resultadoCEP').innerHTML = '';
-                }
-            }).catch(() => {
-                document.getElementById('resultadoCEP').innerHTML = '<div class=\"alert alert-danger\">Erro ao consultar o CEP.</div>';
-            });
+                    if (data.erro) throw new Error("CEP n&atilde;o encontrado no ViaCEP");
+                    preencherCampos(data, "ViaCEP");
+                })
+                .catch(() => {
+                    fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`)
+                        .then(res => {
+                            if (!res.ok) throw new Error("BrasilAPI falhou");
+                            return res.json();
+                        })
+                        .then(data => preencherCampos(data, "BrasilAPI"))
+                        .catch(() => {
+                            document.getElementById('resultadoCEP').innerHTML = '<div class="alert alert-danger">Erro ao consultar o CEP.</div>';
+                        });
+                });
         }
     endContent
 
@@ -142,7 +156,7 @@ static function FWWebExExample_017(cHTML as character) as character
     oFWWebExBody:=WebExBody():New()
     oFWWebExBody:AddChild(oFWWebExMain)
 
-    oFWWebExPage:=WebExPage():New("Exemplo 005 - Formul&aacute;rio ViaCEP")
+    oFWWebExPage:=WebExPage():New("Exemplo 017 - Formul&aacute;rio ViaCEP")
     oFWWebExPage:AddChild(oFWWebExBody)
 
     WebFileTools():HTMLFromControl(oFWWebExPage,oFWWebExPage:GetFWWebExTmpPath(),@cHTMLFile,@cHTML,.T.)

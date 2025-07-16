@@ -10,11 +10,11 @@
       +---> WebExForm ("Consulta CEP")
       |     |
       |     +---> input[name="cep"] (type=text, placeholder="Digite o CEP")
-      |     +---> WebExButton ("Buscar CEP") ? chama buscarCEP()
+      |     +---> WebExButton ("Buscar CEP") ? chama buscarCEP_Cartao()
       |
       +---> WebExScript
       |     |
-      |     +---> <script> com funcao JS buscarCEP()
+      |     +---> <script> com funcao JS buscarCEP_Cartao()
       |           que faz fetch na API ViaCEP e injeta HTML no resultadoCEP
       |
       +---> WebExControl (div#resultadoCEP.mt-4)
@@ -60,53 +60,66 @@ static function FWWebExExample_003(cHTML as character) as character
             WITH WEBEXOBJECT CLASS WebExMain
                 WITH WEBEXOBJECT CLASS WebExForm ARGS "Consulta CEP"
                     .:SetMethod("get")
-                    .:SetAction("javascript:buscarCEP()")
+                    .:SetAction("javascript:buscarCEP_Cartao()")
                     .:AddField("CEP","cep","text","Digite o CEP")
                     .:AddButton(WebExButton():New("Buscar CEP"))
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExScript
                     beginContent var cScript
+                        function buscarCEP_Cartao() {
+                            const cep = document.querySelector("input[name='cep']").value.trim().replace(/\D/g, '');
+                            if (cep.length !== 8) {
+                                document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>CEP inv&aacute;lido.</div>";
+                                return;
+                            }
 
-                        function buscarCEP() {
-
-                        const cep = document.querySelector("input[name='cep']").value.trim();
-                        const url = `https://viacep.com.br/ws/${cep}/json/`;
-
-                        fetch(url)
-                            .then(response => response.json())
-                            .then(data => {
-                            if (data.erro) {
-                                document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>CEP n&atilde;o encontrado.</div>";
-                            } else {
+                            const renderCEP = (data, origem) => {
                                 document.getElementById("resultadoCEP").innerHTML = `
+                                <div class="alert alert-success">Dados carregados via ${origem}</div>
                                 <div class='card'>
                                     <div class='card-body'>
-                                    <h5 class='card-title'>Endere&ccedil;o</h5>
+                                    <h5 class='card-title'>Endere&ccedil;o (${origem})</h5>
                                     <p class='card-text'>
-                                        <strong>CEP:</strong> ${data.cep}<br>
-                                        <strong>Logradouro:</strong> ${data.logradouro} -
-                                        <strong>Complemento:</strong> ${data.complemento} -
-                                        <strong>Unidade:</strong> ${data.unidade}<br>
-                                        <strong>Bairro:</strong> ${data.bairro} -
-                                        <strong>Localidade:</strong> ${data.localidade}<br>
-                                        <strong>UF:</strong> ${data.uf} -
-                                        <strong>Estado:</strong> ${data.estado}<br>
-                                        <strong>Regi&atilde;o:</strong> ${data.regiao} -
-                                        <strong>IBGE:</strong> ${data.ibge}<br>
-                                        <strong>GIA:</strong> ${data.gia} -
-                                        <strong>DDD:</strong> ${data.ddd}<br>
-                                        <strong>SIAFI:</strong> ${data.siafi}<br>
+                                        <strong>CEP:</strong> ${data.cep || '-'}<br>
+                                        <strong>Logradouro:</strong> ${data.logradouro || data.street || '-'} |
+                                        <strong>Complemento:</strong> ${data.complemento || '-'} |
+                                        <strong>Unidade:</strong> ${data.unidade || '-'}<br>
+                                        <strong>Bairro:</strong> ${data.bairro || data.neighborhood  || '-'} |
+                                        <strong>Localidade:</strong> ${data.localidade || data.city || '-'}<br>
+                                        <strong>UF:</strong> ${data.uf || data.state || '-'} |
+                                        <strong>Estado:</strong> ${data.estado || data.state || '-'}}<br>
+                                        <strong>Regi&atilde;o:</strong> ${data.regiao || '-'} |
+                                        <strong>IBGE:</strong> ${data.ibge || '-'}<br>
+                                        <strong>GIA:</strong> ${data.gia || '-'} |
+                                        <strong>DDD:</strong> ${data.ddd || '-'}<br>
+                                        <strong>SIAFI:</strong> ${data.siafi || '-'}<br>
                                     </p>
                                     </div>
                                 </div>
                                 `;
-                            }
-                            })
-                            .catch(() => {
-                            document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>Erro ao consultar o CEP.</div>";
-                            });
-                        }
+                            };
 
+                            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                                .then(res => {
+                                    if (!res.ok) throw new Error("ViaCEP falhou");
+                                    return res.json();
+                                })
+                                .then(data => {
+                                    if (data.erro) throw new Error("CEP n&atilde;o encontrado no ViaCEP");
+                                    renderCEP(data, "ViaCEP");
+                                })
+                                .catch(() => {
+                                    fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`)
+                                        .then(res => {
+                                            if (!res.ok) throw new Error("BrasilAPI falhou");
+                                            return res.json();
+                                        })
+                                        .then(data => renderCEP(data, "BrasilAPI"))
+                                        .catch(() => {
+                                            document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>Erro ao consultar o CEP.</div>";
+                                        });
+                                });
+                        }
                     endContent
                     .:SetContent(cScript)
                 END WEBEXOBJECT
