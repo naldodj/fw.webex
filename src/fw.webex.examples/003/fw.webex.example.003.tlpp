@@ -69,30 +69,30 @@ static function FWWebExExample_003(cHTML as character) as character
                         function buscarCEP_Cartao() {
                             const cep = document.querySelector("input[name='cep']").value.trim().replace(/\D/g, '');
                             if (cep.length !== 8) {
-                                document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>CEP inv&aacute;lido.</div>";
+                                document.getElementById("resultadoCEP").innerHTML = "<div class='alert alert-danger'>CEP inv&aacute;lido.</div><hr/>";
                                 return;
                             }
 
                             const renderCEP = (data, origem) => {
                                 document.getElementById("resultadoCEP").innerHTML = `
-                                <div class="alert alert-success">Dados carregados via ${origem}</div>
+                                <div class="alert alert-success">Dados carregados via ${origem}</div><hr/>
                                 <div class='card'>
                                     <div class='card-body'>
                                     <h5 class='card-title'>Endere&ccedil;o (${origem})</h5>
                                     <p class='card-text'>
-                                        <strong>CEP:</strong> ${data.cep || '-'}<br>
+                                        <strong>CEP:</strong> ${data.cep || '-'}<br/>
                                         <strong>Logradouro:</strong> ${data.logradouro || data.street || '-'} |
                                         <strong>Complemento:</strong> ${data.complemento || '-'} |
-                                        <strong>Unidade:</strong> ${data.unidade || '-'}<br>
+                                        <strong>Unidade:</strong> ${data.unidade || '-'}<br/>
                                         <strong>Bairro:</strong> ${data.bairro || data.neighborhood  || '-'} |
-                                        <strong>Localidade:</strong> ${data.localidade || data.city || '-'}<br>
+                                        <strong>Localidade:</strong> ${data.localidade || data.city || '-'}<br/>
                                         <strong>UF:</strong> ${data.uf || data.state || '-'} |
-                                        <strong>Estado:</strong> ${data.estado || data.state || '-'}}<br>
+                                        <strong>Estado:</strong> ${data.estado || data.state || '-'}}<br/>
                                         <strong>Regi&atilde;o:</strong> ${data.regiao || '-'} |
-                                        <strong>IBGE:</strong> ${data.ibge || '-'}<br>
+                                        <strong>IBGE:</strong> ${data.ibge || '-'}<br/>
                                         <strong>GIA:</strong> ${data.gia || '-'} |
-                                        <strong>DDD:</strong> ${data.ddd || '-'}<br>
-                                        <strong>SIAFI:</strong> ${data.siafi || '-'}<br>
+                                        <strong>DDD:</strong> ${data.ddd || '-'}<br/>
+                                        <strong>SIAFI:</strong> ${data.siafi || '-'}<br/>
                                     </p>
                                     </div>
                                 </div>

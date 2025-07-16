@@ -31,7 +31,7 @@ class WebExForm from WebExControl
     public method SetAction(cFormAction as character) as object
     public method AddField(cLabel as character,cName as character,cType as character,cPlaceholder as character) as object
     public method AddFieldToRow(oWebExRowFormFields,cLabel as character,cName as character,cType as character,cPlaceholder as character) as object
-    public method AddGroupToRow(oWebExRowFormFields,cLabel as character,cName as character,cType as character,cPlaceholder as character,nColSize as numeric,/*@*/oGroupRef as object) as object
+    public method AddGroupToRow(oWebExRowFormFields,cLabel as character,cName as character,cType as character,cPlaceholder as character,nColSize as numeric,/*@*/oWebExInputGroupFormFieldRef as object) as object
     public method AddButton(oWebExButtonForm as object) as object
 
     public method RenderHTML() as character
@@ -86,11 +86,9 @@ method AddFieldToRow(oWebExRowFormFields,cLabel,cName,cType,cPlaceholder) class 
     ::jWebExFieldFormFields[oWebExRowFormFields:GetID()]:=oWebExRowFormFields
 return(oWebExFieldFormField)
 
-method AddGroupToRow(oWebExRowFormFields,cLabel,cName,cType,cPlaceholder,nColSize,/*@*/oGroupRef) class WebExForm
+method AddGroupToRow(oWebExRowFormFields,cLabel,cName,cType,cPlaceholder,nColSize,/*@*/oWebExInputGroupFormFieldRef) class WebExForm
 
-    local oCol as object
-    local oLabel as object
-    local oInput as object
+    local oWebExColFormField as object
 
     paramtype 1 var oWebExRowFormFields as object class WebExRow
     paramtype 2 var cLabel as character
@@ -98,33 +96,19 @@ method AddGroupToRow(oWebExRowFormFields,cLabel,cName,cType,cPlaceholder,nColSiz
     paramtype 4 var cType as character
     paramtype 5 var cPlaceholder as character
     paramtype 6 var nColSize as numeric optional
-    paramtype 7 var oGroupRef as object optional
-
-    // Cria o input
-    oInput:=WebExControl():New("input")
-    oInput:SetAttr("type",cType)
-    oInput:SetAttr("name",cName)
-    oInput:SetAttr("placeholder",cPlaceholder)
-    oInput:AddClass("form-control")
-
-    // Cria o grupo que retornara por referencia
-    oGroupRef:=WebExControl():New("div")
-    oGroupRef:AddClass("input-group")
-    oGroupRef:AddChild(oInput)
-
-    //Monta o Label
-    oLabel:=WebExLabel():New(cName,cLabel)
+    paramtype 7 var oWebExInputGroupFormFieldRef as object optional
 
     // Monta estrutura
-    oCol:=WebExCol():New(nColSize)
-    oCol:AddChild(oLabel)
-    oCol:AddChild(oGroupRef)
-    oWebExRowFormFields:AddChild(oCol)
+    oWebExColFormField:=WebExFieldGroup():New(cLabel,cName,cType,cPlaceholder,/*cTitle*/,nColSize)
+    oWebExRowFormFields:AddChild(oWebExColFormField)
 
     // Registra no form
     ::jWebExFieldFormFields[oWebExRowFormFields:GetID()]:=oWebExRowFormFields
 
-return(oCol)
+    //Retorna o Grupo por Referencia
+    oWebExInputGroupFormFieldRef:=oWebExColFormField:GetObjWebExInputGroupInputFieldGroup()
+
+return(oWebExColFormField)
 
 method AddButton(oWebExButtonForm) class WebExForm
     paramtype 1 var oWebExButtonForm as object class WebExButton

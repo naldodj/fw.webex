@@ -78,8 +78,12 @@ static function FWWebExExample_005(cHTML as character) as character
     oFWWebExForm:SetMethod("get")
     oFWWebExForm:SetAction("#")
 
+    //Div com o Resultado das mensagens
+    oDiv:=WebExControl():New("div")
+    oDiv:SetAttr("id","resultadoCEP")
+
     // Campo de busca
-    oFWWebExForm:AddField("CEP","cep","text","Digite o CEP")
+    oFWWebExForm:AddField("CEP","cep","text","Digite o CEP"):AddChild(WebExHR():New()):AddChild(oDiv)
 
     // Campos que serao atualizados via Ajax (ja definidos)
     oFWWebExForm:AddField("Logradouro","logradouro","text","")
@@ -88,13 +92,9 @@ static function FWWebExExample_005(cHTML as character) as character
     oFWWebExForm:AddField("UF","uf","text","")
     oFWWebExForm:AddField("C&oacute;digo IBGE","ibge","text","")
 
-    oDiv:=WebExControl():New("div")
-    oDiv:SetAttr("id","resultadoCEP")
-
     oFWWebExButton:=WebExButton():New("Buscar")
     oFWWebExButton:SetAttr("onclick","buscarCEP_Formulario(); return false;")
 
-    oFWWebExForm:AddChild(oDiv)
     oFWWebExForm:AddChild(oFWWebExButton)
 
     // Adiciona o script para consulta Ajax do ViaCEP
@@ -112,7 +112,7 @@ static function FWWebExExample_005(cHTML as character) as character
                 document.getElementsByName('localidade')[0].value = data.localidade || data.city || '';
                 document.getElementsByName('uf')[0].value = data.uf || data.state || '';
                 document.getElementsByName('ibge')[0].value = data.ibge || '';
-                document.getElementById('resultadoCEP').innerHTML = `<div class="alert alert-success">Dados carregados via ${origem}</div>`;
+                document.getElementById('resultadoCEP').innerHTML = `<div class="alert alert-success">Dados carregados via ${origem}</div><hr/>`;
             };
 
             fetch(`https://viacep.com.br/ws/${cep}/json/`)

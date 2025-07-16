@@ -84,7 +84,7 @@ return(::cFieldName)
 method SetFieldName(cFieldName) class WebExField
     paramtype 1 var cFieldName as character optional default ::cFieldName
     ::cFieldName:=cFieldName
-    ::oWebExInputField:SetInputName(::cFieldType)
+    ::oWebExInputField:SetInputName(::cFieldName)
 return(self)
 
 method GetFieldType() class WebExField

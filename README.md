@@ -150,19 +150,19 @@ static function FWWebExExample_003(cHTML as character) as character
                                     <div class='card-body'>
                                     <h5 class='card-title'>Endere&ccedil;o</h5>
                                     <p class='card-text'>
-                                        <strong>CEP:</strong> ${data.cep}<br>
+                                        <strong>CEP:</strong> ${data.cep}<br/>
                                         <strong>Logradouro:</strong> ${data.logradouro} -
                                         <strong>Complemento:</strong> ${data.complemento} -
-                                        <strong>Unidade:</strong> ${data.unidade}<br>
+                                        <strong>Unidade:</strong> ${data.unidade}<br/>
                                         <strong>Bairro:</strong> ${data.bairro} -
-                                        <strong>Localidade:</strong> ${data.localidade}<br>
+                                        <strong>Localidade:</strong> ${data.localidade}<br/>
                                         <strong>UF:</strong> ${data.uf} -
-                                        <strong>Estado:</strong> ${data.estado}<br>
+                                        <strong>Estado:</strong> ${data.estado}<br/>
                                         <strong>Regi&atilde;o:</strong> ${data.regiao} -
-                                        <strong>IBGE:</strong> ${data.ibge}<br>
+                                        <strong>IBGE:</strong> ${data.ibge}<br/>
                                         <strong>GIA:</strong> ${data.gia} -
-                                        <strong>DDD:</strong> ${data.ddd}<br>
-                                        <strong>SIAFI:</strong> ${data.siafi}<br>
+                                        <strong>DDD:</strong> ${data.ddd}<br/>
+                                        <strong>SIAFI:</strong> ${data.siafi}<br/>
                                     </p>
                                     </div>
                                 </div>
