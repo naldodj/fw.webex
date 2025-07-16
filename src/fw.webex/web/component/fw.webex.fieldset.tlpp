@@ -43,7 +43,7 @@ return(::cFieldSetLegend)
 method SetFieldSetLegend(cFieldSetLegend) class WebExFieldSet
     paramtype 1 var cFieldSetLegend as character optional default ::cFieldSetLegend
     ::cFieldSetLegend:=cFieldSetLegend
-    ::oWebExLegendFieldSet:SetLetend(::cFieldSetLegend)
+    ::oWebExLegendFieldSet:SetLegendContent(::cFieldSetLegend)
 return(self)
 
 method GetWebExLegendFieldSet() class WebExFieldSet

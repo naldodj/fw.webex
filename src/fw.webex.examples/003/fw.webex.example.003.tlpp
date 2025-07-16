@@ -59,8 +59,8 @@ static function FWWebExExample_003(cHTML as character) as character
         WITH WEBEXOBJECT CLASS WebExBody
             WITH WEBEXOBJECT CLASS WebExMain
                 WITH WEBEXOBJECT CLASS WebExForm ARGS "Consulta CEP"
-                    .:SetMethod("get")
-                    .:SetAction("javascript:buscarCEP_Cartao()")
+                    .:SetFormMethod("get")
+                    .:SetFormAction("javascript:buscarCEP_Cartao()")
                     .:AddField("CEP","cep","text","Digite o CEP")
                     .:AddButton(WebExButton():New("Buscar CEP"))
                 END WEBEXOBJECT

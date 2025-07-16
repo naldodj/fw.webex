@@ -75,17 +75,18 @@ static function FWWebExExample_005(cHTML as character) as character
 
     //https://getbootstrap.com/docs/5.0/forms/form-control/
     oFWWebExForm:=WebExForm():New("Consulta de CEP")
-    oFWWebExForm:SetMethod("get")
-    oFWWebExForm:SetAction("#")
+    oFWWebExForm:SetFormMethod("get")
+    oFWWebExForm:SetFormAction("#")
 
     //Div com o Resultado das mensagens
     oDiv:=WebExControl():New("div")
     oDiv:SetAttr("id","resultadoCEP")
 
     // Campo de busca
-    oFWWebExForm:AddField("CEP","cep","text","Digite o CEP"):AddChild(WebExHR():New()):AddChild(oDiv)
+    oFWWebExForm:AddField("CEP","cepsearch","text","Digite o CEP"):AddChild(WebExHR():New()):AddChild(oDiv)
 
     // Campos que serao atualizados via Ajax (ja definidos)
+    oFWWebExForm:AddField("CEP","cep","text","")
     oFWWebExForm:AddField("Logradouro","logradouro","text","")
     oFWWebExForm:AddField("Bairro","bairro","text","")
     oFWWebExForm:AddField("Cidade","localidade","text","")
@@ -100,15 +101,16 @@ static function FWWebExExample_005(cHTML as character) as character
     // Adiciona o script para consulta Ajax do ViaCEP
     beginContent var cScript
         function buscarCEP_Formulario() {
-            const cep = document.getElementsByName('cep')[0].value.replace(/\D/g, '');
+            const cep = document.getElementsByName('cepsearch')[0].value.replace(/\D/g, '');
             if (cep.length !== 8) {
                 document.getElementById('resultadoCEP').innerHTML = '<div class="alert alert-danger">CEP inv&aacute;lido.</div>';
                 return;
             }
 
             const preencherCampos = (data, origem) => {
-                document.getElementsByName('logradouro')[0].value = data.logradouro || '';
-                document.getElementsByName('bairro')[0].value = data.bairro || '';
+                document.getElementsByName('cep')[0].value = data.cep || '';
+                document.getElementsByName('logradouro')[0].value = data.logradouro  || data.street || '';
+                document.getElementsByName('bairro')[0].value = data.bairro || data.neighborhood || '';
                 document.getElementsByName('localidade')[0].value = data.localidade || data.city || '';
                 document.getElementsByName('uf')[0].value = data.uf || data.state || '';
                 document.getElementsByName('ibge')[0].value = data.ibge || '';

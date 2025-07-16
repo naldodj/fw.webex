@@ -3,6 +3,15 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-16 19:42 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  * README.md
+  * src/fw.webex/web/component/fw.webex.fieldset.tlpp
+  * src/fw.webex/web/component/fw.webex.form.tlpp
+  * src/fw.webex/web/component/fw.webex.legend.tlpp
+  * src/fw.webex.examples/003/fw.webex.example.003.tlpp
+  * src/fw.webex.examples/005/fw.webex.example.005.tlpp
+  * src/fw.webex.examples/017/fw.webex.example.017.tlpp
+
 2025-07-16 15:25 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + src/fw.webex/web/component/fw.webex.field.group.tlpp
   + src/fw.webex/web/component/fw.webex.input.group.tlpp

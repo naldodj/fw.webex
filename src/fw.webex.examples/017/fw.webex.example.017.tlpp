@@ -65,7 +65,6 @@ static function FWWebExExample_017(cHTML as character) as character
     local cHTMLFile:=cProcName as character
 
     local oDiv as object
-    local oGroupRef as object
 
     local oFWWebExRow1 as object
     local oFWWebExRow2 as object
@@ -75,21 +74,23 @@ static function FWWebExExample_017(cHTML as character) as character
     local oFWWebExForm as object
     local oFWWebExButton as object
     local oFWWebExScript as object
+    local oWebExInputGroup as object
 
     //https://getbootstrap.com/docs/5.0/forms/form-control/
     oFWWebExForm:=WebExForm():New("Consulta de CEP")
     oFWWebExForm:DelAttr("class"):AddClass("row g-3")
-    oFWWebExForm:SetMethod("get")
-    oFWWebExForm:SetAction("#")
+    oFWWebExForm:SetFormMethod("get")
+    oFWWebExForm:SetFormAction("#")
 
     // Campo de busca
     oFWWebExRow1:=WebExRow():New()
-    oFWWebExForm:AddGroupToRow(oFWWebExRow1,"CEP","cep","text","Digite o CEP",4,@oGroupRef)
+    oFWWebExForm:AddFieldGroupToRow(oFWWebExRow1,"CEP","cepsearch","text","Digite o CEP",4)
+    oWebExInputGroup:=oFWWebExForm:GetObjWebExInputGroupInputFieldGroupFormField()
 
     //Carrega o Botao para Buscar os Dados ao Grupo
     oFWWebExButton:=WebExButton():New("Buscar")
     oFWWebExButton:SetAttr("onclick","buscarCEP_Formulario(); return false;")
-    oGroupRef:AddChild(oFWWebExButton)
+    oWebExInputGroup:AddChild(oFWWebExButton)
 
     //Adiciona um Separador Horizontal
     oFWWebExRow1:AddChild(WebExHR():New())
@@ -101,24 +102,26 @@ static function FWWebExExample_017(cHTML as character) as character
 
     // Campos que serao atualizados via Ajax (ja definidos)
     oFWWebExRow2:=WebExRow():New()
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Logradouro","logradouro","text",""):AddClass("mb-3 col-md-4")
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Bairro","bairro","text",""):AddClass("mb-3 col-md-4")
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Cidade","localidade","text",""):AddClass("mb-3 col-md-4")
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"UF","uf","text",""):DelAttr("class"):AddClass("mb-3 col-md-4")
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"C&oacute;digo IBGE","ibge","text",""):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"CEP","cep","text",""):GetObjWebExRowFormFields():AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Logradouro","logradouro","text",""):GetObjWebExRowFormFields():AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Bairro","bairro","text",""):GetObjWebExRowFormFields():AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Cidade","localidade","text",""):GetObjWebExRowFormFields():AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"UF","uf","text",""):DelAttr("class"):GetObjWebExRowFormFields():AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"C&oacute;digo IBGE","ibge","text",""):GetObjWebExRowFormFields():AddClass("mb-3 col-md-4")
 
     // Adiciona o script para consulta Ajax do ViaCEP
     beginContent var cScript
         function buscarCEP_Formulario() {
-            const cep = document.getElementsByName('cep')[0].value.replace(/\D/g, '');
+            const cep = document.getElementsByName('cepsearch')[0].value.replace(/\D/g, '');
             if (cep.length !== 8) {
                 document.getElementById('resultadoCEP').innerHTML = '<div class="alert alert-danger">CEP inv&aacute;lido.</div>';
                 return;
             }
 
             const preencherCampos = (data, origem) => {
-                document.getElementsByName('logradouro')[0].value = data.logradouro || '';
-                document.getElementsByName('bairro')[0].value = data.bairro || '';
+                document.getElementsByName('cep')[0].value = data.cep || '';
+                document.getElementsByName('logradouro')[0].value = data.logradouro  || data.street || '';
+                document.getElementsByName('bairro')[0].value = data.bairro || data.neighborhood || '';
                 document.getElementsByName('localidade')[0].value = data.localidade || data.city || '';
                 document.getElementsByName('uf')[0].value = data.uf || data.state || '';
                 document.getElementsByName('ibge')[0].value = data.ibge || '';
@@ -165,7 +168,6 @@ static function FWWebExExample_017(cHTML as character) as character
     oFWWebExPage:Clean()
 
     FreeObj(@oDiv)
-    FreeObj(@oGroupRef)
 
     FreeObj(@oFWWebExRow1)
     FreeObj(@oFWWebExRow2)
@@ -175,5 +177,6 @@ static function FWWebExExample_017(cHTML as character) as character
     FreeObj(@oFWWebExForm)
     FreeObj(@oFWWebExButton)
     FreeObj(@oFWWebExScript)
+    FreeObj(@oWebExInputGroup)
 
 return(cHTMLFile)
