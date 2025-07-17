@@ -117,6 +117,7 @@ method RenderHTML() class WebExPage
     local lIsDark as logical
     local lHasMain as logical
     local lHasBody as logical
+    local lExternalAssets:=.F. as logical
 
     local oPage as object
     local oPageBody as object
@@ -347,8 +348,10 @@ method RenderHTML() class WebExPage
         ***************************************************************************************************************************
         //Scripts
         jPageScripts:=oPage:GetPageScriptBundle()
-        aEval(jPageScripts:GetNames(),{|cName|oPage:AddChild(jPageScripts[cName])})
-        if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets))
+        aEval(jPageScripts:GetNames(),{|cName|if(!lExternalAssets,lExternalAssets:=jPageScripts[cName]:GetExternalAssets(),nil),oPage:AddChild(jPageScripts[cName])})
+        ::lExternalAssets:=lExternalAssets
+        .:SetExternalAssets(::lExternalAssets)
+        if (::ExternalAssetsIsEnabled().and.(::lExternalAssets))
             //External Assets (Do Not Use WebExScript Here)
             WITH WEBEXOBJECT CLASS WebExControl TYPE script
                 .:SetContent("/*__EXTERNAL_ASSETS__*/")

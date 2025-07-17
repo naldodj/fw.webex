@@ -3,6 +3,12 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-17 16:26 UTC naldodj (Fix Issue: Protheus AppServer returns wrong MIME type for external assets)
+  * include/fw.webex.th
+  * src/fw.webex/tools/fw.webex.file.tools.tlpp
+  * src/fw.webex/web/layout/fw.webex.page.tlpp
+  * src/fw.webex.examples/016/fw.webex.example.016.tlpp
+
 2025-07-17 12:16 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
   * src/fw.webex/web/component/fw.webex.alert.tlpp

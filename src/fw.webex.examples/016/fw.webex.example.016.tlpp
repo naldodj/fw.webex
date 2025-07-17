@@ -158,7 +158,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                                     .:AddClass("embed-responsive")
                                     .:AddClass("embed-responsive-21by9")
                                     WITH WEBEXOBJECT CLASS WebExIFrame
-                                        .:SetAttr("src",cAlarmClockPageLocalAssetsFilePath)
+                                        .:SetAttr("src",cAlarmClockPageExternalAssetsFilePath)
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
@@ -169,7 +169,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                                     .:AddClass("embed-responsive")
                                     .:AddClass("embed-responsive-21by9")
                                     WITH WEBEXOBJECT CLASS WebExIFrame
-                                        .:SetAttr("src",cRealTimeClockPageLocalAssetsFilePath)
+                                        .:SetAttr("src",cRealTimeClockPageExternalAssetsFilePath)
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
@@ -180,7 +180,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                                     .:AddClass("embed-responsive")
                                     .:AddClass("embed-responsive-21by9")
                                     WITH WEBEXOBJECT CLASS WebExIFrame
-                                        .:SetAttr("src",cZodiacSignsPageLocalAssetsFilePath/*cZodiacSignsPageExternalAssetsFilePath*/)
+                                        .:SetAttr("src",cZodiacSignsPageExternalAssetsFilePath)
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                             END WEBEXOBJECT

@@ -408,6 +408,7 @@ static method HTMLAssetsToFile(cAssetID,cAssetType,cAssetContent,cAssetPath,/*<@
             splitPath(cHTMLAssetFileName,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
             cLocalAssetsFilePath:=cSPPFile
             cLocalAssetsFilePath+=cSPPExt
+            cExternalAssetsFilePath:=cLocalAssetsFilePath
         endif
 
     end sequence

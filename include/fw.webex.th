@@ -26,7 +26,7 @@ Released to Public Domain.
 
     #define FWWEBEX_WEB_TMP_PATH "\web\fwwebex\tmp\"
     #define FWWEBEX_WEB_NULL_CONTENT "__NULL__"
-    #define FWWEBEX_EXTERNAL_ASSETS_IS_ENABLED .F.
+    #define FWWEBEX_EXTERNAL_ASSETS_IS_ENABLED .T.
 
     #IFNDEF _PROTHEUS_CH
         #include "totvs.ch"
