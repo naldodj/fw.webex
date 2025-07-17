@@ -290,10 +290,13 @@ method RenderHTML() class WebExTemplateBulkActionTable
 
             endContent
 
-            cScript:=StrTran(cScript,"FUNCID",cIDTable)
-            cScript:=StrTran(cScript,"cIDTable",cIDTable)
-            cScript:=StrTran(cScript,"cIDModal",cIDModal)
-            cScript:=StrTran(cScript,"cIDWrapper",cIDWrapper)
+            cScript:=.:StrReplace(cScript,{;
+                 "FUNCID"     : cIDTable;
+                ,"cIDTable"   : cIDTable;
+                ,"cIDModal"   : cIDModal;
+                ,"cIDWrapper" : cIDWrapper;
+                };
+            )
 
             .:SetContent(cScript)
 

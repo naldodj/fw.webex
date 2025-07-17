@@ -604,9 +604,14 @@ SELECT cSXBFields
  WHERE SXB.D_E_L_E_T_<>'*'
    AND SXB.XB_ALIAS='cSXBAliasSeek'
                 endContent
-                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBFields",cSXBFields)
-                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBTableName",cSXBTableName)
-                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBAliasSeek",cSXBAliasSeek)
+                cSXBTableQuery:=WebExHelper():StrReplace(;
+                    cSXBTableQuery;
+                    ,{;
+                        "cSXBFields":cSXBFields;
+                       ,"cSXBTableName":cSXBTableName;
+                       ,"cSXBAliasSeek":cSXBAliasSeek;
+                    };
+                )
                 aTCSQLToArr:=Array(0)
                 aTCSQLSetFields:=Array(0)
                 aEval(aSXBDBStruct,{|e|if(e[DBS_TYPE]!="C",aAdd(aTCSQLSetFields,e),nil)})
@@ -668,9 +673,14 @@ SELECT cSXBFields
  WHERE SXB.D_E_L_E_T_<>'*'
    AND SXB.XB_ALIAS='cSXBAliasSeek'
                 endContent
-                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBFields",cSXBFields)
-                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBTableName",cSXBTableName)
-                cSXBTableQuery:=StrTran(cSXBTableQuery,"cSXBAliasSeek",cSXBAliasSeek)
+                cSXBTableQuery:=WebExHelper():StrReplace(;
+                    cSXBTableQuery;
+                    ,{;
+                        "cSXBFields":cSXBFields;
+                       ,"cSXBTableName":cSXBTableName;
+                       ,"cSXBAliasSeek":cSXBAliasSeek;
+                    };
+                )
                 aTCSQLToArr:=Array(0)
                 aTCSQLSetFields:=Array(0)
                 aEval(aSXBDBStruct,{|e|if(e[DBS_TYPE]!="C",aAdd(aTCSQLSetFields,e),nil)})

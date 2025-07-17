@@ -305,16 +305,24 @@ static procedure FWWebExExample_007(cHTML as character) as character
     if (!FindClass("DNA.TECH.USERRESTCRUDTLPP"))
         //Considerando que callProcRestCrudTLPP depende de DNA.TECH.USERRESTCRUDTLPP
         //u_callProcRestCrudTLPPEx007 atuara como um mock da callProcRestCrudTLPP.
-        cScript:=StrTran(cScript,"callProcRestCrudTLPP","u_callProcRestCrudTLPPEx007")
+        cScript:=WebExHelper():StrReplace(;
+            cScript;
+            ,{"callProcRestCrudTLPP":"u_callProcRestCrudTLPPEx007"};
+        )
     else
         cDNATechAuth:=MemoRead("\dna.tech\authentication\authentication.aut")
         cDNATechAuth:=Encode64("token:"+cDNATechAuth)
         cDNATechAuth:="X-DNATech-Auth-Token: "+cDNATechAuth
         cDNATechAuth:=WebExHelper():ConvertHeaderToJSObject(cDNATechAuth)
-        cScript:=StrTran(cScript,"<DNATechAuth>",cDNATechAuth)
+        cScript:=WebExHelper():StrReplace(cScript,{{"<DNATechAuth>",cDNATechAuth}})
     endif
-    cScript:=StrTran(cScript,"<Autorization>",cAutorization)
-    cScript:=StrTran(cScript,"https://localhost:9898/rest/",cRESTURL)
+    cScript:=WebExHelper():StrReplace(;
+        cScript;
+       ,{;
+            {"<Autorization>",cAutorization};
+           ,{"https://localhost:9898/rest/",cRESTURL};
+        };
+    )
 
     oFWWebExScript:SetContent(cScript)
 

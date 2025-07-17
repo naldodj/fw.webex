@@ -13,8 +13,8 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-static cCHR10:=CHR(10) as character
-static cCHR13:=CHR(13) as character
+static __cCHR10:=CHR(10) as character
+static __cCHR13:=CHR(13) as character
 
 static __jEmojis as json
 
@@ -31,6 +31,8 @@ class WebExHelper
     static method GetEmojiHtmlJSON() as json
     static method GetEmojiHtmlCode(cName as character) as character
 
+    static method StrReplace(cTemplate as character,vSubstitutions as variant) as character
+
 end class
 
 static method EscapeAll(cValue) class WebExHelper
@@ -43,24 +45,39 @@ return(cValue)
 static method EscapeHTMLScript(cHTML) class WebExHelper
     paramtype 1 var cHTML as character
     cHTML:=AllTrim(cHTML)
-    cHTML:=StrTran(cHTML,"'","\\'")
-    cHTML:=StrTran(cHTML,cCHR13,"")
-    cHTML:=StrTran(cHTML,cCHR10,"")
+    cHTML:=WebExHelper():StrReplace(;
+        cHTML;
+       ,{;
+            {"'","\\'"};
+           ,{__cCHR13,""};
+           ,{__cCHR10,""};
+       };
+    )
 return(cHTML)
 
 static method EscapeJavaScript(cCode) class WebExHelper
     paramtype 1 var cCode as character
-    cCode:=StrTran(cCode,"\\","\\\\")
-    cCode:=StrTran(cCode,"'","\\'")
-    cCode:=StrTran(cCode,'"','\\\"')
-    cCode:=StrTran(cCode,cCHR13,"")
-    cCode:=StrTran(cCode,cCHR10,"")
+    cCode:=WebExHelper():StrReplace(;
+        cCode;
+       ,{;
+            {"\\","\\\\"};
+           ,{"'","\\'"};
+           ,{'"','\\\"'};
+           ,{__cCHR13,""};
+           ,{__cCHR10,""};
+       };
+    )
 return(cCode)
 
 static method EscapeHTMLAttribute(cValue) class WebExHelper
     paramtype 1 var cValue as character
-    cValue:=StrTran(cValue,'"',"&quot;")
-    cValue:=StrTran(cValue,"'","&#39;")
+    cValue:=WebExHelper():StrReplace(;
+        cValue;
+       ,{;
+            {'"',"&quot;"};
+           ,{"'","&#39;"};
+       };
+    )
 return(cValue)
 
 static method ConvertHeaderToJSObject(cHeaderString) class WebExHelper
@@ -153,3 +170,36 @@ static method GetEmojiHtmlCode(cName) class WebExHelper
     FreeObj(@jEmojis)
 
 return(cEmojiHtmlCode)
+
+method StrReplace(cTemplate,vSubstitutions) class WebExHelper
+
+    local aNames as array
+    local cName as character
+
+    local cApplied as character
+
+    local i as numeric
+
+    paramtype 1 var cTemplate as character
+    paramtype 2 var vSubstitutions as array,json
+
+    cApplied:=cTemplate
+
+    if (ValType(vSubstitutions)=="J")
+        aNames:=vSubstitutions:GetNames()
+        for i:=1 to Len(aNames)
+            cName:=aNames[i]
+            cApplied:=StrTran(cApplied,cName,vSubstitutions[cName])
+        next i
+    else
+        aNames:=vSubstitutions
+        for i:=1 to Len(vSubstitutions)
+            if (Len(aNames[i])!=2)
+                loop
+            endif
+            cName:=aNames[i][1]
+            cApplied:=StrTran(cApplied,cName,aNames[i][2])
+        next i
+    endif
+
+return(cApplied)

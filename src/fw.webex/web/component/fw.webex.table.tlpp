@@ -185,7 +185,7 @@ method SetObjTableScript(oTableScript) class WebExTable
                 button.innerText = '-';
             }
         endContent
-        cScript:=StrTran(cScript,"__cID__",::GetFixedID())
+        cScript:=::oTableScript:StrReplace(cScript,{ "__cID__" : self:GetFixedID() })
         ::oTableScript:SetContent(cScript)
     endif
 
