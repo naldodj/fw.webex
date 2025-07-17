@@ -36,14 +36,14 @@
             |     +---> WebExCardKPI ("Clientes Ativos", "1.024", bg-info)
             |           |
             |           +---> WebExIcon ("analytics", material)
-            |           +---> Icone depois do texto (SetIconBefore(.F.))
+            |           +---> Icone depois do texto (lSetIconBefore(.F.))
             |
             +---> WebExCol (col-4, border-start, border-secondary, ps-3)
                   |
                   +---> WebExCardKPI ("Ticket Medio", "R$ 122,00", bg-warning)
                         |
                         +---> WebExIcon ("insights", material)
-                        +---> Icone depois do texto (SetIconBefore(.F.))
+                        +---> Icone depois do texto (lSetIconBefore(.F.))
 
 Released to Public Domain.
 --------------------------------------------------------------------------------------
@@ -113,8 +113,7 @@ static procedure FWWebExExample_011(cHTML as character) as character
                 WITH WEBEXOBJECT CLASS WebExRow
                     // KPI 1
                     WITH WEBEXOBJECT CLASS WebExCol ARGS 6
-                        WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material")
-                            .:SetIconBefore(.F.)
+                        WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material",.F.)
                         END WEBEXOBJECT
                     END WEBEXOBJECT
                     // KPI 2
@@ -122,8 +121,7 @@ static procedure FWWebExExample_011(cHTML as character) as character
                         .:AddClass("border-start")
                         .:AddClass("border-secondary")
                         .:AddClass("ps-3")
-                        WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material")
-                            .:SetIconBefore(.F.)
+                        WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material",.F.)
                         END WEBEXOBJECT
                     END WEBEXOBJECT
                 END WEBEXOBJECT

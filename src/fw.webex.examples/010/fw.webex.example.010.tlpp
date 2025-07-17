@@ -36,14 +36,14 @@
             |     +---> WebExCardKPI ("Clientes Ativos", "1.024", bg-info)
             |           |
             |           +---> WebExIcon ("analytics", material)
-            |           +---> Icone posicionado apos o texto (SetIconBefore(.F.))
+            |           +---> Icone posicionado apos o texto (lSetIconBefore(.F.))
             |
             +---> WebExCol (col-6)
                   |
                   +---> WebExCardKPI ("Ticket Medio", "R$ 122,00", bg-warning)
                         |
                         +---> WebExIcon ("insights", material)
-                        +---> Icone posicionado apos o texto (SetIconBefore(.F.))
+                        +---> Icone posicionado apos o texto (lSetIconBefore(.F.))
 
 Released to Public Domain.
 --------------------------------------------------------------------------------------
@@ -75,6 +75,8 @@ static procedure FWWebExExample_010(cHTML as character) as character
 
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
+
+    local lSetIconBefore as logical
 
     local oFWWebExPage as object
     local oFWWebExMain as object
@@ -116,14 +118,14 @@ static procedure FWWebExExample_010(cHTML as character) as character
     oFWWebExRow1:AddChild(oFWWebExCol2)
     oFWWebExRow1:AddChild(oFWWebExCol3)
 
+    lSetIconBefore:=.F.
+
     oFWWebExCol3:=WebExCol():New(6)
-    oFWWebExCardKPI:=WebExCardKPI():New("Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material"))
-    oFWWebExCardKPI:SetIconBefore(.F.)
+    oFWWebExCardKPI:=WebExCardKPI():New("Clientes Ativos","1.024","bg-info",WebExIcon():New("analytics","material",lSetIconBefore))
     oFWWebExCol3:AddChild(oFWWebExCardKPI)
 
     oFWWebExCol4:=WebExCol():New(6)
-    oFWWebExCardKPI:=WebExCardKPI():New("Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material"))
-    oFWWebExCardKPI:SetIconBefore(.F.)
+    oFWWebExCardKPI:=WebExCardKPI():New("Ticket M&eacute;dio","R$ 122,00","bg-warning",WebExIcon():New("insights","material",lSetIconBefore))
     oFWWebExCol4:AddChild(oFWWebExCardKPI)
 
     // Segunda linha com KPI

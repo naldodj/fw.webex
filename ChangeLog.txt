@@ -3,6 +3,13 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-17 09:13 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  * src/fw.webex/web/component/fw.webex.card.tlpp
+  * src/fw.webex/web/component/fw.webex.cardkpi.tlpp
+  * src/fw.webex.examples/010/fw.webex.example.010.tlpp
+  * src/fw.webex.examples/011/fw.webex.example.011.tlpp
+  * src/fw.webex/web/component/fw.webex.icon.tlpp
+
 2025-07-17 00:01 naldodj (Fix AddClass)
   !Fix AddClass
     * src/fw.webex/web/control/fw.webex.control.tlpp

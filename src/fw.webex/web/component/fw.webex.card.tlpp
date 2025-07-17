@@ -101,7 +101,6 @@ method SetObjCardTextTitle(oCardTextTitle) class WebExCard
     oCardTextTitle:SetID(::oCardTextTitle:GetID())
     oCardTextTitle:SetFixedID(::oCardTextTitle:GetFixedID())
     ::oCardTextTitle:SetFromObject(oCardTextTitle)
-    ::oCardBody:jChildren[::oCardTextTitle:GetID()]:=::oCardTextTitle
 return(self)
 
 method GetObjCardTextBody() class WebExCard
@@ -112,5 +111,4 @@ method SetObjCardTextBody(oCardTextBody) class WebExCard
     oCardTextBody:SetID(::oCardTextBody:GetID())
     oCardTextBody:SetFixedID(::oCardTextBody:GetFixedID())
     ::oCardTextBody:SetFromObject(oCardTextBody)
-    ::oCardBody:jChildren[::oCardTextBody:GetID()]:=::oCardTextBody
 return(self)

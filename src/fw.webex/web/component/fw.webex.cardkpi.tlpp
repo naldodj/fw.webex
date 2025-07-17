@@ -19,29 +19,43 @@ class WebExCardKPI from WebExControl
     protected data cCardKPIValue as character
     protected data cCardKPITheme as character
 
-    protected data lIconBefore as logical
-
-    protected data oCardKPIIcon as character
+    protected data oCardKPIIcon as object
+    protected data oCardKPIBody as object
+    protected data oCardKPITitle as object
+    protected data oCardKPIText as object
+    protected data oCardKPIStrong as object
 
     public method New(cCardKPITitle as character,cCardKPIValue as character,cCardKPITheme as character,oCardKPIIcon as object) as object
-    public method SetIconBefore(lIconBefore) as object
-    public method RenderHTML() as character
+
+    public method GetCardKPITitle() as character
+    public method SetCardKPITitle(cCardKPITitle as character) as object
+
+    public method GetCardKPIValue() as character
+    public method SetCardKPIValue(cCardKPIValue as character) as object
+
+    public method GetCardKPITheme() as character
+    public method SetCardKPITheme(cCardKPITheme as character) as object
+
+    public method GetObjCardKPIIcon() as object
+    public method SetObjCardKPIIcon(oCardKPIIcon as object) as object
 
 endclass
 
 method New(cCardKPITitle,cCardKPIValue,cCardKPITheme,oCardKPIIcon) class WebExCardKPI
 
+    local lHasIcon as logical
+
     paramtype 1 var cCardKPITitle as character optional default ""
     paramtype 2 var cCardKPIValue as character optional default ""
     paramtype 3 var cCardKPITheme as character optional default "bg-primary"
-    paramtype 4 var oCardKPIIcon as object class WEBEXICON optional
+    paramtype 4 var oCardKPIIcon as object class WebExIcon optional
 
     ::cCardKPITitle:=cCardKPITitle
     ::cCardKPIValue:=cCardKPIValue
-    ::cCardKPITheme:=cCardKPITheme
-    ::oCardKPIIcon:=oCardKPIIcon
+    ::cCardKPITheme:=Lower(AllTrim(cCardKPITheme))
 
     _Super:New("div")
+    ::SetEnableIcons()
 
     ::AddClass("card")
     ::AddClass("mb-3")
@@ -50,52 +64,73 @@ method New(cCardKPITitle,cCardKPIValue,cCardKPITheme,oCardKPIIcon) class WebExCa
         ::AddClass(::cCardKPITheme)
     endif
 
-    ::SetIconBefore()
-    ::SetEnableIcons()
+    ::oCardKPITitle:=WebExH5():New()
+    ::oCardKPITitle:AddClass("card-title")
 
-return(self)
-
-method SetIconBefore(lIconBefore) class WebExCardKPI
-    paramtype 1 var lIconBefore as logical optional default .T.
-    ::lIconBefore:=lIconBefore
-return(self)
-
-method RenderHTML() class WebExCardKPI
-
-    local cHTML as character
-
-    local oBody as object
-    local ocCardKPITitle as object
-    local oText as object
-    local oStrong as object
-
-    oStrong:=WebExStrong():New(::cCardKPITitle)
-
-    ocCardKPITitle:=WebExControl():New("h5")
-    ocCardKPITitle:AddClass("card-cCardKPITitle")
-    if (::lIconBefore)
-        if (!Empty(::oCardKPIIcon))
-            ocCardKPITitle:AddChild(::oCardKPIIcon)
-        endif
-    endif
-    ocCardKPITitle:AddChild(oStrong)
-    if (!::lIconBefore)
-        if (!Empty(::oCardKPIIcon))
-            ocCardKPITitle:AddChild(::oCardKPIIcon)
+    ::oCardKPIIcon:=oCardKPIIcon
+    lHasIcon:=(ValType(::oCardKPIIcon)=="O")
+    if (lHasIcon)
+        if (::oCardKPIIcon:GetIconBefore())
+            if (!Empty(::oCardKPIIcon))
+                ::oCardKPITitle:AddChild(::oCardKPIIcon)
+            endif
         endif
     endif
 
-    oText:=WebExControl():New("p")
-    oText:AddClass("card-text")
-    oText:SetContent(::cCardKPIValue)
+    ::oCardKPIStrong:=WebExStrong():New(::cCardKPITitle)
+    ::oCardKPITitle:AddChild(::oCardKPIStrong)
 
-    oBody:=WebExControl():New("div")
-    oBody:AddClass("card-body")
-    oBody:AddChild(ocCardKPITitle)
-    oBody:AddChild(oText)
+    if (lHasIcon)
+        if (!::oCardKPIIcon:GetIconBefore())
+            if (!Empty(::oCardKPIIcon))
+                ::oCardKPITitle:AddChild(::oCardKPIIcon)
+            endif
+        endif
+    endif
 
-    ::AddChild(oBody)
+    ::oCardKPIText:=WebExParagraph():New()
+    ::oCardKPIText:AddClass("card-text")
+    ::oCardKPIText:SetContent(::cCardKPIValue)
 
-    cHTML:=_Super:RenderHTML()
+    ::oCardKPIBody:=WebExDiv():New()
+    ::oCardKPIBody:AddClass("card-body")
+    ::oCardKPIBody:AddChild(::oCardKPITitle)
+    ::oCardKPIBody:AddChild(::oCardKPIText)
 
-return(cHTML)
+    ::AddChild(::oCardKPIBody)
+
+return(self)
+
+method GetCardKPITitle() class WebExCardKPI
+return(::cCardKPITitle)
+
+method SetCardKPITitle(cCardKPITitle) class WebExCardKPI
+    paramtype 1 var cCardKPITitle as character optional default ::cCardKPITitle
+    ::cCardKPITitle:=cCardKPITitle
+return(self)
+
+method GetCardKPIValue() class WebExCardKPI
+return(::cCardKPIValue)
+
+method SetCardKPIValue(cCardKPIValue) class WebExCardKPI
+    paramtype 1 var cCardKPIValue as character optional default ::cCardKPIValue
+    ::cCardKPIValue:=cCardKPIValue
+return(self)
+
+method GetCardKPITheme() class WebExCardKPI
+return(::cCardKPITheme)
+
+method SetCardKPITheme(cCardKPITheme) class WebExCardKPI
+    paramtype 1 var cCardKPITheme as character optional default ::cCardKPITheme
+    ::cCardKPITheme:=cCardKPITheme
+return(self)
+
+method GetObjCardKPIIcon() class WebExCardKPI
+return(::oCardKPIIcon)
+
+method SetObjCardKPIIcon(oCardKPIIcon) class WebExCardKPI
+    paramtype 1 var oCardKPIIcon as object class WebExIcon
+    oCardKPIIcon:SetID(::oCardKPIIcon:GetID())
+    oCardKPIIcon:SetFixedID(::oCardKPIIcon:GetFixedID())
+    ::oCardKPIIcon:SetFromObject(oCardKPIIcon)
+return(self)
