@@ -43,38 +43,10 @@ class WebExForm from WebExControl
 
     public method RenderHTML() as character
 
-    public method GetFormTitle() as character
     public method SetFormTitle(cFormTitle as character) as object
-
-    public method GetFormMethod() as character
     public method SetFormMethod(cFormMethod as character) as object
-
-    public method GetFormAction() as character
     public method SetFormAction(cFormAction as character) as object
-
-    public method GetJSONWebExFieldFormFields() as json
-    public method SetJSONWebExFieldFormFields(jWebExButtonFormButtons as json) as object
-
-    public method GetFormButtonsFirst() as logical
-    public method SetFormButtonsFirst(lFormButtonsFirst as logical) as object
-
-    public method GetWebExColFieldGroupColSize() as numeric
     public method SetWebExColFieldGroupColSize(nWebExColFieldGroupColSize as numeric) as object
-
-    public method GetObjWebExRowFormFields() as object
-    public method SetObjWebExRowFormFields(oWebExFieldFormField) as object
-
-    public method GetObjWebExFieldFormField() as object
-    public method SetObjWebExFieldFormField(oWebExFieldFormField as object) as object
-
-    public method GetObjWebExFieldSetFormField() as object
-    public method SetObjWebExFieldSetFormField(oWebExFieldSetFormField as object) as object
-
-    public method GetObjWebExFieldGroupFormField() as object
-    public method SetObjWebExFieldGroupFormField(oWebExFieldGroupFormField as object) as object
-
-    public method GetObjWebExInputGroupInputFieldGroupFormField() as object
-    public method SetObjWebExInputGroupInputFieldGroupFormField(oWebExInputGroupInputFieldGroupFormField as object) as object
 
 endclass
 
@@ -145,7 +117,7 @@ method AddFieldGroupToRow(oWebExRowFormFields,cFormFieldLabel,cFormFieldName,cFo
     ::jWebExFieldFormFields[::oWebExRowFormFields:GetID()]:=::oWebExRowFormFields
 
     //Obtem o Grupo
-    ::oWebExInputGroupInputFieldGroupFormField:=::oWebExFieldGroupFormField:GetObjWebExInputGroupInputFieldGroup()
+    ::oWebExInputGroupInputFieldGroupFormField:=::oWebExFieldGroupFormField:GetMemberData("oWebExInputGroupInputFieldGroup")
 
 return(self)
 
@@ -195,116 +167,28 @@ method RenderHTML() class WebExForm
 
 return(_Super:RenderHTML())
 
-method GetFormTitle() class WebExForm
-return(::cFormTitle)
-
 method SetFormTitle(cFormTitle) class WebExForm
     paramtype 1 var cFormTitle as character optional default ::cFormTitle
-    ::cFormTitle:=cFormTitle
+    ::SetMemberData("cFormTitle",cFormTitle)
     ::oWebExFieldSetFormField:SetFieldSetLegend(::cFormTitle)
 return(self)
 
-method GetFormMethod() class WebExForm
-return(::cFormMethod)
-
 method SetFormMethod(cFormMethod) class WebExForm
     paramtype 1 var cFormMethod as character optional default ::cFormMethod
-    ::cFormMethod:=cFormMethod
+    ::SetMemberData("cFormMethod",cFormMethod)
     ::SetAttr("method",::cFormMethod)
 return(self)
 
-method GetFormAction() class WebExForm
-return(::cFormAction)
-
 method SetFormAction(cFormAction) class WebExForm
     paramtype 1 var cFormAction as character optional default ::cFormAction
-    ::cFormAction:=AllTrim(cFormAction)
+    ::SetMemberData("cFormAction",AllTrim(cFormAction))
     ::SetAttr("action",::cFormAction)
 return(self)
 
-method GetJSONWebExFieldFormFields() class WebExForm
-return(::jWebExFieldFormFields)
-
-method SetJSONWebExFieldFormFields(jWebExButtonFormButtons) class WebExForm
-    paramtype 1 var jWebExButtonFormButtons as json optional default ::jWebExButtonFormButtons
-    ::jWebExFieldFormFields:=jWebExButtonFormButtons
-return(self)
-
-method GetFormButtonsFirst() class WebExForm
-return(::lFormButtonsFirst)
-
-method SetFormButtonsFirst(lFormButtonsFirst) class WebExForm
-    paramtype 1 var lFormButtonsFirst as logical optional default ::lFormButtonsFirst
-    ::lFormButtonsFirst:=lFormButtonsFirst
-return(self)
-
-method GetWebExColFieldGroupColSize() class WebExForm
-return(::nWebExColFieldGroupColSize)
-
 method SetWebExColFieldGroupColSize(nWebExColFieldGroupColSize) class WebExForm
     paramtype 1 var nWebExColFieldGroupColSize as numeric optional default ::nWebExColFieldGroupColSize
-    ::nWebExColFieldGroupColSize:=nWebExColFieldGroupColSize
-    if (valType(oWebExFieldGroupFormField)=="O")
+    ::SetMemberData("nWebExColFieldGroupColSize",nWebExColFieldGroupColSize)
+    if (valType(::oWebExFieldGroupFormField)=="O")
         ::oWebExFieldGroupFormField:SetWebExColFieldGroupColSize(::nWebExColFieldGroupColSize)
-    endif
-return(self)
-
-method GetObjWebExRowFormFields() class WebExForm
-return(::oWebExFieldFormField)
-
-method SetObjWebExRowFormFields(oWebExFieldFormField) class WebExForm
-    paramtype 1 var oWebExFieldFormField as object class WebExField
-    if (valType(::oWebExFieldFormField)=="O")
-        oWebExFieldFormField:SetID(::oWebExFieldFormField:GetID())
-        oWebExFieldFormField:SetFixedID(::oWebExFieldFormField:GetFixedID())
-        ::oWebExFieldFormField:SetFromObject(oWebExFieldFormField)
-    endif
-return(self)
-
-method GetObjWebExFieldFormField() class WebExForm
-return(::oWebExFieldFormField)
-
-method SetObjWebExFieldFormField(oWebExFieldFormField) class WebExForm
-    paramtype 1 var oWebExFieldFormField as object class WebExField
-    if (valType(oWebExFieldFormField)=="O")
-        oWebExFieldFormField:SetID(::oWebExFieldFormField:GetID())
-        oWebExFieldFormField:SetFixedID(::oWebExFieldFormField:GetFixedID())
-        ::oWebExFieldFormField:SetFromObject(oWebExFieldFormField)
-    endif
-return(self)
-
-method GetObjWebExFieldSetFormField() class WebExForm
-return(::oWebExFieldSetFormField)
-
-method SetObjWebExFieldSetFormField(oWebExFieldSetFormField) class WebExForm
-    paramtype 1 var oWebExFieldSetFormField as object class WebExFieldSet
-    if (valType(oWebExFieldSetFormField)=="O")
-        oWebExFieldSetFormField:SetID(::oWebExFieldSetFormField:GetID())
-        oWebExFieldSetFormField:SetFixedID(::oWebExFieldSetFormField:GetFixedID())
-        ::oWebExFieldSetFormField:SetFromObject(oWebExFieldSetFormField)
-    endif
-return(self)
-
-method GetObjWebExFieldGroupFormField() class WebExForm
-return(::oWebExFieldGroupFormField)
-
-method SetObjWebExFieldGroupFormField(oWebExFieldGroupFormField) class WebExForm
-    paramtype 1 var oWebExFieldGroupFormField as object class WebExFieldGroup
-    if (valType(oWebExFieldGroupFormField)=="O")
-        oWebExFieldGroupFormField:SetID(::oWebExFieldGroupFormField:GetID())
-        oWebExFieldGroupFormField:SetFixedID(::oWebExFieldGroupFormField:GetFixedID())
-        ::oWebExFieldGroupFormField:SetFromObject(oWebExFieldGroupFormField)
-    endif
-return(self)
-
-method GetObjWebExInputGroupInputFieldGroupFormField() class WebExForm
-return(::oWebExInputGroupInputFieldGroupFormField)
-
-method SetObjWebExInputGroupInputFieldGroupFormField(oWebExInputGroupInputFieldGroupFormField) class WebExForm
-    paramtype 1 var oWebExInputGroupInputFieldGroupFormField as object class WebExInputGroup
-    if (valType(oWebExInputGroupInputFieldGroupFormField)=="O")
-        oWebExInputGroupInputFieldGroupFormField:SetID(::oWebExInputGroupInputFieldGroupFormField:GetID())
-        oWebExInputGroupInputFieldGroupFormField:SetFixedID(::oWebExInputGroupInputFieldGroupFormField:GetFixedID())
-        ::oWebExInputGroupInputFieldGroupFormField:SetFromObject(oWebExInputGroupInputFieldGroupFormField)
     endif
 return(self)

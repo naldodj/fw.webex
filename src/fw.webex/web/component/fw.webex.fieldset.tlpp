@@ -21,11 +21,7 @@ class WebExFieldSet from WebExControl
 
     public method New(cFieldSetLegend as character) as object
 
-    public method GetFieldSetLegend() as character
     public method SetFieldSetLegend(cFieldSetLegend as character) as object
-
-    public method GetWebExLegendFieldSet() as object
-    public method SetWebExLegendFieldSet(oWebExLegendFieldSet as object) as object
 
 endclass
 
@@ -37,21 +33,8 @@ method New(cFieldSetLegend) class WebExFieldSet
     ::AddChild(::oWebExLegendFieldSet)
 return(self)
 
-method GetFieldSetLegend() class WebExFieldSet
-return(::cFieldSetLegend)
-
 method SetFieldSetLegend(cFieldSetLegend) class WebExFieldSet
     paramtype 1 var cFieldSetLegend as character optional default ::cFieldSetLegend
-    ::cFieldSetLegend:=cFieldSetLegend
+    ::SetMemberData("cFieldSetLegend",cFieldSetLegend)
     ::oWebExLegendFieldSet:SetLegendContent(::cFieldSetLegend)
-return(self)
-
-method GetWebExLegendFieldSet() class WebExFieldSet
-return(::oWebExLegendFieldSet)
-
-method SetWebExLegendFieldSet(oWebExLegendFieldSet) class WebExFieldSet
-    paramtype 1 var oWebExLegendFieldSet as object class WebExLegend
-    oWebExLegendFieldSet:SetID(::oWebExLegendFieldSet:GetID())
-    oWebExLegendFieldSet:SetFixedID(::oWebExLegendFieldSet:GetFixedID())
-    ::oWebExLegendFieldSet:SetFromObject(oWebExLegendFieldSet)
 return(self)

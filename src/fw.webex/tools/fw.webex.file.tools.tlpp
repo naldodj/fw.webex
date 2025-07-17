@@ -185,7 +185,7 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
                                 oWebExNavSide:AddClass("collapse")
                                 oWebExNavSide:AddClass("show")
                                 oWebExNavSide:SetAttr("class","collapse show")
-                                oWebExNavSide:SetBrand("Side Menu")
+                                oWebExNavSide:SetNavSideBrand("Side Menu")
                                 oWebExNavSideMenuItem:=oWebExNavSide:AddItem("Data","#",WebExIcon():New("bi-window"))
                                 oWebExNavSideMenuItem:SetAttr("data-toggledump","dumpdata")
                                 oWebExNavSideMenuItem:=oWebExNavSide:AddItem("DumpDOM","#",WebExIcon():New("bi-list-nested"))

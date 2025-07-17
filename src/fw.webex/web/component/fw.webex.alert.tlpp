@@ -20,10 +20,8 @@ class WebExAlert from WebExControl
 
     public method New(cAlertText as character,cAlertType as character) as object
 
-    public method GetAlertText() as character
     public method SetAlertText(cAlertText as character) as object
 
-    public method GetAlertType() as character
     public method SetAlertType(cAlertText as character) as object
 
 endclass
@@ -38,21 +36,15 @@ method New(cAlertText,cAlertType) class WebExAlert
     ::SetAlertType()
 return(self)
 
-method GetAlertText() class WebExAlert
-return(::cAlertText)
-
 method SetAlertText(cAlertText) class WebExAlert
     paramtype 1 var cAlertText as character default ::cAlertText
-    ::cAlertText:=cAlertText
+    ::SetMemberData("cAlertText",cAlertText)
     ::SetContent(::cAlertText)
 return(self)
 
-method GetAlertType() class WebExAlert
-return(::cAlertType)
-
 method SetAlertType(cAlertType) class WebExAlert
     paramtype 1 var cAlertType as character default ::cAlertType
-    ::cAlertType:=Lower(cAlertType)
+    ::SetMemberData("cAlertType",Lower(cAlertType))
     ::AddClass("alert")
     ::DelClassRegex("alert-(primary|secondary|success|danger|warning|info|light|dark)") // remove qualquer alert-* anterior (se tiver)
     ::AddClass("alert-"+::cAlertType)

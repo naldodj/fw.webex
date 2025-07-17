@@ -38,8 +38,6 @@ class WebExTable from WebExControl
     protected data oTableScript as object
 
     public method New(cTableTitle) as object
-    public method SetTitle(cTableTitle) as object
-    public method SetTitleBefore(lTableTitleBefore) as object
     public method AddColumnHeader(cTableColummLabel as character) as object
     public method BuildHeader() as object
     public method AddCell(xTableCellValue as variant) as object
@@ -47,37 +45,7 @@ class WebExTable from WebExControl
     public method EnableDrillDown() as object
     public method RenderHTML() as character
 
-    public method GetTableTitle() as character
     public method SetTableTitle(cTableTitle as character) as character
-
-    public method GetJSONTableHeader() as json
-    public method SetJSONTableHeader(jTableHeader as json) as object
-
-    public method GetJSONTableDetail() as json
-    public method SetJSONTableDetail(jTableDetail as json) as object
-
-    public method GetTableExpandable() as logical
-    public method SetTableExpandable(lTableExpandable as logical) as object
-
-    public method GetTableTitleBefore() as logical
-    public method SetTableTitleBefore(lTableTitleBefore as logical) as object
-
-    public method GetObjTableTHead() as object
-    public method SetObjTableTHead(oTableTHead as object) as object
-
-    public method GetObjTableTBody() as object
-    public method SetObjTableTBody(oTableTBody as object) as object
-
-    public method GetObjTableTHeadTH() as object
-    public method GetObjTableTHeadTR() as object
-
-    public method GetObjTableTBodyRowTD() as object
-    public method GetObjTableTBodyRowTR() as object
-    public method GetObjTableTBodyRowTDButton() as object
-
-    public method GetObjTableCaption() as object
-
-    public method GetObjTableScript() as object
     public method SetObjTableScript(oTableScript as object) as object
 
 endclass
@@ -96,16 +64,7 @@ method New(cTableTitle) class WebExTable
     ::AddClass("table")
     ::AddClass("table-striped")
     ::AddClass("table-hover")
-    ::SetTableTitleBefore()
     ::SetTableTitle()
-return(self)
-
-method SetTitle(cTableTitle) class WebExTable
-    ::SetTableTitle(cTableTitle)
-return(self)
-
-method SetTitleBefore(lTableTitleBefore) class WebExTable
-    ::SetTableTitleBefore(lTableTitleBefore)
 return(self)
 
 method AddColumnHeader(cTableColummLabel) class WebExTable
@@ -122,9 +81,9 @@ method BuildHeader() class WebExTable
         ::oTableTHeadTH:SetContent("")
         ::oTableTHeadTR:AddChild(::oTableTHeadTH)
     endif
-    aEval(::jTableHeader:GetNames(),{|cName|::GetObjTableTHeadTR():AddChild(::GetJSONTableHeader()[cName])})
+    aEval(::jTableHeader:GetNames(),{|cName|::GetMemberData("oTableTHeadTR"):AddChild(::GetMemberData("jTableHeader")[cName])})
     ::oTableTHead:AddChild(::oTableTHeadTR)
-    ::SetJSONTableHeader(JSONObject():New())
+    ::SetMemberData("jTableHeader",JSONObject():New())
 return(self)
 
 method AddCell(xTableCellValue) class WebExTable
@@ -150,9 +109,9 @@ method BuildBodyRow(cDataHTML) class WebExTable
         ::oTableTBodyRowTD:AddChild(::oTableTBodyRowTDButton)
         ::oTableTBodyRowTR:AddChild(::oTableTBodyRowTD)
     endif
-    aEval(::jTableDetail:GetNames(),{|cName|::GetObjTableTBodyRowTR():AddChild(::GetJSONTableDetail()[cName])})
+    aEval(::jTableDetail:GetNames(),{|cName|::GetMemberData("oTableTBodyRowTR"):AddChild(::GetMemberData("jTableDetail")[cName])})
     ::oTableTBody:AddChild(::oTableTBodyRowTR)
-    ::SetJSONTableDetail(JSONObject():New())
+    ::SetMemberData("jTableDetail",JSONObject():New())
 return(::oTableTBodyRowTR)
 
 method EnableDrillDown() class WebExTable
@@ -180,12 +139,9 @@ method RenderHTML() class WebExTable
 
 return(cHTML)
 
-method GetTableTitle() class WebExTable
-return(::cTableTitle)
-
 method SetTableTitle(cTableTitle) class WebExTable
     paramtype 1 var cTableTitle as character optional default ::cTableTitle
-    ::cTableTitle:=cTableTitle
+    ::SetMemberData("cTableTitle",cTableTitle)
     if (!Empty(::cTableTitle))
         ::DelClassRegex("caption-(top|bottom)") // remove qualquer caption-* anterior (se tiver))
         ::AddClass(if(::lTableTitleBefore,"caption-top","caption-bottom"))
@@ -198,92 +154,16 @@ method SetTableTitle(cTableTitle) class WebExTable
     endif
 return(self)
 
-method GetJSONTableHeader() class WebExTable
-return(::jTableHeader)
-
-method SetJSONTableHeader(jTableHeader) class WebExTable
-    paramtype 1 var jTableHeader as json default ::jTableHeader
-    ::jTableHeader:=jTableHeader
-return(self)
-
-method GetJSONTableDetail() class WebExTable
-return(::jTableDetail)
-
-method SetJSONTableDetail(jTableDetail) class WebExTable
-    paramtype 1 var jTableDetail as json default ::jTableDetail
-    ::jTableDetail:=jTableDetail
-return(self)
-
-method GetTableExpandable() class WebExTable
-return(::lTableExpandable)
-
-method SetTableExpandable(lTableExpandable) class WebExTable
-    paramtype 1 var lTableExpandable as logical optional default ::lTableExpandable
-    ::lTableExpandable:=lTableExpandable
-return(self)
-
-method GetTableTitleBefore() class WebExTable
-return(::lTableTitleBefore)
-
-method SetTableTitleBefore(lTableTitleBefore) class WebExTable
-    paramtype 1 var lTableTitleBefore as logical optional default ::lTableTitleBefore
-    ::lTableTitleBefore:=lTableTitleBefore
-return(self)
-
-method GetObjTableTHead() class WebExTable
-return(::oTableTHead)
-
-method SetObjTableTHead(oTableTHead) class WebExTable
-    paramtype 1 var oTableTHead as object class WebExControl optional
-    if (ValType(oTableTHead)!="O")
-        oTableTHead:=::oTableTHead
-    endif
-    ::oTableTHead:=oTableTHead
-return(self)
-
-method GetObjTableTBody() class WebExTable
-return(::oTableTBody)
-
-method SetObjTableTBody(oTableTBody) class WebExTable
-    paramtype 1 var oTableTBody as object class WebExControl optional
-    if (ValType(oTableTBody)!="O")
-        oTableTBody:=::oTableTBody
-    endif
-    ::oTableTBody:=oTableTBody
-return(self)
-
-method GetObjTableTHeadTH() class WebExTable
-return(::oTableTHeadTH)
-
-method GetObjTableTHeadTR() class WebExTable
-return(::oTableTHeadTR)
-
-method GetObjTableTBodyRowTD() class WebExTable
-return(::oTableTBodyRowTD)
-
-method GetObjTableTBodyRowTR() class WebExTable
-return(::oTableTBodyRowTR)
-
-method GetObjTableTBodyRowTDButton() class WebExTable
-return(::oTableTBodyRowTDButton)
-
-method GetObjTableCaption() class WebExTable
-return(::oTableCaption)
-
-method GetObjTableScript() class WebExTable
-return(::oTableScript)
-
 method SetObjTableScript(oTableScript) class WebExTable
     local cScript as character
     local lTableScript as logical
     paramtype 1 var oTableScript as object class WebExScript optional
     lTableScript:=(valType(::oTableScript)=="O")
     if (ValType(oTableScript)=="O")
-        if (lTableScript)
-            oTableScript:SetID(::oTableScript:GetID())
-            oTableScript:SetFixedID(::oTableScript:GetFixedID())
+        if (!lTableScript)
+            ::oTableScript:=WebExScript():New()
         endif
-        ::oTableScript:SetFromObject(oTableScript)
+        ::oTableScript:MergeFromObject(@oTableScript)
     elseif ((::lTableExpandable).and.(!lTableScript))
         ::oTableScript:=WebExScript():New()
         //TODO: fetch real content via AJAX and update td.innerHTML

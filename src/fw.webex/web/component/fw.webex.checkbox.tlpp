@@ -20,29 +20,68 @@ class WebExCheckBox from WebExControl
     protected data cCheckBoxTitle as character
     protected data cCheckBoxValue as character
 
-    protected data oWebExInput as object
-    protected data oWebExLabel as object
+    protected data oCheckBoxWebExInput as object
+    protected data oCheckBoxWebExLabel as object
+
     public method New(cCheckBoxLabel as character,cCheckBoxName as character,cCheckBoxTitle as character,cCheckBoxValue) as object
+
+    public method SetCheckBoxLabel(cCheckBoxLabel as character) as character
+    public method SetCheckBoxName(cCheckBoxName as character) as character
+    public method SetCheckBoxTitle(cCheckBoxTitle as character) as character
+    public method SetCheckBoxValue(cCheckBoxValue as character) as character
+
 endclass
 
 method New(cCheckBoxLabel,cCheckBoxName,cCheckBoxTitle,cCheckBoxValue) class WebExCheckBox
+
     paramtype 1 var cCheckBoxLabel as character optional default ""
     paramtype 2 var cCheckBoxName as character optional default ""
     paramtype 3 var cCheckBoxTitle as character optional default ""
     paramtype 4 var cCheckBoxValue as character optional default ""
+
     ::cCheckBoxLabel:=cCheckBoxLabel
     ::cCheckBoxName:=cCheckBoxName
     ::cCheckBoxTitle:=cCheckBoxTitle
     ::cCheckBoxValue:=cCheckBoxValue
+
     _Super:New("div")
     ::AddClass("form-check")
-    ::oWebExInput:=WebExInput():New(cCheckBoxName,"checkbox","",cCheckBoxTitle)
-    ::oWebExInput:AddClass("form-check-input")
-    if (!Empty(cCheckBoxValue))
-        ::oWebExInput:SetAttr("value",cCheckBoxValue)
+
+    ::oCheckBoxWebExInput:=WebExInput():New(::cCheckBoxName,"checkbox","",::cCheckBoxTitle)
+    ::oCheckBoxWebExInput:AddClass("form-check-input")
+
+    if (!Empty(::cCheckBoxValue))
+        ::SetCheckBoxValue()
     endif
-    ::oWebExLabel:=WebExLabel():New(::oWebExInput:GetFixedID(),cCheckBoxLabel)
-    ::oWebExLabel:AddClass("form-check-label")
-    ::AddChild(::oWebExLabel)
-    ::AddChild(::oWebExInput)
+
+    ::oCheckBoxWebExLabel:=WebExLabel():New(::oCheckBoxWebExInput:GetFixedID(),::cCheckBoxLabel)
+    ::oCheckBoxWebExLabel:AddClass("form-check-label")
+
+    ::AddChild(::oCheckBoxWebExLabel)
+    ::AddChild(::oCheckBoxWebExInput)
+
+return(self)
+
+method SetCheckBoxLabel(cCheckBoxLabel) class WebExCheckBox
+    paramtype 1 var cCheckBoxLabel as character optional default ::cCheckBoxLabel
+    ::SetMemberData("cCheckBoxLabel",cCheckBoxLabel)
+    ::oCheckBoxWebExLabel:SetLabelText(::cCheckBoxLabel)
+return(self)
+
+method SetCheckBoxName(cCheckBoxName) class WebExCheckBox
+    paramtype 1 var cCheckBoxName as character optional default ::cCheckBoxName
+    ::SetMemberData("cCheckBoxName",cCheckBoxName)
+    ::oCheckBoxWebExInput:SetInPutName(cCheckBoxName)
+return(self)
+
+method SetCheckBoxTitle(cCheckBoxTitle) class WebExCheckBox
+    paramtype 1 var cCheckBoxTitle as character optional default ::cCheckBoxTitle
+    ::SetMemberData("cCheckBoxTitle",cCheckBoxTitle)
+    ::oCheckBoxWebExInput:SetInputTitle(cCheckBoxTitle)
+return(self)
+
+method SetCheckBoxValue(cCheckBoxValue) class WebExCheckBox
+    paramtype 1 var cCheckBoxValue as character optional default ::cCheckBoxValue
+    ::SetMemberData("cCheckBoxValue",cCheckBoxValue)
+    ::oCheckBoxWebExInput:SetAttr("value",::cCheckBoxValue)
 return(self)

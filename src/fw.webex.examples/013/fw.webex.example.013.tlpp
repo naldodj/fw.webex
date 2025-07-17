@@ -130,7 +130,7 @@ static procedure FWWebExExample_013(cHTML as character) as character
     oFWWebExNavSide:AddClass("collapse")
     oFWWebExNavSide:AddClass("show")
     oFWWebExNavSide:SetAttr("class","collapse show")
-    oFWWebExNavSide:SetBrand("Side Menu")
+    oFWWebExNavSide:SetNavSideBrand("Side Menu")
 
     oFWWebExIcon:=WebExIcon():New("bi-bar-chart")
     oFWWebExNavSide:AddItem("Dashboard KPI","#",oFWWebExIcon):SetAttr("data-toggle-kpi","kpi")

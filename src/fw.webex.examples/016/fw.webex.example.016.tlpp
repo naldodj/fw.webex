@@ -112,7 +112,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                             oWebExNavSide:AddClass("collapse")
                             oWebExNavSide:AddClass("show")
                             oWebExNavSide:SetAttr("class","collapse show")
-                            oWebExNavSide:SetBrand("Side Menu")
+                            oWebExNavSide:SetNavSideBrand("Side Menu")
                             .:AddDivider()
                             oWebExNavSideMenuItem:=oWebExNavSide:AddItem(WebExHelper():GetEmojiHtmlCode("alarm_clock")+"AlarmClock","#")
                             oWebExNavSideMenuItem:SetAttr("data-togglepages","alarmclock")

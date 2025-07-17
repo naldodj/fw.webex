@@ -69,6 +69,7 @@ class WebExControl
     public method ClassFullName() as character
 
     public method SetFromObject(oSource as object) as object
+    public method MergeFromObject(oSource as object) as object
 
     public method GetMemberData(cMember as character,xDefault as variant,lSuperClass as logical) as variant
     public method SetMemberData(cMember as character,xValue as variant,lSuperClass as logical) as variant
@@ -271,6 +272,8 @@ method SetFromObject(oSource) class WebExControl
 
     local xValue as variant
 
+    paramtype 1 var oSource as object
+
     cSourceClass:=GetClassName(oSource)
     cTargetClass:=GetClassName(self)
 
@@ -286,6 +289,24 @@ method SetFromObject(oSource) class WebExControl
             self:SetMemberData(cKey,xValue,.T.)
         next i
         FWFreeArray(@aMemberData)
+    endif
+
+return(self)
+
+method MergeFromObject(oSource) class WebExControl
+
+    local cSourceClass as character
+    local cTargetClass as character
+
+    paramtype 1 var oSource as object
+
+    cSourceClass:=GetClassName(oSource)
+    cTargetClass:=GetClassName(self)
+
+    if (cTargetClass==cSourceClass)
+        oSource:SetID(::GetID())
+        oSource:SetFixedID(::GetFixedID())
+        ::SetFromObject(oSource)
     endif
 
 return(self)

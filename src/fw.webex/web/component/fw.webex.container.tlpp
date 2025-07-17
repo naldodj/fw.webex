@@ -19,7 +19,6 @@ class WebExContainer from WebExControl
 
     public method New(lContainerFluid as logical) as object
 
-    public method GetContainerFluid() as logical
     public method SetContainerFluid(lContainerFluid as logical) as object
 
 endclass
@@ -28,14 +27,12 @@ method New(lContainerFluid) class WebExContainer
     paramtype 1 var lContainerFluid as logical optional default .F.
     ::lContainerFluid:=lContainerFluid
     _Super:New("div")
+    ::SetContainerFluid()
 return(self)
-
-method GetContainerFluid() class WebExContainer
-return(::lContainerFluid)
 
 method SetContainerFluid(lContainerFluid) class WebExContainer
     paramtype 1 var lContainerFluid as logical optional default ::lContainerFluid
-    ::lContainerFluid:=lContainerFluid
+    ::SetMemberData("lContainerFluid",lContainerFluid)
     if (::lContainerFluid)
         ::DelClass("container")
         ::AddClass("container-fluid")

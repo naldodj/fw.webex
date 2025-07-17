@@ -135,7 +135,7 @@ static procedure FWWebExExample_009(cHTML as character) as character
     local oFWWebExTableDrillDown as object
 
     oFWWebExTable:=WebExTable():New("Turnover por Empresa")
-    oFWWebExTable:SetTitleBefore(.T.)
+    oFWWebExTable:SetMemberData("lTableTitleBefore",.T.)
     oFWWebExTable:EnableDrillDown()
 
     oFWWebExTable:AddColumnHeader("C&oacute;digo")
@@ -144,13 +144,13 @@ static procedure FWWebExExample_009(cHTML as character) as character
 
     for nEmpresa:=1 to nEmpresas
         oFWWebExTableDrillDown:=WebExTable():New()
-        oFWWebExTableDrillDown:SetTitleBefore(.T.)
+        oFWWebExTableDrillDown:SetMemberData("lTableTitleBefore",.T.)
         oFWWebExTableDrillDown:AddColumnHeader("C&oacute;digo")
         oFWWebExTableDrillDown:AddColumnHeader("Nome")
         oFWWebExTableDrillDown:AddColumnHeader("% Turnover")
         oFWWebExTableDrillDown:BuildHeader()
         aEval(aEmpresas[nEmpresa][3],{|aRowDrillDown|;
-                 oFWWebExTableDrillDown:SetTitle("Turnover Departamento ["+aRowDrillDown[1]+"]");
+                 oFWWebExTableDrillDown:SetTableTitle("Turnover Departamento ["+aRowDrillDown[1]+"]");
                 ,oFWWebExTableDrillDown:AddCell(aRowDrillDown[1]);
                 ,oFWWebExTableDrillDown:AddCell(aRowDrillDown[2]);
                 ,oFWWebExTableDrillDown:AddCell(aRowDrillDown[3]);

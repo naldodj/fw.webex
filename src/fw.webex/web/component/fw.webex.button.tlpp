@@ -20,10 +20,7 @@ class WebExButton from WebExControl
 
     public method New(cButtonLabel as character,cButtonType as character) as object
 
-    public method GetButtonLabel() as character
     public method SetButtonLabel(cButtonLabel as character) as character
-
-    public method GetButtonType() as character
     public method SetButtonType(cButtonType as character) as character
 
 endclass
@@ -40,20 +37,14 @@ method New(cButtonLabel,cButtonType) class WebExButton
     ::SetButtonType()
 return(self)
 
-method GetButtonLabel() class WebExButton
-return(::cButtonLabel)
-
 method SetButtonLabel(cButtonLabel) class WebExButton
     paramtype 1 var cButtonLabel as character optional default ::cButtonLabel
-    ::cButtonLabel:=cButtonLabel
+    ::SetMemberData("cButtonLabel",cButtonLabel)
     ::SetContent(::cButtonLabel)
 return(self)
 
-method GetButtonType() class WebExButton
-return(::cButtonType)
-
 method SetButtonType(cButtonType) class WebExButton
     paramtype 1 var cButtonType as character optional default ::cButtonType
-    ::cButtonType:=Lower(cButtonType)
+    ::SetMemberData("cButtonType",Lower(cButtonType))
     ::SetAttr("type",cButtonType)
 return(self)

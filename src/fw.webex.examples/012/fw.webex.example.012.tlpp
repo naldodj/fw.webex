@@ -25,7 +25,7 @@
             |     |
             |     +---> oFWWebExNavSide (div#webex-sidebar.collapse.show)
             |           |
-            |           +---> Brand gerado internamente via SetBrand("Side Menu")
+            |           +---> Brand gerado internamente via SetNavSideBrand("Side Menu")
             |           |
             |           +---> Dashboard KPI (data-toggle-kpi="kpi")
             |           |     |
@@ -138,7 +138,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
     oFWWebExNavSide:AddClass("collapse")
     oFWWebExNavSide:AddClass("show")
     oFWWebExNavSide:SetAttr("class","collapse show")
-    oFWWebExNavSide:SetBrand("Side Menu")
+    oFWWebExNavSide:SetNavSideBrand("Side Menu")
 
     oFWWebExIcon:=WebExIcon():New("bi-bar-chart")
     oFWWebExNavSide:AddItem("Dashboard KPI","#",oFWWebExIcon):SetAttr("data-toggle-kpi","kpi")

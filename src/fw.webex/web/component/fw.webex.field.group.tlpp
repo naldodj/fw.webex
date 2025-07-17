@@ -30,35 +30,12 @@ class WebExFieldGroup from WebExControl
 
     public method New(cFieldGroupLabel as character,cFieldGroupName as character,cFieldGroupType as character,cFieldGroupPlaceHolder as character,cFieldGroupTitle as character,nWebExColFieldGroupColSize as numeric) as object
 
-    public method GetFieldGroupLabel() as character
     public method SetFieldGroupLabel(cFieldGroupLabel as character) as object
-
-    public method GetFieldGroupName() as character
     public method SetFieldGroupName(cFieldGroupName as character) as object
-
-    public method GetFieldGroupType() as character
     public method SetFieldGroupType(cFieldGroupType as character) as object
-
-    public method GetFieldPlaceHolder() as character
     public method SetFieldPlaceHolder(cFieldGroupPlaceHolder as character) as object
-
-    public method GetFieldGroupTitle() as character
     public method SetFieldGroupTitle(cFieldGroupTitle as character) as object
-
-    public method GetWebExColFieldGroupColSize() as numeric
     public method SetWebExColFieldGroupColSize(nWebExColFieldGroupColSize as numeric) as object
-
-    public method GetObjWebExColFieldGroup() as object
-    public method SetObjWebExColFieldGroup(oWebExColFieldGroup as object) as object
-
-    public method GetObjWebExLabelFieldGroup() as object
-    public method SetObjWebExLabelFieldGroup(oWebExLabelFieldGroup as object) as object
-
-    public method GetObjWebExControlInputFieldGroup() as object
-    public method SetObjWebExControlInputFieldGroup(oWebExControlInputFieldGroup as object) as object
-
-    public method GetObjWebExInputGroupInputFieldGroup() as object
-    public method SetObjWebExInputGroupInputFieldGroup(oWebExInputGroupInputFieldGroup as object) as object
 
 endclass
 
@@ -106,31 +83,22 @@ method New(cFieldGroupLabel,cFieldGroupName,cFieldGroupType,cFieldGroupPlaceHold
 
 return(self)
 
-method GetFieldGroupLabel() class WebExFieldGroup
-return(::cFieldGroupLabel)
-
 method SetFieldGroupLabel(cFieldGroupLabel) class WebExFieldGroup
     paramtype 1 var cFieldGroupLabel as character optional default ::cFieldGroupLabel
-    ::cFieldGroupLabel:=cFieldGroupLabel
+    ::SetMemberData("cFieldGroupLabel",cFieldGroupLabel)
     ::oWebExLabelFieldGroup:SetLabelFor(::oWebExControlInputFieldGroup:GetFixedID())
     ::oWebExLabelFieldGroup:SetLabelText(::cFieldGroupLabel)
 return(self)
 
-method GetFieldGroupName() class WebExFieldGroup
-return(::cFieldGroupName)
-
 method SetFieldGroupName(cFieldGroupName) class WebExFieldGroup
     paramtype 1 var cFieldGroupName as character optional default ::cFieldGroupName
-    ::cFieldGroupName:=cFieldGroupName
+    ::SetMemberData("cFieldGroupName",cFieldGroupName)
     ::oWebExControlInputFieldGroup:SetAttr("name",::cFieldGroupName)
 return(self)
 
-method GetFieldGroupType() class WebExFieldGroup
-return(::cFieldGroupType)
-
 method SetFieldGroupType(cFieldGroupType) class WebExFieldGroup
     paramtype cFieldGroupType as character optional default ::cFieldGroupType
-    ::cFieldGroupType:=cFieldGroupType
+    ::SetMemberData("cFieldGroupType",cFieldGroupType)
     ::oWebExControlInputFieldGroup:SetAttr("type",::cFieldGroupType)
     if (!::cFieldGroupType=="checkbox")
         ::oWebExControlInputFieldGroup:AddClass("form-control")
@@ -139,12 +107,9 @@ method SetFieldGroupType(cFieldGroupType) class WebExFieldGroup
     endif
 return(self)
 
-method GetFieldPlaceHolder() class WebExFieldGroup
-return(::cFieldGroupPlaceHolder)
-
 method SetFieldPlaceHolder(cFieldGroupPlaceHolder) class WebExFieldGroup
     paramtype 1 var cFieldGroupPlaceHolder as character optional default ::cFieldGroupPlaceHolder
-    ::cFieldGroupPlaceHolder:=cFieldGroupPlaceHolder
+    ::SetMemberData("cFieldGroupPlaceHolder",cFieldGroupPlaceHolder)
     if (!Empty(::cFieldGroupPlaceHolder))
         ::oWebExControlInputFieldGroup:SetAttr("placeholder",::cFieldGroupPlaceHolder)
     else
@@ -152,12 +117,9 @@ method SetFieldPlaceHolder(cFieldGroupPlaceHolder) class WebExFieldGroup
     endif
 return(self)
 
-method GetFieldGroupTitle() class WebExFieldGroup
-return(::cFieldGroupTitle)
-
 method SetFieldGroupTitle(cFieldGroupTitle) class WebExFieldGroup
     paramtype 1 var cFieldGroupTitle as character optional default ::cFieldGroupTitle
-    ::cFieldGroupTitle:=cFieldGroupTitle
+    ::SetMemberData("cFieldGroupTitle",cFieldGroupTitle)
     if (!Empty(::cFieldGroupTitle))
         ::oWebExControlInputFieldGroup:SetAttr("title",::cFieldGroupTitle)
     else
@@ -165,50 +127,8 @@ method SetFieldGroupTitle(cFieldGroupTitle) class WebExFieldGroup
     endif
 return(self)
 
-method GetWebExColFieldGroupColSize() class WebExFieldGroup
-return(::nWebExColFieldGroupColSize)
-
 method SetWebExColFieldGroupColSize(nWebExColFieldGroupColSize) class WebExFieldGroup
     paramtype 1 var nWebExColFieldGroupColSize as numeric optional default ::nWebExColFieldGroupColSize
+    ::SetMemberData("nWebExColFieldGroupColSize",nWebExColFieldGroupColSize)
     ::oWebExColFieldGroup:SetColSize(::nWebExColFieldGroupColSize)
-return(self)
-
-method GetObjWebExColFieldGroup() class WebExFieldGroup
-return(::oWebExColFieldGroup)
-
-method SetObjWebExColFieldGroup(oWebExColFieldGroup) class WebExFieldGroup
-    paramtype 1 var oWebExColFieldGroup as object class WebExCol
-    oWebExColFieldGroup:SetID(::oWebExColFieldGroup:GetID())
-    oWebExColFieldGroup:SetFixedID(::oWebExColFieldGroup:GetFixedID())
-    ::oWebExColFieldGroup:SetFromObject(oWebExColFieldGroup)
-return(self)
-
-method GetObjWebExLabelFieldGroup() class WebExFieldGroup
-return(::oWebExLabelFieldGroup)
-
-method SetObjWebExLabelFieldGroup(oWebExLabelFieldGroup) class WebExFieldGroup
-    paramtype 1 var oWebExLabelFieldGroup as object class WebExLabel
-    oWebExLabelFieldGroup:SetID(::oWebExLabelFieldGroup:GetID())
-    oWebExLabelFieldGroup:SetFixedID(::oWebExLabelFieldGroup:GetFixedID())
-    ::oWebExLabelFieldGroup:SetFromObject(oWebExLabelFieldGroup)
-return(self)
-
-method GetObjWebExControlInputFieldGroup() class WebExFieldGroup
-return(::oWebExControlInputFieldGroup)
-
-method SetObjWebExControlInputFieldGroup(oWebExControlInputFieldGroup) class WebExFieldGroup
-    paramtype 1 var oWebExControlInputFieldGroup as object class WebExControl
-    oWebExControlInputFieldGroup:SetID(::oWebExControlInputFieldGroup:GetID())
-    oWebExControlInputFieldGroup:SetFixedID(::oWebExControlInputFieldGroup:GetFixedID())
-    ::oWebExControlInputFieldGroup:SetFromObject(oWebExControlInputFieldGroup)
-return(self)
-
-method GetObjWebExInputGroupInputFieldGroup() class WebExFieldGroup
-return(::oWebExInputGroupInputFieldGroup)
-
-method SetObjWebExInputGroupInputFieldGroup(oWebExInputGroupInputFieldGroup) class WebExFieldGroup
-    paramtype 1 var oWebExInputGroupInputFieldGroup as object class WebExInputGroup
-    oWebExInputGroupInputFieldGroup:SetID(::oWebExInputGroupInputFieldGroup:GetID())
-    oWebExInputGroupInputFieldGroup:SetFixedID(::oWebExInputGroupInputFieldGroup:GetFixedID())
-    ::oWebExInputGroupInputFieldGroup:SetFromObject(oWebExInputGroupInputFieldGroup)
 return(self)

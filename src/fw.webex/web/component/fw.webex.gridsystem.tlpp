@@ -54,7 +54,6 @@ class WebExCol from WebExControl
 
     public method New(nColSize as numeric) as object
 
-    public method GetColSize() as numeric
     public method SetColSize(nColSize as numeric) as object
 
 endclass
@@ -66,12 +65,9 @@ method New(nColSize) class WebExCol
     ::SetColSize()
 return(self)
 
-method GetColSize() class WebExCol
-return(::nColSize)
-
 method SetColSize(nColSize) class WebExCol
     paramtype 1 var nColSize as numeric optional default ::nColSize
-    ::nColSize:=nColSize
+    ::SetMemberData("nColSize",nColSize)
     ::DelClassRegex("col-md-[0-9]+") // remove qualquer col-md-* anterior (se tiver)
     ::AddClass("col-md-"+cValToChar(::nColSize))
 return(self)

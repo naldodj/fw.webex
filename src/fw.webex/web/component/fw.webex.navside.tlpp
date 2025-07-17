@@ -26,24 +26,13 @@ class WebExNavSide from WebExControl
     protected data oNavSideWrapper as object
 
     public method New(cNavSideBrand as character) as object
-    public method SetBrand(cNavSideBrand as character) as object
+
     public method AddItem(cNavSideLabel as character,cNavSideHRef as character,oNavIcon as object) as object
     public method AddDivider() as object
     public method AddHeader(cNavSideHeaderText as character) as object
     public method RenderHTML() as character
 
-    public method GetNavSideBrand() as character
     public method SetNavSideBrand(cNavSideBrand as character) as object
-
-    public method GetJSONNavSideItems() as json
-
-    public method GetObjNavSideItem() as object
-    public method GetObjNavSideLink() as object
-    public method GetObjNavSideSpan() as object
-
-    public method GetObjNavSideList() as object
-    public method GetObjNavSideBrand() as object
-    public method GetObjNavSideWrapper() as object
 
 endclass
 
@@ -58,10 +47,6 @@ method New(cNavSideBrand) class WebExNavSide
     ::AddClass("sidebar bg-body border-end")
     ::SetAttr("id",::GetFixedID())
     ::SetNavSideBrand()
-return(self)
-
-method SetBrand(cNavSideBrand) class WebExNavSide
-    ::SetNavSideBrand(cNavSideBrand)
 return(self)
 
 method AddItem(cNavSideLabel,cNavSideHRef,oNavIcon) class WebExNavSide
@@ -120,9 +105,6 @@ method RenderHTML() class WebExNavSide
 
 return(cHTML)
 
-method GetNavSideBrand() class WebExNavSide
-return(::cNavSideBrand)
-
 method SetNavSideBrand(cNavSideBrand) class WebExNavSide
     paramtype 1 var cNavSideBrand as character optional default ::cNavSideBrand
     ::cNavSideBrand:=cNavSideBrand
@@ -135,24 +117,3 @@ method SetNavSideBrand(cNavSideBrand) class WebExNavSide
         ::oNavSideBrand:SetContent(::cNavSideBrand)
     endif
 return(self)
-
-method GetJSONNavSideItems() class WebExNavSide
-return(::jNavSideItems)
-
-method GetObjNavSideItem() class WebExNavSide
-return(::oNavSideItem)
-
-method GetObjNavSideLink() class WebExNavSide
-return(::oNavSideItem)
-
-method GetObjNavSideSpan() class WebExNavSide
-return(::oNavSideSpan)
-
-method GetObjNavSideList() class WebExNavSide
-return(::oNavSideList)
-
-method GetObjNavSideBrand() class WebExNavSide
-return(::oNavSideBrand)
-
-method GetObjNavSideWrapper() class WebExNavSide
-return(::oNavSideWrapper)

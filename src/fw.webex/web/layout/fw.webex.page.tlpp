@@ -38,13 +38,7 @@ class WebExPage from WebExControl
     public method New(cPageTitle as character) as object
     public method AddChild(oPageChild as object) as object
 
-    public method GetPageTitle() as character
-    public method SetPageTitle(cPageTitle) as object
-
-    public method GetJSONPageStyle() as json
     public method AddPageStyle(cPageStyle) as object
-
-    public method GetObjPageBody() as object
     public method SetObjPageBody(oPageBody as object) as object
 
     public method GetObjPageAfterRender() as object
@@ -55,7 +49,7 @@ endclass
 
 method New(cPageTitle) class WebExPage
     paramtype cPageTitle as character optional default "FWWEBEX"
-    ::SetPageTitle(cPageTitle)
+    ::SetMemberData("cPageTitle",cPageTitle)
     ::jPageStyle:=JSONObject():New()
     _Super:New("div")
     ::AddClass("main-div")
@@ -79,20 +73,6 @@ method AddChild(oPageChild) class WebExPage
     endif
 return(self)
 
-method GetPageTitle() class WebExPage
-return(::cPageTitle)
-
-method SetPageTitle(cPageTitle) class WebExPage
-    paramtype 1 var cPageTitle as character optional default "FWWEBEX"
-    if (Empty(cPageTitle))
-        cPageTitle:="FWWEBEX"
-    endif
-    ::cPageTitle:=cPageTitle
-return(self)
-
-method GetJSONPageStyle() class WebExPage
-return(::jPageStyle)
-
 method AddPageStyle(cPageStyle) class WebExPage
     local oStyle as object
     paramtype 1 var cPageStyle as character
@@ -101,9 +81,6 @@ method AddPageStyle(cPageStyle) class WebExPage
         ::jPageStyle[oStyle:GetID()]:=oStyle
     END WEBEXOBJECT
 return(self)
-
-method GetObjPageBody() class WebExPage
-return(::oPageBody)
 
 method SetObjPageBody(oPageBody) class WebExPage
     local cClassName as character
@@ -123,7 +100,7 @@ method SetObjPageBody(oPageBody) class WebExPage
 return(self)
 
 method GetObjPageAfterRender() class WebExPage
-return(::oPageRender)
+return(::GetMemberData("oPageRender"))
 
 method RenderHTML() class WebExPage
 

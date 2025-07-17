@@ -23,17 +23,9 @@ class WebExIcon from WebExControl
 
     public method New(cIconName as character,cIconType as character,lIconBefore as logical) as object
 
-    public method GetIconType() as character
     public method SetIconType(cIconType as character) as object
-
-    public method GetIconSize() as character
     public method SetIconSize(cIconSize as character) as object
-
-    public method GetIconName() as character
     public method SetIconName(cIconName as character) as object
-
-    public method GetIconBefore() as logical
-    public method SetIconBefore(lIconBefore) as object
 
 endclass
 
@@ -41,7 +33,7 @@ method New(cIconName,cIconType,lIconBefore) class WebExIcon
     paramtype 1 var cIconName as character
     paramtype 2 var cIconType as character optional default "bootstrap"
     paramtype 3 var lIconBefore as logical optional default .T.
-    ::SetIconType(cIconType)
+    ::cIconType:=Lower(AllTrim(cIconType))
     ::cIconName:=cIconName
     ::lIconBefore:=lIconBefore
     _Super:New("i")
@@ -49,24 +41,18 @@ method New(cIconName,cIconType,lIconBefore) class WebExIcon
     ::SetIconName(cIconName,cIconType)
 return(self)
 
-method GetIconType() class WebExIcon
-return(::cIconType)
-
 method SetIconType(cIconType) class WebExIcon
-    ::cIconType:=Lower(AllTrim(cIconType))
+    paramtype 1 var cIconType as character optional default ::cIconType
+    ::SetMemberData("cIconType",Lower(AllTrim(cIconType)))
 return(self)
-
-method GetIconName() class WebExIcon
-return(::cIconName)
 
 method SetIconName(cIconName,cIconType) class WebExIcon
 
     paramtype 1 var cIconName as character
     paramtype 2 var cIconType as character optional default ::cIconType
 
-    ::cIconName:=cIconName
-
-    cIconType:=Lower(cIconType)
+    ::SetMemberData("cIconName",cIconName)
+    ::SetIconType(cIconType)
 
     // Remove classes anteriores
     if (::cIconType!=cIconType)
@@ -98,12 +84,9 @@ method SetIconName(cIconName,cIconType) class WebExIcon
 
 return(self)
 
-method GetIconSize() class WebExIcon
-return(::cIconSize)
-
 method SetIconSize(cIconSize) class WebExIcon
     paramtype 1 var cIconSize as character
-    ::cIconSize:=cIconSize
+    ::SetMemberData("cIconSize",cIconSize)
     if (::cIconType=="bootstrap")
         // Remove apenas classes tipo fs-1, fs-2, ..., fs-6 (bootstrap usa ate fs-6 oficialmente)
         ::DelClassRegex("fs-[1-6]")
@@ -117,12 +100,4 @@ method SetIconSize(cIconSize) class WebExIcon
         ::DelClassRegex("md(-[a-z0-9-]+)?")
         ::AddClass("md-"+::cIconSize)
     endif
-return(self)
-
-method GetIconBefore() class WebExIcon
-return(::lIconBefore)
-
-method SetIconBefore(lIconBefore) class WebExIcon
-    paramtype 1 var lIconBefore as logical optional default ::lIconBefore
-    ::lIconBefore:=lIconBefore
 return(self)

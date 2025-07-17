@@ -24,20 +24,8 @@ class WebExCard from WebExControl
 
     public method New(cCardTextTitle as character,cCardTextBody as character) as object
 
-    public method GetCardTextTitle() as character
     public method SetCardTextTitle(cCardTextTitle as character) as object
-
-    public method GetCardTextBody() as character
     public method SetCardTextBody(cCardTextBody as character) as character
-
-    public method GetObjCardBody() as object
-    public method SetObjCardBody(oCardBody as object) as object
-
-    public method GetObjCardTextTitle() as object
-    public method SetObjCardTextTitle(oCardTextTitle as object) as object
-
-    public method GetObjCardTextBody() as object
-    public method SetObjCardTextBody(oCardTextBody as object) as object
 
 endclass
 
@@ -63,52 +51,16 @@ method New(cCardTextTitle,cCardTextBody) class WebExCard
     END WEBEXOBJECT
 return(self)
 
-method GetCardTextTitle() class WebExCard
-return(::cCardTextTitle)
-
 method SetCardTextTitle(cCardTextTitle) class WebExCard
     paramtype 1 var cCardTextTitle as character optional default ::cCardTextTitle
+    ::SetMemberData("cCardTextTitle",cCardTextTitle)
     ::AddClass("card-title")
     ::SetContent(::cCardTextTitle)
 return(self)
 
-method GetCardTextBody() class WebExCard
-return(::cCardTextBody)
-
 method SetCardTextBody(cCardTextBody) class WebExCard
     paramtype 1 var cCardTextBody as character optional default ::cCardTextBody
-    ::cCardTextBody:=cCardTextBody
+    ::SetMemberData("cCardTextBody",cCardTextBody)
     ::AddClass("card-text")
     ::SetContent(::cCardTextBody)
-return(self)
-
-method GetObjCardBody() class WebExCard
-return(::oCardBody)
-
-method SetObjCardBody(oCardBody) class WebExCard
-    paramtype 1 var oCardBody as object class WebExDiv
-    oCardBody:SetID(::oCardBody:GetID())
-    oCardBody:SetFixedID(::oCardBody:GetFixedID())
-    ::oCardBody:SetFromObject(oCardBody)
-    ::jChildren[::oCardBody:GetID()]:=::oCardBody
-return(self)
-
-method GetObjCardTextTitle() class WebExCard
-return(::oCardTextTitle)
-
-method SetObjCardTextTitle(oCardTextTitle) class WebExCard
-    paramtype 1 var oCardTextTitle as object class WebExH5
-    oCardTextTitle:SetID(::oCardTextTitle:GetID())
-    oCardTextTitle:SetFixedID(::oCardTextTitle:GetFixedID())
-    ::oCardTextTitle:SetFromObject(oCardTextTitle)
-return(self)
-
-method GetObjCardTextBody() class WebExCard
-return(::oCardTextBody)
-
-method SetObjCardTextBody(oCardTextBody) class WebExCard
-    paramtype 1 var oCardTextBody as object class WebExParagraph
-    oCardTextBody:SetID(::oCardTextBody:GetID())
-    oCardTextBody:SetFixedID(::oCardTextBody:GetFixedID())
-    ::oCardTextBody:SetFromObject(oCardTextBody)
 return(self)

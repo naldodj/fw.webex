@@ -19,10 +19,18 @@ class WebExStrong from WebExControl
 
     public method New(cStrongTextContent as character) as object
 
+    public method SetStrongTextContent(cStrongTextContent as character) as object
+
 endclass
 
 method New(cStrongTextContent) class WebExStrong
     ::cStrongTextContent:=cStrongTextContent
     _Super:New("strong")
+    ::SetStrongTextContent()
+return(self)
+
+method SetStrongTextContent(cStrongTextContent) class WebExStrong
+    paramtype 1 var cStrongTextContent as character optional default ::cStrongTextContent
+    ::SetMemberData("cStrongTextContent",cStrongTextContent)
     ::SetContent(::cStrongTextContent)
 return(self)

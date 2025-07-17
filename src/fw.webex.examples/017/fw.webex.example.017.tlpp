@@ -85,7 +85,7 @@ static function FWWebExExample_017(cHTML as character) as character
     // Campo de busca
     oFWWebExRow1:=WebExRow():New()
     oFWWebExForm:AddFieldGroupToRow(oFWWebExRow1,"CEP","cepsearch","text","Digite o CEP",4)
-    oWebExInputGroup:=oFWWebExForm:GetObjWebExInputGroupInputFieldGroupFormField()
+    oWebExInputGroup:=oFWWebExForm:GetMemberData("oWebExInputGroupInputFieldGroup")
 
     //Carrega o Botao para Buscar os Dados ao Grupo
     oFWWebExButton:=WebExButton():New("Buscar")

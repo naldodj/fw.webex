@@ -26,26 +26,11 @@ class WebExField from WebExControl
 
     public method New(cFieldLabel as character,cFieldName as character,cFieldType as character,cFieldPlaceHolder as character,cFieldTitle as character) as object
 
-    public method GetFieldLabel() as character
     public method SetFieldLabel(cFieldLabel as character) as object
-
-    public method GetFieldName() as character
     public method SetFieldName(cFieldName as character) as object
-
-    public method GetFieldType() as character
     public method SetFieldType(cFieldType as character) as object
-
-    public method GetFieldPlaceHolder() as character
     public method SetFieldPlaceHolder(cFieldPlaceHolder as character) as object
-
-    public method GetFieldTitle() as character
     public method SetFieldTitle(cFieldTitle as character) as object
-
-    public method GetObjWebExInputField() as object
-    public method SetObjWebExInputField(oWebExInputField as object) as object
-
-    public method GetObjWebExLabelField() as object
-    public method SetObjWebExLabelField(oWebExLabelField as object) as object
 
 endclass
 
@@ -68,68 +53,33 @@ method New(cFieldLabel,cFieldName,cFieldType,cFieldPlaceHolder,cFieldTitle) clas
     ::AddChild(::oWebExInputField)
 return(self)
 
-method GetFieldLabel() class WebExField
-return(::cFieldLabel)
-
 method SetFieldLabel(cFieldLabel) class WebExField
     paramtype 1 var cFieldLabel as character optional default ::cFieldLabel
-    ::cFieldLabel:=cFieldLabel
+    ::SetMemberData("cFieldLabel",cFieldLabel)
     ::oWebExLabelField:SetLabelFor(::oWebExInputField:GetFixedID())
     ::oWebExLabelField:SetLabelText(::cFieldLabel)
 return(self)
 
-method GetFieldName() class WebExField
-return(::cFieldName)
-
 method SetFieldName(cFieldName) class WebExField
     paramtype 1 var cFieldName as character optional default ::cFieldName
-    ::cFieldName:=cFieldName
+    ::SetMemberData("cFieldName",cFieldName)
     ::oWebExInputField:SetInputName(::cFieldName)
 return(self)
 
-method GetFieldType() class WebExField
-return(::cFieldType)
-
 method SetFieldType(cFieldType) class WebExField
     paramtype cFieldType as character optional default ::cFieldType
-    ::cFieldType:=cFieldType
+    ::SetMemberData("cFieldType",cFieldType)
     ::oWebExInputField:SetInputType(::cFieldType)
 return(self)
 
-method GetFieldPlaceHolder() class WebExField
-return(::cFieldPlaceHolder)
-
 method SetFieldPlaceHolder(cFieldPlaceHolder) class WebExField
     paramtype 1 var cFieldPlaceHolder as character optional default ::cFieldPlaceHolder
-    ::cFieldPlaceHolder:=cFieldPlaceHolder
+    ::SetMemberData("cFieldPlaceHolder",cFieldPlaceHolder)
     ::oWebExInputField:SetInputPlaceHolder(::cFieldPlaceHolder)
 return(self)
 
-method GetFieldTitle() class WebExField
-return(::cFieldTitle)
-
 method SetFieldTitle(cFieldTitle) class WebExField
     paramtype 1 var cFieldTitle as character optional default ::cFieldTitle
-    ::cFieldTitle:=cFieldTitle
+    ::SetMemberData("cFieldTitle",cFieldTitle)
     ::oWebExInputField:SetInputTitle(::cFieldTitle)
-return(self)
-
-method GetObjWebExInputField() class WebExField
-return(::oWebExInputField)
-
-method SetObjWebExInputField(oWebExInputField) class WebExField
-    paramtype 1 var oWebExInputField as object class WebExInput
-    oWebExInputField:SetID(::oWebExInputField:GetID())
-    oWebExInputField:SetFixedID(::oWebExInputField:GetFixedID())
-    ::oWebExInputField:SetFromObject(oWebExInputField)
-return(self)
-
-method GetObjWebExLabelField() class WebExField
-return(::oWebExLabelField)
-
-method SetObjWebExLabelField(oWebExLabelField) class WebExField
-    paramtype 1 var oWebExLabelField as object class WebExLabel
-    oWebExLabelField:SetID(::oWebExLabelField:GetID())
-    oWebExLabelField:SetFixedID(::oWebExLabelField:GetFixedID())
-    ::oWebExLabelField:SetFromObject(oWebExLabelField)
 return(self)
