@@ -961,14 +961,26 @@ method DelAssets() class WebExControl
 return(__jAssets)
 
 method AddClass(cNewClass) class WebExControl
-   local cClass as character
-   paramtype 1 var cNewClass as character
-   cClass:=AllTrim(::GetAttr("class"))
-   if (Empty(cClass))
-      ::SetAttr("class",cNewClass)
-   else
-      ::SetAttr("class",cClass+" "+cNewClass)
-   endif
+    local aNewClass as array
+    local cClass as character
+    local cClassItem as character
+    local i as numeric
+    paramtype 1 var cNewClass as character
+    if (!::HasAttr("class"))
+        ::SetAttr("class",Lower(AllTrim(cNewClass)))
+    else
+        cClass:=AllTrim(::GetAttr("class"))
+        aNewClass:=StrTokArr2(Lower(AllTrim(cNewClass))," ")
+        for i:=1 to Len(aNewClass)
+            cClassItem:=aNewClass[i]
+            if (!::HasAttrValue("class",cClassItem))
+                cClass+=" "+cClassItem
+            endif
+        next i
+        FWFreeArray(@aNewClass)
+        ::DelAttr("class")
+        ::SetAttr("class",cClass)
+    endif
 return(self)
 
 method HasClass(cClass,aClasses) class WebExControl

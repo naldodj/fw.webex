@@ -3,6 +3,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-17 00:01 naldodj (Fix AddClass)
+  !Fix AddClass
+    * src/fw.webex/web/control/fw.webex.control.tlpp
+
 2025-07-16 19:42 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * README.md
   * src/fw.webex/web/component/fw.webex.fieldset.tlpp
