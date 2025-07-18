@@ -29,7 +29,8 @@ class WebApp
 
     static method GetTWebChannel(lConnect as logical) as object
     static method GetRemoteOrigin() as character
-    static method ExtendUrlWithParams(cUrl as character) as character
+    static method GetTotvsTecParams() as json
+    static method ExtendUrlWithTotvsTecParams(cUrl as character) as character
 
 end class
 
@@ -251,24 +252,13 @@ static method GetRemoteOrigin() class WebApp
 
 return(cRemoteOrigin)
 
-static method ExtendUrlWithParams(cUrl) class WebApp
-
-    local aParams as array
-
-    local cSep:="?" as character
-    local cParam as character
-    local cNewUrl as character
+static method GetTotvsTecParams() class WebApp
 
     local jParams:=JSONObject():New() as json
 
-    local i as numeric
     local nRemoteType as numeric
 
     local oTWebChannel:=WebApp():GetTWebChannel(.T.) as object
-
-    paramtype 1 var cUrl as character
-
-    cNewUrl:=cUrl
 
     begin sequence
 
@@ -291,6 +281,34 @@ static method ExtendUrlWithParams(cUrl) class WebApp
         jParams["totvstec_remote_type"]:=LTrim(Str(nRemoteType))
         jParams["totvstec_remote_origin"]:=WebApp():GetRemoteOrigin()
 
+    end sequence
+
+return(jParams)
+
+static method ExtendUrlWithTotvsTecParams(cUrl) class WebApp
+
+    local aParams as array
+
+    local cSep:="?" as character
+    local cParam as character
+    local cNewUrl as character
+
+    local jParams as json
+
+    local i as numeric
+
+    paramtype 1 var cUrl as character
+
+    cNewUrl:=cUrl
+
+    begin sequence
+
+        // Monta os parametros que normalmente o TWebEngine injeta
+        jParams:=WebApp():GetTotvsTecParams()
+        if (Empty(jParams:GetNames()))
+            break
+        endif
+
         // Verifica se a URL ja tem parametros
         if ("?"$cUrl)
             cSep:="&"
@@ -311,7 +329,6 @@ static method ExtendUrlWithParams(cUrl) class WebApp
     end sequence
 
 return(cNewUrl)
-
 
 *******************************************************************************************************
 @Get(endpoint="/fwwebex/webapp/FixHeaderRouter/query",description="Fix Header Router")

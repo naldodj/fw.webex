@@ -189,17 +189,28 @@ method StrReplace(cTemplate,vSubstitutions) class WebExHelper
         aNames:=vSubstitutions:GetNames()
         for i:=1 to Len(aNames)
             cName:=aNames[i]
+            if (valType(vSubstitutions[cName])!="C")
+                loop
+            endif
             cApplied:=StrTran(cApplied,cName,vSubstitutions[cName])
         next i
     else
         aNames:=vSubstitutions
-        for i:=1 to Len(vSubstitutions)
-            if (Len(aNames[i])!=2)
-                loop
-            endif
-            cName:=aNames[i][1]
-            cApplied:=StrTran(cApplied,cName,aNames[i][2])
-        next i
+        if ((Len(aNames)==2).and.(ValType(aNames[1])=="C").and.(ValType(aNames[2])=="C"))
+            cName:=aNames[1]
+            cApplied:=StrTran(cApplied,cName,aNames[2])
+        else
+            for i:=1 to Len(vSubstitutions)
+                if (Len(aNames[i])!=2).or.(ValType(aNames[i][2])!="C")
+                    loop
+                endif
+                if (ValType(aNames[i][1])!="C")
+                    loop
+                endif
+                cName:=aNames[i][1]
+                cApplied:=StrTran(cApplied,cName,aNames[i][2])
+            next i
+        endif
     endif
 
 return(cApplied)

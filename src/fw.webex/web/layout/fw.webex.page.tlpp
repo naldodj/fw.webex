@@ -354,7 +354,7 @@ method RenderHTML() class WebExPage
         if (::ExternalAssetsIsEnabled().and.(::lExternalAssets))
             //External Assets (Do Not Use WebExScript Here)
             WITH WEBEXOBJECT CLASS WebExControl TYPE script
-                .:SetContent("__EXTERNAL_ASSETS__")
+                .:SetContent("/*__EXTERNAL_ASSETS__*/")
             END WEBEXOBJECT
         endif
     END WEBEXOBJECT
@@ -393,8 +393,8 @@ method RenderHTML() class WebExPage
                     }
                 )();
             endContent
-            cScript:=WebExHelper():StrReplace(cScript,{"__jAssets__":jAssets:ToJSON()})
-            cHTML:=WebExHelper():StrReplace(cHTML,{"__EXTERNAL_ASSETS__":cScript})
+            cScript:=WebExHelper():StrReplace(cScript,{"__jAssets__",jAssets:ToJSON()})
+            cHTML:=WebExHelper():StrReplace(cHTML,{"/*__EXTERNAL_ASSETS__*/",cScript})
         endif
     endif
 

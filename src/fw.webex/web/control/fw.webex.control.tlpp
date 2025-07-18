@@ -842,7 +842,15 @@ method RenderHTML() class WebExControl
         cContent:=::cContent
         cLowerType:=::cType
 
-        if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets).and.(cLowerType$"script|style").and.(cContent!=FWWEBEX_WEB_NULL_CONTENT))
+        if (;
+                (::ExternalAssetsIsEnabled());
+                .and.;
+                (::lExternalAssets);
+                .and.;
+                (cLowerType$"script|style");
+                .and.;
+                (!::ContentIsNull());
+            )
             lHTMLAssetsToFile:=WebFileTools():HTMLAssetsToFile(;
                 ::GetID();
                 ,cLowerType;
