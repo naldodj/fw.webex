@@ -3,6 +3,12 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-18 17:26 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  * src/fw.webex/tools/fw.webex.webapp.tools.tlpp
+  * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+  * src/fw.webex.examples/018/fw.webex.example.018.tlpp
+
 2025-07-18 16:05 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + New Example (Beta)
     + src/fw.webex.examples/018/fw.webex.example.018.tlpp

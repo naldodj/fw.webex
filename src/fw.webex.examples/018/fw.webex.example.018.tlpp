@@ -168,8 +168,8 @@ static procedure FWWebExExample_018(cHTML as character) as character
                 serverSide: true,
                 processing: false,
                 dom: 'Blfrtip',
-                lengthMenu: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,30,35,40,45,50,100,-1],
-                pageLength: 10,//DEFAULT
+                lengthMenu: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 100, -1],
+                pageLength: 10,
                 buttons: [
                     'copy',
                     'csv',
@@ -199,7 +199,6 @@ static procedure FWWebExExample_018(cHTML as character) as character
                     console.log('preDrawCallback: Starting table draw');
                 },
                 drawCallback: function (settings) {
-                    $('#custom-loader').hide();
                     console.log('drawCallback: Table draw completed, rows:', this.api().rows({ page: 'current' }).count());
                     const api = this.api();
                     const rows = api.rows({ page: 'current' }).count();
@@ -208,6 +207,7 @@ static procedure FWWebExExample_018(cHTML as character) as character
                     for (let i = 0; i < emptyRows; i++) {
                         $('#example tbody').append('<tr class="empty-row"><td colspan="999">&nbsp;</td></tr>');
                     }
+                    $('#custom-loader').hide();
                 },
                 ajax: function (data, callback) {
                     const pageNumber = Math.floor(data.start / data.length) + 1;
@@ -235,7 +235,10 @@ static procedure FWWebExExample_018(cHTML as character) as character
 
                     // Criar um ID unico para a requisicao
                     const requestId = `request_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-                    console.log('Sending request via WebSocket:', { requestId, request });
+                    console.log('Sending request via WebSocket/MessageChannel:', { requestId, request });
+
+                    // Flag to track if the response was handled
+                    let responseHandled = false;
 
                     // Configurar listener para a resposta
                     const handleResponse = (event) => {
@@ -244,17 +247,10 @@ static procedure FWWebExExample_018(cHTML as character) as character
                             console.warn('No protheusResponse in event');
                             return;
                         }
-                        /*
-                        if (event.protheusResponse.requestId !== requestId) {
-                            console.warn('RequestId mismatch:', {
-                                received: event.protheusResponse.requestId,
-                                expected: requestId
-                            });
-                            return;
-                        }*/
 
+                        responseHandled = true;
                         try {
-                            const json = event.protheusResponse;
+                            const json = event.protheusResponse ;
                             console.log('Response data:', json);
 
                             if (!json || !json.table || !json.table.items) {
@@ -262,7 +258,7 @@ static procedure FWWebExExample_018(cHTML as character) as character
                             }
 
                             const rows = json.table.items.map(row => {
-                                const i = row.detail ? row.detail.items : {};
+                                const i = row.detail && row.detail.items ? row.detail.items : {};
                                 return [
                                     i.RA_FILIAL || '',
                                     i.RA_MAT || '',
@@ -283,27 +279,37 @@ static procedure FWWebExExample_018(cHTML as character) as character
                                 recordsFiltered: json.TotalRows || rows.length
                             });
                             console.log('Callback invoked with data');
+                            table.draw(); // Force redraw
                         } catch (err) {
                             console.error('Error processing response:', err);
                             callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
+                            table.draw(); // Force redraw on error
                         } finally {
-                            // Only remove listener if the correct requestId was processed
-                            if (event.protheusResponse.requestId === requestId) {
-                                twebchannel.eventTarget.removeEventListener('dataResponse', handleResponse);
-                                console.log('Removed dataResponse listener for requestId:', requestId);
-                            }
+                            $('#custom-loader').hide();
+                            twebchannel.eventTarget.removeEventListener('dataResponse', handleResponse);
                         }
                     };
 
                     // Adicionar listener para a resposta
                     twebchannel.eventTarget.addEventListener('dataResponse', handleResponse);
 
-                    // Enviar a requisicao via WebSocket
+                    // Timeout to handle missing responses
+                    setTimeout(() => {
+                        if (!responseHandled) {
+                            console.error('Response timeout for requestId:', requestId);
+                            twebchannel.eventTarget.removeEventListener('dataResponse', handleResponse);
+                            callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
+                            table.draw(); // Force redraw
+                        }
+                    }, 10000); // 10 seconds timeout
+
+                    // Enviar a requisicao via WebSocket/MessageChannel
                     if (twebchannel && twebchannel.gotConnection) {
                         twebchannel.jsToAdvpl('CALLBACK_EXEC', JSON.stringify({ ...request, requestId }));
                     } else {
-                        console.error('WebSocket not connected.');
+                        console.error('WebSocket/MessageChannel not connected.');
                         callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
+                        table.draw(); // Force redraw
                     }
                 }
             });
@@ -352,23 +358,74 @@ static procedure FWWebExExample_018(cHTML as character) as character
                             window.dialog = window.dialog || {};
                             window.dialog.jsToAdvpl = twebchannel.sendMessageChannel.bind(twebchannel);
                             if (typeof twebchannel.callback === 'function') twebchannel.callback();
+                            console.log('MessageChannel CONNECTED');
                             break;
                         case 'DISCONNECTED':
                             console.log('Received DISCONNECTED message:', event);
                             break;
                         case 'EXEC':
                             console.log('Received EXEC message:', data);
-                            twebchannel.onReceiveAdvplToJs(data.value.type, data.value.content);
+                            if (data.value && data.value.type) {
+                                twebchannel.onReceiveAdvplToJs(data.value.type, data.value.content);
+                            } else {
+                                console.warn('Invalid EXEC message: Missing value or type', data);
+                            }
                             break;
                         case 'RETURN':
                             console.log('Received RETURN message:', event);
                             break;
+                        case 'MS_WEBENGINERUNJAVASCRIPT':
+                            console.log('Processing MS_WEBENGINERUNJAVASCRIPT:', data);
+                            try {
+                                if (data.value) {
+                                    eval(data.value); // Execute JavaScript code
+                                } else {
+                                    console.warn('MS_WEBENGINERUNJAVASCRIPT missing value:', data);
+                                }
+                            } catch (err) {
+                                console.error('Error evaluating MS_WEBENGINERUNJAVASCRIPT:', err, 'Code:', data.value);
+                            }
+                            break;
                         default:
-                            console.error('Invalid message type:', messageType, event);
+                            console.warn('Unexpected message type:', messageType, event);
                             break;
                     }
                 };
             }
+
+            // Override window.onmessage to handle unexpected messages
+            window.onmessage = function(event) {
+                console.log('window.onmessage received:', event.data);
+                const data = event.data;
+                const messageType = (data.type || 'UNDEFINED').toUpperCase();
+
+                // Check origin for security
+                const origin = getParam('totvstec_remote_origin') || '*';
+                if (origin !== '*' && event.origin !== origin) {
+                    console.warn('Unexpected origin:', event.origin, 'Expected:', origin);
+                    return;
+                }
+
+                if (messageType === 'MS_WEBENGINERUNJAVASCRIPT') {
+                    console.log('Processing MS_WEBENGINERUNJAVASCRIPT:', data);
+                    try {
+                        if (data.value) {
+                            eval(data.value);
+                        } else {
+                            console.warn('MS_WEBENGINERUNJAVASCRIPT missing value:', data);
+                        }
+                    } catch (err) {
+                        console.error('Error evaluating MS_WEBENGINERUNJAVASCRIPT:', err, 'Code:', data.value);
+                    }
+                } else {
+                    console.warn('Unexpected message type in window.onmessage:', messageType, event);
+                    // Fallback: Treat as EXEC if it resembles a response
+                    if (data.value && data.value.type === 'CALLBACK_RESPONSE') {
+                        console.log('Fallback: Processing as EXEC message:', data.value);
+                        twebchannel.onReceiveAdvplToJs(data.value.type, data.value.content);
+                    }
+                }
+            };
         });
     endContent
 

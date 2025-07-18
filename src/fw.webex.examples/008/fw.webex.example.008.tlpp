@@ -252,7 +252,6 @@ static procedure FWWebExExample_008(cHTML as character) as character
                             $('#custom-loader').show();
                         },
                         "drawCallback": function(settings) {
-                            $('#custom-loader').hide();
                             // This drawCallback ensures consistent table height across pages.
                             // It calculates how many empty rows are needed to fill the remaining space,
                             // and appends them to the table so all pages have the same visual height.
@@ -263,6 +262,7 @@ static procedure FWWebExExample_008(cHTML as character) as character
                             for (let i = 0; i < emptyRows; i++) {
                                 $('#example tbody').append('<tr class="empty-row"><td colspan="999">&nbsp;</td></tr>');
                             }
+                            $('#custom-loader').hide();
                         },
                         ajax: function (data, callback) {
                             const pageNumber = Math.floor(data.start / data.length) + 1;
@@ -575,13 +575,14 @@ function u_callProcRestCrudTLPPEx008()
 }
     endContent
 
-    jHeader:=JSONObject():New()
-    jHeader["Content-Type"]:="application/json; charset=utf-8"
-    jHeader["Cache-Control"]:="no-cache"
-    jHeader["Content-Length"]:=LTrim(Str(Len(cJSON)))
-
-    oRest:setHeaderResponse(jHeader)
-    oRest:SetResponse(cJSON)
+    if (Type("oRest")=="O")
+        jHeader:=JSONObject():New()
+        jHeader["Content-Type"]:="application/json; charset=utf-8"
+        jHeader["Cache-Control"]:="no-cache"
+        jHeader["Content-Length"]:=LTrim(Str(Len(cJSON)))
+        oRest:SetHeaderResponse(jHeader)
+        oRest:SetResponse(cJSON)
+    endif
 
     FreeObj(@jHeader)
 

@@ -259,12 +259,15 @@ static method JSToAdvPL(oTWebChannel,cCodeType,cCodeContent) class WebApp
     local cCallBackAct as character
     local cCallBackRet as character
     local cCallBackMsg as character
+    local cResposeType as character
+    local cCallBackType as character
 
     local jResponse as json
+    local jCallBackRet as json
 
     local lTWebEngine as logical
 
-    local nCallBaclAct as numeric
+    local nCallBackAct as numeric
 
     local oTWebEngine as object
 
@@ -281,22 +284,22 @@ static method JSToAdvPL(oTWebChannel,cCodeType,cCodeContent) class WebApp
     aCallBackAct:=StrTokArr2(cCallBackAct,"|")
     aEval(aCallBackAct,{|cCallBackActRet as character,y as numeric|aCallBackAct[y]:=StrTokArr2(cCallBackActRet,":")})
 
-    nCallBaclAct:=aScan(;
+    nCallBackAct:=aScan(;
         aCallBackAct;
        ,{|uCallBackActRet as variant|;
             cCodeType==if((ValType(uCallBackActRet)=="C"),uCallBackActRet,uCallBackActRet[1]);
         };
     )
 
-    if (nCallBaclAct>0)
-        if (Len(aCallBackAct[nCallBaclAct])>=2)
-            cCallBackAct:=aCallBackAct[nCallBaclAct][1]
-            cCallBackRet:=aCallBackAct[nCallBaclAct][2]
-            if (Len(aCallBackAct[nCallBaclAct])>=3)
-                cCallBackMsg:=aCallBackAct[nCallBaclAct][3]
+    if (nCallBackAct>0)
+        if (Len(aCallBackAct[nCallBackAct])>=2)
+            cCallBackAct:=aCallBackAct[nCallBackAct][1]
+            cCallBackRet:=aCallBackAct[nCallBackAct][2]
+            if (Len(aCallBackAct[nCallBackAct])>=3)
+                cCallBackMsg:=aCallBackAct[nCallBackAct][3]
             endif
         else
-            cCallBackAct:=aCallBackAct[nCallBaclAct][1]
+            cCallBackAct:=aCallBackAct[nCallBackAct][1]
             cCallBackRet:=cCallBackAct
         endif
     endif
@@ -311,10 +314,12 @@ static method JSToAdvPL(oTWebChannel,cCodeType,cCodeContent) class WebApp
     do case
         case (cCodeType==cCallBackAct)
             ConOut(cCodeType,cCodeContent)
-            if (valType(bCallBack)=="B")
+            cCallBackType:=valType(bCallBack)
+            if (cCallBackType=="B")
                 jResponse:=Eval(bCallBack,oTWebChannel,cCodeType,cCodeContent,aCallBackAct,oTWebEngine)
+                cResposeType:=ValType(jResponse)
                 if (;
-                        (ValType(jResponse)=="J");
+                        (cResposeType=="J");
                         .and.;
                         (;
                             (!jResponse:HasProperty("lHasError"));
@@ -329,17 +334,18 @@ static method JSToAdvPL(oTWebChannel,cCodeType,cCodeContent) class WebApp
                         (jResponse:HasProperty("xContent"));
                 )
                     xCallBackRet:=jResponse["xContent"]
-                    cCallBackType:=ValType(xCallBackRet)
+                    cResposeType:=ValType(xCallBackRet)
                     do case
-                        case (cCallBackType=="J")
-                            xCallBackRet:=xCallBackRet:ToJSON()
-                            FreeObj(@xCallBackRet)
+                        case (cResposeType=="J")
+                            jCallBackRet:=xCallBackRet
+                            xCallBackRet:=jCallBackRet:ToJSON()
+                            FreeObj(@jCallBackRet)
                         otherwise
-                            if (cCallBackType!="C")
+                            if (cResposeType!="C")
                                 xCallBackRet:="Error: The data received in the callback is invalid or incompatible with JavaScript execution in the browser. Expected a valid JSON or JavaScript content, but received an incompatible type, such as a Protheus object, a logical value without context, or other non-executable data."
                             endif
                     end case
-                    if (!cCallBackType$"C|J")
+                    if (!cResposeType$"C|J")
                         if (lTWebEngine)
                             oTWebEngine:RunJavaScript('Alert("'+cCallBackAct+'", "'+xCallBackRet+'");')
                         endif
@@ -358,9 +364,9 @@ static method JSToAdvPL(oTWebChannel,cCodeType,cCodeContent) class WebApp
                         (jResponse:HasProperty("xContent"));
                 )
                     xCallBackRet:=jResponse:HasProperty("xContent")
-                    cCallBackType:=ValType(xCallBackRet)
+                    cResposeType:=ValType(xCallBackRet)
                     do case
-                        case (cCallBackType=="J")
+                        case (cResposeType=="J")
                             if xCallBackRet:HasProperty("cErrorMessage")
                                 cCallBackMsg:=xCallBackRet["cErrorMessage"]
                             else
@@ -369,7 +375,7 @@ static method JSToAdvPL(oTWebChannel,cCodeType,cCodeContent) class WebApp
                                 endif
                             endif
                         otherwise
-                            if (cCallBackType!="C")
+                            if (cResposeType!="C")
                                 if (!Empty(cCallBackMsg))
                                     cCallBackMsg:="Error: An unknown error occurred during processing in Protheus. No specific details were provided in the response. Please check the server logs or contact the system administrator for further investigation."
                                 endif
@@ -393,6 +399,24 @@ static method JSToAdvPL(oTWebChannel,cCodeType,cCodeContent) class WebApp
                 oTWebEngine:RunJavaScript('Alert("'+cCallBackAct+'", "'+cCallBackMsg+'");')
             endif
     end case
+
+    cResposeType:=valType(jResponse)
+    if (cResposeType$"A|J")
+        if (cResposeType=="A")
+            FWFreeArray(@jResponse)
+        else
+            FreeObj(@jResponse)
+        endif
+    endif
+
+    cCallBackType:=ValType(xCallBackRet)
+    if (cCallBackType$"A|J")
+        if (cCallBackType=="A")
+            FWFreeArray(@xCallBackRet)
+        else
+            FreeObj(@xCallBackRet)
+        endif
+    endif
 
     FWFreeArray(@aCallBackAct)
 
