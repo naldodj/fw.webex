@@ -22,6 +22,8 @@ end class
 
 static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLContent,lEncodeUTF8) class WebFileTools
 
+    local cFixedID as character
+
     local cClassName as character
 
     local cSPPDrive as character
@@ -52,8 +54,10 @@ static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLC
         endif
     endif
 
+    cFixedID:=Lower(oFWWebExControl:GetFixedID())
+
     if (Empty(cHTMLFileName))
-        cHTMLFileName:=oFWWebExControl:GetFixedID()
+        cHTMLFileName:=cFixedID
         cHTMLFileName+="."
         cHTMLFileName+=UUIDRandomSeq()
         cHTMLFileName+=".html"
@@ -77,9 +81,9 @@ static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLC
         SplitPath(cHTMLFileName,@cSPPDrive,@cSPPPath,@cSPPFile,@cSPPExt)
         cHTMLFileName:=cSPPDrive
         cHTMLFileName+=cSPPPath
-        if (!oFWWebExControl:GetFixedID()$cSPPFile)
+        if (!cFixedID$cSPPFile)
             cHTMLFileName+=cSPPFile
-            cHTMLFileName+="."+oFWWebExControl:GetFixedID()
+            cHTMLFileName+="."+cFixedID
         else
             cHTMLFileName+=cSPPFile
         endif
@@ -89,6 +93,7 @@ static method HTMLFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName,cHTMLC
             cHTMLFileName+=".html"
         endif
 
+        cHTMLFileName:=Lower(cHTMLFileName)
         lHTMLFromControl:=MemoWrite(cHTMLFileName,cHTMLContent)
 
     endif
@@ -356,6 +361,7 @@ static method HTMLAssetsToFile(cAssetID,cAssetType,cAssetContent,cAssetPath,/*<@
         cHTMLAssetFileName:=cAssetPath
         cHTMLAssetFileName+=cAssetID
         cHTMLAssetFileName+=if(cAssetType=="html",".html",if(cAssetType=="script",".js",".css"))
+        cHTMLAssetFileName:=Lower(cHTMLAssetFileName)
 
         lHTMLAssetsToFile:=MemoWrite(cHTMLAssetFileName,cAssetContent)
         if (!lHTMLAssetsToFile)

@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-18 18:57 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  * src/fw.webex/tools/fw.webex.file.tools.tlpp
+
 2025-07-18 18:39 UTC naldodj (refactor: remove TimeOut and Force Redraw)
   * src/fw.webex.examples/018/fw.webex.example.018.tlpp
 
