@@ -279,6 +279,25 @@ Utilizamos padrão Harbour: [How to Participate](https://github.com/naldodj/nald
 
 ---
 
+### ✅ Configuration: `[FWWEBEX]` Section in `appserver.ini`
+
+To enable integration with the FWWebEx REST services, make sure to include the following configuration in your `appserver.ini` file:
+
+```ini
+[FWWEBEX]
+RestURL=<e.g.:https://localhost:8091/app-root/>
+OAuth2URL=<e.g.:https://localhost:8091/rest/tlpp/oauth2/token>
+AppRootURI=<e.g.:https://localhost:8091/app-root/>
+ClientID=<e.g.:000000>
+ClientSecret=<e.g.:admin>
+UserName=<e.g.:admin>
+Password=<e.g.:admin>
+```
+
+⚠️ **Note:** The `AppRootURI` value is currently required as a manual setting. Ideally, this value should be automatically retrieved from the system. A future improvement may address this limitation.
+
+---
+
 ## 📄 Licença
 
 [MIT](LICENSE)
