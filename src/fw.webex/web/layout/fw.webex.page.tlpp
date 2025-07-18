@@ -106,8 +106,11 @@ method RenderHTML() class WebExPage
 
     local cHTML as character
     local cTheme as character
+    local cRestURL as character
     local cPageStyle as character
-    local cScript as character
+    local cPageScript as character
+    local cAPPRootURI as character
+    local cSRVIniName as character
 
     local jHeader as json
     local jAssets as json
@@ -329,17 +332,6 @@ method RenderHTML() class WebExPage
                     .:SetContent("https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js")
                 END WEBEXOBJECT
             //Bootstrap Optional JavaScript
-            //TOTVS Script
-                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent("https://localhost:1234/app-root/preindex_env_environment/twebchannel.js")
-                END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent("https://localhost:1234/app-root/preindex_env_environment/totvstec.js")
-                END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent("https://localhost:1234/app-root/preindex_env_environment/fwprotheus.js")
-                END WEBEXOBJECT
-            //TOTVS Script
             ***************************************************************************************************************************
             //Custom Header
             jHeader:=oPageHeader:GetHeader()
@@ -351,6 +343,25 @@ method RenderHTML() class WebExPage
             //Scripts Head
             jHeadScripts:=oPageHeader:GetHeadScripts()
             aEval(jHeadScripts:GetNames(),{|cName|oPageHeader:AddChild(jHeadScripts[cName])})
+            ***************************************************************************************************************************
+            //TOTVS Script
+                //TODO: Rever a forma de Obter app-root
+                cSRVIniName:=GetSrvIniName()
+                cRestURL:=AllTrim(GetPvProfString("FWWEBEX","RestURL","",cSRVIniName))
+                cAPPRootURI:=AllTrim(GetPvProfString("FWWEBEX","AppRootURI",cRestURL,cSRVIniName))
+                if (Right(cAPPRootURI,1)!="/")
+                    cAPPRootURI+="/"
+                endif
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent(cAPPRootURI+"preindex_env_environment/twebchannel.js")
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent(cAPPRootURI+"preindex_env_environment/totvstec.js")
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent(cAPPRootURI+"preindex_env_environment/fwprotheus.js")
+                END WEBEXOBJECT
+            //TOTVS Script
             ***************************************************************************************************************************
         END WEBEXOBJECT
         ***************************************************************************************************************************
@@ -377,7 +388,7 @@ method RenderHTML() class WebExPage
     if ((::ExternalAssetsIsEnabled()).and.(::lExternalAssets))
         jAssets:=::GetAssets()
         if (Len(jAssets:GetNames())>0)
-            beginContent var cScript
+            beginContent var cPageScript
                 (
                     function(){
                         var useLocal = (
@@ -404,8 +415,8 @@ method RenderHTML() class WebExPage
                     }
                 )();
             endContent
-            cScript:=WebExHelper():StrReplace(cScript,{"__jAssets__",jAssets:ToJSON()})
-            cHTML:=WebExHelper():StrReplace(cHTML,{"/*__EXTERNAL_ASSETS__*/",cScript})
+            cPageScript:=WebExHelper():StrReplace(cPageScript,{"__jAssets__",jAssets:ToJSON()})
+            cHTML:=WebExHelper():StrReplace(cHTML,{"/*__EXTERNAL_ASSETS__*/",cPageScript})
         endif
     endif
 

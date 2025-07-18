@@ -394,10 +394,10 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
 
     local lGetRESTCredential as logical
 
-    paramtype 1 var cUSR as character optional default GetPvProfString("FWWEBEX","UserName","",cSRVIniName)
-    paramtype 2 var cPDW as character optional default GetPvProfString("FWWEBEX","Password","",cSRVIniName)
-    paramtype 3 var cRESTURL as character optional default GetPvProfString("FWWEBEX","RestURL","",cSRVIniName)
-    paramtype 4 var cRESTURLOAuth2 as character optional default GetPvProfString("FWWEBEX","OAuth2URL","",cSRVIniName)
+    paramtype 1 var cUSR as character optional default AllTrim(GetPvProfString("FWWEBEX","UserName","",cSRVIniName))
+    paramtype 2 var cPDW as character optional default AllTrim(GetPvProfString("FWWEBEX","Password","",cSRVIniName))
+    paramtype 3 var cRESTURL as character optional default AllTrim(GetPvProfString("FWWEBEX","RestURL","",cSRVIniName))
+    paramtype 4 var cRESTURLOAuth2 as character optional default AllTrim(GetPvProfString("FWWEBEX","OAuth2URL","",cSRVIniName))
     paramtype 5 var jGetAuthorization as json optional
     paramtype 6 var lUseOAuth2 as logical optional default .F.
 
