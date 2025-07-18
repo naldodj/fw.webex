@@ -44,7 +44,7 @@
                         +---> callbacks para mostrar/esconder o loader
                         +---> preenche dados com fetch POST para:
                               |
-                              +---> WebSock callProcRestCrudTLPP mock
+                              +---> WebSock u_callProcTLPPEx018 mock
                               +---> Body com filtros, campos e paginacao
                         |
                         +---> drawCallback para manter altura da tabela entre paginas
@@ -72,7 +72,7 @@ procedure u_FWWebExExample_018()
     bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_018(@cHTML)},"Aguarde",cProcName)}
     FWExampleTools():Execute(bExecute,cProcName,.T.,.T.)
     if (!Empty(cHTMLFile).and.File(cHTMLFile))
-        bCallBack:={|oTWebChannel as object,cCodeType as character,cCodeContent as character,aCallBackAct as array,oTWebEngine as object|u_callProcRestCrudTLPPEx018(oTWebChannel,cCodeType,cCodeContent,aCallBackAct,oTWebEngine)}
+        bCallBack:={|oTWebChannel as object,cCodeType as character,cCodeContent as character,aCallBackAct as array,oTWebEngine as object|u_callProcTLPPEx018(oTWebChannel,cCodeType,cCodeContent,aCallBackAct,oTWebEngine)}
         bJSToAdvPL:={|oTWebChannel as object,cCodeType as character,cCodeContent as character|FWWebEx.WebApp():JSToAdvPL(oTWebChannel,cCodeType,cCodeContent)}
         cCallBackActRet:="CALLBACK_EXEC:CALLBACK_RESPONSE"
         FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile,oTWebChannel,bJSToAdvPL,bCallBack,cCallBackActRet)
@@ -278,11 +278,9 @@ static procedure FWWebExExample_018(cHTML as character) as character
                                 recordsFiltered: json.TotalRows || rows.length
                             });
                             console.log('Callback invoked with data');
-                            table.draw(); // Force redraw
                         } catch (err) {
                             console.error('Error processing response:', err);
                             callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
-                            table.draw(); // Force redraw on error
                         } finally {
                             $('#custom-loader').hide();
                             twebchannel.eventTarget.removeEventListener('dataResponse', handleResponse);
@@ -292,23 +290,12 @@ static procedure FWWebExExample_018(cHTML as character) as character
                     // Adicionar listener para a resposta
                     twebchannel.eventTarget.addEventListener('dataResponse', handleResponse);
 
-                    // Timeout to handle missing responses
-                    setTimeout(() => {
-                        if (!responseHandled) {
-                            console.error('Response timeout for requestId:', requestId);
-                            twebchannel.eventTarget.removeEventListener('dataResponse', handleResponse);
-                            callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
-                            table.draw(); // Force redraw
-                        }
-                    }, 10000); // 10 seconds timeout
-
                     // Enviar a requisicao via WebSocket/MessageChannel
                     if (twebchannel && twebchannel.gotConnection) {
                         twebchannel.jsToAdvpl('CALLBACK_EXEC', JSON.stringify({ ...request, requestId }));
                     } else {
                         console.error('WebSocket/MessageChannel not connected.');
                         callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
-                        table.draw(); // Force redraw
                     }
                 }
             });
@@ -429,7 +416,7 @@ static procedure FWWebExExample_018(cHTML as character) as character
     endContent
 
     oFWWebExScript:SetContent(cScript)
-    oFWWebExScript:SetExternalAssets(.T.)
+    oFWWebExScript:SetExternalAssets(.F.)
 
     oFWWebExMain:=WebExMain():New()
     oFWWebExMain:AddChild(oDivTable)
@@ -437,7 +424,7 @@ static procedure FWWebExExample_018(cHTML as character) as character
     oFWWebExBody:=WebExBody():New()
     oFWWebExBody:AddChild(oFWWebExMain)
 
-    oFWWebExPage:=WebExPage():New("Exemplo 007 - Funcionarios (REST + DataTable)")
+    oFWWebExPage:=WebExPage():New("Exemplo 007 - Funcionarios (WEBSOCKET + DataTable)")
     oFWWebExPage:SetEnableDataTable()
     oFWWebExPage:AddChild(oFWWebExBody)
 
@@ -454,7 +441,7 @@ static procedure FWWebExExample_018(cHTML as character) as character
 
 return(cHTMLFile)
 
-function u_callProcRestCrudTLPPEx018(oTWebChannel,cCodeType,cCodeContent,aCallBackAct,oTWebEngine) as variant
+function u_callProcTLPPEx018(oTWebChannel,cCodeType,cCodeContent,aCallBackAct,oTWebEngine) as variant
 
     local cJSON as character
 
