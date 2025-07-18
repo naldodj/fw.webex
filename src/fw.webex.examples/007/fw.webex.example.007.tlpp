@@ -322,7 +322,7 @@ static procedure FWWebExExample_007(cHTML as character) as character
     )
 
     oFWWebExScript:SetContent(cScript)
-    oFWWebExScript:SetExternalAssets(.T.)
+    oFWWebExScript:SetExternalAssets(.F.)
 
     oFWWebExMain:=WebExMain():New()
     oFWWebExMain:AddChild(oDivTable)
