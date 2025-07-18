@@ -44,8 +44,7 @@
                         +---> callbacks para mostrar/esconder o loader
                         +---> preenche dados com fetch POST para:
                               |
-                              +---> REST endpoint callProcRestCrudTLPP (ou mock se ausente)
-                              +---> Headers: Authorization e X-DNATech-Auth-Token
+                              +---> WebSock callProcRestCrudTLPP mock
                               +---> Body com filtros, campos e paginacao
                         |
                         +---> drawCallback para manter altura da tabela entre paginas
