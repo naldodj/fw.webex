@@ -17,6 +17,7 @@ namespace FWWebEx
 #include "tlpp-core.th"
 #include "tlpp-rest.th"
 
+static __oTWebEngine as object
 static __oTWebChannel as object
 
 class WebApp
@@ -24,13 +25,18 @@ class WebApp
     static method ThemeIsDark(cTheme as character) as logical
     static method WebAgentIsConnected() as logical
 
-    static method FixHeaderRouter(cFile as character) as character
     static method GetMimeType(cFile) as character
 
     static method GetTWebChannel(lConnect as logical) as object
+
+    static method GetTWebEngine() as object
+    static method SetTWebEngine(oTWebEngine as object) as logical
+
     static method GetRemoteOrigin() as character
     static method GetTotvsTecParams() as json
     static method ExtendUrlWithTotvsTecParams(cUrl as character) as character
+
+    static method JSToAdvPL(oTWebChannel as object,cCodeType as character,cCodeContent as character) as variant
 
 end class
 
@@ -57,100 +63,6 @@ static method WebAgentIsConnected() class WebApp
     local lWebAgentIsConnected as logical
     lWebAgentIsConnected:=((Len(aWebAgentInfo)>=2).and.(!Empty(aWebAgentInfo[1])))
 return(lWebAgentIsConnected)
-
-static method FixHeaderRouter(cFile) class WebApp
-
-    local cMimeType as character
-    local cContentFile as character
-
-    local jQuery as json
-    local jHeader as json
-
-    local nLine as numeric
-    local nLines as numeric
-
-    local oFile as object
-
-    cMimeType:=""
-    cContentFile:=""
-
-    begin sequence
-
-        if (Type("oRest")!="O")
-            paramtype 1 var cFile as character
-            cMimeType:=WebApp():GetMimeType(cFile)
-            break
-        endif
-
-        jQuery:=oRest:GetQueryRequest()
-
-        // Verifica se veio o parametro 'file'
-        if (!((valType(jQuery)=="J").and.(jQuery:HasProperty("file"))))
-            oRest:setStatusCode(400)
-            oRest:setResponse("Parametro 'file' nao informado")
-            break
-        endif
-
-        cFile:=jQuery["file"]
-        cFile:=AllTrim(cFile)
-
-        // Verifica se o arquivo existe
-        if (!File(cFile))
-            oRest:setStatusCode(404)
-            oRest:setResponse("Arquivo nao encontrado: "+cFile)
-            break
-        endif
-
-        // Le o conteudo do arquivo
-        oFile:=FWFileReader():New(cFile)
-        begin sequence
-
-            if (!oFile:Open())
-                oRest:setStatusCode(500)
-                oRest:setResponse("Erro ao abir o arquivo: "+cFile)
-                break
-            endif
-
-            if (oFile:getFileSize()==0)
-                oFile:Close()
-                oRest:setStatusCode(500)
-                oRest:setResponse("Erro ao ler o arquivo: "+cFile)
-                break
-            endif
-
-            // Define o tipo
-            cMimeType:=WebApp():GetMimeType(cFile)
-
-            // Monta cabecalhos
-            jHeader:=JSONObject():New()
-            jHeader["Content-Type"]:=cMimeType
-            jHeader["Cache-Control"]:="no-cache"
-            jHeader["Content-Length"]:=LTrim(Str(oFile:getFileSize()))
-
-            // Define resposta
-            oRest:setHeaderResponse(jHeader)
-            aLines:=oFile:GetAllLines()
-            nLines:=Len(aLines)
-            for nLine:=1 to nLines
-                cContentFile:=aLines[nLine]
-                if(nLine==nLines)
-                    oRest:setLastChunkedResponse(cContentFile)
-                else
-                    oRest:setChunkedResponse(cContentFile)
-                endif
-            next nLine
-
-        end sequence
-
-        oFile:Close()
-        FreeObj(@oFile)
-
-        FreeObj(@jQuery)
-        FreeObj(@jHeader)
-
-    end sequence
-
-return(cMimeType)
 
 static method GetMimeType(cFile) class WebApp
 
@@ -228,6 +140,14 @@ static method GetTWebChannel(lConnect) class WebApp
         __oTWebChannel:Connect()
     endif
 return(__oTWebChannel)
+
+static method GetTWebEngine() class WebApp
+return(__oTWebEngine)
+
+static method SetTWebEngine(oTWebEngine) class WebApp
+    paramtype oTWebEngine as object class TWebEngine
+    __oTWebEngine:=oTWebEngine
+return(.T.)
 
 //TODO: Utilizar a funcao padrao para retornar esta informacao
 static method GetRemoteOrigin() class WebApp
@@ -330,7 +250,150 @@ static method ExtendUrlWithTotvsTecParams(cUrl) class WebApp
 
 return(cNewUrl)
 
-*******************************************************************************************************
-@Get(endpoint="/fwwebex/webapp/FixHeaderRouter/query",description="Fix Header Router")
-function u_FixHeaderRouter(cFile as character) as character
-return(WebApp():FixHeaderRouter(cFile))
+static method JSToAdvPL(oTWebChannel,cCodeType,cCodeContent) class WebApp
+
+    local aCallBackAct as array
+
+    local bCallBack as codeblock
+
+    local cCallBackAct as character
+    local cCallBackRet as character
+    local cCallBackMsg as character
+
+    local jResponse as json
+
+    local lTWebEngine as logical
+
+    local nCallBaclAct as numeric
+
+    local oTWebEngine as object
+
+    local xCallBackRet as variant
+
+    paramtype oTWebChannel as object class TWEBCHANNEL
+    paramtype cCodeType as character
+    paramtype cCodeContent as character optional
+
+    cCodeType:=Upper(AllTrim(cCodeType))
+    bCallBack:=oTWebChannel:bSetGet
+
+    cCallBackAct:=Upper(AllTrim(oTWebChannel:cMSG))
+    aCallBackAct:=StrTokArr2(cCallBackAct,"|")
+    aEval(aCallBackAct,{|cCallBackActRet as character,y as numeric|aCallBackAct[y]:=StrTokArr2(cCallBackActRet,":")})
+
+    nCallBaclAct:=aScan(;
+        aCallBackAct;
+       ,{|uCallBackActRet as variant|;
+            cCodeType==if((ValType(uCallBackActRet)=="C"),uCallBackActRet,uCallBackActRet[1]);
+        };
+    )
+
+    if (nCallBaclAct>0)
+        if (Len(aCallBackAct[nCallBaclAct])>=2)
+            cCallBackAct:=aCallBackAct[nCallBaclAct][1]
+            cCallBackRet:=aCallBackAct[nCallBaclAct][2]
+            if (Len(aCallBackAct[nCallBaclAct])>=3)
+                cCallBackMsg:=aCallBackAct[nCallBaclAct][3]
+            endif
+        else
+            cCallBackAct:=aCallBackAct[nCallBaclAct][1]
+            cCallBackRet:=cCallBackAct
+        endif
+    endif
+
+    if (Empty(cCallBackMsg))
+        cCallBackMsg:="Error: An unknown error occurred during processing in Protheus. No specific details were provided in the response. Please check the server logs or contact the system administrator for further investigation."
+    endif
+
+    oTWebEngine:=WebApp():GetTWebEngine()
+    lTWebEngine:=(valType(oTWebEngine)=="O")
+
+    do case
+        case (cCodeType==cCallBackAct)
+            ConOut(cCodeType,cCodeContent)
+            if (valType(bCallBack)=="B")
+                jResponse:=Eval(bCallBack,oTWebChannel,cCodeType,cCodeContent,aCallBackAct,oTWebEngine)
+                if (;
+                        (ValType(jResponse)=="J");
+                        .and.;
+                        (;
+                            (!jResponse:HasProperty("lHasError"));
+                            .or.;
+                            (;
+                                (ValType(jResponse["lHasError"])=="L");
+                                .and.;
+                                (!jResponse["lHasError"]);
+                            );
+                        );
+                        .and.;
+                        (jResponse:HasProperty("xContent"));
+                )
+                    xCallBackRet:=jResponse["xContent"]
+                    cCallBackType:=ValType(xCallBackRet)
+                    do case
+                        case (cCallBackType=="J")
+                            xCallBackRet:=xCallBackRet:ToJSON()
+                            FreeObj(@xCallBackRet)
+                        otherwise
+                            if (cCallBackType!="C")
+                                xCallBackRet:="Error: The data received in the callback is invalid or incompatible with JavaScript execution in the browser. Expected a valid JSON or JavaScript content, but received an incompatible type, such as a Protheus object, a logical value without context, or other non-executable data."
+                            endif
+                    end case
+                    if (!cCallBackType$"C|J")
+                        if (lTWebEngine)
+                            oTWebEngine:RunJavaScript('Alert("'+cCallBackAct+'", "'+xCallBackRet+'");')
+                        endif
+                    else
+                        oTWebChannel:AdvPLToJS(cCallBackRet,xCallBackRet)
+                    endif
+                elseif (;
+                        (lTWebEngine);
+                        .and.;
+                        (ValType(jResponse)=="J");
+                        .and.;
+                        (jResponse:HasProperty("lHasError"));
+                        .and.;
+                        (ValType(jResponse["lHasError"])=="L");
+                        .and.;
+                        (jResponse:HasProperty("xContent"));
+                )
+                    xCallBackRet:=jResponse:HasProperty("xContent")
+                    cCallBackType:=ValType(xCallBackRet)
+                    do case
+                        case (cCallBackType=="J")
+                            if xCallBackRet:HasProperty("cErrorMessage")
+                                cCallBackMsg:=xCallBackRet["cErrorMessage"]
+                            else
+                                if (!Empty(cCallBackMsg))
+                                    cCallBackMsg:="Error: An issue occurred during processing in Protheus, but no error message was provided. Please ensure that an ErrorMessage is included in the response to provide details about the failure."
+                                endif
+                            endif
+                        otherwise
+                            if (cCallBackType!="C")
+                                if (!Empty(cCallBackMsg))
+                                    cCallBackMsg:="Error: An unknown error occurred during processing in Protheus. No specific details were provided in the response. Please check the server logs or contact the system administrator for further investigation."
+                                endif
+                            endif
+                    end case
+                    oTWebEngine:RunJavaScript('Alert("'+cCallBackAct+'", "'+cCallBackMsg+'");')
+                elseif (lTWebEngine)
+                    if (!Empty(cCallBackMsg))
+                        cCallBackMsg:="Error: An unknown error occurred during processing in Protheus. No specific details were provided in the response. Please check the server logs or contact the system administrator for further investigation."
+                    endif
+                    oTWebEngine:RunJavaScript('Alert("'+cCallBackAct+'", "'+cCallBackMsg+'");')
+                endif
+            endif
+        case (cCodeType=="CALLBACK_ALERT")
+            if (lTWebEngine)
+                oTWebEngine:RunJavaScript('Alert("'+cCallBackAct+'", "'+cCallBackMsg+'");')
+            endif
+        otherwise
+            if (lTWebEngine)
+                cCallBackMsg:="Error: No callback action was found in the list of actions for the requested operation. Please ensure a valid callback is registered to handle the response."
+                oTWebEngine:RunJavaScript('Alert("'+cCallBackAct+'", "'+cCallBackMsg+'");')
+            endif
+    end case
+
+    FWFreeArray(@aCallBackAct)
+
+return

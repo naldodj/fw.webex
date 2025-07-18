@@ -61,36 +61,32 @@ Released to Public Domain.
 
 using namespace FWWebEx
 
-procedure u_FWWebExExample_007()
+procedure u_FWWebExExample_018()
     local bExecute as codeblock
+    local bCallBack as codeblock
+    local bJSToAdvPL as codeblock
     local cHTML as character
     local cHTMLFile as character
     local cProcName:=ProcName() as character
+    local cCallBackActRet as character
     local oTWebChannel:=WebApp():GetTWebChannel() as object
-    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_007(@cHTML)},"Aguarde",cProcName)}
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_018(@cHTML)},"Aguarde",cProcName)}
     FWExampleTools():Execute(bExecute,cProcName,.T.,.T.)
     if (!Empty(cHTMLFile).and.File(cHTMLFile))
-        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile,oTWebChannel)
+        bCallBack:={|oTWebChannel as object,cCodeType as character,cCodeContent as character,aCallBackAct as array,oTWebEngine as object|u_callProcRestCrudTLPPEx018(oTWebChannel,cCodeType,cCodeContent,aCallBackAct,oTWebEngine)}
+        bJSToAdvPL:={|oTWebChannel as object,cCodeType as character,cCodeContent as character|FWWebEx.WebApp():JSToAdvPL(oTWebChannel,cCodeType,cCodeContent)}
+        cCallBackActRet:="CALLBACK_EXEC:CALLBACK_RESPONSE"
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile,oTWebChannel,bJSToAdvPL,bCallBack,cCallBackActRet)
         fErase(cHTMLFile)
     endif
     WebFileTools():ObliterateFWWebExTmpFiles(.T.)
 return
 
-static procedure FWWebExExample_007(cHTML as character) as character
+static procedure FWWebExExample_018(cHTML as character) as character
 
-    local cUSR as character
-    local cPDW as character
     local cScript as character
-    local cRESTURL as character
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
-    local cDNATechAuth as character
-    local cAutorization as character
-    local cRESTURLOAuth2 as character
-
-    local jGetAuthorization as json
-
-    local lUseOAuth2:=.F. as logical
 
     local oDivTable as object
     local oTableStyle as object
@@ -99,22 +95,6 @@ static procedure FWWebExExample_007(cHTML as character) as character
     local oFWWebExMain as object
     local oFWWebExBody as object
     local oFWWebExScript as object
-
-    if (!FWExampleTools():GetRESTCredential(@cUSR,@cPDW,@cRESTURL,@cRESTURLOAuth2,@jGetAuthorization,@lUseOAuth2))
-        return
-    endif
-
-    if (valType(jGetAuthorization)=="J")
-        if ((lUseOAuth2).and.(jGetAuthorization:HasProperty("Bearer")))
-            cAutorization:=jGetAuthorization["Bearer"]
-        elseif (jGetAuthorization:HasProperty("Basic"))
-            cAutorization:=jGetAuthorization["Basic"]
-        endif
-        if (empty(cAutorization))
-            return
-        endif
-        cAutorization:=WebExHelper():ConvertHeaderToJSObject(cAutorization)
-    endif
 
     oTableStyle:=WebExStyle():New()
 
@@ -182,6 +162,8 @@ static procedure FWWebExExample_007(cHTML as character) as character
                         </tr>
                     </thead>
                 </table>`;
+
+            // Inicializa o DataTable
             const table = new DataTable('#example', {
                 serverSide: true,
                 processing: false,
@@ -194,13 +176,13 @@ static procedure FWWebExExample_007(cHTML as character) as character
                     'print',
                     {
                         extend: 'excelHtml5',
-                        title: 'u_FWWebExExample_007',
+                        title: 'u_FWWebExExample_018',
                         filename: 'relatorio_excel',
                         autoFilter: true
                     },
                     {
                         extend: 'pdf',
-                        title: 'u_FWWebExExample_007',
+                        title: 'u_FWWebExExample_018',
                         filename: 'relatorio_pdf'
                     }
                 ],
@@ -212,14 +194,13 @@ static procedure FWWebExExample_007(cHTML as character) as character
                         '-1': 'Todos' //https://datatables.net/reference/option/lengthMenu
                     }
                 },
-                "preDrawCallback": function(settings) {
+                preDrawCallback: function (settings) {
                     $('#custom-loader').show();
+                    console.log('preDrawCallback: Starting table draw');
                 },
-                "drawCallback": function(settings) {
+                drawCallback: function (settings) {
                     $('#custom-loader').hide();
-                    // This drawCallback ensures consistent table height across pages.
-                    // It calculates how many empty rows are needed to fill the remaining space,
-                    // and appends them to the table so all pages have the same visual height.
+                    console.log('drawCallback: Table draw completed, rows:', this.api().rows({ page: 'current' }).count());
                     const api = this.api();
                     const rows = api.rows({ page: 'current' }).count();
                     const pageSize = api.page.len();
@@ -231,95 +212,165 @@ static procedure FWWebExExample_007(cHTML as character) as character
                 ajax: function (data, callback) {
                     const pageNumber = Math.floor(data.start / data.length) + 1;
                     const rowsPerPage = data.length === -1 ? 999999 : data.length;
-                    fetch('https://localhost:9898/rest/callProcRestCrudTLPP/post/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            <Autorization>,
-                            <DNATechAuth>
+
+                    // Configurar o payload da requisicao
+                    const request = {
+                        ClassName: 'userRestCrudTLPPCoreFunction',
+                        FunctionName: 'dna.tech.codAliasPost',
+                        codAlias: 'SRA',
+                        yesFields: 'RA_FILIAL,RA_MAT,RA_APELIDO,RA_CC,RA_SALARIO,RA_ADTPOSE,RA_CATFUNC,RA_DEPIR,RA_SEXO',
+                        Filter: {
+                            RA_SEXO: 'M'
                         },
-                        body: JSON.stringify({
-                            ClassName: 'userRestCrudTLPPCoreFunction',
-                            FunctionName: 'dna.tech.codAliasPost',
-                            codAlias: 'SRA',
-                            yesFields: 'RA_FILIAL,RA_MAT,RA_APELIDO,RA_CC,RA_SALARIO,RA_ADTPOSE,RA_CATFUNC,RA_DEPIR,RA_SEXO',
-                            Filter: {
-                                RA_SEXO: 'M'
-                            },
-                            PageNumber: pageNumber,
-                            RowspPage: rowsPerPage,
-                            cEmp: '99',
-                            cFil: '01',
-                            lChkPrepEnv: false,
-                            lHTTPCTLen: true,
-                            lFWHTTpEncode: true,
-                            cHTTPCTType: 'application/json; charset=UTF-8',
-                            lHTTPCTType: true
-                        })
-                    })
-                    .then(res => {
-                        if (!res.ok) throw new Error('HTTP ' + res.status);
-                        return res.text();
-                    })
-                    .then(text => {
-                        console.log('RAW response:', text);
-                        const json = JSON.parse(text);
-                        if (!json.table || !json.table.items) throw new Error('JSON incompleto');
-                        const rows = json.table.items.map(row => {
-                            const i = row.detail.items;
-                            return [
-                                        i.RA_FILIAL || '',
-                                        i.RA_MAT || '',
-                                        i.RA_APELIDO || '',
-                                        i.RA_CC || '',
-                                        i.RA_SALARIO || '',
-                                        i.RA_ADTPOSE || '',
-                                        i.RA_CATFUNC || '',
-                                        i.RA_DEPIR || '',
-                                        i.RA_SEXO || ''
-                                    ];
-                        });
-                        callback({
-                            data: rows,
-                            recordsTotal: json.TotalRows,
-                            recordsFiltered: json.TotalRows
-                        });
-                    })
-                    .catch(err => console.error('Erro ao carregar dados:', err));
+                        PageNumber: pageNumber,
+                        RowspPage: rowsPerPage,
+                        cEmp: '99',
+                        cFil: '01',
+                        lChkPrepEnv: false,
+                        lHTTPCTLen: true,
+                        lFWHTTpEncode: true,
+                        cHTTPCTType: 'application/json; charset=UTF-8',
+                        lHTTPCTType: true
+                    };
+
+                    // Criar um ID unico para a requisicao
+                    const requestId = `request_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                    console.log('Sending request via WebSocket:', { requestId, request });
+
+                    // Configurar listener para a resposta
+                    const handleResponse = (event) => {
+                        console.log('Received dataResponse event:', event);
+                        if (!event.protheusResponse) {
+                            console.warn('No protheusResponse in event');
+                            return;
+                        }
+                        /*
+                        if (event.protheusResponse.requestId !== requestId) {
+                            console.warn('RequestId mismatch:', {
+                                received: event.protheusResponse.requestId,
+                                expected: requestId
+                            });
+                            return;
+                        }*/
+
+                        try {
+                            const json = event.protheusResponse;
+                            console.log('Response data:', json);
+
+                            if (!json || !json.table || !json.table.items) {
+                                throw new Error('Incomplete JSON: Missing table or items');
+                            }
+
+                            const rows = json.table.items.map(row => {
+                                const i = row.detail ? row.detail.items : {};
+                                return [
+                                    i.RA_FILIAL || '',
+                                    i.RA_MAT || '',
+                                    i.RA_APELIDO || '',
+                                    i.RA_CC || '',
+                                    i.RA_SALARIO || '',
+                                    i.RA_ADTPOSE || '',
+                                    i.RA_CATFUNC || '',
+                                    i.RA_DEPIR || '',
+                                    i.RA_SEXO || ''
+                                ];
+                            });
+
+                            console.log('Mapped rows:', rows);
+                            callback({
+                                data: rows,
+                                recordsTotal: json.TotalRows || rows.length,
+                                recordsFiltered: json.TotalRows || rows.length
+                            });
+                            console.log('Callback invoked with data');
+                        } catch (err) {
+                            console.error('Error processing response:', err);
+                            callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
+                        } finally {
+                            // Only remove listener if the correct requestId was processed
+                            if (event.protheusResponse.requestId === requestId) {
+                                twebchannel.eventTarget.removeEventListener('dataResponse', handleResponse);
+                                console.log('Removed dataResponse listener for requestId:', requestId);
+                            }
+                        }
+                    };
+
+                    // Adicionar listener para a resposta
+                    twebchannel.eventTarget.addEventListener('dataResponse', handleResponse);
+
+                    // Enviar a requisicao via WebSocket
+                    if (twebchannel && twebchannel.gotConnection) {
+                        twebchannel.jsToAdvpl('CALLBACK_EXEC', JSON.stringify({ ...request, requestId }));
+                    } else {
+                        console.error('WebSocket not connected.');
+                        callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
+                    }
                 }
             });
-             //captura do evento de processamento
+
+            // Captura do evento de processamento
             table.on('processing.dt', function (e, settings, processing) {
+                console.log('Processing event:', processing ? 'Started' : 'Finished');
                 if (processing) {
                     $('#custom-loader').show();
                 } else {
                     $('#custom-loader').hide();
                 }
             });
+
+            // Configurar o recebimento de mensagens do backend via advplToJs
+            twebchannel.advplToJs = function (codeType, codeContent, objectName) {
+                console.log('advplToJs called:', { codeType, codeContent, objectName });
+
+                if (codeType === 'CALLBACK_RESPONSE') {
+                    try {
+                        const response = JSON.parse(codeContent);
+                        console.log('Parsed CALLBACK_RESPONSE:', response);
+                        twebchannel.eventTarget.dispatchEvent(new FwEventData('dataResponse', response));
+                    } catch (err) {
+                        console.error('Error parsing advplToJs response:', err);
+                        console.error('Raw codeContent:', codeContent);
+                    }
+                } else {
+                    console.warn('Unexpected codeType received in advplToJs:', codeType);
+                }
+            };
+
+            // Monitor WebSocket or MessageChannel for debugging
+            if (twebchannel.remoteType !== 5) {
+                console.log('WebSocket connection status:', twebchannel.gotConnection ? 'Connected' : 'Disconnected');
+                twebchannel.eventTarget.addEventListener('twebchannelready', () => {
+                    console.log('twebchannelready event fired: WebSocket connected');
+                });
+            } else {
+                twebchannel.channel.port1.onmessage = function(event) {
+                    console.log('MessageChannel message received:', event.data);
+                    const data = event.data;
+                    const messageType = (data.type || 'UNDEFINED').toUpperCase();
+                    switch (messageType) {
+                        case 'CONNECTED':
+                            window.dialog = window.dialog || {};
+                            window.dialog.jsToAdvpl = twebchannel.sendMessageChannel.bind(twebchannel);
+                            if (typeof twebchannel.callback === 'function') twebchannel.callback();
+                            break;
+                        case 'DISCONNECTED':
+                            console.log('Received DISCONNECTED message:', event);
+                            break;
+                        case 'EXEC':
+                            console.log('Received EXEC message:', data);
+                            twebchannel.onReceiveAdvplToJs(data.value.type, data.value.content);
+                            break;
+                        case 'RETURN':
+                            console.log('Received RETURN message:', event);
+                            break;
+                        default:
+                            console.error('Invalid message type:', messageType, event);
+                            break;
+                    }
+                };
+            }
         });
     endContent
-
-    if (!FindClass("DNA.TECH.USERRESTCRUDTLPP"))
-        //Considerando que callProcRestCrudTLPP depende de DNA.TECH.USERRESTCRUDTLPP
-        //u_callProcRestCrudTLPPEx007 atuara como um mock da callProcRestCrudTLPP.
-        cScript:=WebExHelper():StrReplace(;
-            cScript;
-            ,{"callProcRestCrudTLPP":"u_callProcRestCrudTLPPEx007"};
-        )
-    else
-        cDNATechAuth:=MemoRead("\dna.tech\authentication\authentication.aut")
-        cDNATechAuth:=Encode64("token:"+cDNATechAuth)
-        cDNATechAuth:="X-DNATech-Auth-Token: "+cDNATechAuth
-        cDNATechAuth:=WebExHelper():ConvertHeaderToJSObject(cDNATechAuth)
-        cScript:=WebExHelper():StrReplace(cScript,{{"<DNATechAuth>",cDNATechAuth}})
-    endif
-    cScript:=WebExHelper():StrReplace(;
-        cScript;
-       ,{;
-            {"<Autorization>",cAutorization};
-           ,{"https://localhost:9898/rest/",cRESTURL};
-        };
-    )
 
     oFWWebExScript:SetContent(cScript)
     oFWWebExScript:SetExternalAssets(.T.)
@@ -347,14 +398,11 @@ static procedure FWWebExExample_007(cHTML as character) as character
 
 return(cHTMLFile)
 
-//Considerando que callProcRestCrudTLPP depende de DNA.TECH.USERRESTCRUDTLPP
-//u_callProcRestCrudTLPPEx007 atuara como um mock da callProcRestCrudTLPP.
-@Post(endpoint="/u_callProcRestCrudTLPPEx007/post/",description="u_callProcRestCrudTLPPEx007")
-function u_callProcRestCrudTLPPEx007()
+function u_callProcRestCrudTLPPEx018(oTWebChannel,cCodeType,cCodeContent,aCallBackAct,oTWebEngine) as variant
 
     local cJSON as character
 
-    local jHeader as json
+    local jReturn as variant
 
     beginContent var cJSON
 {
@@ -556,14 +604,8 @@ function u_callProcRestCrudTLPPEx007()
 }
     endContent
 
-    jHeader:=JSONObject():New()
-    jHeader["Content-Type"]:="application/json; charset=utf-8"
-    jHeader["Cache-Control"]:="no-cache"
-    jHeader["Content-Length"]:=LTrim(Str(Len(cJSON)))
+    jReturn:=JSONObject():New()
+    jReturn["xContent"]:=JSONObject():New()
+    jReturn["xContent"]:FromJSON(cJSON)
 
-    oRest:setHeaderResponse(jHeader)
-    oRest:SetResponse(cJSON)
-
-    FreeObj(@jHeader)
-
-return(.T.)
+return(jReturn)

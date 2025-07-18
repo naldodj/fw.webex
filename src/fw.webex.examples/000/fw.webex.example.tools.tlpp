@@ -37,7 +37,7 @@ static __cUserPassWord as character
 class FWExampleTools
 
     static method Execute(bExecute as codeblock,cTitle as character,lPrepareEnvironment as logical,lChangeCompanyAndBranch as logical) as variant
-    static method HtmlFileShow(cHTML as character,cTitle as character,cHTMLFile as character) as variant
+    static method HtmlFileShow(cHTML as character,cTitle as character,cHTMLFile as character,bJSToAdvPL as codeblock,bCallBack as codeblock,cCallBackActRet as character) as variant
     static method GetRESTCredential(cUSR as character,cPDW as character,cRESTURL as character,lUseOAuth2 as logical) as logical
     static method ChangeCompanyAndBranch(cCompany as character,cBranch as character,lFirstAccess as logical,cStack as character)
 
@@ -116,7 +116,7 @@ static method Execute(bExecute,cTitle,lPrepareEnvironment,lChangeCompanyAndBranc
 
 return
 
-static method HtmlFileShow(cHTML,cTitle,cHTMLFile,oTWebChannel) class FWExampleTools
+static method HtmlFileShow(cHTML,cTitle,cHTMLFile,oTWebChannel,bJSToAdvPL,bCallBack,cCallBackActRet) class FWExampleTools
 
     local aButtons as array
 
@@ -157,6 +157,9 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile,oTWebChannel) class FWExampleT
     paramtype 2 var cTitle as character
     paramtype 3 var cHTMLFile as character
     paramtype 3 var oTWebChannel as object class TWEBCHANNEL optional
+    paramtype 4 var bJSToAdvPL as block optional
+    paramtype 5 var bCallBack as block optional
+    paramtype 6 var cCallBackActRet as character optional
 
     lTWebChannel:=(ValType(oTWebChannel)=="O")
 
@@ -260,8 +263,29 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile,oTWebChannel) class FWExampleT
                 oTWebChannel:Connect()
             endif
 
+            if (!oTWebChannel:lConnected)
+                oTWebChannel:Connect()
+                if (!oTWebChannel:lConnected)
+                    ApMsgInfo("Falha ao Conectar ao WebSocket",ProcName())
+                    break
+                endif
+            endif
+
+            if (ValType(bJSToAdvPL)=="B")
+                oTWebChannel:bJSToAdvPL:=bJSToAdvPL
+            endif
+
+            if (ValType(bCallBack)=="B")
+                oTWebChannel:bSetGet:=bCallBack
+            endif
+
+            if (ValType(cCallBackActRet)=="C")
+                oTWebChannel:cMSG:=cCallBackActRet
+            endif
+
             oTWebEngine:=TWebEngine():New(oDlg,nTop,nLeft,nRight,nBottom,/*cURL*/,oTWebChannel:nPort)
             oTWebEngine:Align:=CONTROL_ALIGN_ALLCLIENT
+            WebApp():SetTWebEngine(oTWebEngine)
 
             nTop:=oFWDefSize:GetDimension("ButtonActions","LININI")
             nBottom:=oFWDefSize:GetDimension("ButtonActions","LINEND")

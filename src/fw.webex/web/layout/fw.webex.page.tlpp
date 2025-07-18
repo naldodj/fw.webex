@@ -329,6 +329,17 @@ method RenderHTML() class WebExPage
                     .:SetContent("https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js")
                 END WEBEXOBJECT
             //Bootstrap Optional JavaScript
+            //TOTVS Script
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://localhost:1234/app-root/preindex_env_environment/twebchannel.js")
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://localhost:1234/app-root/preindex_env_environment/totvstec.js")
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://localhost:1234/app-root/preindex_env_environment/fwprotheus.js")
+                END WEBEXOBJECT
+            //TOTVS Script
             ***************************************************************************************************************************
             //Custom Header
             jHeader:=oPageHeader:GetHeader()
