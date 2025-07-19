@@ -107,6 +107,7 @@ method RenderHTML() class WebExPage
     local cHTML as character
     local cTheme as character
     local cRestURL as character
+    local cEnvServer as character
     local cPageStyle as character
     local cPageScript as character
     local cAPPRootURI as character
@@ -345,21 +346,22 @@ method RenderHTML() class WebExPage
             aEval(jHeadScripts:GetNames(),{|cName|oPageHeader:AddChild(jHeadScripts[cName])})
             ***************************************************************************************************************************
             //TOTVS Script
-                //TODO: Rever a forma de Obter app-root
+                cEnvServer:=Alltrim(Lower(GetEnvServer()))
                 cSRVIniName:=GetSrvIniName()
                 cRestURL:=AllTrim(GetPvProfString("FWWEBEX","RestURL","",cSRVIniName))
+                //TODO: Rever a forma de Obter app-root
                 cAPPRootURI:=AllTrim(GetPvProfString("FWWEBEX","AppRootURI",cRestURL,cSRVIniName))
                 if (Right(cAPPRootURI,1)!="/")
                     cAPPRootURI+="/"
                 endif
                 WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent(cAPPRootURI+"preindex_env_environment/twebchannel.js")
+                    .:SetContent(cAPPRootURI+"preindex_env_"+cEnvServer+"/twebchannel.js")
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent(cAPPRootURI+"preindex_env_environment/totvstec.js")
+                    .:SetContent(cAPPRootURI+"preindex_env_"+cEnvServer+"/totvstec.js")
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent(cAPPRootURI+"preindex_env_environment/fwprotheus.js")
+                    .:SetContent(cAPPRootURI+"preindex_env_"+cEnvServer+"/fwprotheus.js")
                 END WEBEXOBJECT
             //TOTVS Script
             ***************************************************************************************************************************
