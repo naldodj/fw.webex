@@ -300,16 +300,6 @@ static procedure FWWebExExample_018(cHTML as character) as character
                 }
             });
 
-            // Captura do evento de processamento
-            table.on('processing.dt', function (e, settings, processing) {
-                console.log('Processing event:', processing ? 'Started' : 'Finished');
-                if (processing) {
-                    $('#custom-loader').show();
-                } else {
-                    $('#custom-loader').hide();
-                }
-            });
-
             // Configurar o recebimento de mensagens do backend via advplToJs
             twebchannel.advplToJs = function (codeType, codeContent, objectName) {
                 console.log('advplToJs called:', { codeType, codeContent, objectName });
@@ -328,90 +318,16 @@ static procedure FWWebExExample_018(cHTML as character) as character
                 }
             };
 
-            // Monitor WebSocket or MessageChannel for debugging
-            if (twebchannel.remoteType !== 5) {
-                console.log('WebSocket connection status:', twebchannel.gotConnection ? 'Connected' : 'Disconnected');
-                twebchannel.eventTarget.addEventListener('twebchannelready', () => {
-                    console.log('twebchannelready event fired: WebSocket connected');
-                });
-            } else {
-                twebchannel.channel.port1.onmessage = function(event) {
-                    console.log('MessageChannel message received:', event.data);
-                    const data = event.data;
-                    const messageType = (data.type || 'UNDEFINED').toUpperCase();
-                    switch (messageType) {
-                        case 'CONNECTED':
-                            window.dialog = window.dialog || {};
-                            window.dialog.jsToAdvpl = twebchannel.sendMessageChannel.bind(twebchannel);
-                            if (typeof twebchannel.callback === 'function') twebchannel.callback();
-                            console.log('MessageChannel CONNECTED');
-                            break;
-                        case 'DISCONNECTED':
-                            console.log('Received DISCONNECTED message:', event);
-                            break;
-                        case 'EXEC':
-                            console.log('Received EXEC message:', data);
-                            if (data.value && data.value.type) {
-                                twebchannel.onReceiveAdvplToJs(data.value.type, data.value.content);
-                            } else {
-                                console.warn('Invalid EXEC message: Missing value or type', data);
-                            }
-                            break;
-                        case 'RETURN':
-                            console.log('Received RETURN message:', event);
-                            break;
-                        case 'MS_WEBENGINERUNJAVASCRIPT':
-                            console.log('Processing MS_WEBENGINERUNJAVASCRIPT:', data);
-                            try {
-                                if (data.value) {
-                                    eval(data.value); // Execute JavaScript code
-                                } else {
-                                    console.warn('MS_WEBENGINERUNJAVASCRIPT missing value:', data);
-                                }
-                            } catch (err) {
-                                console.error('Error evaluating MS_WEBENGINERUNJAVASCRIPT:', err, 'Code:', data.value);
-                            }
-                            break;
-                        default:
-                            console.warn('Unexpected message type:', messageType, event);
-                            break;
-                    }
-                };
-            }
-
-            // Override window.onmessage to handle unexpected messages
-            window.onmessage = function(event) {
-                console.log('window.onmessage received:', event.data);
-                const data = event.data;
-                const messageType = (data.type || 'UNDEFINED').toUpperCase();
-
-                // Check origin for security
-                const origin = getParam('totvstec_remote_origin') || '*';
-                if (origin !== '*' && event.origin !== origin) {
-                    console.warn('Unexpected origin:', event.origin, 'Expected:', origin);
-                    return;
-                }
-
-                if (messageType === 'MS_WEBENGINERUNJAVASCRIPT') {
-                    console.log('Processing MS_WEBENGINERUNJAVASCRIPT:', data);
-                    try {
-                        if (data.value) {
-                            eval(data.value);
-                        } else {
-                            console.warn('MS_WEBENGINERUNJAVASCRIPT missing value:', data);
-                        }
-                    } catch (err) {
-                        console.error('Error evaluating MS_WEBENGINERUNJAVASCRIPT:', err, 'Code:', data.value);
-                    }
+            // Captura do evento de processamento
+            table.on('processing.dt', function (e, settings, processing) {
+                console.log('Processing event:', processing ? 'Started' : 'Finished');
+                if (processing) {
+                    $('#custom-loader').show();
                 } else {
-                    console.warn('Unexpected message type in window.onmessage:', messageType, event);
-                    // Fallback: Treat as EXEC if it resembles a response
-                    if (data.value && data.value.type === 'CALLBACK_RESPONSE') {
-                        console.log('Fallback: Processing as EXEC message:', data.value);
-                        twebchannel.onReceiveAdvplToJs(data.value.type, data.value.content);
-                    }
+                    $('#custom-loader').hide();
                 }
-            };
+            });
+
         });
     endContent
 

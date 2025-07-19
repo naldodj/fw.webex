@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-18 21:08 UTC naldodj (Fix WebSocket connection???)
+  ! * src/fw.webex.examples/018/fw.webex.example.018.tlpp
+
 2025-07-18 19:57 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex.examples/007/fw.webex.example.007.tlpp
 
