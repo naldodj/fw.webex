@@ -3,6 +3,9 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-20 07:55 UTC naldodj (Only persist changed parameters to INI file)
+  * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
+
 2025-07-20 07:33 UTC naldodj (Fix MV_PAR04 => MV_PAR06)
   ! Fix MV_PAR04 => MV_PAR06
     * src/fw.webex.examples/000/fw.webex.example.tools.tlpp

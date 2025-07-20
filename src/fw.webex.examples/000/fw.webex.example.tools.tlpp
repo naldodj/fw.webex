@@ -452,29 +452,39 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
         if (empty(cClientID))
             cClientID:=__cUserID
         endif
-        WritePProString("FWWEBEX","ClientID",cClientID,cSRVIniName)
+        if (!(Upper(cClientID)==Upper(AllTrim(GetPvProfString("FWWEBEX","ClientID","",cSRVIniName)))))
+            WritePProString("FWWEBEX","ClientID",cClientID,cSRVIniName)
+        endif
         FWExampleTools():GetClientID(cClientID)
 
         cClientSecret:=AllTrim(aParamRet[__PARAM_CLIENT_SECRET__])
         if (empty(cClientSecret))
             cClientSecret:=AllTrim(aParamRet[__PARAM_PASSWORD__])
         endif
-        WritePProString("FWWEBEX","ClientSecret",cClientSecret,cSRVIniName)
+        if (!(Upper(cClientSecret)==Upper(AllTrim(GetPvProfString("FWWEBEX","ClientSecret","",cSRVIniName)))))
+            WritePProString("FWWEBEX","ClientSecret",cClientSecret,cSRVIniName)
+        endif
         FWExampleTools():GetClientSecret(cClientSecret)
 
         cUSR:=AllTrim(aParamRet[__PARAM_USER_NAME__])
-        WritePProString("FWWEBEX","UserName",cUSR,cSRVIniName)
+        if (!(Upper(cUSR)==Upper(AllTrim(GetPvProfString("FWWEBEX","UserName","",cSRVIniName)))))
+            WritePProString("FWWEBEX","UserName",cUSR,cSRVIniName)
+        endif
         FWExampleTools():GetUserName(cUSR)
 
         cPDW:=AllTrim(aParamRet[__PARAM_PASSWORD__])
-        WritePProString("FWWEBEX","Password",cPDW,cSRVIniName)
+        if (!(Upper(cPDW)==Upper(AllTrim(GetPvProfString("FWWEBEX","Password","",cSRVIniName)))))
+            WritePProString("FWWEBEX","Password",cPDW,cSRVIniName)
+        endif
         FWExampleTools():GetUserPassWord(cPDW)
 
         cRESTURL:=AllTrim(aParamRet[__PARAM_REST_URL__])
         if (Right(cRESTURL,1)!="/")
             cRESTURL+="/"
         endif
-        WritePProString("FWWEBEX","RestURL",cRESTURL,cSRVIniName)
+        if (!(Upper(cRESTURL)==Upper(AllTrim(GetPvProfString("FWWEBEX","RestURL","",cSRVIniName)))))
+            WritePProString("FWWEBEX","RestURL",cRESTURL,cSRVIniName)
+        endif
 
         lUseOAuth2:=aParamRet[__PARAM_USE_OAUTH2__]
         if (lUseOAuth2)
@@ -484,7 +494,9 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
                 if (Right(cRESTURLOAuth2,1)=="/")
                     cRESTURL:=SubStr(cRESTURLOAuth2,1,Len(cRESTURLOAuth2)-1)
                 endif
-                WritePProString("FWWEBEX","OAuth2URL",cRESTURLOAuth2,cSRVIniName)
+                if (!(Upper(cRESTURLOAuth2)==Upper(AllTrim(GetPvProfString("FWWEBEX","OAuth2URL","",cSRVIniName)))))
+                    WritePProString("FWWEBEX","OAuth2URL",cRESTURLOAuth2,cSRVIniName)
+                endif
             endif
         endif
 
