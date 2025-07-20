@@ -34,6 +34,7 @@
                         |           +---> <th>Salario</th>
                         |           +---> <th>Adt.Servico</th>
                         |           +---> <th>Cat.Func.</th>
+                        |           +---> <th>Dep.IRRF.</th>
                         |           +---> <th>Sexo</th>
                         |
                         +---> <tbody> (preenchido dinamicamente via fetch)
@@ -170,6 +171,9 @@ static procedure FWWebExExample_008(cHTML as character) as character
                                     END WEBEXOBJECT
                                     WITH WEBEXOBJECT CLASS WebExControl TYPE th
                                         .:SetContent("Cat.Func.")
+                                    END WEBEXOBJECT
+                                    WITH WEBEXOBJECT CLASS WebExControl TYPE th
+                                        .:SetContent("Dep.IRRF.")
                                     END WEBEXOBJECT
                                     WITH WEBEXOBJECT CLASS WebExControl TYPE th
                                         .:SetContent("Sexo")

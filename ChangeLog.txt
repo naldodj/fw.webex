@@ -3,6 +3,12 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2025-07-20 09:28 UTC naldodj (Fix Reader DataTable)
+  ! Fix Reader DataTable
+    * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+    * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+    * src/fw.webex.examples/018/fw.webex.example.018.tlpp
+
 2025-07-20 09:06 UTC naldodj (feat: add retry logic and animated loader for TWebChannel connection attempts)
   * src/fw.webex.examples/018/fw.webex.example.018.tlpp
 

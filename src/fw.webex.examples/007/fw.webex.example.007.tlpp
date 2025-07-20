@@ -25,6 +25,7 @@
       |           |           +---> <th>Salario</th>
       |           |           +---> <th>Adt.Servico</th>
       |           |           +---> <th>Cat.Func.</th>
+      |           |           +---> <th>DEP.IRRF</th>
       |           |           +---> <th>Sexo</th>
       |           |
       |           +---> <tbody> (populado dinamicamente via fetch AJAX)
@@ -178,6 +179,7 @@ static procedure FWWebExExample_007(cHTML as character) as character
                             <th>Sal&aacute;rio</th>
                             <th>Adt.Servi&ccedil;o</th>
                             <th>Cat.Func.</th>
+                            <th>Dep.IRRF.</th>
                             <th>Sexo</th>
                         </tr>
                     </thead>
