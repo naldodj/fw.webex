@@ -430,19 +430,19 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
     endif
     cRESTURLOAuth2:=PadR(cRESTURLOAuth2,200)
 
-    MV_PAR04:=.F.
-
-    aAdd(aParamBox,{1,"ClientID",cClientID,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-    aAdd(aParamBox,{1,"ClientSecret",cClientSecret,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-    aAdd(aParamBox,{1,"UserName",cUSR,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-    aAdd(aParamBox,{1,"Password",cPDW,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-    aAdd(aParamBox,{1,"URL REST",cRESTURL,"@","NaoVazio()","","AllWaysTrue()",200,.T.})
-    aAdd(aParamBox,{4,"OAuth2",MV_PAR04,"",100,"AllWaysTrue()",.F.})
-    aAdd(aParamBox,{1,"URL REST OAuth2",cRESTURLOAuth2,"@","IF(MV_PAR04,NaoVazio(),AllWaysTrue())","","MV_PAR04",200,.T.})
-
     begin sequence
 
-        lGetRESTCredential:=ParamBox(@aParamBox,"Selecione os Parametros",@aParamRet,nil,nil,.T.,nil,nil,nil,nil,.T.,.T.)
+        SaveInter()
+            MV_PAR06:=.F.
+            aAdd(aParamBox,{1,"ClientID",cClientID,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
+            aAdd(aParamBox,{1,"ClientSecret",cClientSecret,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
+            aAdd(aParamBox,{1,"UserName",cUSR,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
+            aAdd(aParamBox,{1,"Password",cPDW,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
+            aAdd(aParamBox,{1,"URL REST",cRESTURL,"@","NaoVazio()","","AllWaysTrue()",200,.T.})
+            aAdd(aParamBox,{4,"OAuth2",MV_PAR06,"",100,"AllWaysTrue()",.F.})
+            aAdd(aParamBox,{1,"URL REST OAuth2",cRESTURLOAuth2,"@","IF(MV_PAR06,NaoVazio(),AllWaysTrue())","","MV_PAR06",200,.T.})
+            lGetRESTCredential:=ParamBox(@aParamBox,"Selecione os Parametros",@aParamRet,nil,nil,.T.,nil,nil,nil,nil,.T.,.T.)
+        RestInter()
 
         if (!lGetRESTCredential)
             break
