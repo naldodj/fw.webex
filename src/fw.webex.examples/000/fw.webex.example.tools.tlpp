@@ -399,34 +399,34 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
     paramtype 5 var jGetAuthorization as json optional
     paramtype 6 var lUseOAuth2 as logical optional default .F.
 
-    cClientID:=GetPvProfString("FWWEBEX","ClientID","",cSRVIniName)
+    cClientID:=AllTrim(GetPvProfString("FWWEBEX","ClientID","",cSRVIniName))
     if (Empty(cClientID))
         cClientID:=__cUserID
     endif
     cClientID:=PadR(cClientID,100)
 
-    cClientSecret:=GetPvProfString("FWWEBEX","ClientSecret","",cSRVIniName)
+    cClientSecret:=AllTrim(GetPvProfString("FWWEBEX","ClientSecret","",cSRVIniName))
     if (Empty(cClientSecret))
-        cClientSecret:=GetPvProfString("FWWEBEX","Password","",cSRVIniName)
+        cClientSecret:=AllTrim(GetPvProfString("FWWEBEX","Password","",cSRVIniName))
     endif
     cClientSecret:=PadR(cClientSecret,100)
 
     if (Empty(cUSR))
-        cUSR:=GetPvProfString("FWWEBEX","UserName","",cSRVIniName)
+        cUSR:=AllTrim(GetPvProfString("FWWEBEX","UserName","",cSRVIniName))
     endif
     cUSR:=PadR(cUSR,100)
     if (Empty(cPDW))
-        cPDW:=GetPvProfString("FWWEBEX","Password","",cSRVIniName)
+        cPDW:=AllTrim(GetPvProfString("FWWEBEX","Password","",cSRVIniName))
     endif
 
     cPDW:=PadR(cPDW,100)
     if (Empty(cRESTURL))
-        cRESTURL:=GetPvProfString("FWWEBEX","RestURL","",cSRVIniName)
+        cRESTURL:=AllTrim(GetPvProfString("FWWEBEX","RestURL","",cSRVIniName))
     endif
     cRESTURL:=PadR(cRESTURL,200)
 
     if (Empty(cRESTURLOAuth2))
-        cRESTURLOAuth2:=GetPvProfString("FWWEBEX","OAuth2URL","",cSRVIniName)
+        cRESTURLOAuth2:=AllTrim(GetPvProfString("FWWEBEX","OAuth2URL","",cSRVIniName))
     endif
     cRESTURLOAuth2:=PadR(cRESTURLOAuth2,200)
 
