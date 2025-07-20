@@ -19,8 +19,6 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-#include "shell.ch"
-
 #define __PARAM_CLIENT_ID__ 1
 #define __PARAM_CLIENT_SECRET__ 2
 #define __PARAM_USER_NAME__ 3

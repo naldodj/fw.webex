@@ -36,6 +36,17 @@ Released to Public Domain.
         #include "directry.ch"
     #ENDIF
 
+    #IFNDEF _DBSTRUCT_CH_
+        #include "dbstruct.ch"
+    #ENDIF
+
+    #IFNDEF _SHELL_CH_
+        #IFNDEF SW_HIDE
+            #DEFINE _SHELL_CH_
+            #include "shell.ch"
+        #ENDIF
+    #ENDIF
+
     #IFNDEF _PARMTYPE_CH
         #DEFINE _PARMTYPE_CH
         #include "parmtype.ch"
