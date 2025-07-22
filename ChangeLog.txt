@@ -5,6 +5,12 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
 */
 
+2025-07-22 22:29 UTC naldodj (makepatch)
+  + bin/patches/ext.txt
+  + bin/patches/makepatch.bat
+  + bin/patches/makepatch.lst
+  + bin/patches/makepatch.ps1
+
 2025-07-22 13:40 UTC naldodj (% New Menu Option: FWWebEx Config)
   * src/fw.webex.examples/000/fw.webex.example.000.tlpp
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp

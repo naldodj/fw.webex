@@ -1,0 +1,1 @@
+.\appserver.exe -compile -genpatch -files=makepatch.lst -env=compile -patchtype=ptm -outgenpatch=C:\TOTVS\patches\generate\
