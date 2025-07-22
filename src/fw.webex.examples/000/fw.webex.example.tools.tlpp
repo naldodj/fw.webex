@@ -26,6 +26,7 @@ namespace FWWebEx
 #define __PARAM_REST_URL__ 5
 #define __PARAM_USE_OAUTH2__ 6
 #define __PARAM_REST_URL_OAUTH2__ 7
+#define __PARAM_APPROOT_URI__ 8
 
 static __cUserID as character
 static __cClientSecret as character
@@ -386,6 +387,8 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
     local aParamBox:=Array(0) as array
     local aParamRet:=Array(0) as array
 
+    local cAppRootURI as character
+
     local cClientID as character
     local cClientSecret as character
     local cSRVIniName:=GetSrvIniName() as character
@@ -398,6 +401,9 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
     paramtype 4 var cRESTURLOAuth2 as character optional default AllTrim(GetPvProfString("FWWEBEX","OAuth2URL","",cSRVIniName))
     paramtype 5 var jGetAuthorization as json optional
     paramtype 6 var lUseOAuth2 as logical optional default .F.
+
+    cAppRootURI:=AllTrim(GetPvProfString("FWWEBEX","AppRootURI","",cSRVIniName))
+    cAppRootURI:=PadR(cAppRootURI,200)
 
     cClientID:=AllTrim(GetPvProfString("FWWEBEX","ClientID","",cSRVIniName))
     if (Empty(cClientID))
@@ -441,6 +447,7 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
             aAdd(aParamBox,{1,"URL REST",cRESTURL,"@","NaoVazio()","","AllWaysTrue()",200,.T.})
             aAdd(aParamBox,{4,"OAuth2",MV_PAR06,"",100,"AllWaysTrue()",.F.})
             aAdd(aParamBox,{1,"URL REST OAuth2",cRESTURLOAuth2,"@","IF(MV_PAR06,NaoVazio(),AllWaysTrue())","","MV_PAR06",200,.T.})
+            aAdd(aParamBox,{1,"APPRoot URI",cAppRootURI,"@","NaoVazio()","","AllWaysTrue()",200,.T.})
             lGetRESTCredential:=ParamBox(@aParamBox,"Selecione os Parametros",@aParamRet,nil,nil,.T.,nil,nil,nil,nil,.T.,.T.)
         RestInter()
 
@@ -498,6 +505,14 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
                     WritePProString("FWWEBEX","OAuth2URL",cRESTURLOAuth2,cSRVIniName)
                 endif
             endif
+        endif
+
+        cAppRootURI:=AllTrim(aParamRet[__PARAM_APPROOT_URI__])
+        if (Right(cAppRootURI,1)!="/")
+            cAppRootURI+="/"
+        endif
+        if (!(Upper(cAppRootURI)==Upper(AllTrim(GetPvProfString("FWWEBEX","AppRootURI","",cSRVIniName)))))
+            WritePProString("FWWEBEX","AppRootURI",cAppRootURI,cSRVIniName)
         endif
 
         jGetAuthorization:=FWExampleTools():GetAuthorization(cUSR,cPDW,cRESTURLOAuth2)

@@ -167,24 +167,30 @@ static function LoadMenu(oTDlg as object,jExamples as json) as object
     nCategories:=Len(aCategories)
 
     MENU oTMenu IMAGE "" OF oTDlg
-        MENUITEM oTMenuItem PROMPT cCadastro
         MENU
-            for nCategory:=1 to nCategories
-                cCategory:=aCategories[nCategory]
-                MENUITEM oTMenuItem PROMPT cCategory
-                MENU
-                    aNames:=aClone(jExamples[cCategory]:GetNames())
-                    nNames:=Len(aNames)
-                    for nName:=1 to nNames
-                        cName:=aNames[nName]
-                        bTMenuAction:=jExamples[cCategory][cName]
-                        MENUITEM oTMenuItem PROMPT cName
-                        oTMenuItem:bAction:=bTMenuAction
-                    next nName
-                    FWFreeArray(@aNames)
-                ENDMENU
-            next nCategory
+            MENUITEM oTMenuItem PROMPT "FWWebEx Config"
+            oTMenuItem:bAction:={||FWWebEx.FWExampleTools():GetRESTCredential()}
         ENDMENU
+        MENU
+            MENUITEM oTMenuItem PROMPT cCadastro
+            MENU
+                for nCategory:=1 to nCategories
+                    cCategory:=aCategories[nCategory]
+                    MENUITEM oTMenuItem PROMPT cCategory
+                    MENU
+                        aNames:=aClone(jExamples[cCategory]:GetNames())
+                        nNames:=Len(aNames)
+                        for nName:=1 to nNames
+                            cName:=aNames[nName]
+                            bTMenuAction:=jExamples[cCategory][cName]
+                            MENUITEM oTMenuItem PROMPT cName
+                            oTMenuItem:bAction:=bTMenuAction
+                        next nName
+                        FWFreeArray(@aNames)
+                    ENDMENU
+                next nCategory
+            ENDMENU
+        MENU
         MENU
             MENUITEM oTMenuItem PROMPT "Exit" ACTION if(ApMsgNoYes("Deseja sair?"),oTDlg:End(),.F.)
         ENDMENU
