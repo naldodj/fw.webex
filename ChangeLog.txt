@@ -1,58 +1,64 @@
 /* Encoding: UTF-8 (No BOM)  Notation (in 5th column):
      * Change  ! Fix  % Optimize  + Add  - Remove  ; Comment
    Entries may not always be in chronological/commit order.
-   See license at the end of file. */
+   See license at the end of file.
+   (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+*/
 
-2025-07-20 09:28 UTC naldodj (Fix Reader DataTable)
+2025-07-22 11:36 UTC naldodj (Issue: Erro na execução u_FWWebExExample_001 #6)
+  ! Issue: Erro na execução u_FWWebExExample_001 #6
+  * src/fw.webex.examples/000/fw.webex.template.bulk.action.table.tlpp
+
+2025-07-20 09:28 BRT naldodj (Fix Reader DataTable)
   ! Fix Reader DataTable
     * src/fw.webex.examples/007/fw.webex.example.007.tlpp
     * src/fw.webex.examples/008/fw.webex.example.008.tlpp
     * src/fw.webex.examples/018/fw.webex.example.018.tlpp
 
-2025-07-20 09:06 UTC naldodj (feat: add retry logic and animated loader for TWebChannel connection attempts)
+2025-07-20 09:06 BRT naldodj (feat: add retry logic and animated loader for TWebChannel connection attempts)
   * src/fw.webex.examples/018/fw.webex.example.018.tlpp
 
-2025-07-20 08:03 UTC naldodj (Only persist changed parameters to INI file)
+2025-07-20 08:03 BRT naldodj (Only persist changed parameters to INI file)
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 
-2025-07-20 07:55 UTC naldodj (Only persist changed parameters to INI file)
+2025-07-20 07:55 BRT naldodj (Only persist changed parameters to INI file)
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 
-2025-07-20 07:33 UTC naldodj (Fix MV_PAR04 => MV_PAR06)
+2025-07-20 07:33 BRT naldodj (Fix MV_PAR04 => MV_PAR06)
   ! Fix MV_PAR04 => MV_PAR06
     * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 
-2025-07-18 21:05 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-18 21:05 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * include/fw.webex.th
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
   * src/fw.webex.examples/018/fw.webex.example.018.tlpp
 
-2025-07-18 21:48 UTC naldodj (Fix preindex_env_ URI)
+2025-07-18 21:48 BRT naldodj (Fix preindex_env_ URI)
   ! * src/fw.webex/web/layout/fw.webex.page.tlpp
 
-2025-07-18 21:08 UTC naldodj (Fix WebSocket connection???)
+2025-07-18 21:08 BRT naldodj (Fix WebSocket connection???)
   ! * src/fw.webex.examples/018/fw.webex.example.018.tlpp
 
-2025-07-18 19:57 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-18 19:57 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex.examples/007/fw.webex.example.007.tlpp
 
-2025-07-18 19:38 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-18 19:38 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/web/layout/fw.webex.page.tlpp
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 
-2025-07-18 18:57 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-18 18:57 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
 
-2025-07-18 18:39 UTC naldodj (refactor: remove TimeOut and Force Redraw)
+2025-07-18 18:39 BRT naldodj (refactor: remove TimeOut and Force Redraw)
   * src/fw.webex.examples/018/fw.webex.example.018.tlpp
 
-2025-07-18 17:26 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-18 17:26 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/tools/fw.webex.webapp.tools.tlpp
   * src/fw.webex.examples/007/fw.webex.example.007.tlpp
   * src/fw.webex.examples/008/fw.webex.example.008.tlpp
   * src/fw.webex.examples/018/fw.webex.example.018.tlpp
 
-2025-07-18 16:05 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-18 16:05 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + New Example (Beta)
     + src/fw.webex.examples/018/fw.webex.example.018.tlpp
     + src/fw.webex.examples/018/README.md
@@ -78,7 +84,7 @@
     * src/fw.webex.examples/016/fw.webex.example.016.tlpp
     * src/fw.webex.examples/017/fw.webex.example.017.tlpp
 
-2025-07-18 00:02 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-18 00:02 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/tools/fw.webex.helper.tlpp
   * src/fw.webex/tools/fw.webex.webapp.tools.tlpp
   * src/fw.webex/web/control/fw.webex.control.tlpp
@@ -86,7 +92,7 @@
   * src/fw.webex.examples/007/fw.webex.example.007.tlpp
   * src/fw.webex/tools/fw.webex.url.tlpp
 
-2025-07-17 19:13 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-17 19:13 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/tools/fw.webex.helper.tlpp
   * src/fw.webex/web/component/fw.webex.table.tlpp
   * src/fw.webex/web/control/fw.webex.control.tlpp
@@ -98,13 +104,13 @@
   * src/fw.webex.examples/008/fw.webex.example.008.tlpp
   * src/fw.webex.examples/017/fw.webex.example.017.tlpp
 
-2025-07-17 16:26 UTC naldodj (Fix Issue: Protheus AppServer returns wrong MIME type for external assets)
+2025-07-17 16:26 BRT naldodj (Fix Issue: Protheus AppServer returns wrong MIME type for external assets)
   * include/fw.webex.th
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
   * src/fw.webex/web/layout/fw.webex.page.tlpp
   * src/fw.webex.examples/016/fw.webex.example.016.tlpp
 
-2025-07-17 12:16 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-17 12:16 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
   * src/fw.webex/web/component/fw.webex.alert.tlpp
   * src/fw.webex/web/component/fw.webex.button.tlpp
@@ -131,7 +137,7 @@
   * src/fw.webex.examples/016/fw.webex.example.016.tlpp
   * src/fw.webex.examples/017/fw.webex.example.017.tlpp
 
-2025-07-17 09:13 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-17 09:13 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/web/component/fw.webex.card.tlpp
   * src/fw.webex/web/component/fw.webex.cardkpi.tlpp
   * src/fw.webex.examples/010/fw.webex.example.010.tlpp
@@ -142,7 +148,7 @@
   !Fix AddClass
     * src/fw.webex/web/control/fw.webex.control.tlpp
 
-2025-07-16 19:42 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-16 19:42 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * README.md
   * src/fw.webex/web/component/fw.webex.fieldset.tlpp
   * src/fw.webex/web/component/fw.webex.form.tlpp
@@ -151,7 +157,7 @@
   * src/fw.webex.examples/005/fw.webex.example.005.tlpp
   * src/fw.webex.examples/017/fw.webex.example.017.tlpp
 
-2025-07-16 15:25 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-16 15:25 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + src/fw.webex/web/component/fw.webex.field.group.tlpp
   + src/fw.webex/web/component/fw.webex.input.group.tlpp
   * README.md
@@ -161,14 +167,14 @@
   * src/fw.webex.examples/005/fw.webex.example.005.tlpp
   * src/fw.webex.examples/017/fw.webex.example.017.tlpp
 
-2025-07-16 10:36 UTC naldodj (fallback: Use BrazilAPI when BuscaCEP fails)
+2025-07-16 10:36 BRT naldodj (fallback: Use BrazilAPI when BuscaCEP fails)
   * README.md
   * src/fw.webex.examples/003/fw.webex.example.003.tlpp
   * src/fw.webex.examples/005/fw.webex.example.005.tlpp
   * src/fw.webex.examples/006/fw.webex.example.006.tlpp
   * src/fw.webex.examples/017/fw.webex.example.017.tlpp
 
-2025-07-16 09:18 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-16 09:18 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
   * src/fw.webex/web/component/fw.webex.field.tlpp
   * src/fw.webex/web/component/fw.webex.fieldset.tlpp
@@ -178,13 +184,13 @@
   * src/fw.webex/web/control/fw.webex.control.tlpp
   * src/fw.webex/web/layout/fw.webex.page.tlpp
 
-2025-07-15 18:53 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-15 18:53 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/web/component/fw.webex.container.tlpp
   * src/fw.webex/web/component/fw.webex.table.tlpp
   * src/fw.webex/web/layout/fw.webex.main.tlpp
   * src/fw.webex.examples/009/fw.webex.example.009.tlpp
 
-2025-07-15 13:34 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-15 13:34 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + src/fw.webex/web/page/fw.webex.anchor.tlpp
   + src/fw.webex/web/page/fw.webex.blockquote.tlpp
   + src/fw.webex/web/page/fw.webex.div.tlpp
@@ -199,10 +205,10 @@
   * src/fw.webex/web/component/fw.webex.table.tlpp
   * src/fw.webex/web/control/fw.webex.control.tlpp
 
-2025-07-15 07:46 UTC naldodj (refactor: multiple structural and layout improvements across fw.webex.button.tlpp)
+2025-07-15 07:46 BRT naldodj (refactor: multiple structural and layout improvements across fw.webex.button.tlpp)
   * src/fw.webex/web/component/fw.webex.button.tlpp
 
-2025-07-14 22:57 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-14 22:57 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/web/component/fw.webex.alert.tlpp
   * src/fw.webex/web/component/fw.webex.button.tlpp
   * src/fw.webex/web/component/fw.webex.card.tlpp
@@ -221,11 +227,11 @@
   * src/fw.webex/web/component/fw.webex.table.tlpp
   * src/fw.webex.examples/000/fw.webex.template.bulk.action.table.tlpp
 
-2025-07-14 19:16 UTC naldodj (Disable lChangeCompanyAndBranch)
+2025-07-14 19:16 BRT naldodj (Disable lChangeCompanyAndBranch)
   * src/fw.webex.examples/005/fw.webex.example.005.tlpp
   * src/fw.webex.examples/017/fw.webex.example.017.tlpp
 
-2025-07-14 19:08 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-14 19:08 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + New Example
     + src/fw.webex.examples/017/fw.webex.example.017.tlpp
     + src/fw.webex.examples/017/README.md
@@ -244,17 +250,17 @@
     * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
     * src/fw.webex.examples/005/fw.webex.example.005.tlpp
 
-2025-07-13 17:35 UTC naldodj (Update Emogi Table)
+2025-07-13 17:35 BRT naldodj (Update Emogi Table)
   * src/fw.webex/tools/fw.webex.helper.tlpp
 
-2025-07-13 17:22 UTC naldodj (New Alarm URL)
+2025-07-13 17:22 BRT naldodj (New Alarm URL)
   * src/fw.webex.examples/016/fw.webex.example.016.tlpp
 
-2025-07-13 16:59 UTC naldodj (Fix Alarm URL)
+2025-07-13 16:59 BRT naldodj (Fix Alarm URL)
   ! Fix Alarm URL
     * src/fw.webex.examples/016/fw.webex.example.016.tlpp
 
-2025-07-13 16:02 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-13 16:02 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + src/fw.webex/tools/fw.webex.url.tlpp
   * src/fw.webex/tools/fw.webex.webapp.tools.tlpp
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
@@ -276,14 +282,14 @@
   * src/fw.webex.examples/015/fw.webex.example.015.tlpp
   * src/fw.webex.examples/016/fw.webex.example.016.tlpp
 
-2025-07-12 19:09 UTC naldodj (New Example: iFrame)
+2025-07-12 19:09 BRT naldodj (New Example: iFrame)
   + src/fw.webex.examples/016/fw.webex.example.016.tlpp
   + src/fw.webex.examples/016/README.md
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
   * src/fw.webex/tools/fw.webex.helper.tlpp
   * src/fw.webex.examples/000/fw.webex.example.000.tlpp
 
-2025-07-12 11:12 UTC naldodj (Fix: Restore usage of GetID() where dynamic object identification is required)
+2025-07-12 11:12 BRT naldodj (Fix: Restore usage of GetID() where dynamic object identification is required)
   ! (Fix: Restore usage of GetID() where dynamic object identification is required)
     * src/fw.webex/web/control/fw.webex.control.tlpp
   ! Fix: Moved the nuke button to after the presentation. Because deleting the HTML right after generating it is dumb, even by my standards.
@@ -302,10 +308,10 @@
     * src/fw.webex.examples/014/fw.webex.example.014.tlpp
     * src/fw.webex.examples/015/fw.webex.example.015.tlpp
 
-2025-07-12 10:24 UTC naldodj (Issue: Protheus AppServer returns wrong MIME type for external assets #2)
+2025-07-12 10:24 BRT naldodj (Issue: Protheus AppServer returns wrong MIME type for external assets #2)
   * src/fw.webex/web/control/fw.webex.control.tlpp
 
-2025-07-12 10:02 UTC naldodj (Add method ObliterateFWWebExTmpFiles to WebExControl – cleanup of temp files with optional full wipe)
+2025-07-12 10:02 BRT naldodj (Add method ObliterateFWWebExTmpFiles to WebExControl – cleanup of temp files with optional full wipe)
   + include/directry.ch
   * include/fw.webex.th
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
@@ -313,10 +319,10 @@
   * src/fw.webex.examples/000/fw.webex.example.000.tlpp
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 
-2025-07-11 20:49 UTC naldodj (Fix ClientSecret update)
+2025-07-11 20:49 BRT naldodj (Fix ClientSecret update)
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 
-2025-07-11 18:01 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-11 18:01 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + src/fw.webex/tools/fw.webex.webapp.auth.tlpp
   * include/fw.webex.th
   * src/fw.webex/tools/fw.webex.helper.tlpp
@@ -335,11 +341,11 @@
   * src/fw.webex.examples/008/fw.webex.example.008.tlpp
   * src/tools/switch.tlpp
 
-2025-07-10 18:28 UTC naldodj (Fix lChangeCompanyAndBranch)
+2025-07-10 18:28 BRT naldodj (Fix lChangeCompanyAndBranch)
   !Fix lChangeCompanyAndBranch
     * src/fw.webex.examples/009/fw.webex.example.009.tlpp
 
-2025-07-10 18:24 UTC naldodj (lChangeCompanyAndBranch : Allow company and branch selection for FWWebEx example testing)
+2025-07-10 18:24 BRT naldodj (lChangeCompanyAndBranch : Allow company and branch selection for FWWebEx example testing)
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
   * src/fw.webex.examples/001/fw.webex.example.001.tlpp
   * src/fw.webex.examples/002/fw.webex.example.002.tlpp
@@ -347,22 +353,22 @@
   * src/fw.webex.examples/008/fw.webex.example.008.tlpp
   * src/fw.webex.examples/009/fw.webex.example.009.tlpp
 
-2025-07-10 17:56 UTC naldodj (Allow company and branch selection for FWWebEx example testing)
+2025-07-10 17:56 BRT naldodj (Allow company and branch selection for FWWebEx example testing)
   + src/fw.webex.examples/000/fw.webex.parambox.tools.tlpp
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 
-2025-07-10 17:12 UTC naldodj (Refactor: use RetSQLName() to avoid hardcoded table name)
+2025-07-10 17:12 BRT naldodj (Refactor: use RetSQLName() to avoid hardcoded table name)
   * README.md
   * src/fw.webex.examples/001/fw.webex.example.001.tlpp
   * src/fw.webex.examples/002/fw.webex.example.002.tlpp
 
-2025-07-10 16:36 UTC naldodj (Refactor: use :ContentIsNull() or FWWEBEX_WEB_NULL_CONTENT constant to avoid hardcoded null content values)
+2025-07-10 16:36 BRT naldodj (Refactor: use :ContentIsNull() or FWWEBEX_WEB_NULL_CONTENT constant to avoid hardcoded null content values)
   * Refactor: use :ContentIsNull() or FWWEBEX_WEB_NULL_CONTENT constant to avoid hardcoded null content values
     * include/fw.webex.th
     * src/fw.webex/web/control/fw.webex.control.tlpp
   * src/fw.webex/web/component/fw.webex.template.bulk.action.table.tlpp -> src/fw.webex.examples/000/fw.webex.template.bulk.action.table.tlpp
 
-2025-07-10 11:25 UTC naldodj (Refactor: use :GetFWWebExTmpPath() or FWWEBEX_WEB_TMP_PATH constant to avoid hardcoded temp paths)
+2025-07-10 11:25 BRT naldodj (Refactor: use :GetFWWebExTmpPath() or FWWEBEX_WEB_TMP_PATH constant to avoid hardcoded temp paths)
   * include/fw.webex.th
   * README.md
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
@@ -383,7 +389,7 @@
   * src/fw.webex.examples/014/fw.webex.example.014.tlpp
   * src/fw.webex.examples/015/fw.webex.example.015.tlpp
 
-2025-07-10 09:50 UTC naldodj (Add support for fixed HTML IDs via cFixedID to improve layout compatibility)
+2025-07-10 09:50 BRT naldodj (Add support for fixed HTML IDs via cFixedID to improve layout compatibility)
   * Add support for fixed HTML IDs via cFixedID to improve layout compatibility
     * src/fw.webex/web/control/fw.webex.control.tlpp
   * Ensure all examples include <main> tag inside <body> for consistent page structure
@@ -424,28 +430,28 @@
     * src/fw.webex.examples/014/README.md
     * src/fw.webex.examples/015/README.md
 
-2025-07-09 19:40 UTC naldodj (fix: adjusted ParamType for lDelAttrValue from 7 to 4)
+2025-07-09 19:40 BRT naldodj (fix: adjusted ParamType for lDelAttrValue from 7 to 4)
   ! adjusted ParamType for lDelAttrValue from 7 to 4
     * src/fw.webex/web/control/fw.webex.control.tlpp
 
-2025-07-09 17:04 UTC naldodj (New Features)
+2025-07-09 17:04 BRT naldodj (New Features)
   + src/fw.webex/web/component/fw.webex.iframe.tlpp
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
 
-2025-07-09 11:06 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-09 11:06 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
   * src/fw.webex/web/layout/fw.webex.page.tlpp
 
-2025-07-09 08:24 UTC naldodj (Fix Clone Method)
+2025-07-09 08:24 BRT naldodj (Fix Clone Method)
   * Update
     * src/fw.webex/tools/fw.webex.file.tools.tlpp
   ! Fix Clone Method
     * src/fw.webex/web/control/fw.webex.control.tlpp
 
-2025-07-09 00:13 UTC naldodj (fw.webex.example.015.tlpp)
+2025-07-09 00:13 BRT naldodj (fw.webex.example.015.tlpp)
   * src/fw.webex.examples/015/fw.webex.example.015.tlpp
 
-2025-07-09 00:04 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-09 00:04 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + src/fw.webex.examples/015/fw.webex.example.015.tlpp
   + src/fw.webex.examples/015/README.md
   * src/fw.webex/tools/fw.webex.context.tlpp
@@ -488,16 +494,16 @@
   * src/fw.webex.examples/013/fw.webex.example.013.tlpp
   * src/fw.webex.examples/013/README.md
 
-2025-07-08 06:43 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-08 06:43 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/web/control/fw.webex.control.tlpp
 
-2025-07-07 22:35 UTC naldodj (Fix Top Layout)
+2025-07-07 22:35 BRT naldodj (Fix Top Layout)
   * src/fw.webex.examples/012/README.md
   * src/fw.webex.examples/012/fw.webex.example.012.tlpp
   * src/fw.webex.examples/013/fw.webex.example.013.tlpp
   * src/fw.webex.examples/013/README.md
 
-2025-07-07 19:17 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx and Fix Clone Method)
+2025-07-07 19:17 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx and Fix Clone Method)
   * src/fw.webex/tools/fw.webex.context.tlpp
   * src/fw.webex/web/component/fw.webex.alert.tlpp
   * src/fw.webex/web/component/fw.webex.button.tlpp
@@ -527,7 +533,7 @@
   * src/fw.webex/web/page/fw.webex.title.tlpp
   * src/fw.webex/web/script/fw.webex.script.tlpp
 
-2025-07-06 22:25 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-06 22:25 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * ChangeLog.txt
   * README.md
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
@@ -564,7 +570,7 @@
   * src/fw.webex.examples/014/fw.webex.example.014.tlpp
   * src/fw.webex.examples/014/README.md
 
-2025-07-04 20:52 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+2025-07-04 20:52 BRT naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   - src/fw.webex/web/layout/fw.webex.shell.tlpp
   * src/fw.webex/tools/fw.webex.file.tools.tlpp
   * src/fw.webex/web/control/fw.webex.control.tlpp
@@ -600,7 +606,7 @@
   * src/fw.webex.examples/014/fw.webex.example.014.tlpp
   * src/fw.webex.examples/014/README.md
 
-2025-07-04 20:52 UTC naldodj (Fix fErase)
+2025-07-04 20:52 BRT naldodj (Fix fErase)
   ! Fix fErase
     * src/fw.webex.examples/001/fw.webex.example.001.tlpp
     * src/fw.webex.examples/001/README.md
@@ -631,7 +637,7 @@
     * src/fw.webex.examples/014/fw.webex.example.014.tlpp
     * src/fw.webex.examples/014/README.md
 
-2025-07-04 20:16 UTC naldodj (DOM Structure)
+2025-07-04 20:16 BRT naldodj (DOM Structure)
   * src/fw.webex.examples/001/fw.webex.example.001.tlpp
   * src/fw.webex.examples/002/fw.webex.example.002.tlpp
   * src/fw.webex.examples/003/fw.webex.example.003.tlpp
@@ -641,12 +647,12 @@
   * src/fw.webex.examples/007/fw.webex.example.007.tlpp
   * src/fw.webex.examples/008/fw.webex.example.008.tlpp
 
-2025-07-04 19:51 UTC naldodj (New Features and New Tests)
+2025-07-04 19:51 BRT naldodj (New Features and New Tests)
   * src/fw.webex.examples/012/fw.webex.example.012.tlpp
   * src/fw.webex.examples/013/fw.webex.example.013.tlpp
   * src/fw.webex.examples/014/fw.webex.example.014.tlpp
 
-2025-07-04 19:21 UTC naldodj (New Features and New Tests)
+2025-07-04 19:21 BRT naldodj (New Features and New Tests)
   + src/fw.webex/web/page/fw.webex.style.tlpp
   + src/fw.webex.examples/014/fw.webex.example.014.tlpp
   + src/fw.webex.examples/014/README.md
@@ -683,7 +689,7 @@
   * src/fw.webex.examples/013/fw.webex.example.013.tlpp
   * src/fw.webex.examples/013/README.md
 
-2025-07-04 02:11 UTC naldodj (refactor: reorganized folder structure and source to improve modularity and clarity)
+2025-07-04 02:11 BRT naldodj (refactor: reorganized folder structure and source to improve modularity and clarity)
   + src/fw.webex/tools/fw.webex.file.tools.tlpp
   + src/fw.webex/web/script/fw.webex.script.tlpp
   + src/fw.webex.examples/013/fw.webex.example.013.tlpp
@@ -728,7 +734,7 @@
   * src/fw.webex.examples/012/fw.webex.example.012.tlpp
   * src/fw.webex.examples/012/README.md
 
-2025-07-03 12:55 UTC naldodj (refactor: reorganized folder structure to improve modularity and clarity)
+2025-07-03 12:55 BRT naldodj (refactor: reorganized folder structure to improve modularity and clarity)
   + src/fw.webex/web/component/fw.webex.comment.tlpp
   + src/fw.webex/web/component/fw.webex.script.tlpp
   + src/fw.webex/web/page/fw.webex.body.tlpp
@@ -766,16 +772,16 @@
   * src/fw.webex/web/fw.webex.table.tlpp -> src/fw.webex/web/component/fw.webex.table.tlpp
   * src/fw.webex/web/fw.webex.template.bulk.action.table.tlpp -> src/fw.webex/web/component/fw.webex.template.bulk.action.table.tlpp
 
-2025-07-03 00:28 UTC naldodj (New Features Test)
+2025-07-03 00:28 BRT naldodj (New Features Test)
   * src/fw.webex.examples/009/fw.webex.example.009.tlpp
 
-2025-07-03 00:01 UTC naldodj (CLASSPARAMEXCEPTION)
+2025-07-03 00:01 BRT naldodj (CLASSPARAMEXCEPTION)
   * src/fw.webex/control/fw.webex.control.tlpp
 
-2025-07-02 23:55 UTC naldodj (New Features)
+2025-07-02 23:55 BRT naldodj (New Features)
   * src/fw.webex.examples/002/fw.webex.example.002.tlpp
 
-2025-07-02 21:28 UTC naldodj (New Features)
+2025-07-02 21:28 BRT naldodj (New Features)
   + src/fw.webex/web/fw.webex.checkbox.tlpp
   + src/fw.webex/web/fw.webex.container.tlpp
   + src/fw.webex/web/fw.webex.main.tlpp
@@ -797,7 +803,7 @@
   * src/fw.webex.examples/008/fw.webex.example.008.tlpp
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 
-2025-07-01 15:43 UTC naldodj (Added a wrapper to bypass long TL++ names because life is too short. Other changes exist. Details are a luxury for another day.)
+2025-07-01 15:43 BRT naldodj (Added a wrapper to bypass long TL++ names because life is too short. Other changes exist. Details are a luxury for another day.)
   * include/fw.webex.th
   * src/fw.webex/control/fw.webex.control.tlpp
   * src/fw.webex/tools/fw.webex.context.tlpp
@@ -813,7 +819,7 @@
   * src/fw.webex.examples/010/fw.webex.example.010.tlpp
   * src/fw.webex.examples/010/README.md
 
-2025-07-01 13:12 UTC naldodj (Now we don’t throw the whole kitchen sink into <head>. Just what’s needed.)
+2025-07-01 13:12 BRT naldodj (Now we don’t throw the whole kitchen sink into <head>. Just what’s needed.)
   * include/fw.webex.th
   * src/fw.webex/control/fw.webex.control.tlpp
   * src/fw.webex/tools/fw.webex.context.tlpp
@@ -826,18 +832,18 @@
   * src/fw.webex.examples/007/fw.webex.example.007.tlpp
   * src/fw.webex.examples/008/fw.webex.example.008.tlpp
 
-2025-06-30 23:01 UTC naldodj (Fix Sunset Theme)
+2025-06-30 23:01 BRT naldodj (Fix Sunset Theme)
   * src/fw.webex/web/fw.webex.cardkpi.tlpp
   * src/fw.webex/web/fw.webex.page.tlpp
 
-2025-06-30 22:49 UTC naldodj (Indent JavaScript code)
+2025-06-30 22:49 BRT naldodj (Indent JavaScript code)
   * src/fw.webex/web/fw.webex.table.tlpp
 
-2025-06-30 22:09 UTC naldodj (Fix Sunset Theme)
+2025-06-30 22:09 BRT naldodj (Fix Sunset Theme)
   ! Fix Sunset Theme
     * src/fw.webex/web/fw.webex.page.tlpp
 
-2025-06-30 19:27 UTC naldodj (...)
+2025-06-30 19:27 BRT naldodj (...)
   + src/fw.webex.examples/011/fw.webex.example.011.tlpp
   + src/fw.webex.examples/011/README.md
   * src/fw.webex/web/fw.webex.rules.tlpp
@@ -854,12 +860,12 @@
   * src/fw.webex.examples/010/fw.webex.example.010.tlpp
   * src/fw.webex.examples/010/README.md
 
-2025-06-30 18:50 UTC naldodj (ClassName)
+2025-06-30 18:50 BRT naldodj (ClassName)
   * src/fw.webex/web/fw.webex.cardkpi.tlpp
   * src/fw.webex/web/fw.webex.form.tlpp
   * src/fw.webex/control/fw.webex.control.tlpp
 
-2025-06-30 17:45 UTC naldodj (New Feature)
+2025-06-30 17:45 BRT naldodj (New Feature)
   + data/json/turnovergeralfuncionarios.json
   + data/scripts/ps1/turnovergeralfuncionarios.ps1
   + src/fw.webex/web/fw.webex.cardkpi.tlpp
@@ -882,25 +888,25 @@
   * src/fw.webex.examples/009/fw.webex.example.009.tlpp
   * src/fw.webex.examples/009/README.md
 
-2025-06-29 13:58 UTC naldodj (Create the Menu by Category)
+2025-06-29 13:58 BRT naldodj (Create the Menu by Category)
   * src/fw.webex.examples/000/fw.webex.example.000.tlpp
 
-2025-06-29 13:30 UTC naldodj (Fix)
+2025-06-29 13:30 BRT naldodj (Fix)
   ! toggle drill-down icon between + and - on row expand/collapse
     * src/fw.webex/web/fw.webex.table.tlpp
 
-2025-06-29 12:52 UTC naldodj (Example of Examples: README)
+2025-06-29 12:52 BRT naldodj (Example of Examples: README)
   + src/fw.webex.examples/000/README.md
 
-2025-06-29 12:48 UTC naldodj (Example of Examples)
+2025-06-29 12:48 BRT naldodj (Example of Examples)
   + src/fw.webex.examples/000/fw.webex.example.000.tlpp
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 
-2025-06-29 11:20 UTC naldodj (Fix AddColumnHeader and AddCell return)
+2025-06-29 11:20 BRT naldodj (Fix AddColumnHeader and AddCell return)
   ! Fix AddColumnHeader and AddCell return
     * src/fw.webex/web/fw.webex.table.tlpp
 
-2025-06-29 10:53 UTC naldodj (refactor)
+2025-06-29 10:53 BRT naldodj (refactor)
   + src/fw.webex.examples/000/fw.webex.example.tools.tlpp
   + src/resource/dna_tech_logo_black_panter_2.png
   + src/resource/dna_tech_logo_black_panter.png
@@ -928,15 +934,15 @@
   * src/fw.webex.examples/009/fw.webex.example.009.tlpp
   * src/fw.webex.examples/009/README.md
 
-2025-06-29 02:29 UTC naldodj (oTableDrillDown:BuildHeader())
+2025-06-29 02:29 BRT naldodj (oTableDrillDown:BuildHeader())
   ! Fix oTableDrillDown:BuildHeader()
     * src/fw.webex.examples/009/fw.webex.example.009.tlpp
 
-2025-06-29 02:17 UTC naldodj (:AddStyle)
+2025-06-29 02:17 BRT naldodj (:AddStyle)
   * src/fw.webex/tools/fw.webex.webapp.tools.tlpp
   * src/fw.webex/web/fw.webex.page.tlpp
 
-2025-06-29 01:18 UTC naldodj (New Examples)
+2025-06-29 01:18 BRT naldodj (New Examples)
   + New Examples
     + src/fw.webex/tools/fw.webex.helper.tlpp
     + src/fw.webex/web/fw.webex.table.tlpp
@@ -976,25 +982,25 @@
     * src/fw.webex.examples/008/fw.webex.example.008.tlpp
     * src/fw.webex.examples/008/README.md
 
-2025-06-27 14:11 UTC naldodj (New Examples)
+2025-06-27 14:11 BRT naldodj (New Examples)
   + src/fw.webex.examples/008/fw.webex.example.008.tlpp
   + src/fw.webex.examples/008/README.md
   * src/fw.webex.examples/007/fw.webex.example.007.tlpp
 
-2025-06-27 07:28 UTC naldodj (Fix Accentuation)
+2025-06-27 07:28 BRT naldodj (Fix Accentuation)
 * src/fw.webex.examples/007/fw.webex.example.007.tlpp
 
-2025-06-27 06:52 UTC naldodj (Custom Process...)
+2025-06-27 06:52 BRT naldodj (Custom Process...)
   * src/fw.webex.examples/007/fw.webex.example.007.tlpp
 
-2025-06-27 05:19 UTC naldodj (pageLength and drawCallback)
+2025-06-27 05:19 BRT naldodj (pageLength and drawCallback)
   * src/fw.webex.examples/006/fw.webex.example.006.tlpp
   * src/fw.webex.examples/007/fw.webex.example.007.tlpp
 
-2025-06-27 04:37 UTC naldodj (X-DNATech-Auth-Token)
+2025-06-27 04:37 BRT naldodj (X-DNATech-Auth-Token)
   * src/fw.webex.examples/007/fw.webex.example.007.tlpp
 
-2025-06-27 04:23 UTC naldodj (example.007)
+2025-06-27 04:23 BRT naldodj (example.007)
   + src/fw.webex.examples/007/fw.webex.example.007.tlpp
   + src/fw.webex.examples/007/README.md
   * .gitignore
@@ -1006,13 +1012,13 @@
   * src/fw.webex.examples/005/fw.webex.example.005.tlpp
   * src/fw.webex.examples/006/fw.webex.example.006.tlpp
 
-2025-06-25 19:00 UTC naldodj (Fix protocol)
+2025-06-25 19:00 BRT naldodj (Fix protocol)
   !* src/fw.webex.examples/006/fw.webex.example.006.tlpp
 
-2025-06-25 18:40 UTC naldodj (DataTable: Portuguese-Brasil translation)
+2025-06-25 18:40 BRT naldodj (DataTable: Portuguese-Brasil translation)
   * src/fw.webex.examples/006/fw.webex.example.006.tlpp
 
-2025-06-25 17:38 UTC naldodj (refactor: reorganized folder structure to improve modularity and clarity)
+2025-06-25 17:38 BRT naldodj (refactor: reorganized folder structure to improve modularity and clarity)
   + src/fw.webex.examples/001/README.md
   + src/fw.webex.examples/002/README.md
   + src/fw.webex.examples/003/README.md
@@ -1026,7 +1032,7 @@
   * src/fw.webex.examples/fw.webex.example.005.tlpp -> src/fw.webex.examples/005/fw.webex.example.005.tlpp
   * src/fw.webex.examples/fw.webex.example.006.tlpp -> src/fw.webex.examples/006/fw.webex.example.006.tlpp
 
-2025-06-25 17:19 UTC naldodj (DataTable)
+2025-06-25 17:19 BRT naldodj (DataTable)
   * ObjClean
     * include/fw.webex.th
     * src/fw.webex/tools/fw.webex.context.tlpp
@@ -1043,15 +1049,15 @@
   * New Features
     * src/fw.webex/web/fw.webex.page.tlpp
 
-2025-06-25 14:01 UTC naldodj (Dark Theme)
+2025-06-25 14:01 BRT naldodj (Dark Theme)
   * src/fw.webex/web/fw.webex.form.tlpp
   * src/fw.webex/web/fw.webex.page.tlpp
   * src/fw.webex/web/fw.webex.template.bulk.action.table.tlpp
 
-2025-06-25 02:54 UTC naldodj (example.005)
+2025-06-25 02:54 BRT naldodj (example.005)
   * src/fw.webex.examples/fw.webex.example.005.tlpp
 
-2025-06-25 02:40 UTC naldodj (New Features)
+2025-06-25 02:40 BRT naldodj (New Features)
   + src/fw.webex.examples/fw.webex.example.005.tlpp
   * src/fw.webex/tools/fw.webex.webapp.tools.tlpp
   * src/fw.webex/web/fw.webex.form.tlpp
@@ -1060,28 +1066,28 @@
   * src/fw.webex.examples/fw.webex.example.003.tlpp
   * src/fw.webex.examples/fw.webex.example.004.tlpp
 
-2025-06-24 20:18 UTC naldodj (HasClass and DelClass)
+2025-06-24 20:18 BRT naldodj (HasClass and DelClass)
   * src/fw.webex/control/fw.webex.control.tlpp
   * src/fw.webex.examples/fw.webex.example.004.tlpp
 
-2025-06-24 17:50 UTC naldodj (CEP Detail)
+2025-06-24 17:50 BRT naldodj (CEP Detail)
   * src/fw.webex.examples/fw.webex.example.003.tlpp
 
-2025-06-24 17:08 UTC naldodj (AddClass)
+2025-06-24 17:08 BRT naldodj (AddClass)
   * src/fw.webex/control/fw.webex.control.tlpp
 
-2025-06-24 17:01 UTC naldodj (New Features)
+2025-06-24 17:01 BRT naldodj (New Features)
   + src/fw.webex/web/fw.webex.alert.tlpp
   + src/fw.webex/web/fw.webex.card.tlpp
   + src/fw.webex/web/fw.webex.strong.tlpp
   + src/fw.webex.examples/fw.webex.example.004.tlpp
   * src/fw.webex/control/fw.webex.control.tlpp
 
-2025-06-24 14:56 UTC naldodj (new tools)
+2025-06-24 14:56 BRT naldodj (new tools)
   + src/tools/for.each.tlpp
   + src/tools/switch.tlpp
 
-2025-06-24 10:16 UTC naldodj (refactor: reorganized folder structure to improve modularity and clarity)
+2025-06-24 10:16 BRT naldodj (refactor: reorganized folder structure to improve modularity and clarity)
   * src/fw.webex/fw.webex.button.tlpp -> src/fw.webex/web/fw.webex.button.tlpp
   * src/fw.webex/fw.webex.context.tlpp -> src/fw.webex/tools/fw.webex.context.tlpp
   * src/fw.webex/fw.webex.control.tlpp -> src/fw.webex/control/fw.webex.control.tlpp
@@ -1095,7 +1101,7 @@
   * src/fw.webex/fw.webex.template.bulk.action.table.tlpp -> src/fw.webex/web/fw.webex.template.bulk.action.table.tlpp
   * src/fw.webex/fw.webex.webapp.tools.tlpp -> src/fw.webex/tools/fw.webex.webapp.tools.tlpp
 
-2025-06-24 10:00 UTC naldodj (New Features)
+2025-06-24 10:00 BRT naldodj (New Features)
   + src/fw.webex/fw.webex.button.tlpp
   + src/fw.webex/fw.webex.field.tlpp
   + src/fw.webex/fw.webex.fieldset.tlpp
@@ -1106,10 +1112,10 @@
   + src/fw.webex.examples/fw.webex.example.003.tlpp
   * src/fw.webex.examples/fw.webex.example.002.tlpp
 
-2025-06-23 17:41 UTC naldodj (main -> div)
+2025-06-23 17:41 BRT naldodj (main -> div)
   * src/fw.webex/fw.webex.template.bulk.action.table.tlpp
 
-2025-06-23 17:33 UTC naldodj (code cleanup)
+2025-06-23 17:33 BRT naldodj (code cleanup)
   - Legacy stub file
     + src/__rpo-legacy-cleanup/fw-webex.context.tlpp
     + src/__rpo-legacy-cleanup/fw-webex.control.tlpp
@@ -1131,7 +1137,7 @@
     * src/fw.webex/fw-webex.page.tlpp -> src/fw.webex/fw.webex.page.tlpp
     * src/fw.webex/fw-webex.webapp.tools.tlpp -> src/fw.webex/fw.webex.webapp.tools.tlpp
 
-2025-06-23 15:50 UTC naldodj (Fix)
+2025-06-23 15:50 BRT naldodj (Fix)
   ! fix ID
     * src/fw.webex/fw-webex.control.tlpp
   ! fix names
@@ -1139,18 +1145,18 @@
   ! fix: buttons mind their own table now
     * src/fw.webex/fw-webex.template.bulk.action.table.tlpp
 
-2025-06-23 14:57 UTC naldodj (NewID and cIDModal)
+2025-06-23 14:57 BRT naldodj (NewID and cIDModal)
   * src/fw.webex/fw-webex.control.tlpp
   * src/fw.webex/fw-webex.template.bulk.action.table.tlpp
 
-2025-06-21 10:25 UTC naldodj (Fix Accentuation)
+2025-06-21 10:25 BRT naldodj (Fix Accentuation)
   * !src/fw.webex/fw-webex.template.bulk.action.table.tlpp
 
-2025-06-21 10:17 UTC naldodj (fw.webex.example.002.tlpp)
+2025-06-21 10:17 BRT naldodj (fw.webex.example.002.tlpp)
   * src/fw.webex/fw-webex.control.tlpp
   * src/fw.webex/fw-webex.template.bulk.action.table.tlpp
 
-2025-06-21 10:02 UTC naldodj (fw.webex.example.002.tlpp)
+2025-06-21 10:02 BRT naldodj (fw.webex.example.002.tlpp)
   + src/fw.webex/fw-webex.webapp.tools.tlpp
   + src/fw.webex.examples/fw.webex.example.002.tlpp
   * src/fw.webex/fw-webex.context.tlpp
@@ -1159,7 +1165,7 @@
   * src/fw.webex/fw-webex.template.bulk.action.table.tlpp
   * src/fw.webex.examples/fw.webex.example.001.tlpp
 
-2025-06-20 23:15 UTC naldodj (Initial Commit)
+2025-06-20 23:15 BRT naldodj (Initial Commit)
   + bin/3rdpatch.hb
   + bin/check.hb
   + bin/commit.hb

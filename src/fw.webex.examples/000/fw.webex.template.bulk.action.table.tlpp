@@ -66,7 +66,11 @@ method FromSQL(cTemplateBulkActionTableSQL) class WebExTemplateBulkActionTable
     (cTmpAlias)->(dbCloseArea())
     nColumns:=Len(aColumns)
 
-    TCSQLToArr(cTemplateBulkActionTableSQL,@aData,nil,aColumns,aColumns)
+    if ("POSTGRES"==Upper(AllTrim(TCGetDB())))
+        __TCSQLToArr(cQuery,@aData,nil,aColumns,aColumns)
+    else
+        TCSQLToArr(cTemplateBulkActionTableSQL,@aData,nil,aColumns,aColumns)
+    endif
 
     for i:=1 to nColumns
         cProperty:=aColumns[i][DBS_NAME]
@@ -307,3 +311,44 @@ method RenderHTML() class WebExTemplateBulkActionTable
     cHtml:=_Super:RenderHTML()
 
 return(cHtml)
+
+static function __TCSqlToArr(cQuery,aResult,aBinds,aSetFields,aQryStru) as array
+
+    local aFieldPos:=Array(0) as array
+    local aDataArray:=aResult as array
+
+    local cTmpAlias:=GetNextAlias() as character
+
+    local nField as numeric
+    local nFields as numeric
+
+    beginSQL alias cTmpAlias
+        select t.* from (%exp:cQuery%) t
+    endSQL
+
+    nFields:=Len(aSetFields)
+    for nField:=1 to nFields
+        cField:=aSetFields[nField][DBS_NAME]
+        aAdd(aFieldPos,{nField,cField})
+        TCSetField(cTmpAlias,cField,aSetFields[nField][DBS_TYPE],aSetFields[nField][DBS_LEN],aSetFields[nField][DBS_DEC])
+    next nField
+
+    while ((cTmpAlias)->(!eof()))
+        (cTmpAlias)->(aAdd(aDataArray,RegToArray(cTmpAlias,aFieldPos)))
+        ((cTmpAlias)->(!dbSkip()))
+    end while
+
+    (cTmpAlias)->(dbCloseArea())
+
+    FWFreeArray(@aFieldPos)
+
+return(aDataArray)
+
+static function RegToArray(cAlias as character,aFieldPos as array) as array
+
+    local aValues:=Array(0) as array
+
+    aValues:=Array(Len(aFieldPos))
+    (cAlias)->(aEval(aFieldPos,{|aField,nAT|aValues[nAT]:=FieldGet(aField[1])}))
+
+return(aValues)
