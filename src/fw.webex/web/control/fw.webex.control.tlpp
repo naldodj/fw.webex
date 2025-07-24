@@ -147,6 +147,8 @@ class WebExControl
     public method SetEnableDataTable(lDataTableEnabled as logical) as object
 
     public method Clean() as variant
+    public method CleanChildren() as variant
+
     public method RemoveScripts() as variant
     public method DisableFeatures() as variant
 
@@ -610,10 +612,10 @@ method ObliterateFWWebExTmpFiles(lNoMercy) class WebExControl
     paramtype 1 var lNoMercy as logical optional default .F.
     aFiles:=directory(cFWWebExTmpPath+"*.*")
     if (lNoMercy)
-        aEval(aFiles,{|e|fErase(cFWWebExTmpPath+e[F_NAME])})
+        aEval(aFiles,{|e as array|fErase(cFWWebExTmpPath+e[F_NAME])})
     else
         aEval(aFiles;
-            ,{|e|;
+            ,{|e as array|;
                 if(;
                     (e[F_DATE]<dToday);
                     .or.;
@@ -982,7 +984,7 @@ method GetAssets() class WebExControl
 return(__jAssets)
 
 method DelAssets() class WebExControl
-    aEval(__jAssets:GetNames(),{|cName|__jAssets:DelName(cName)})
+    aEval(__jAssets:GetNames(),{|cName as character|__jAssets:DelName(cName)})
 return(__jAssets)
 
 method AddClass(cNewClass) class WebExControl
@@ -1497,18 +1499,97 @@ method Clean() class WebExControl
     ::DelAssets()
     ::RemoveScripts()
     ::DisableFeatures()
+    ::CleanChildren()
+    aEval(;
+         ::GetJSONChildren():GetNames();
+        ,{|cName as character|;
+            if(;
+                (ValType(::GetJSONChildren()[cName])=="O");
+                ,FreeObj(::GetJSONChildren()[cName]);
+                ,nil;
+            );
+            ,::GetJSONChildren():DelName(cName);
+        };
+    )
+return(nil)
+
+method CleanChildren() class WebExControl
+
+    local aChildren:=::jChildren:GetNames() as array
+
+    local cKey as character
+
+    local nChild as numeric
+    local nChilds as numeric
+
+    local oChild as object
+
+    nChilds:=Len(aChildren)
+    if (nChilds>0)
+        for nChild:=1 to nChilds
+            cKey:=aChildren[nChild]
+            if (::jChildren:HasProperty(cKey))
+                oChild:=::jChildren[cKey]
+                if (valType(oChild)=="O")
+                    oChild:CleanChildren()
+                    FreeObj(@oChild)
+                endif
+                ::jChildren:DelName(cKey)
+            endif
+        next nChild
+    endif
+
 return(nil)
 
 method RemoveScripts() class WebExControl
     local jHeadScripts:=::GetHeadScripts() as json
     local jPageScripts:=::GetPageScripts() as json
-    aEval(jHeadScripts:GetNames(),{|cName|jHeadScripts:DelName(cName)})
-    aEval(jPageScripts:GetNames(),{|cName|jPageScripts:DelName(cName)})
+    aEval(;
+         jHeadScripts:GetNames();
+        ,{|cName as character|;
+            if(;
+                (ValType(jHeadScripts[cName])=="O");
+                ,(;
+                    jHeadScripts[cName]:CleanChildren();
+                    ,FreeObj(jHeadScripts[cName]);
+                );
+                ,nil;
+            );
+            ,jHeadScripts:DelName(cName);
+        };
+    )
+    aEval(;
+         jPageScripts:GetNames();
+        ,{|cName as character|;
+            if(;
+                (ValType(jPageScripts[cName])=="O");
+                ,(;
+                    jPageScripts[cName]:CleanChildren();
+                    ,FreeObj(jPageScripts[cName]);
+                );
+                ,nil;
+            );
+            ,jPageScripts:DelName(cName);
+        };
+    )
 return(nil)
 
 method DisableFeatures() class WebExControl
-    aEval(__jHeader:GetNames(),{|cName|__jHeader:DelName(cName)})
-    aEval(__jFeatures:GetNames(),{|cFeature|__jFeatures[cFeature]:=.F.,self:SetMemberData(cFeature,.T.)})
+    aEval(;
+         __jHeader:GetNames();
+        ,{|cName as character|;
+            if(;
+                (ValType(__jHeader[cName])=="O");
+                ,(;
+                    __jHeader[cName]:CleanChildren();
+                    ,FreeObj(__jHeader[cName]);
+                );
+                ,nil;
+            );
+            ,__jHeader:DelName(cName);
+        };
+    )
+    aEval(__jFeatures:GetNames(),{|cFeature as character|__jFeatures[cFeature]:=.F.,self:SetMemberData(cFeature,.T.)})
 return(nil)
 
 method Clone() class WebExControl

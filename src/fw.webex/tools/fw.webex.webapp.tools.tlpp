@@ -38,6 +38,8 @@ class WebApp
 
     static method JSToAdvPL(oTWebChannel as object,cCodeType as character,cCodeContent as character) as variant
 
+    static method GetAPPRoot() as character
+
 end class
 
 static method ThemeIsDark(cTheme) class WebApp
@@ -421,3 +423,15 @@ static method JSToAdvPL(oTWebChannel,cCodeType,cCodeContent) class WebApp
     FWFreeArray(@aCallBackAct)
 
 return
+
+static method GetAPPRoot() class WebApp
+
+    local cSRVIniName:=GetSrvIniName() as character
+
+    //TODO: Rever a forma de Obter app-root
+    cAPPRootURI:=AllTrim(GetPvProfString("FWWEBEX","AppRootURI","",cSRVIniName))
+    if (Right(cAPPRootURI,1)!="/")
+        cAPPRootURI+="/"
+    endif
+
+return(cAPPRootURI)

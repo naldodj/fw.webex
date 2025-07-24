@@ -36,6 +36,9 @@ class WebExPage from WebExControl
     protected data oPageRender as object
 
     public method New(cPageTitle as character) as object
+
+    public method Clean() as variant
+
     public method AddChild(oPageChild as object) as object
 
     public method AddPageStyle(cPageStyle) as object
@@ -54,6 +57,38 @@ method New(cPageTitle) class WebExPage
     _Super:New("div")
     ::AddClass("main-div")
 return(self)
+
+method Clean() class WebExPage
+
+    //Styles
+    aEval(;
+         ::jPageStyle:GetNames();
+        ,{|cName as character|;
+            if(;
+                (ValType(::jPageStyle[cName])=="O");
+                ,(;
+                    ::jPageStyle[cName]:CleanChildren();
+                   ,FreeObj(::jPageStyle[cName]);
+                );
+                ,nil;
+            );
+            ,::jPageStyle:DelName(cName);
+        };
+    )
+
+    if (valType(::oPageBody)=="O")
+        ::oPageBody:CleanChildren()
+        FreeObj(@::oPageBody)
+    endif
+
+    if (valType(::oPageRender)=="O")
+        ::oPageRender:CleanChildren()
+        FreeObj(@::oPageRender)
+    endif
+
+    _Super:Clean()
+
+return(nil)
 
 method AddChild(oPageChild) class WebExPage
     local cClassName as character
@@ -106,12 +141,10 @@ method RenderHTML() class WebExPage
 
     local cHTML as character
     local cTheme as character
-    local cRestURL as character
     local cEnvServer as character
     local cPageStyle as character
     local cPageScript as character
     local cAPPRootURI as character
-    local cSRVIniName as character
 
     local jHeader as json
     local jAssets as json
@@ -347,13 +380,7 @@ method RenderHTML() class WebExPage
             ***************************************************************************************************************************
             //TOTVS Script
                 cEnvServer:=Alltrim(Lower(GetEnvServer()))
-                cSRVIniName:=GetSrvIniName()
-                cRestURL:=AllTrim(GetPvProfString("FWWEBEX","RestURL","",cSRVIniName))
-                //TODO: Rever a forma de Obter app-root
-                cAPPRootURI:=AllTrim(GetPvProfString("FWWEBEX","AppRootURI",cRestURL,cSRVIniName))
-                if (Right(cAPPRootURI,1)!="/")
-                    cAPPRootURI+="/"
-                endif
+                cAPPRootURI:=WebApp():GetAPPRoot()
                 WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
                     .:SetContent(cAPPRootURI+"preindex_env_"+cEnvServer+"/twebchannel.js")
                 END WEBEXOBJECT

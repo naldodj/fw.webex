@@ -46,7 +46,7 @@ static procedure FWWebExExample_000()
     local nRight as numeric
 
     local nExample as numeric
-    local nExamples:=18 as numeric
+    local nExamples:=19 as numeric
 
     local oTDlg as object
     local oTMenu as object
@@ -62,6 +62,7 @@ static procedure FWWebExExample_000()
     jExamples["Nav"]:=JSONObject():New()
     jExamples["DumpDOM"]:=JSONObject():New()
     jExamples["iFrame"]:=JSONObject():New()
+    jExamples["SBAdmin"]:=JSONObject():New()
 
     for nExample:=1 to nExamples
         cExample:="u_FWWebExExample_"+StrZero(nExample,3)
@@ -84,6 +85,8 @@ static procedure FWWebExExample_000()
             jExamples["DumpDOM"][cExample]:=&("{||"+cExample+"()}")
         case (cRight$"016")
             jExamples["iFrame"][cExample]:=&("{||"+cExample+"()}")
+        case (cRight$"019")
+            jExamples["SBAdmin"][cExample]:=&("{||"+cExample+"()}")
         endcase
     next nExample
 
