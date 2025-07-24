@@ -98,7 +98,7 @@ static function FWWebExExample_014(cHTML as character) as character
     local oFWWebExHRDivider as object
     local oFWWebExContainer as object
 
-    oBrandIcon:=WebExControl():New("div")
+    oBrandIcon:=WebExDiv():New()
     oBrandIcon:AddClass("me-2")
     oBrandIcon:AddChild(WebExIcon():New("bi-bar-chart"))
 
@@ -106,12 +106,12 @@ static function FWWebExExample_014(cHTML as character) as character
     oTextInBrand:AddClass("fw-bold")
     oTextInBrand:SetContent("FWWebEx")
 
-    oBrandText:=WebExControl():New("div")
+    oBrandText:=WebExDiv():New()
     oBrandText:AddClass("mx-3")
     oBrandText:AddChild(oTextInBrand)
 
     // Brand
-    oBrandLink:=WebExControl():New("a")
+    oBrandLink:=WebExAnchor():New()
     oBrandLink:AddClass("d-flex align-items-center justify-content-center mb-3 text-white fw-bold text-decoration-none")
     oBrandLink:SetAttr("href","#")
     oBrandLink:AddChild(oBrandIcon)
@@ -127,16 +127,16 @@ static function FWWebExExample_014(cHTML as character) as character
     oMenuText:=WebExControl():New("span")
     oMenuText:SetContent("Dashboard")
 
-    oMenuLink:=WebExControl():New("a")
+    oMenuLink:=WebExAnchor():New()
     oMenuLink:AddClass("nav-link"):SetAttr("href","#")
     oMenuLink:AddChild(oMenuIcon)
     oMenuLink:AddChild(oMenuText)
 
-    oMenuItem:=WebExControl():New("li")
+    oMenuItem:=WebExLI():New()
     oMenuItem:AddClass("nav-item active")
     oMenuItem:AddChild(oMenuLink)
 
-    oSidebar:=WebExControl():New("ul")
+    oSidebar:=WebExUL():New()
     oSidebar:AddClass("nav flex-column bg-primary p-3")
     oSidebar:AddChild(oBrandLink)
     oSidebar:AddChild(oFWWebExHRDivider)
@@ -162,12 +162,12 @@ static function FWWebExExample_014(cHTML as character) as character
     oFWWebExMain:AddChild(oFWWebExContainer)
 
     // Conteudo principal
-    oContentWrapper:=WebExControl():New("div")
+    oContentWrapper:=WebExDiv():New()
     oContentWrapper:AddClass("d-flex flex-column w-100")
     oContentWrapper:AddChild(oTopBar)
     oContentWrapper:AddChild(oFWWebExMain)
 
-    oWrapper:=WebExControl():New("div")
+    oWrapper:=WebExDiv():New()
     oWrapper:AddClass("d-flex")
     oWrapper:AddChild(oSidebar)
     oWrapper:AddChild(oContentWrapper)

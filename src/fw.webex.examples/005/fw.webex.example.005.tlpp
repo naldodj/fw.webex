@@ -76,7 +76,7 @@ static function FWWebExExample_005(cHTML as character) as character
     oFWWebExForm:SetFormAction("#")
 
     //Div com o Resultado das mensagens
-    oDiv:=WebExControl():New("div")
+    oDiv:=WebExDiv():New()
     oDiv:SetAttr("id","resultadoCEP")
 
     // Campo de busca

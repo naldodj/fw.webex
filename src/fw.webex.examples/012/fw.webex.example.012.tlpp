@@ -161,17 +161,17 @@ static procedure FWWebExExample_012(cHTML as character) as character
 
     oFWWebExNavTop:=WebExNavTop():New("")
 
-    oTopContainer:=WebExControl():New("div")
+    oTopContainer:=WebExDiv():New()
     oTopContainer:AddClass("d-flex align-items-center gap-2") // gap-2 adiciona espaco
     oTopContainer:AddChild(oFWWebExNavTop)
     oTopContainer:AddChild(oTopBar)
 
-    oContentWrapper:=WebExControl():New("div")
+    oContentWrapper:=WebExDiv():New()
     oContentWrapper:AddClass("d-flex flex-column w-100")
     oContentWrapper:AddChild(oTopContainer)
     oContentWrapper:AddChild(oFWWebExMain)
 
-    oWrapper:=WebExControl():New("div")
+    oWrapper:=WebExDiv():New()
     oWrapper:AddClass("d-flex")
     oWrapper:AddChild(oFWWebExSideBar)     // menu lateral
     oWrapper:AddChild(oContentWrapper)     // conteudo principal

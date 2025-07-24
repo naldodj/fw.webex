@@ -413,12 +413,16 @@ return(self)
 method DelAllAttr(lDelAllAttr) class WebExControl
     local aAttr as array
     local cAttr as character
+    local lDelAttr:=.F. as logical
     local i as numeric
-    paramtype 1 var lDelAllAttr as logical
+    paramtype 1 var lDelAllAttr as logical optional default .F.
     aAttr:=::jAttrs:GetNames()
-    for i:=1 to Len(aNames)
+    for i:=1 to Len(aAttr)
         cAttr:=aAttr[i]
         ::DelAttr(cAttr,@lDelAttr)
+        if (!lDelAllAttr)
+            lDelAllAttr:=lDelAttr
+        endif
     next i
 return(self)
 

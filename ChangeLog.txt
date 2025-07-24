@@ -5,6 +5,22 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-07-24 14:25 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  * src/fw.webex/web/component/fw.webex.field.group.tlpp
+  * src/fw.webex/web/component/fw.webex.form.tlpp
+  * src/fw.webex/web/component/fw.webex.navside.tlpp
+  * src/fw.webex/web/component/fw.webex.navtop.tlpp
+  * src/fw.webex/web/control/fw.webex.control.tlpp
+  * src/fw.webex.examples/005/fw.webex.example.005.tlpp
+  * src/fw.webex.examples/006/fw.webex.example.006.tlpp
+  * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  * src/fw.webex.examples/012/fw.webex.example.012.tlpp
+  * src/fw.webex.examples/013/fw.webex.example.013.tlpp
+  * src/fw.webex.examples/014/fw.webex.example.014.tlpp
+  * src/fw.webex.examples/015/fw.webex.example.015.tlpp
+  * src/fw.webex.examples/017/fw.webex.example.017.tlpp
+  * src/fw.webex.examples/018/fw.webex.example.018.tlpp
+
 2025-07-24 11:15 UTC naldodj (Get-Date)
   * ChangeLog.txt
 

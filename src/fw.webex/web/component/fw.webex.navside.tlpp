@@ -25,9 +25,13 @@ class WebExNavSide from WebExControl
     protected data oNavSideBrand as object
     protected data oNavSideWrapper as object
 
+    protected data oNavSideDivider as object
+    protected data oNavSideHeader as object
+    protected data oNavSideIcon as object
+
     public method New(cNavSideBrand as character) as object
 
-    public method AddItem(cNavSideLabel as character,cNavSideHRef as character,oNavIcon as object) as object
+    public method AddItem(cNavSideLabel as character,cNavSideHRef as character,oNavSideIcon as object) as object
     public method AddDivider() as object
     public method AddHeader(cNavSideHeaderText as character) as object
     public method RenderHTML() as character
@@ -49,11 +53,11 @@ method New(cNavSideBrand) class WebExNavSide
     ::SetNavSideBrand()
 return(self)
 
-method AddItem(cNavSideLabel,cNavSideHRef,oNavIcon) class WebExNavSide
+method AddItem(cNavSideLabel,cNavSideHRef,oNavSideIcon) class WebExNavSide
 
     paramtype 1 var cNavSideLabel as character
     paramtype 2 var cNavSideHRef as character
-    paramtype 3 var oNavIcon as object class WEBEXICON optional
+    paramtype 3 var oNavSideIcon as object class WebExIcon optional
 
     ::oNavSideSpan:=WebExSpan():New()
     ::oNavSideSpan:SetContent(cNavSideLabel)
@@ -61,8 +65,9 @@ method AddItem(cNavSideLabel,cNavSideHRef,oNavIcon) class WebExNavSide
     ::oNavSideLink:=WebExAnchor():New()
     ::oNavSideLink:AddClass("nav-link")
     ::oNavSideLink:SetAttr("href",cNavSideHRef)
-    if (oNavIcon!=nil)
-        ::oNavSideLink:AddChild(oNavIcon)
+    if (oNavSideIcon!=nil)
+        ::oNavSideIcon:=oNavSideIcon
+        ::oNavSideLink:AddChild(::oNavSideIcon)
     endif
     ::oNavSideLink:AddChild(::oNavSideSpan)
 
@@ -74,20 +79,19 @@ method AddItem(cNavSideLabel,cNavSideHRef,oNavIcon) class WebExNavSide
 return(::oNavSideItem)
 
 method AddDivider() class WebExNavSide
-    local oDivider:=WebExHR():New()
-    oDivider:DelClassRegex("my-[0-9]+") // remove qualquer my-* anterior (se tiver)
-    oDivider:AddClass("my-2")
-    ::oNavSideList:AddChild(oDivider)
-return(oDivider)
+    ::oNavSideDivider:=WebExHR():New()
+    ::oNavSideDivider:DelClassRegex("my-[0-9]+") // remove qualquer my-* anterior (se tiver)
+    ::oNavSideDivider:AddClass("my-2")
+    ::oNavSideList:AddChild(::oNavSideDivider)
+return(self)
 
 method AddHeader(cNavSideHeaderText) class WebExNavSide
-    local oHeader as object
     paramtype 1 var cNavSideHeaderText as character
-    oHeader:=WebExDiv():New()
-    oHeader:AddClass("text-muted text-uppercase px-3 small fw-bold")
-    oHeader:SetContent(cNavSideHeaderText)
-    ::oNavSideList:AddChild(oHeader)
-return(oHeader)
+    ::oNavSideHeader:=WebExDiv():New()
+    ::oNavSideHeader:AddClass("text-muted text-uppercase px-3 small fw-bold")
+    ::oNavSideHeader:SetContent(cNavSideHeaderText)
+    ::oNavSideList:AddChild(::oNavSideHeader)
+return(self)
 
 method RenderHTML() class WebExNavSide
 

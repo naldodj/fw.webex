@@ -102,7 +102,7 @@ static procedure FWWebExExample_006(cHTML as character) as character
     oFWWebExForm:AddChild(oFWWebExButton)
 
     // Tabela que sera preenchida
-    oDivTable:=WebExControl():New("div")
+    oDivTable:=WebExDiv():New()
     oDivTable:SetAttr("id","tableResult")
 
     // Script para requisitar ViaCEP e preencher a tabela com DataTables

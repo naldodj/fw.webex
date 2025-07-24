@@ -82,7 +82,7 @@ static function FWWebExExample_017(cHTML as character) as character
     // Campo de busca
     oFWWebExRow1:=WebExRow():New()
     oFWWebExForm:AddFieldGroupToRow(oFWWebExRow1,"CEP","cepsearch","text","Digite o CEP",4)
-    oWebExInputGroup:=oFWWebExForm:GetMemberData("oWebExInputGroupInputFieldGroupFormField")
+    oWebExInputGroup:=oFWWebExForm:GetMemberData("oFormFieldGroupWebExInputGroup")
 
     //Carrega o Botao para Buscar os Dados ao Grupo
     oFWWebExButton:=WebExButton():New("Buscar")
@@ -93,18 +93,18 @@ static function FWWebExExample_017(cHTML as character) as character
     oFWWebExRow1:AddChild(WebExHR():New())
 
     //Div com o Resultado das mensagens
-    oDiv:=WebExControl():New("div")
+    oDiv:=WebExDiv():New()
     oDiv:SetAttr("id","resultadoCEP")
     oFWWebExRow1:AddChild(oDiv)
 
     // Campos que serao atualizados via Ajax (ja definidos)
     oFWWebExRow2:=WebExRow():New()
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"CEP","cep","text",""):GetMemberData("oWebExFieldFormField"):DelAttr("class"):AddClass("mb-3 col-md-4")
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Logradouro","logradouro","text",""):GetMemberData("oWebExFieldFormField"):DelAttr("class"):AddClass("mb-3 col-md-4")
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Bairro","bairro","text",""):GetMemberData("oWebExFieldFormField"):DelAttr("class"):AddClass("mb-3 col-md-4")
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Cidade","localidade","text",""):GetMemberData("oWebExFieldFormField"):DelAttr("class"):AddClass("mb-3 col-md-4")
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"UF","uf","text",""):GetMemberData("oWebExFieldFormField"):DelAttr("class"):AddClass("mb-3 col-md-4")
-    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"C&oacute;digo IBGE","ibge","text",""):GetMemberData("oWebExFieldFormField"):DelAttr("class"):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"CEP","cep","text",""):GetMemberData("oFormFieldWebExField"):DelAttr("class"):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Logradouro","logradouro","text",""):GetMemberData("oFormFieldWebExField"):DelAttr("class"):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Bairro","bairro","text",""):GetMemberData("oFormFieldWebExField"):DelAttr("class"):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"Cidade","localidade","text",""):GetMemberData("oFormFieldWebExField"):DelAttr("class"):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"UF","uf","text",""):GetMemberData("oFormFieldWebExField"):DelAttr("class"):AddClass("mb-3 col-md-4")
+    oFWWebExForm:AddFieldToRow(@oFWWebExRow2,"C&oacute;digo IBGE","ibge","text",""):GetMemberData("oFormFieldWebExField"):DelAttr("class"):AddClass("mb-3 col-md-4")
 
     // Adiciona o script para consulta Ajax do ViaCEP
     beginContent var cScript

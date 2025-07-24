@@ -7,13 +7,16 @@
 
 Released to Public Domain.
 
-loocal oNav:=WebExNavTop():New("FWWebEx")
-oNav:AddLink("Home","#home",WebExIcon():New("bi-house"))
-oNav:AddDropDown("Acoes", {;
-    ,{"Salvar","#salvar"};
-    ,{"Excluir","#excluir"};
-    ,{"Sair","#sair"};
-})
+local oNavTop:=WebExNavTop():New("FWWebEx") as object
+oNavTop:AddLink("Home","#home",WebExIcon():New("bi-house"))
+oNavTop:AddDropDown(;
+    "Acoes";
+    ,{;
+        ,{"Salvar","#salvar"};
+        ,{"Excluir","#excluir"};
+        ,{"Sair","#sair"};
+    };
+)
 
 --------------------------------------------------------------------------------------
 */
@@ -29,132 +32,142 @@ class WebExNavTop from WebExControl
     protected data jNavTopLinks as json
     protected data jNavTopDropDowns as json
 
+    protected data oNavTopLink as object
+    protected data oNavTopLinkIcon as object
+
+    protected data oNavTopDropdownItem as object
+    protected data oNavTopDropdownMenu as object
+    protected data oNavTopDropdownLink as object
+    protected data oNavTopDropdownToggle as object
+    protected data oNavTopDropdownWrapper as object
+
+    protected data oNavTopBrand as object
+    protected data oNavTopContainer as object
+
+    protected data oNavTopSidebarToggle as object
+    protected data oNavTopSidebarToggleIcon as object
+
     public method New(cNavTopBrand as character) as object
-    public method AddLink(cNavTopLabel as character,cNavTopHRef as character,oNavTopIcon as object) as object
+    public method AddLink(cNavTopLabel as character,cNavTopHRef as character,oNavTopLinkIcon as object) as object
     public method AddDropDown(cNavTopLabel as character,aNavTopDropDownItems as array) as object
     public method RenderHTML() as character
 
 endclass
 
 method New(cNavTopBrand) class WebExNavTop
+
     paramtype 1 var cNavTopBrand as character optional default ""
+
     ::cNavTopBrand:=cNavTopBrand
     ::jNavTopLinks:=JSONObject():New()
     ::jNavTopDropDowns:=JSONObject():New()
+
     _Super:New("nav")
     ::AddClass("navbar mb-4")
+
+    // Botao para abrir/recolher o menu lateral (sidebar)
+    ::oNavTopSidebarToggle:=WebExButton():New("","")
+    ::oNavTopSidebarToggle:DelAllAttr()
+    ::oNavTopSidebarToggle:SetAttr("class","navbar-toggler border-0 bg-transparent mb-1 ps-0 pe-0 ms-0 me-0")
+    ::oNavTopSidebarToggle:SetAttr("type","button")
+    ::oNavTopSidebarToggle:SetAttr("data-bs-toggle","collapse")
+    ::oNavTopSidebarToggle:SetAttr("data-bs-target","#webex-sidebar")
+    ::oNavTopSidebarToggle:SetAttr("aria-controls","webex-sidebar")
+    ::oNavTopSidebarToggle:SetAttr("aria-expanded","false")
+    ::oNavTopSidebarToggle:SetAttr("aria-label","Alternar menu")
+    ::oNavTopSidebarToggle:SetAttr("style","margin-bottom: 2px; outline:none; box-shadow:none;")
+
+    ::oNavTopSidebarToggleIcon:=WebExIcon():New("bi-list")
+    ::oNavTopSidebarToggleIcon:AddClass("fs-4 ms-0 me-0")
+    ::oNavTopSidebarToggle:AddChild(::oNavTopSidebarToggleIcon)
+
+    // Marca do sistema
+    ::oNavTopBrand:=WebExAnchor():New()
+    ::oNavTopBrand:SetAttr("class","navbar-brand ps-0 pe-0 ms-0 me-0")
+    ::oNavTopBrand:SetAttr("href","#")
+    ::oNavTopBrand:SetContent(::cNavTopBrand)
+
+    // Container principal do topo
+    ::oNavTopContainer:=WebExDiv():New()
+    ::oNavTopContainer:SetAttr("class","container-fluid d-flex flex-column align-items-start px-0")
+
+    ::oNavTopContainer:AddChild(::oNavTopSidebarToggle)
+    ::oNavTopContainer:AddChild(::oNavTopBrand)
+
+    ::AddChild(::oNavTopContainer)
+
 return(self)
 
-method AddLink(cNavTopLabel,cNavTopHRef,oNavTopIcon) class WebExNavTop
-    local oLink as object
+method AddLink(cNavTopLabel,cNavTopHRef,oNavTopLinkIcon) class WebExNavTop
     paramtype 1 var cNavTopLabel as character
     paramtype 2 var cNavTopHRef as character
-    paramtype 3 var oNavTopIcon as object class WEBEXICON optional
-    oLink:=WebExControl():New("a")
-    oLink:SetAttr("class","nav-link")
-    oLink:SetAttr("href",cNavTopHRef)
-    if (oNavTopIcon!=nil)
-        oLink:AddChild(oNavTopIcon)
-        oLink:AddContent(" ")
+    paramtype 3 var oNavTopLinkIcon as object class WEBEXICON optional
+    ::oNavTopLink:=WebExAnchor():New()
+    ::oNavTopLink:SetAttr("class","nav-link")
+    ::oNavTopLink:SetAttr("href",cNavTopHRef)
+    if (oNavTopLinkIcon!=nil)
+        ::oNavTopLinkIcon:=oNavTopLinkIcon
+        ::oNavTopLink:AddChild(::oNavTopLinkIcon)
+        ::oNavTopLink:AddContent(" ")
     endif
-    oLink:AddContent(cNavTopLabel)
-    ::jNavTopLinks[oLink:GetID()]:=oLink
-return(oLink)
+    ::oNavTopLink:AddContent(cNavTopLabel)
+    ::jNavTopLinks[::oNavTopLink:GetID()]:=::oNavTopLink
+return(self)
 
 method AddDropDown(cNavTopLabel,aNavTopDropDownItems) class WebExNavTop
 
     local i as numeric
 
-    local oItem as object
-    local oLink as object
-    local oMenu as object
-    local oWrapper as object
-    local oToggle as object
+    ::oNavTopDropdownToggle:=WebExAnchor():New()
+    ::oNavTopDropdownToggle:SetAttr("class","nav-link dropdown-toggle")
+    ::oNavTopDropdownToggle:SetAttr("href","#")
+    ::oNavTopDropdownToggle:SetAttr("role","button")
+    ::oNavTopDropdownToggle:SetAttr("data-bs-toggle","dropdown")
+    ::oNavTopDropdownToggle:SetAttr("aria-expanded","false")
+    ::oNavTopDropdownToggle:SetContent(cNavTopLabel)
 
-    oToggle := WebExControl():New("a")
-    oToggle:SetAttr("class","nav-link dropdown-toggle")
-    oToggle:SetAttr("href","#")
-    oToggle:SetAttr("role","button")
-    oToggle:SetAttr("data-bs-toggle","dropdown")
-    oToggle:SetAttr("aria-expanded","false")
-    oToggle:SetContent(cNavTopLabel)
-
-    oMenu:=WebExControl():New("ul")
-    oMenu:SetAttr("class","dropdown-menu")
+    ::oNavTopDropdownMenu:=WebExControl():New("ul")
+    ::oNavTopDropdownMenu:SetAttr("class","dropdown-menu")
     for i:=1 to Len(aNavTopDropDownItems)
-        oItem:=WebExControl():New("li")
-        oLink:=WebExControl():New("a")
-        oLink:SetAttr("class","dropdown-item")
-        oLink:SetAttr("href",aNavTopDropDownItems[i][2])
-        oLink:SetContent(aNavTopDropDownItems[i][1])
-        oItem:AddChild(oLink)
-        oMenu:AddChild(oItem)
+        ::oNavTopDropdownItem:=WebExLI():New()
+        ::oNavTopDropdownLink:=WebExAnchor():New()
+        ::oNavTopDropdownLink:SetAttr("class","dropdown-item")
+        ::oNavTopDropdownLink:SetAttr("href",aNavTopDropDownItems[i][2])
+        ::oNavTopDropdownLink:SetContent(aNavTopDropDownItems[i][1])
+        ::oNavTopDropdownItem:AddChild(::oNavTopDropdownLink)
+        ::oNavTopDropdownMenu:AddChild(::oNavTopDropdownItem)
     next i
 
-    oWrapper:=WebExControl():New("li")
-    oWrapper:SetAttr("class","nav-item dropdown")
-    oWrapper:AddChild(oToggle)
-    oWrapper:AddChild(oMenu)
+    ::oNavTopDropdownWrapper:=WebExLI():New()
+    ::oNavTopDropdownWrapper:SetAttr("class","nav-item dropdown")
+    ::oNavTopDropdownWrapper:AddChild(::oNavTopDropdownToggle)
+    ::oNavTopDropdownWrapper:AddChild(::oNavTopDropdownMenu)
 
-    ::jNavTopDropDowns[oWrapper:GetID()]:=oWrapper
+    ::jNavTopDropDowns[::oNavTopDropdownWrapper:GetID()]:=::oNavTopDropdownWrapper
 
-return(oWrapper)
+return(self)
 
 method RenderHTML() class WebExNavTop
 
     local cHTML as character
 
     local oUl as object
-    local oNavTopIcon as object
-    local oBrand as object
     local oCollapse as object
-    local oContainer as object
-    local oSidebarToggle as object
-
-    // Botao para abrir/recolher o menu lateral (sidebar)
-    oSidebarToggle:=WebExControl():New("button")
-    oSidebarToggle:SetAttr("class","navbar-toggler border-0 bg-transparent mb-1 ps-0 pe-0 ms-0 me-0")
-    oSidebarToggle:SetAttr("type","button")
-    oSidebarToggle:SetAttr("data-bs-toggle","collapse")
-    oSidebarToggle:SetAttr("data-bs-target","#webex-sidebar")
-    oSidebarToggle:SetAttr("aria-controls","webex-sidebar")
-    oSidebarToggle:SetAttr("aria-expanded","false")
-    oSidebarToggle:SetAttr("aria-label","Alternar menu")
-    oSidebarToggle:SetAttr("style","margin-bottom: 2px; outline:none; box-shadow:none;")
-
-    oNavTopIcon:=WebExIcon():New("bi-list")
-    oNavTopIcon:AddClass("fs-4 ms-0 me-0")
-    oSidebarToggle:AddChild(oNavTopIcon)
-
-    // Marca do sistema
-    oBrand:=WebExControl():New("a")
-    oBrand:SetAttr("class","navbar-brand ps-0 pe-0 ms-0 me-0")
-    oBrand:SetAttr("href","#")
-    oBrand:SetContent(::cNavTopBrand)
-
-    // Container principal do topo
-    oContainer:=WebExControl():New("div")
-    oContainer:SetAttr("class","container-fluid d-flex flex-column align-items-start px-0")
-
-    oContainer:AddChild(oSidebarToggle)
-    oContainer:AddChild(oBrand)
 
     if ((Len(::jNavTopLinks:GetNames())>0).or.(Len(::jNavTopDropDowns:GetNames())>0))
-        oUl:=WebExControl():New("ul")
+        oUl:=WebExUL():New()
         oUl:SetAttr("class","navbar-nav me-auto mb-0")
         // Adiciona os links
-        aEval(::jNavTopLinks:GetNames(), {|k| oUl:AddChild(::jNavTopLinks[k]) })
+        aEval(::jNavTopLinks:GetNames(),{|k|oUl:AddChild(::jNavTopLinks[k])})
         // Adiciona os dropdowns
-        aEval(::jNavTopDropDowns:GetNames(), {|k| oUl:AddChild(::jNavTopDropDowns[k]) })
+        aEval(::jNavTopDropDowns:GetNames(),{|k|oUl:AddChild(::jNavTopDropDowns[k])})
         // Menu colapsavel da barra superior
-        oCollapse:=WebExControl():New("div")
+        oCollapse:=WebExDiv():New()
         oCollapse:SetAttr("class","collapse navbar-collapse p-0 m-0")
         oCollapse:SetAttr("id",::GetFixedID()+"_menu")
         oCollapse:AddChild(oUl)
-        oContainer:AddChild(oCollapse)
+        ::oNavTopContainer:AddChild(oCollapse)
     endif
-
-    ::AddChild(oContainer)
 
     cHTML:=_Super:RenderHTML()
 

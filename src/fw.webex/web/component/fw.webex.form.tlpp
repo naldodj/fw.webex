@@ -19,34 +19,34 @@ class WebExForm from WebExControl
     protected data cFormMethod as character
     protected data cFormAction as character
 
-    protected data jWebExFieldFormFields as json
-    protected data jWebExButtonFormButtons as json
+    protected data jFormFieldWebExFields as json
+    protected data jFormWebExButtonButtons as json
 
     protected data lFormButtonsFirst as logical
 
-    protected data nWebExColFieldGroupColSize as numeric
+    protected data nFieldGroupColSize as numeric
 
-    protected data oWebExButtonForm as object
-    protected data oWebExRowFormFields as object
-    protected data oWebExFieldFormField as object
-    protected data oWebExFieldSetFormField as object
-    protected data oWebExFieldGroupFormField as object
-    protected data oWebExInputGroupInputFieldGroupFormField as object
+    protected data oFormWebExButton as object
+    protected data oFormFieldsWebExRow as object
+    protected data oFormFieldWebExField as object
+    protected data oFormFieldWebExFieldSet as object
+    protected data oFormFieldWebExFieldGroup as object
+    protected data oFormFieldGroupWebExInputGroup as object
 
     public method New(cFormTitle as character,lFormButtonsFirst as logical) as object
 
     public method AddField(cFormFieldLabel as character,cFormFieldName as character,cFormFieldType as character,cFormFieldPlaceHolder as character) as object
-    public method AddFieldToRow(oWebExRowFormFields,cFormFieldLabel as character,cFormFieldName as character,cFormFieldType as character,cFormFieldPlaceHolder as character) as object
-    public method AddFieldGroupToRow(oWebExRowFormFields,cFormFieldLabel as character,cFormFieldName as character,cFormFieldType as character,cFormFieldPlaceHolder as character,nWebExColFieldGroupColSize as numeric) as object
+    public method AddFieldToRow(oFormFieldsWebExRow,cFormFieldLabel as character,cFormFieldName as character,cFormFieldType as character,cFormFieldPlaceHolder as character) as object
+    public method AddFieldGroupToRow(oFormFieldsWebExRow,cFormFieldLabel as character,cFormFieldName as character,cFormFieldType as character,cFormFieldPlaceHolder as character,nFieldGroupColSize as numeric) as object
 
-    public method AddButton(oWebExButtonForm as object) as object
+    public method AddButton(oFormWebExButton as object) as object
 
     public method RenderHTML() as character
 
     public method SetFormTitle(cFormTitle as character) as object
     public method SetFormMethod(cFormMethod as character) as object
     public method SetFormAction(cFormAction as character) as object
-    public method SetWebExColFieldGroupColSize(nWebExColFieldGroupColSize as numeric) as object
+    public method SetFieldGroupColSize(nFieldGroupColSize as numeric) as object
 
 endclass
 
@@ -57,14 +57,14 @@ method New(cFormTitle,lFormButtonsFirst) class WebExForm
     ::cFormMethod:="get"
     ::cFormAction:="#"
     ::lFormButtonsFirst:=lFormButtonsFirst
-    ::jWebExFieldFormFields:=JSONObject():New()
-    ::jWebExButtonFormButtons:=JSONObject():New()
-    ::nWebExColFieldGroupColSize:=4//Default
+    ::jFormFieldWebExFields:=JSONObject():New()
+    ::jFormWebExButtonButtons:=JSONObject():New()
+    ::nFieldGroupColSize:=4//Default
     _Super:New("form")
     ::AddClass("p-3")
     ::AddClass("border")
     ::AddClass("rounded")
-    ::oWebExFieldSetFormField:=WebExFieldSet():New(::cFormTitle)
+    ::oFormFieldWebExFieldSet:=WebExFieldSet():New(::cFormTitle)
     ::SetFormTitle()
     ::SetFormMethod()
     ::SetFormAction()
@@ -75,56 +75,56 @@ method AddField(cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHol
     paramtype 2 var cFormFieldName as character
     paramtype 3 var cFormFieldType as character
     paramtype 4 var cFormFieldPlaceHolder as character
-    ::oWebExFieldFormField:=WebExField():New(cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHolder)
-    ::jWebExFieldFormFields[::oWebExFieldFormField:GetID()]:=::oWebExFieldFormField
+    ::oFormFieldWebExField:=WebExField():New(cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHolder)
+    ::jFormFieldWebExFields[::oFormFieldWebExField:GetID()]:=::oFormFieldWebExField
 return(self)
 
-method AddFieldToRow(oWebExRowFormFields,cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHolder) class WebExForm
+method AddFieldToRow(oFormFieldsWebExRow,cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHolder) class WebExForm
 
-    paramtype 1 var oWebExRowFormFields as object class WEBEXROW
+    paramtype 1 var oFormFieldsWebExRow as object class WEBEXROW
     paramtype 2 var cFormFieldLabel as character
     paramtype 3 var cFormFieldName as character
     paramtype 4 var cFormFieldType as character
     paramtype 5 var cFormFieldPlaceHolder as character
 
-    ::oWebExRowFormFields:=oWebExRowFormFields
+    ::oFormFieldsWebExRow:=oFormFieldsWebExRow
 
-    ::oWebExFieldFormField:=WebExField():New(cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHolder)
+    ::oFormFieldWebExField:=WebExField():New(cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHolder)
 
-    ::oWebExRowFormFields:AddChild(::oWebExFieldFormField)
-    ::jWebExFieldFormFields[::oWebExRowFormFields:GetID()]:=::oWebExRowFormFields
+    ::oFormFieldsWebExRow:AddChild(::oFormFieldWebExField)
+    ::jFormFieldWebExFields[::oFormFieldsWebExRow:GetID()]:=::oFormFieldsWebExRow
 
 return(self)
 
-method AddFieldGroupToRow(oWebExRowFormFields,cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHolder,nWebExColFieldGroupColSize) class WebExForm
+method AddFieldGroupToRow(oFormFieldsWebExRow,cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHolder,nFieldGroupColSize) class WebExForm
 
-    paramtype 1 var oWebExRowFormFields as object class WebExRow
+    paramtype 1 var oFormFieldsWebExRow as object class WebExRow
     paramtype 2 var cFormFieldLabel as character
     paramtype 3 var cFormFieldName as character
     paramtype 4 var cFormFieldType as character
     paramtype 5 var cFormFieldPlaceHolder as character
-    paramtype 6 var nWebExColFieldGroupColSize as numeric optional default 4
+    paramtype 6 var nFieldGroupColSize as numeric optional default 4
 
-    ::oWebExRowFormFields:=oWebExRowFormFields
+    ::oFormFieldsWebExRow:=oFormFieldsWebExRow
 
-    ::nWebExColFieldGroupColSize:=nWebExColFieldGroupColSize
+    ::nFieldGroupColSize:=nFieldGroupColSize
 
     // Monta estrutura
-    ::oWebExFieldGroupFormField:=WebExFieldGroup():New(cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHolder,/*cTitle*/,::nWebExColFieldGroupColSize)
-    ::oWebExRowFormFields:AddChild(::oWebExFieldGroupFormField)
+    ::oFormFieldWebExFieldGroup:=WebExFieldGroup():New(cFormFieldLabel,cFormFieldName,cFormFieldType,cFormFieldPlaceHolder,/*cTitle*/,::nFieldGroupColSize)
+    ::oFormFieldsWebExRow:AddChild(::oFormFieldWebExFieldGroup)
 
     // Registra no form
-    ::jWebExFieldFormFields[::oWebExRowFormFields:GetID()]:=::oWebExRowFormFields
+    ::jFormFieldWebExFields[::oFormFieldsWebExRow:GetID()]:=::oFormFieldsWebExRow
 
     //Obtem o Grupo
-    ::oWebExInputGroupInputFieldGroupFormField:=::oWebExFieldGroupFormField:GetMemberData("oWebExInputGroupInputFieldGroup")
+    ::oFormFieldGroupWebExInputGroup:=::oFormFieldWebExFieldGroup:GetMemberData("oFieldGroupWebExInputGroup")
 
 return(self)
 
-method AddButton(oWebExButtonForm) class WebExForm
-    paramtype 1 var oWebExButtonForm as object class WebExButton
-    ::oWebExButtonForm:=oWebExButtonForm
-    ::jWebExButtonFormButtons[::oWebExButtonForm:GetID()]:=::oWebExButtonForm
+method AddButton(oFormWebExButton) class WebExForm
+    paramtype 1 var oFormWebExButton as object class WebExButton
+    ::oFormWebExButton:=oFormWebExButton
+    ::jFormWebExButtonButtons[::oFormWebExButton:GetID()]:=::oFormWebExButton
 return(self)
 
 method RenderHTML() class WebExForm
@@ -142,35 +142,35 @@ method RenderHTML() class WebExForm
     ::SetFormMethod()
     ::SetFormAction()
 
-    jChilds:=if(::lFormButtonsFirst,::jWebExButtonFormButtons,::jWebExFieldFormFields)
+    jChilds:=if(::lFormButtonsFirst,::jFormWebExButtonButtons,::jFormFieldWebExFields)
 
     aNames:=jChilds:GetNames()
     nNames:=Len(aNames)
     for nName:=1 to nNames
         cFormFieldName:=aNames[nName]
         oChild:=jChilds[cFormFieldName]
-        ::oWebExFieldSetFormField:AddChild(oChild)
+        ::oFormFieldWebExFieldSet:AddChild(oChild)
     next nName
     FWFreeArray(@aNames)
 
-    jChilds:=if(::lFormButtonsFirst,::jWebExFieldFormFields,::jWebExButtonFormButtons)
+    jChilds:=if(::lFormButtonsFirst,::jFormFieldWebExFields,::jFormWebExButtonButtons)
     aNames:=jChilds:GetNames()
     nNames:=Len(aNames)
     for nName:=1 to nNames
         cFormFieldName:=aNames[nName]
         oChild:=jChilds[cFormFieldName]
-        ::oWebExFieldSetFormField:AddChild(oChild)
+        ::oFormFieldWebExFieldSet:AddChild(oChild)
     next nName
     FWFreeArray(@aNames)
 
-    ::AddChild(::oWebExFieldSetFormField)
+    ::AddChild(::oFormFieldWebExFieldSet)
 
 return(_Super:RenderHTML())
 
 method SetFormTitle(cFormTitle) class WebExForm
     paramtype 1 var cFormTitle as character optional default ::cFormTitle
     ::SetMemberData("cFormTitle",cFormTitle)
-    ::oWebExFieldSetFormField:SetFieldSetLegend(::cFormTitle)
+    ::oFormFieldWebExFieldSet:SetFieldSetLegend(::cFormTitle)
 return(self)
 
 method SetFormMethod(cFormMethod) class WebExForm
@@ -185,10 +185,10 @@ method SetFormAction(cFormAction) class WebExForm
     ::SetAttr("action",::cFormAction)
 return(self)
 
-method SetWebExColFieldGroupColSize(nWebExColFieldGroupColSize) class WebExForm
-    paramtype 1 var nWebExColFieldGroupColSize as numeric optional default ::nWebExColFieldGroupColSize
-    ::SetMemberData("nWebExColFieldGroupColSize",nWebExColFieldGroupColSize)
-    if (valType(::oWebExFieldGroupFormField)=="O")
-        ::oWebExFieldGroupFormField:SetWebExColFieldGroupColSize(::nWebExColFieldGroupColSize)
+method SetFieldGroupColSize(nFieldGroupColSize) class WebExForm
+    paramtype 1 var nFieldGroupColSize as numeric optional default ::nFieldGroupColSize
+    ::SetMemberData("nFieldGroupColSize",nFieldGroupColSize)
+    if (valType(::oFormFieldWebExFieldGroup)=="O")
+        ::oFormFieldWebExFieldGroup:SetFieldGroupColSize(::nFieldGroupColSize)
     endif
 return(self)

@@ -21,89 +21,89 @@ class WebExFieldGroup from WebExControl
     protected data cFieldGroupPlaceHolder as character
     protected data cFieldGroupTitle as character
 
-    protected data nWebExColFieldGroupColSize
+    protected data nFieldGroupColSize
 
-    protected data oWebExColFieldGroup as object
-    protected data oWebExLabelFieldGroup as object
-    protected data oWebExControlInputFieldGroup as object
-    protected data oWebExInputGroupInputFieldGroup as object
+    protected data oFieldGroupWebExCol as object
+    protected data oFieldGroupWebExLabel as object
+    protected data oFieldGroupWebExControl as object
+    protected data oFieldGroupWebExInputGroup as object
 
-    public method New(cFieldGroupLabel as character,cFieldGroupName as character,cFieldGroupType as character,cFieldGroupPlaceHolder as character,cFieldGroupTitle as character,nWebExColFieldGroupColSize as numeric) as object
+    public method New(cFieldGroupLabel as character,cFieldGroupName as character,cFieldGroupType as character,cFieldGroupPlaceHolder as character,cFieldGroupTitle as character,nFieldGroupColSize as numeric) as object
 
     public method SetFieldGroupLabel(cFieldGroupLabel as character) as object
     public method SetFieldGroupName(cFieldGroupName as character) as object
     public method SetFieldGroupType(cFieldGroupType as character) as object
     public method SetFieldPlaceHolder(cFieldGroupPlaceHolder as character) as object
     public method SetFieldGroupTitle(cFieldGroupTitle as character) as object
-    public method SetWebExColFieldGroupColSize(nWebExColFieldGroupColSize as numeric) as object
+    public method SetFieldGroupColSize(nFieldGroupColSize as numeric) as object
 
 endclass
 
-method New(cFieldGroupLabel,cFieldGroupName,cFieldGroupType,cFieldGroupPlaceHolder,cFieldGroupTitle,nWebExColFieldGroupColSize) class WebExFieldGroup
+method New(cFieldGroupLabel,cFieldGroupName,cFieldGroupType,cFieldGroupPlaceHolder,cFieldGroupTitle,nFieldGroupColSize) class WebExFieldGroup
 
     paramtype 1 var cFieldGroupLabel as character
     paramtype 2 var cFieldGroupName as character
     paramtype 3 var cFieldGroupType as character
     paramtype 4 var cFieldGroupPlaceHolder as character
     paramtype 5 var cFieldGroupTitle as character optional default cFieldGroupPlaceHolder
-    paramtype 6 var nWebExColFieldGroupColSize as numeric optional default 4
+    paramtype 6 var nFieldGroupColSize as numeric optional default 4
 
     ::cFieldGroupLabel:=cFieldGroupLabel
     ::cFieldGroupName:=cFieldGroupName
     ::cFieldGroupType:=cFieldGroupType
     ::cFieldGroupPlaceHolder:=cFieldGroupPlaceHolder
     ::cFieldGroupTitle:=cFieldGroupTitle
-    ::nWebExColFieldGroupColSize:=nWebExColFieldGroupColSize
+    ::nFieldGroupColSize:=nFieldGroupColSize
 
     _Super:New("div")
     ::AddClass("mb-3")
 
     // Cria o input
-    ::oWebExControlInputFieldGroup:=WebExControl():New("input")
+    ::oFieldGroupWebExControl:=WebExControl():New("input")
     ::SetFieldGroupType()
     ::SetFieldGroupName()
     ::SetFieldPlaceHolder()
     ::SetFieldGroupTitle()
 
     // Cria o grupo que retornara por referencia
-    ::oWebExInputGroupInputFieldGroup:=WebExInputGroup():New()
-    ::oWebExInputGroupInputFieldGroup:AddChild(::oWebExControlInputFieldGroup)
+    ::oFieldGroupWebExInputGroup:=WebExInputGroup():New()
+    ::oFieldGroupWebExInputGroup:AddChild(::oFieldGroupWebExControl)
 
     //Monta o Label
-    ::oWebExLabelFieldGroup:=WebExLabel():New(::oWebExControlInputFieldGroup:GetFixedID(),::cFieldGroupLabel)
+    ::oFieldGroupWebExLabel:=WebExLabel():New(::oFieldGroupWebExControl:GetFixedID(),::cFieldGroupLabel)
     ::SetFieldGroupLabel()
 
     // Monta estrutura
-    ::oWebExColFieldGroup:=WebExCol():New(::nWebExColFieldGroupColSize)
-    ::SetWebExColFieldGroupColSize()
-    ::oWebExColFieldGroup:AddChild(::oWebExLabelFieldGroup)
-    ::oWebExColFieldGroup:AddChild(::oWebExInputGroupInputFieldGroup)
+    ::oFieldGroupWebExCol:=WebExCol():New(::nFieldGroupColSize)
+    ::SetFieldGroupColSize()
+    ::oFieldGroupWebExCol:AddChild(::oFieldGroupWebExLabel)
+    ::oFieldGroupWebExCol:AddChild(::oFieldGroupWebExInputGroup)
 
-    ::AddChild(::oWebExColFieldGroup)
+    ::AddChild(::oFieldGroupWebExCol)
 
 return(self)
 
 method SetFieldGroupLabel(cFieldGroupLabel) class WebExFieldGroup
     paramtype 1 var cFieldGroupLabel as character optional default ::cFieldGroupLabel
     ::SetMemberData("cFieldGroupLabel",cFieldGroupLabel)
-    ::oWebExLabelFieldGroup:SetLabelFor(::oWebExControlInputFieldGroup:GetFixedID())
-    ::oWebExLabelFieldGroup:SetLabelText(::cFieldGroupLabel)
+    ::oFieldGroupWebExLabel:SetLabelFor(::oFieldGroupWebExControl:GetFixedID())
+    ::oFieldGroupWebExLabel:SetLabelText(::cFieldGroupLabel)
 return(self)
 
 method SetFieldGroupName(cFieldGroupName) class WebExFieldGroup
     paramtype 1 var cFieldGroupName as character optional default ::cFieldGroupName
     ::SetMemberData("cFieldGroupName",cFieldGroupName)
-    ::oWebExControlInputFieldGroup:SetAttr("name",::cFieldGroupName)
+    ::oFieldGroupWebExControl:SetAttr("name",::cFieldGroupName)
 return(self)
 
 method SetFieldGroupType(cFieldGroupType) class WebExFieldGroup
     paramtype cFieldGroupType as character optional default ::cFieldGroupType
     ::SetMemberData("cFieldGroupType",cFieldGroupType)
-    ::oWebExControlInputFieldGroup:SetAttr("type",::cFieldGroupType)
+    ::oFieldGroupWebExControl:SetAttr("type",::cFieldGroupType)
     if (!::cFieldGroupType=="checkbox")
-        ::oWebExControlInputFieldGroup:AddClass("form-control")
+        ::oFieldGroupWebExControl:AddClass("form-control")
     else
-        ::oWebExControlInputFieldGroup:DelClass("form-control")
+        ::oFieldGroupWebExControl:DelClass("form-control")
     endif
 return(self)
 
@@ -111,9 +111,9 @@ method SetFieldPlaceHolder(cFieldGroupPlaceHolder) class WebExFieldGroup
     paramtype 1 var cFieldGroupPlaceHolder as character optional default ::cFieldGroupPlaceHolder
     ::SetMemberData("cFieldGroupPlaceHolder",cFieldGroupPlaceHolder)
     if (!Empty(::cFieldGroupPlaceHolder))
-        ::oWebExControlInputFieldGroup:SetAttr("placeholder",::cFieldGroupPlaceHolder)
+        ::oFieldGroupWebExControl:SetAttr("placeholder",::cFieldGroupPlaceHolder)
     else
-        ::oWebExControlInputFieldGroup:DelAttr("placeholder")
+        ::oFieldGroupWebExControl:DelAttr("placeholder")
     endif
 return(self)
 
@@ -121,14 +121,14 @@ method SetFieldGroupTitle(cFieldGroupTitle) class WebExFieldGroup
     paramtype 1 var cFieldGroupTitle as character optional default ::cFieldGroupTitle
     ::SetMemberData("cFieldGroupTitle",cFieldGroupTitle)
     if (!Empty(::cFieldGroupTitle))
-        ::oWebExControlInputFieldGroup:SetAttr("title",::cFieldGroupTitle)
+        ::oFieldGroupWebExControl:SetAttr("title",::cFieldGroupTitle)
     else
-        ::oWebExControlInputFieldGroup:DelAttr("title")
+        ::oFieldGroupWebExControl:DelAttr("title")
     endif
 return(self)
 
-method SetWebExColFieldGroupColSize(nWebExColFieldGroupColSize) class WebExFieldGroup
-    paramtype 1 var nWebExColFieldGroupColSize as numeric optional default ::nWebExColFieldGroupColSize
-    ::SetMemberData("nWebExColFieldGroupColSize",nWebExColFieldGroupColSize)
-    ::oWebExColFieldGroup:SetColSize(::nWebExColFieldGroupColSize)
+method SetFieldGroupColSize(nFieldGroupColSize) class WebExFieldGroup
+    paramtype 1 var nFieldGroupColSize as numeric optional default ::nFieldGroupColSize
+    ::SetMemberData("nFieldGroupColSize",nFieldGroupColSize)
+    ::oFieldGroupWebExCol:SetColSize(::nFieldGroupColSize)
 return(self)
