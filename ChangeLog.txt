@@ -2,8 +2,11 @@
      * Change  ! Fix  % Optimize  + Add  - Remove  ; Comment
    Entries may not always be in chronological/commit order.
    See license at the end of file.
-   (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+   (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
+
+2025-07-24 11:15 UTC naldodj (Get-Date)
+  * ChangeLog.txt
 
 2025-07-22 22:29 UTC naldodj (makepatch)
   + bin/patches/ext.txt
