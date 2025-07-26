@@ -5,6 +5,12 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-07-26 14:20 UTC naldodj (dna.tech.tools SDF)
+  + data/dna.tech/data/zx.dtc
+  + data/dna.tech/data/zy.dtc
+  + data/dna.tech/data/zz.dtc
+  * data/sdf/dna.tech.sdfbra.txt.7z -> data/dna.tech/sdf/dna.tech.sdfbra.txt.7z
+
 2025-07-26 14:17 UTC naldodj (dna.tech.tools SDF)
   + data/sdf/dna.tech.sdfbra.txt.7z
 
