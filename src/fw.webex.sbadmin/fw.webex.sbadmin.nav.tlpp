@@ -71,8 +71,7 @@ method New(cBrandName,cBrandLink) class SBAdminNav
             .:SetFixedID("id","sidebarToggle")
             .:AddClass("btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0")
             .:SetAttr("href","#!")
-            WITH WEBEXOBJECT ::oSBAdminNavIconToggle CLASS WebExIcon() ARGS "fa-bars","fontawesome"
-                .:AddClass("fas")
+            WITH WEBEXOBJECT ::oSBAdminNavIconToggle CLASS WebExIcon() ARGS "fas fa-bars","fontawesome"
             END WEBEXOBJECT
         END WEBEXOBJECT
         WITH WEBEXOBJECT  CLASS WebExComment
@@ -91,8 +90,7 @@ method New(cBrandName,cBrandLink) class SBAdminNav
                     .:SetAttr("type","button")
                     .:SetFixedID("btnNavbarSearch")
                     .:AddClass("btn btn-primary")
-                    WITH WEBEXOBJECT ::oSBAdminNavFormSearchIconButton CLASS WebExIcon ARGS "fa-search","fontawesome"
-                        .:AddClass("fas")
+                    WITH WEBEXOBJECT ::oSBAdminNavFormSearchIconButton CLASS WebExIcon ARGS "fas fa-search","fontawesome"
                     END WEBEXOBJECT
                 END WEBEXOBJECT
             END WEBEXOBJECT
@@ -111,9 +109,7 @@ method New(cBrandName,cBrandLink) class SBAdminNav
                     .:SetAttr("role","button" )
                     .:SetAttr("data-bs-toggle","dropdown")
                     .:SetAttr("aria-expanded","false")
-                    WITH WEBEXOBJECT CLASS WebExIcon() ARGS "fa-user","fontawesome"
-                        .:AddClass("fas")
-                        .:AddClass("fa-fw")
+                    WITH WEBEXOBJECT CLASS WebExIcon() ARGS "fas fa-user fa-fw","fontawesome"
                     END WEBEXOBJECT
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExUL
