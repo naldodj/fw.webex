@@ -45,7 +45,7 @@ endclass
 method New(cBrandName,cBrandLink) class SBAdminNav
 
     paramtype 1 var cBrandName as character optional default "FWWebEx.SBAdmin"
-    paramtype 1 var cBrandLink as character optional default "#"
+    paramtype 2 var cBrandLink as character optional default "#"
 
     ::cBrandName:=cBrandName
     ::cBrandLink:=cBrandLink
