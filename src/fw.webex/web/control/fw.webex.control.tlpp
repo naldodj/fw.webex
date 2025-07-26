@@ -35,6 +35,7 @@ class WebExControl
     protected data cType as character
     protected data cContent as character
     protected data cFixedID as character
+    protected data cContentLoadAfterID as character
 
     protected data cFWWebExTmpPath as character
 
@@ -86,7 +87,7 @@ class WebExControl
     public method DelAttrValueRegex(cAttr as character,cAttrValueRegex as character,/*@*/aAttr as array,lDelAttrValue as logical) as object
 
     public method GetContent() as character
-    public method SetContent(cContent as character) as object
+    public method SetContent(cContent as character,cContentLoadAfterID as character) as object
     public method ContentIsNull() as logical
 
     public method GetFWWebExTmpPath() as character
@@ -526,9 +527,11 @@ return(self)
 method GetContent() class WebExControl
 return(::cContent)
 
-method SetContent(cContent) class WebExControl
+method SetContent(cContent,cContentLoadAfterID) class WebExControl
    paramtype 1 var cContent as character
+   paramtype 2 var cContentLoadAfterID as character optional default ""
    ::cContent:=cContent
+   ::cContentLoadAfterID:=cContentLoadAfterID
 return(self)
 
 method ContentIsNull() class WebExControl
@@ -836,6 +839,8 @@ method RenderHTML() class WebExControl
     local nChild as numeric
     local nChilds as numeric
 
+    local oChild as object
+
     local xVal as variant
 
     if ((::lRenderChildren).or.(Empty(::cHTML)))
@@ -908,7 +913,7 @@ method RenderHTML() class WebExControl
                     cHTML+=">"
                 endif
 
-                if (cContent!=FWWEBEX_WEB_NULL_CONTENT)
+                if ((cContent!=FWWEBEX_WEB_NULL_CONTENT).and.(Empty(::cContentLoadAfterID)))
                     cHTML+=cContent
                 endif
 
@@ -922,6 +927,11 @@ method RenderHTML() class WebExControl
                             if (valType(oChild)=="O")
                                 ::SetRenderChildren(::lRenderChildren)
                                 cHTML+=oChild:RenderHTML()
+                                if (oChild:GetID()==::cContentLoadAfterID)
+                                    if ((cContent!=FWWEBEX_WEB_NULL_CONTENT))
+                                        cHTML+=cContent
+                                    endif
+                                endif
                             endif
                         endif
                     next nChild
