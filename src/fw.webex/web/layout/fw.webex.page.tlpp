@@ -114,7 +114,7 @@ method AddPageStyle(cPageStyle) class WebExPage
     WITH WEBEXOBJECT oStyle CLASS WebExControl TYPE style
         .:SetContent(cPageStyle)
         ::jPageStyle[oStyle:GetID()]:=oStyle
-    END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 return(self)
 
 method SetObjPageBody(oPageBody) class WebExPage
@@ -299,7 +299,7 @@ method RenderHTML() class WebExPage
     WITH WEBEXOBJECT ::oPageBody
         WITH WEBEXOBJECT CLASS WebExFooter
         END WEBEXOBJECT
-    END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
     ::oPageBody:RenderHTML()
     ::oPageBody:SetRenderChildren(.F.)
 
@@ -408,7 +408,7 @@ method RenderHTML() class WebExPage
                 .:SetContent("/*__EXTERNAL_ASSETS__*/")
             END WEBEXOBJECT
         endif
-    END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 
     cHTML+=oPage:RenderHTML()
 

@@ -567,7 +567,7 @@ static function AlarmClockPage()
         WITH WEBEXOBJECT CLASS WebExScript
             .:SetContent(cScript)
         END WEBEXOBJECT
-    END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 
 return(oFWWebExPage)
 
@@ -1091,6 +1091,6 @@ static function ZodiacSignsPage()
         WITH WEBEXOBJECT CLASS WebExScript
             .:SetContent(cScript)
         END WEBEXOBJECT
-    END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 
 return(oFWWebExPage)

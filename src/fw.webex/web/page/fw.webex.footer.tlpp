@@ -43,5 +43,5 @@ method New(cFooterContent) class WebExFooter
                 .:SetContent(::cFooterContent)
             END WEBEXOBJECT
         END WEBEXOBJECT
-    END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 return(self)

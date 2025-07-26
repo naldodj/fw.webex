@@ -30,13 +30,15 @@ class SBAdminNav from WebExControl
     protected data oSBAdminNavFormSearchInputGroup as object
 
     protected data oSBAdminNavRightMenu as object
+    protected data oSBAdminNavRightMenuItem as object
 
     public method New() as object
 
     public method SetBrandName(cBrandName as character) as object
     public method SetBrandLink(cBrandLInk as character) as object
 
-    public method NavRightMenuAddItem() as object
+    public method NavRightMenuAddItem(oSBAdminNavRightMenu,oSBAdminNavRightMenuItem) as object
+    public method NavRightMenuAddDivider(oSBAdminNavRightMenu as object) as object
 
 endclass
 
@@ -86,7 +88,6 @@ method New(cBrandName,cBrandLink) class SBAdminNav
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
-        //TODO: NavRightMenuAddItem()
         WITH WEBEXOBJECT ::oSBAdminNavRightMenu CLASS WebExUL
             .:AddClass("navbar-nav ms-auto ms-md-0 me-3 me-lg-4")
             WITH WEBEXOBJECT CLASS WebExLI
@@ -120,12 +121,7 @@ method New(cBrandName,cBrandLink) class SBAdminNav
                         .:SetContent("Activity Log")
                         END WEBEXOBJECT
                     END WEBEXOBJECT
-                    WITH WEBEXOBJECT CLASS WebExLI
-                        WITH WEBEXOBJECT CLASS WebExHR
-                            .:DelAllAttr()
-                            .:SetAttr("class","dropdown-divider")
-                        END WEBEXOBJECT
-                    END WEBEXOBJECT
+                    ::NavRightMenuAddDivider(.this)
                     WITH WEBEXOBJECT CLASS WebExLI
                         WITH WEBEXOBJECT CLASS WebExAnchor
                             .:SetAttr("class","dropdown-item")
@@ -136,7 +132,7 @@ method New(cBrandName,cBrandLink) class SBAdminNav
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
-    END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 
 return(self)
 
@@ -152,6 +148,21 @@ method SetBrandLink(cBrandLInk) class SBAdminNav
     ::oSBAdminNavBrand:SetAttr("href",::cBrandLInk)
 return(self)
 
-method NavRightMenuAddItem() class SBAdminNav
-    //TODO:
+method NavRightMenuAddItem(oSBAdminNavRightMenu,oSBAdminNavRightMenuItem) class SBAdminNav
+    paramtype 1 var oSBAdminNavRightMenu as object optional default ::oSBAdminNavRightMenu
+    paramtype 1 var oSBAdminNavRightMenuItem as object
+    ::oSBAdminNavRightMenuItem:=oSBAdminNavRightMenuItem
+    oSBAdminNavRightMenu:AddChild(::oSBAdminNavRightMenuItem)
+return(self)
+
+method NavRightMenuAddDivider(oSBAdminNavRightMenu) class SBAdminNav
+    paramtype oSBAdminNavRightMenu as object
+    WITH WEBEXOBJECT oSBAdminNavRightMenu
+        WITH WEBEXOBJECT CLASS WebExLI
+            WITH WEBEXOBJECT CLASS WebExHR
+                .:DelAllAttr()
+                .:SetAttr("class","dropdown-divider")
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 return(self)

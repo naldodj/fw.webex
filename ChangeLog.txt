@@ -5,6 +5,22 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-07-26 12:00 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  * src/fw.webex/web/component/fw.webex.card.tlpp
+  * src/fw.webex/web/control/fw.webex.control.tlpp
+  * src/fw.webex/web/layout/fw.webex.page.tlpp
+  * src/fw.webex/web/page/fw.webex.footer.tlpp
+  * src/fw.webex.examples/000/fw.webex.template.bulk.action.table.tlpp
+  * src/fw.webex.examples/001/fw.webex.example.001.tlpp
+  * src/fw.webex.examples/002/fw.webex.example.002.tlpp
+  * src/fw.webex.examples/003/fw.webex.example.003.tlpp
+  * src/fw.webex.examples/004/fw.webex.example.004.tlpp
+  * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+  * src/fw.webex.examples/011/fw.webex.example.011.tlpp
+  * src/fw.webex.examples/016/fw.webex.example.016.tlpp
+  * src/fw.webex.examples/020/fw.webex.example.020.tlpp
+  * src/fw.webex.sbadmin/fw.webex.sbadmin.nav.tlpp
+
 2025-07-26 03:52 UTC naldodj (Fix: html2fwwebex.py)
   ! Fix: html2fwwebex.py
     * py/html2fwwebex.py

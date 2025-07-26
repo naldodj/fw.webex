@@ -832,6 +832,7 @@ method RenderHTML() class WebExControl
     local cLowerType as character
 
     local lHTMLAssetsToFile:=.F. as logical
+    local lContentLoadAfterID as logical
 
     local nAttr as numeric
     local nAttrs as numeric
@@ -852,6 +853,7 @@ method RenderHTML() class WebExControl
 
         cContent:=::cContent
         cLowerType:=::cType
+        lContentLoadAfterID:=(!Empty(::cContentLoadAfterID))
 
         if (;
                 (::ExternalAssetsIsEnabled());
@@ -913,7 +915,7 @@ method RenderHTML() class WebExControl
                     cHTML+=">"
                 endif
 
-                if ((cContent!=FWWEBEX_WEB_NULL_CONTENT).and.(Empty(::cContentLoadAfterID)))
+                if ((cContent!=FWWEBEX_WEB_NULL_CONTENT).and.(!lContentLoadAfterID))
                     cHTML+=cContent
                 endif
 
@@ -927,7 +929,7 @@ method RenderHTML() class WebExControl
                             if (valType(oChild)=="O")
                                 ::SetRenderChildren(::lRenderChildren)
                                 cHTML+=oChild:RenderHTML()
-                                if (oChild:GetID()==::cContentLoadAfterID)
+                                if ((lContentLoadAfterID).and.(oChild:GetID()==::cContentLoadAfterID))
                                     if ((cContent!=FWWEBEX_WEB_NULL_CONTENT))
                                         cHTML+=cContent
                                     endif

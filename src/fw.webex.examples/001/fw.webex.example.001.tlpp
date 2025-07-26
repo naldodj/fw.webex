@@ -87,7 +87,7 @@ static function FWWebExExample_001() as character
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
-    END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 
     WebFileTools():HTMLFromControl(oFWWebExPage,GetTempPath(),@cHTMLFile,@cHTML,.T.)
 

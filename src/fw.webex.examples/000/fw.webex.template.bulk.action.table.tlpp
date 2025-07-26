@@ -306,7 +306,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
 
         END WEBEXOBJECT
 
-    END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 
     cHtml:=_Super:RenderHTML()
 

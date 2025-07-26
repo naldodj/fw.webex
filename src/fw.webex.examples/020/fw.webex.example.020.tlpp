@@ -104,7 +104,7 @@ static procedure FWWebExExample_020(cHTML as character) as character
         WITH WEBEXOBJECT oFWWebExBody
             WITH WEBEXOBJECT CLASS SBAdminNav
             END WEBEXOBJECT
-        END WEBEXOBJECT
+        END WEBEXOBJECT NOADDCHILD
         oScript:=WebExControl():New("script")
         oScript:SetAttr("src",cSBAdminPath+"js/scripts.js")
     oFWWebExBody:AddChild(oScript)

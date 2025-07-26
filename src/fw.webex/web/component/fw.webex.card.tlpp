@@ -48,7 +48,7 @@ method New(cCardTextTitle,cCardTextBody) class WebExCard
                 END WEBEXOBJECT
             endif
         END WEBEXOBJECT
-    END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 return(self)
 
 method SetCardTextTitle(cCardTextTitle) class WebExCard
