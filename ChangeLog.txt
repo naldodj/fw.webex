@@ -5,6 +5,11 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-07-26 12:48 UTC naldodj (fw.webex.sbadmin)
+  * py/html2fwwebex.py
+  * src/fw.webex.examples/019/fw.webex.example.019.tlpp
+  * src/fw.webex.sbadmin/fw.webex.sbadmin.nav.tlpp
+
 2025-07-26 12:00 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   * src/fw.webex/web/component/fw.webex.card.tlpp
   * src/fw.webex/web/control/fw.webex.control.tlpp

@@ -3,7 +3,7 @@
 #  / _|__      ____      __  ___ | |__    ___ __  __
 # | |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
 # |  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
-# | |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+# |_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
 #
 # html2fwwebex.py
 #
@@ -37,18 +37,20 @@ def preserve_entities(text):
     text = text.replace('&amp;', '&amp;')
     return text
 
-def process_element(el, level=0, count=[0]):
+def process_element(el, level=0, counters=None):
+    if counters is None:
+        counters = {"Comment": 0}  # Inicializa contador para comentários
     lines = []
 
     # Se for um comentário
     if isinstance(el, Comment):
-        count[0] += 1
-        var = f"oComment{count[0]}"
-        lines.append(f"{indent(level)}{var} := WebExControl():New( \"!--\" )")
+        counters["Comment"] += 1
+        var = f"oComment{counters['Comment']}"
+        lines.append(f"{indent(level)}{var}:=WebExComment():New()")
         content = str(el).strip().replace('"', '\\"')
         if content:
             content = preserve_entities(content)
-            lines.append(f"{indent(level)}{var}:SetContent( \"{content}\" )")
+            lines.append(f"{indent(level)}{var}:SetContent(\"{content}\")")
         return lines, var
 
     # Se não for uma tag válida, retorna vazio
@@ -56,44 +58,47 @@ def process_element(el, level=0, count=[0]):
     if not tag:
         return [], None
 
-    count[0] += 1
-    var = f"o{tag.capitalize()}{count[0]}"
-    lines.append(f"{indent(level)}{var} := WebExControl():New( \"{tag}\" )")
+    # Inicializa contador para a tag se não existir
+    if tag not in counters:
+        counters[tag] = 0
+    counters[tag] += 1
+    var = f"o{tag.capitalize()}{counters[tag]}"
+    lines.append(f"{indent(level)}{var}:=WebExControl():New(\"{tag}\")")
 
     # Processa todos os atributos de forma genérica
     for attr, value in el.attrs.items():
         if attr == "class":
             # Tratamento especial para classes (lista de strings)
             class_str = " ".join(value)
-            lines.append(f"{indent(level)}{var}:SetAttr( \"class\", \"{class_str}\" )")
+            lines.append(f"{indent(level)}{var}:AddClass(\"{class_str}\")")
         elif attr == "id":
             # Tratamento especial para id (usando SetFixedID)
-            lines.append(f"{indent(level)}{var}:SetFixedID( \"{value}\" )")
+            lines.append(f"{indent(level)}{var}:SetFixedID(\"{value}\")")
         elif attr == "href" and value == ":back":
             # Tratamento especial para href=":back" (navegação de retorno)
-            lines.append(f"{indent(level)}{var}:SetAttr( \"href\", \"javascript:history.back()\" )")
+            lines.append(f"{indent(level)}{var}:SetAttr(\"href\",\"javascript:history.back()\")")
         else:
             # Demais atributos são tratados diretamente
-            attr_value = str(value).replace('"', '\\"')
-            lines.append(f"{indent(level)}{var}:SetAttr( \"{attr}\", \"{attr_value}\" )")
+            attr_value = str(value).replace('"','\\"')
+            lines.append(f"{indent(level)}{var}:SetAttr(\"{attr}\",\"{attr_value}\")")
 
     # Acumula linhas de conteúdo e filhos na ordem do DOM
     content_lines = []
     last_child_var = None
     for content in el.contents:
         if isinstance(content, str) and not isinstance(content, Comment) and content.strip():
-            content = content.strip().replace('"', '\\"')
+            content = content.strip().replace('"','\\"')
             content = preserve_entities(content)
             if last_child_var:
-                content_lines.append(f"{indent(level)}{var}:SetContent( \"{content}\", {last_child_var}:GetID() )")
+                content_lines.append(f"{indent(level)}{var}:SetContent(\"{content}\",{last_child_var}:GetID())")
             else:
-                content_lines.append(f"{indent(level)}{var}:SetContent( \"{content}\" )")
+                content_lines.append(f"{indent(level)}{var}:SetContent(\"{content}\")")
         else:
             # Processa comentários ou elementos como filhos
-            child_lines, child_var = process_element(content, level + 1, count)
+            child_lines, child_var = process_element(content, level + 1, counters)
             content_lines.extend(child_lines)
             if child_var:
-                content_lines.append(f"{indent(level)}{var}:AddChild( {child_var} )")
+                content_lines.append(f"{indent(level)}{var}:AddChild({child_var})")
                 last_child_var = child_var
 
     # Adiciona as linhas acumuladas após processar todos os conteúdos
@@ -119,8 +124,8 @@ def main():
     lines, top_var = process_element(body)
 
     # Finalização
-    lines.append(f"oFWWebExPage:=WebExPage():New('{args.output_file} :: FWWEbEx :: SBADMIN')")
-    lines.append(f"oFWWebExPage:AddChild( {top_var} )")
+    lines.append(f"oFWWebExPage:=WebExPage():New(\"{args.output_file} :: FWWEbEx :: SBADMIN\")")
+    lines.append(f"oFWWebExPage:AddChild({top_var})")
 
     # Salvar como arquivo TLPP
     with open(args.output_file, "w", encoding="utf-8") as f:

@@ -55,10 +55,16 @@ method New(cBrandName,cBrandLink) class SBAdminNav
     ::AddClass("sb-topnav navbar navbar-expand navbar-dark bg-dark")
 
     WITH WEBEXOBJECT self
+        WITH WEBEXOBJECT  CLASS WebExComment
+            .:SetContent("Navbar Brand")
+        END WEBEXOBJECT
         WITH WEBEXOBJECT ::oSBAdminNavBrand CLASS WebExAnchor
             .:AddClass("navbar-brand ps-3")
             ::SetBrandLink(::cBrandLink)
             ::SetBrandName(::cBrandName)
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT  CLASS WebExComment
+            .:SetContent("Sidebar Toggle")
         END WEBEXOBJECT
         WITH WEBEXOBJECT ::oSBAdminNavToggle CLASS WebExButton ARGS "",""
             .:DelAllAttr()
@@ -68,6 +74,9 @@ method New(cBrandName,cBrandLink) class SBAdminNav
             WITH WEBEXOBJECT ::oSBAdminNavIconToggle CLASS WebExIcon() ARGS "fa-bars","fontawesome"
                 .:AddClass("fas")
             END WEBEXOBJECT
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT  CLASS WebExComment
+            .:SetContent("Navbar Search")
         END WEBEXOBJECT
         WITH WEBEXOBJECT ::oSBAdminNavFormSearch CLASS WebExForm ARGS ""
             .:DelAllAttr()
@@ -87,6 +96,9 @@ method New(cBrandName,cBrandLink) class SBAdminNav
                     END WEBEXOBJECT
                 END WEBEXOBJECT
             END WEBEXOBJECT
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT  CLASS WebExComment
+            .:SetContent("Navbar")
         END WEBEXOBJECT
         WITH WEBEXOBJECT ::oSBAdminNavRightMenu CLASS WebExUL
             .:AddClass("navbar-nav ms-auto ms-md-0 me-3 me-lg-4")
