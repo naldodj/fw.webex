@@ -32,62 +32,16 @@ return
 
 static procedure FWWebExExample_019(cHTML as character) as character
 
-    local aSBAdmin as array
-    local aSBAdminFiles as array
-
-    local jSBAdmin:=JSONObject():New()
-
-    local cSBAdmin as character
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
-    local cAPPRootURI:=WebApp():GetAPPRoot() as character
-    local cSBAdminPath:=cAPPRootURI+"fwwebex/sbadmin/"
-
-    local i as numeric
-    local nDir as numeric
+    local cSBAdminPath as character
 
     local oFWWebExPage as object
     local oFWWebExBody as object
 
-    if ((Empty(cAPPRootURI)).or.(cAPPRootURI=="/"))
-        ApMsgAlert("app-root Inv&aacute;lido ou inexistente ["+cAPPRootURI+"]",ProcName())
+    if (!FWExampleTools():SBAdminCheck(@cSBAdminPath))
         return("")
     endif
-
-    //https://startbootstrap.com/template/sb-admin
-    jSBAdmin["fwwebex_sbadmin"]:="\http-root\app-root\fwwebex\sbadmin\"
-    jSBAdmin["fwwebex_sbadmin_assets_demo"]:="\http-root\app-root\fwwebex\sbadmin\assets\demo\"
-    jSBAdmin["fwwebex_sbadmin_assets_img"]:="\http-root\app-root\fwwebex\sbadmin\assets\img\"
-    jSBAdmin["fwwebex_sbadmin_css"]:="\http-root\app-root\fwwebex\sbadmin\css\"
-    jSBAdmin["fwwebex_sbadmin_js"]:="http-root\app-root\fwwebex\sbadmin\js\"
-
-    //Verifica se os Demais Dados do SBAdmin estao no servidor
-    aSBAdmin:=jSBAdmin:GetNames()
-    for i:=1 to Len(aSBAdmin)
-        cSBAdmin:=aSBAdmin[i]
-        if (!lIsDir(jSBAdmin[cSBAdmin]))
-            ApMsgAlert("Estrutura SBAdmin n&atilde;o Encontrada ["+jSBAdmin[cSBAdmin]+"]",ProcName())
-            FWFreeArray(@aSBAdmin)
-            FreeObj(@jSBAdmin)
-            return("")
-        endif
-        aSBAdminFiles:=Directory(jSBAdmin[cSBAdmin]+"*.*")
-        while ((nDir:=aScan(aSBAdminFiles,{|x|(x[F_ATTR]=="D").or.(x[F_NAME]==".").or.(x[F_NAME]=="..")}))>0)
-            aDel(aSBAdminFiles,nDir)
-            aSize(aSBAdminFiles,(Len(aSBAdminFiles)-1))
-        end while
-        if (Empty(aSBAdminFiles))
-            ApMsgAlert("Arquivos para SBAdmin n&atilde;o Encontrados ["+jSBAdmin[cSBAdmin]+"]",ProcName())
-            FWFreeArray(@aSBAdmin)
-            FreeObj(@jSBAdmin)
-            FWFreeArray(@aSBAdminFiles)
-            return("")
-        endif
-        FWFreeArray(@aSBAdminFiles)
-    next i
-
-    FWFreeArray(@aSBAdmin)
-    FreeObj(@jSBAdmin)
 
     oLinkInHeader:=WebExLink():New()
     oLinkInHeader:SetAttr("href",cSBAdminPath+"css/styles.css")
