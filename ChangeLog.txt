@@ -5,6 +5,11 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-07-28 12:26 UTC naldodj (fw.webex.sbadmin)
+  * src/fw.webex/tools/fw.webex.context.tlpp
+  * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
+  * src/fw.webex.sbadmin/fw.webex.sbadmin.nav.tlpp
+
 2025-07-26 14:20 UTC naldodj (dna.tech.tools SDF)
   + data/dna.tech/data/zx.dtc
   + data/dna.tech/data/zy.dtc

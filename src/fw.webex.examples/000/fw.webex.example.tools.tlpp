@@ -177,6 +177,7 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile,oTWebChannel,bJSToAdvPL,bCallB
         lAbrir:=file(cHTMLFile)
 
         if (lAbrir)
+            lAbrir:=(WebApp():WebAgentIsConnected())
             if (WebApp():WebAgentIsConnected())
                 bErrorBlock:=ErrorBlock({|oError|Break(oError)})
                 begin sequence

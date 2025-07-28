@@ -18,6 +18,8 @@ class SBAdminNav from WebExControl
     protected data cBrandName as character
     protected data cBrandLink as character
 
+    protected data lNavRightMenu as logical
+
     protected data oSBAdminNav as object
     protected data oSBAdminNavBrand as object
     protected data oSBAdminNavToggle as object
@@ -32,30 +34,37 @@ class SBAdminNav from WebExControl
     protected data oSBAdminNavRightMenu as object
     protected data oSBAdminNavRightMenuItem as object
 
-    public method New() as object
+    public method New(cBrandName as character,cBrandLInk as character,lNavRightMenu) as object
 
     public method SetBrandName(cBrandName as character) as object
     public method SetBrandLink(cBrandLInk as character) as object
 
-    public method NavRightMenuAddItem(oSBAdminNavRightMenu,oSBAdminNavRightMenuItem) as object
+    public method NavRightMenuAdd(oSBAdminNav as object) as object
+    public method NavRightMenuAddItem(oSBAdminNavRightMenu as object,oSBAdminNavRightMenuItem as object) as object
     public method NavRightMenuAddDivider(oSBAdminNavRightMenu as object) as object
+
+    public method NavRightLoadJSONMenu(jSBAdminNavRightMenu as json) as object
 
 endclass
 
-method New(cBrandName,cBrandLink) class SBAdminNav
+method New(cBrandName,cBrandLink,lNavRightMenu) class SBAdminNav
 
     paramtype 1 var cBrandName as character optional default "FWWebEx.SBAdmin"
     paramtype 2 var cBrandLink as character optional default "#"
+    paramtype 3 var lNavRightMenu as logical optional default .T.
 
     ::cBrandName:=cBrandName
     ::cBrandLink:=cBrandLink
+    ::lNavRightMenu:=lNavRightMenu
 
     _Super:New("nav")
     ::SetFixedID("sb-topnav")
     ::AddClass("sb-topnav navbar navbar-expand navbar-dark bg-dark")
 
-    WITH WEBEXOBJECT self
-        WITH WEBEXOBJECT  CLASS WebExComment
+    ::oSBAdminNav:=self
+
+    WITH WEBEXOBJECT ::oSBAdminNav
+        WITH WEBEXOBJECT CLASS WebExComment
             .:SetContent("Navbar Brand")
         END WEBEXOBJECT
         WITH WEBEXOBJECT ::oSBAdminNavBrand CLASS WebExAnchor
@@ -63,7 +72,7 @@ method New(cBrandName,cBrandLink) class SBAdminNav
             ::SetBrandLink(::cBrandLink)
             ::SetBrandName(::cBrandName)
         END WEBEXOBJECT
-        WITH WEBEXOBJECT  CLASS WebExComment
+        WITH WEBEXOBJECT CLASS WebExComment
             .:SetContent("Sidebar Toggle")
         END WEBEXOBJECT
         WITH WEBEXOBJECT ::oSBAdminNavToggle CLASS WebExButton ARGS "",""
@@ -74,7 +83,7 @@ method New(cBrandName,cBrandLink) class SBAdminNav
             WITH WEBEXOBJECT ::oSBAdminNavIconToggle CLASS WebExIcon() ARGS "fas fa-bars","fontawesome"
             END WEBEXOBJECT
         END WEBEXOBJECT
-        WITH WEBEXOBJECT  CLASS WebExComment
+        WITH WEBEXOBJECT CLASS WebExComment
             .:SetContent("Navbar Search")
         END WEBEXOBJECT
         WITH WEBEXOBJECT ::oSBAdminNavFormSearch CLASS WebExForm ARGS ""
@@ -95,51 +104,10 @@ method New(cBrandName,cBrandLink) class SBAdminNav
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
-        WITH WEBEXOBJECT  CLASS WebExComment
-            .:SetContent("Navbar")
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT ::oSBAdminNavRightMenu CLASS WebExUL
-            .:AddClass("navbar-nav ms-auto ms-md-0 me-3 me-lg-4")
-            WITH WEBEXOBJECT CLASS WebExLI
-                .:SetAttr("class","nav-item dropdown")
-                WITH WEBEXOBJECT CLASS WebExAnchor
-                    .:SetAttr("class","nav-link dropdown-toggle")
-                    .:SetFixedID("navbarDropdown")
-                    .:SetAttr("href","#")
-                    .:SetAttr("role","button" )
-                    .:SetAttr("data-bs-toggle","dropdown")
-                    .:SetAttr("aria-expanded","false")
-                    WITH WEBEXOBJECT CLASS WebExIcon() ARGS "fas fa-user fa-fw","fontawesome"
-                    END WEBEXOBJECT
-                END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExUL
-                    .:SetAttr("class","dropdown-menu dropdown-menu-end")
-                    .:SetAttr("aria-labelledby","navbarDropdown")
-                    WITH WEBEXOBJECT CLASS WebExLI
-                        WITH WEBEXOBJECT CLASS WebExAnchor
-                            .:SetAttr("class","dropdown-item")
-                            .:SetAttr("href","#!")
-                            .:SetContent("Settings")
-                        END WEBEXOBJECT
-                    END WEBEXOBJECT
-                    WITH WEBEXOBJECT CLASS WebExLI
-                        WITH WEBEXOBJECT CLASS WebExAnchor
-                        .:SetAttr("class","dropdown-item")
-                        .:SetAttr("href","#!")
-                        .:SetContent("Activity Log")
-                        END WEBEXOBJECT
-                    END WEBEXOBJECT
-                    ::NavRightMenuAddDivider(.this)
-                    WITH WEBEXOBJECT CLASS WebExLI
-                        WITH WEBEXOBJECT CLASS WebExAnchor
-                            .:SetAttr("class","dropdown-item")
-                            .:SetAttr("href","#!")
-                            .:SetContent("Logout")
-                        END WEBEXOBJECT
-                    END WEBEXOBJECT
-                END WEBEXOBJECT
-            END WEBEXOBJECT
-        END WEBEXOBJECT
+        if (::lNavRightMenu)
+            ::lNavRightMenu:=.F.
+            ::NavRightMenuAdd(self)
+        endif
     END WEBEXOBJECT NOADDCHILD
 
 return(self)
@@ -154,6 +122,61 @@ method SetBrandLink(cBrandLInk) class SBAdminNav
     paramtype cBrandLInk as character optional default ::cBrandLInk
     ::cBrandLInk:=cBrandLInk
     ::oSBAdminNavBrand:SetAttr("href",::cBrandLInk)
+return(self)
+
+method NavRightMenuAdd(oSBAdminNav) class SBAdminNav
+    paramtype 1 var oSBAdminNav as object class SBAdminNav optional
+    default oSBAdminNav:=::oSBAdminNav
+    if (!::lNavRightMenu)
+        ::lNavRightMenu:=.T.
+        WITH WEBEXOBJECT ::oSBAdminNav
+            WITH WEBEXOBJECT CLASS WebExComment
+                .:SetContent("Navbar")
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT ::oSBAdminNavRightMenu CLASS WebExUL
+                .:AddClass("navbar-nav ms-auto ms-md-0 me-3 me-lg-4")
+                WITH WEBEXOBJECT CLASS WebExLI
+                    .:SetAttr("class","nav-item dropdown")
+                    WITH WEBEXOBJECT CLASS WebExAnchor
+                        .:SetAttr("class","nav-link dropdown-toggle")
+                        .:SetFixedID("navbarDropdown")
+                        .:SetAttr("href","#")
+                        .:SetAttr("role","button" )
+                        .:SetAttr("data-bs-toggle","dropdown")
+                        .:SetAttr("aria-expanded","false")
+                        WITH WEBEXOBJECT CLASS WebExIcon() ARGS "fas fa-user fa-fw","fontawesome"
+                        END WEBEXOBJECT
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExUL
+                        .:SetAttr("class","dropdown-menu dropdown-menu-end")
+                        .:SetAttr("aria-labelledby","navbarDropdown")
+                        WITH WEBEXOBJECT CLASS WebExLI
+                            WITH WEBEXOBJECT CLASS WebExAnchor
+                                .:SetAttr("class","dropdown-item")
+                                .:SetAttr("href","#!")
+                                .:SetContent("Settings")
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                        WITH WEBEXOBJECT CLASS WebExLI
+                            WITH WEBEXOBJECT CLASS WebExAnchor
+                            .:SetAttr("class","dropdown-item")
+                            .:SetAttr("href","#!")
+                            .:SetContent("Activity Log")
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                        ::NavRightMenuAddDivider(.this)
+                        WITH WEBEXOBJECT CLASS WebExLI
+                            WITH WEBEXOBJECT CLASS WebExAnchor
+                                .:SetAttr("class","dropdown-item")
+                                .:SetAttr("href","#!")
+                                .:SetContent("Logout")
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT NOADDCHILD
+    endif
 return(self)
 
 method NavRightMenuAddItem(oSBAdminNavRightMenu,oSBAdminNavRightMenuItem) class SBAdminNav
@@ -173,4 +196,8 @@ method NavRightMenuAddDivider(oSBAdminNavRightMenu) class SBAdminNav
             END WEBEXOBJECT
         END WEBEXOBJECT
     END WEBEXOBJECT NOADDCHILD
+return(self)
+
+method NavRightLoadJSONMenu(jSBAdminNavRightMenu) class SBAdminNav
+    paramtype 1 var jSBAdminNavRightMenu as json
 return(self)
