@@ -17,6 +17,7 @@ class SBAdminNav from WebExControl
 
     protected data cBrandName as character
     protected data cBrandLink as character
+    protected data cSBAdminNavHRef as character
 
     protected data lNavRightMenu as logical
 
@@ -39,11 +40,12 @@ class SBAdminNav from WebExControl
     public method SetBrandName(cBrandName as character) as object
     public method SetBrandLink(cBrandLInk as character) as object
 
-    public method NavRightMenuAdd(oSBAdminNav as object) as object
-    public method NavRightMenuAddItem(oSBAdminNavRightMenu as object,oSBAdminNavRightMenuItem as object) as object
-    public method NavRightMenuAddDivider(oSBAdminNavRightMenu as object) as object
+    public method NavRightMenuAdd(oSBAdminNav as object,cSBAdminNavHRef as character) as object
 
     public method NavRightLoadJSONMenu(jSBAdminNavRightMenu as json) as object
+    public method RenderDropdownMenu(aMenuItems as array,cClass as character,cAriaLabelledBy as character) as object
+
+    public method NavRightMenuAddDivider(oSBAdminNavRightMenu as object) as object
 
 endclass
 
@@ -55,6 +57,8 @@ method New(cBrandName,cBrandLink,lNavRightMenu) class SBAdminNav
 
     ::cBrandName:=cBrandName
     ::cBrandLink:=cBrandLink
+    ::cSBAdminNavHRef:="#"
+
     ::lNavRightMenu:=lNavRightMenu
 
     _Super:New("nav")
@@ -124,8 +128,9 @@ method SetBrandLink(cBrandLInk) class SBAdminNav
     ::oSBAdminNavBrand:SetAttr("href",::cBrandLInk)
 return(self)
 
-method NavRightMenuAdd(oSBAdminNav) class SBAdminNav
+method NavRightMenuAdd(oSBAdminNav,cSBAdminNavHRef) class SBAdminNav
     paramtype 1 var oSBAdminNav as object class SBAdminNav optional
+    paramtype 2 var cSBAdminNavHRef as character optional default ::cSBAdminNavHRef
     default oSBAdminNav:=::oSBAdminNav
     if (!::lNavRightMenu)
         ::lNavRightMenu:=.T.
@@ -135,42 +140,16 @@ method NavRightMenuAdd(oSBAdminNav) class SBAdminNav
             END WEBEXOBJECT
             WITH WEBEXOBJECT ::oSBAdminNavRightMenu CLASS WebExUL
                 .:AddClass("navbar-nav ms-auto ms-md-0 me-3 me-lg-4")
-                WITH WEBEXOBJECT CLASS WebExLI
+                WITH WEBEXOBJECT ::oSBAdminNavRightMenuItem CLASS WebExLI
                     .:SetAttr("class","nav-item dropdown")
                     WITH WEBEXOBJECT CLASS WebExAnchor
                         .:SetAttr("class","nav-link dropdown-toggle")
                         .:SetFixedID("navbarDropdown")
-                        .:SetAttr("href","#")
+                        .:SetAttr("href",::cSBAdminNavHRef)
                         .:SetAttr("role","button" )
                         .:SetAttr("data-bs-toggle","dropdown")
                         .:SetAttr("aria-expanded","false")
                         WITH WEBEXOBJECT CLASS WebExIcon() ARGS "fas fa-user fa-fw","fontawesome"
-                        END WEBEXOBJECT
-                    END WEBEXOBJECT
-                    WITH WEBEXOBJECT CLASS WebExUL
-                        .:SetAttr("class","dropdown-menu dropdown-menu-end")
-                        .:SetAttr("aria-labelledby","navbarDropdown")
-                        WITH WEBEXOBJECT CLASS WebExLI
-                            WITH WEBEXOBJECT CLASS WebExAnchor
-                                .:SetAttr("class","dropdown-item")
-                                .:SetAttr("href","#!")
-                                .:SetContent("Settings")
-                            END WEBEXOBJECT
-                        END WEBEXOBJECT
-                        WITH WEBEXOBJECT CLASS WebExLI
-                            WITH WEBEXOBJECT CLASS WebExAnchor
-                            .:SetAttr("class","dropdown-item")
-                            .:SetAttr("href","#!")
-                            .:SetContent("Activity Log")
-                            END WEBEXOBJECT
-                        END WEBEXOBJECT
-                        ::NavRightMenuAddDivider(.this)
-                        WITH WEBEXOBJECT CLASS WebExLI
-                            WITH WEBEXOBJECT CLASS WebExAnchor
-                                .:SetAttr("class","dropdown-item")
-                                .:SetAttr("href","#!")
-                                .:SetContent("Logout")
-                            END WEBEXOBJECT
                         END WEBEXOBJECT
                     END WEBEXOBJECT
                 END WEBEXOBJECT
@@ -179,15 +158,186 @@ method NavRightMenuAdd(oSBAdminNav) class SBAdminNav
     endif
 return(self)
 
-method NavRightMenuAddItem(oSBAdminNavRightMenu,oSBAdminNavRightMenuItem) class SBAdminNav
-    paramtype 1 var oSBAdminNavRightMenu as object optional default ::oSBAdminNavRightMenu
-    paramtype 1 var oSBAdminNavRightMenuItem as object
-    ::oSBAdminNavRightMenuItem:=oSBAdminNavRightMenuItem
-    oSBAdminNavRightMenu:AddChild(::oSBAdminNavRightMenuItem)
+/*
+{
+  "menu": [
+    {
+      "id": "dashboard0",
+      "label": "Dashboard0",
+      "icon": "fas fa-tachometer-alt",
+      "url": "/dashboard",
+      "badge": {
+        "label": "Novo",
+        "class": "bg-success text-white"
+      },
+      "subItems": [
+        {
+          "id": "generalview",
+          "label": "Vis&atilde;o Geral",
+          "icon": "fas fa-chart-pie",
+          "url": "/dashboard/overview",
+          "badge": {
+            "label": "Novo",
+            "class": "bg-success text-white"
+          },
+          "roles": ["000000"],
+          "subItems": []
+        }
+      ]
+    },
+    {
+      "divider": true
+    },
+    {
+      "id": "indicators",
+      "label": "Indicadores",
+      "icon": "fas fa-chart-line",
+      "url": "ws:KPIS_REQUEST:KPIS_RESPONSE",
+      "badge": {
+        "label": "Novo",
+        "class": "bg-success text-white"
+      },
+      "wsAction": {
+        "class": "userRestCrudTLPPCoreFunction",
+        "method": "dna.tech.codAliasPost",
+        "params": {
+          "codAlias": "SRA",
+          "filter": {
+            "RA_SEXO": "M"
+          },
+          "yesFields": "RA_FILIAL,RA_MAT,RA_APELIDO"
+        }
+      },
+      "subItems": []
+    }
+  ]
+}
+*/
+method NavRightLoadJSONMenu(jSBAdminNavRightMenu) class SBAdminNav
+
+    local aMenus as array
+
+    paramtype 1 var jSBAdminNavRightMenu as json
+
+    if (jSBAdminNavRightMenu:HasProperty("menu"))
+        aMenus:=jSBAdminNavRightMenu["menu"]
+        if (Len(aMenus)>0)
+            WITH WEBEXOBJECT ::oSBAdminNavRightMenuItem
+                ::RenderDropdownMenu(aMenus,"dropdown-menu dropdown-menu-end","navbarDropdown")
+            END WEBEXOBJECT NOADDCHILD
+        endif
+    endif
+
 return(self)
 
+method RenderDropdownMenu(aMenuItems,cClass,cAriaLabelledBy) CLASS SBAdminNav
+
+    local aRolesUser as array
+
+    local nMenuItem as numeric
+    local nMenuItems:=Len(aMenuItems) as numeric
+
+    local oMenuItem as object
+
+    if (::lNavRightMenu)
+
+        WITH WEBEXOBJECT CLASS WebExUL
+            if (!Empty(cClass))
+                .:AddClass(cClass)
+            endif
+            if (!Empty(cAriaLabelledBy))
+                .:SetAttr("aria-labelledby",cAriaLabelledBy)
+            endif
+            for nMenuItem:=1 to nMenuItems
+                oMenuItem:=aMenuItems[nMenuItem]
+                if ((oMenuItem:HasProperty("divider")).and.(oMenuItem["divider"]))
+                    ::NavRightMenuAddDivider(.this)
+                    loop
+                endif
+                if ((!oMenuItem:HasProperty("label")).or.(!oMenuItem:HasProperty("url")))
+                    loop
+                endif
+                if ((!oMenuItem:HasProperty("roles")).and.(!Empty(oMenuItem["roles"])))
+                    if (!(ShouldDisplayItem(oMenuItem["roles"],@aRolesUser)))
+                        loop
+                    endif
+                endif
+                WITH WEBEXOBJECT CLASS WebExLI
+                    WITH WEBEXOBJECT CLASS WebExAnchor
+                        .:AddClass("dropdown-item d-flex justify-content-between align-items-center gap-2")
+                        if (oMenuItem:HasProperty("id"))
+                            .:SetFixedID(oMenuItem["id"])
+                        endif
+                        if (oMenuItem:HasProperty("wsAction"))
+                            .:SetAttr("href","#!")
+                            .:SetAttr("data-wsurl",oMenuItem["url"])
+                            .:SetAttr("data-wsaction",Encode64(oMenuItem["wsAction"]:ToJSON()))
+                        else
+                            .:SetAttr("href",oMenuItem["url"])
+                        endif
+                        if (oMenuItem:HasProperty("icon"))
+                            WITH WEBEXOBJECT CLASS WebExIcon ARGS oMenuItem["icon"],"fontawesome"
+                            END WEBEXOBJECT
+                        endif
+                        WITH WEBEXOBJECT CLASS WebExLabel ARGS oMenuItem["label"],oMenuItem["label"]
+                        END WEBEXOBJECT
+                        if (oMenuItem:HasProperty("badge")).and.(oMenuItem["badge"]:HasProperty("label"))
+                            WITH WEBEXOBJECT CLASS WebExSpan
+                                .:SetContent(oMenuItem["badge"]["label"])
+                                .:AddClass("badge rounded-pill")
+                                if (oMenuItem["badge"]:HasProperty("class"))
+                                    .:AddClass(oMenuItem["badge"]["class"])
+                                endif
+                            END WEBEXOBJECT
+                        endif
+                    END WEBEXOBJECT
+                    if ((oMenuItem:HasProperty("subItems")).and.(Len(oMenuItem["subItems"])>0))
+                        ::RenderDropdownMenu(oMenuItem["subItems"],"submenu dropdown-submenu",NIL)
+                    endif
+                END WEBEXOBJECT
+            next nMenuItem
+        END WEBEXOBJECT
+
+    endif
+
+    FWFreeArray(@aRolesUser)
+
+return(self)
+
+static function ShouldDisplayItem(aRolesItem as array,aRolesUser as array) as logical
+
+    local lRet:=.T. as logical
+
+    local nItem as numeric
+    local nItems as numeric
+
+    begin sequence
+
+        if (empty(aRolesItem))
+            break
+        endif
+
+        if (Empty(aRolesUser))
+            PswOrder(1)
+            if (PswSeek(__cUserID))
+                aRolesUser:=PswRet()[1][10]
+            endif
+        endif
+
+        nItems:=Len(aRolesItem)
+        for nItem:=1 to nItems
+            lRet:=(aScan(aRolesUser,{|cGroup as character|cGroup==aRolesItem[nItem]})>0)
+            if (lRet)
+                exit
+            endif
+        next nItem
+
+    end sequence
+
+return(lRet)
+
 method NavRightMenuAddDivider(oSBAdminNavRightMenu) class SBAdminNav
-    paramtype oSBAdminNavRightMenu as object
+    paramtype 1 var oSBAdminNavRightMenu as object class WebExUL optional
     WITH WEBEXOBJECT oSBAdminNavRightMenu
         WITH WEBEXOBJECT CLASS WebExLI
             WITH WEBEXOBJECT CLASS WebExHR
@@ -196,8 +346,4 @@ method NavRightMenuAddDivider(oSBAdminNavRightMenu) class SBAdminNav
             END WEBEXOBJECT
         END WEBEXOBJECT
     END WEBEXOBJECT NOADDCHILD
-return(self)
-
-method NavRightLoadJSONMenu(jSBAdminNavRightMenu) class SBAdminNav
-    paramtype 1 var jSBAdminNavRightMenu as json
 return(self)

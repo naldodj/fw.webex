@@ -32,6 +32,7 @@ return
 
 static procedure FWWebExExample_020(cHTML as character) as character
 
+    local cScript as character
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
     local cSBAdminPath as character
@@ -55,15 +56,33 @@ static procedure FWWebExExample_020(cHTML as character) as character
 
     oFWWebExBody:=WebExBody():New()
     oFWWebExBody:SetAttr("class","sb-nav-fixed")
-        WITH WEBEXOBJECT oFWWebExBody
-            WITH WEBEXOBJECT CLASS SBAdminNav
-            END WEBEXOBJECT
-        END WEBEXOBJECT NOADDCHILD
-        oScript:=WebExControl():New("script")
-        oScript:SetAttr("src",cSBAdminPath+"js/scripts.js")
-    oFWWebExBody:AddChild(oScript)
+    WITH WEBEXOBJECT oFWWebExBody
+        WITH WEBEXOBJECT CLASS SBAdminNav
+            .:NavRightLoadJSONMenu(SBAdminGetRightMenu())
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 
     oFWWebExPage:=WebExPage():New("fw.webex.example.020.tlpp :: FWWEbEx :: SBADMIN :: SBAdminNav")
+    WITH WEBEXOBJECT oFWWebExPage
+        beginContent var cScript
+            function decodeHTMLEntities(text) {
+                const txt = document.createElement("textarea");
+                txt.innerHTML = text;
+                return txt.value;
+            }
+            function showComingSoon(route) {
+                alert(decodeHTMLEntities('Rota ' + route + ' ainda n&atilde;o implementada!'));
+            }
+        endContent
+        WITH WEBEXOBJECT CLASS WebExScript
+            .:SetContent(cScript)
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExScript
+
+    END WEBEXOBJECT NOADDCHILD
+    oScript:=WebExControl():New("script")
+    oScript:SetAttr("src",cSBAdminPath+"js/scripts.js")
+    oFWWebExPage:AddChild(oScript)
     oFWWebExPage:AddChild(oFWWebExBody)
 
     WebFileTools():HTMLFromControl(oFWWebExPage,oFWWebExPage:GetFWWebExTmpPath(),@cHTMLFile,@cHTML,.T.)
@@ -73,3 +92,70 @@ static procedure FWWebExExample_020(cHTML as character) as character
     FreeObj(@oFWWebExPage)
 
 return(cHTMLFile)
+
+static function SBAdminGetRightMenu()
+
+    local cSBAdminNavRightMenu as character
+
+    local jSBAdminNavRightMenu as json
+
+    beginContent var cSBAdminNavRightMenu
+{
+  "menu": [
+    {
+      "id": "dashboard",
+      "label": "Dashboard",
+      "icon": "fas fa-tachometer-alt",
+      "url": "javascript:showComingSoon('/dashboard');",
+      "badge": {
+        "label": "Novo",
+        "class": "bg-success text-white"
+      },
+      "subItems": [
+        {
+          "id": "generalview",
+          "label": "Vis&atilde;o Geral",
+          "icon": "fas fa-chart-pie",
+          "url": "javascript:showComingSoon('/dashboard/overview');",
+          "badge": {
+            "label": "Novo",
+            "class": "bg-success text-white"
+          },
+          "roles": ["000000"],
+          "subItems": []
+        }
+      ]
+    },
+    {
+      "divider": true
+    },
+    {
+      "id": "indicators",
+      "label": "Indicadores",
+      "icon": "fas fa-chart-line",
+      "url": "ws:KPIS_REQUEST:KPIS_RESPONSE",
+      "badge": {
+        "label": "Novo",
+        "class": "bg-success text-white"
+      },
+      "wsAction": {
+        "class": "userRestCrudTLPPCoreFunction",
+        "method": "dna.tech.codAliasPost",
+        "params": {
+          "codAlias": "SRA",
+          "filter": {
+            "RA_SEXO": "M"
+          },
+          "yesFields": "RA_FILIAL,RA_MAT,RA_APELIDO"
+        }
+      },
+      "subItems": []
+    }
+  ]
+}
+    endContent
+
+    jSBAdminNavRightMenu:=JSONObject():New()
+    jSBAdminNavRightMenu:FromJSON(cSBAdminNavRightMenu)
+
+return(jSBAdminNavRightMenu)
