@@ -77,8 +77,6 @@ static procedure FWWebExExample_020(cHTML as character) as character
         WITH WEBEXOBJECT CLASS WebExScript
             .:SetContent(cScript)
         END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExScript
-
     END WEBEXOBJECT NOADDCHILD
     oScript:=WebExControl():New("script")
     oScript:SetAttr("src",cSBAdminPath+"js/scripts.js")
