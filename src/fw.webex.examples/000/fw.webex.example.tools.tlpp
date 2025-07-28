@@ -94,18 +94,22 @@ static method Execute(bExecute,cTitle,lPrepareEnvironment,lChangeCompanyAndBranc
                 __cInternet:=NIL
             endif
         endif
-            private oMainWnd as object
-            lRedefineBottom:=.T.
-            DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE cTitle
-                @ 000,000 MSPANEL oMainPanel OF oMainWnd
-                oMainPanel:Align:=CONTROL_ALIGN_ALLCLIENT
-                @ 000,000 BITMAP oMainBmp RESNAME "DNA_TECH_LOGO_BLACK_PANTER" SIZE 1024,1024 BORDER OF oMainPanel PIXEL
-                oMainBmp:Align:=CONTROL_ALIGN_ALLCLIENT
-                oMainBmp:SetCSS("{background-size: 100% 100%;}")
-            ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (Eval(bInit),oMainWnd:End())
-            FreeObj(@oMainBmp)
-            FreeObj(@oMainPanel)
-            FreeObj(@oMainWnd)
+            if (WebApp():WebAgentIsConnected())
+                private oMainWnd as object
+                lRedefineBottom:=.T.
+                DEFINE WINDOW oMainWnd FROM 00,00 TO 1024,768 TITLE cTitle
+                    @ 000,000 MSPANEL oMainPanel OF oMainWnd
+                    oMainPanel:Align:=CONTROL_ALIGN_ALLCLIENT
+                    @ 000,000 BITMAP oMainBmp RESNAME "DNA_TECH_LOGO_BLACK_PANTER" SIZE 1024,1024 BORDER OF oMainPanel PIXEL
+                    oMainBmp:Align:=CONTROL_ALIGN_ALLCLIENT
+                    oMainBmp:SetCSS("{background-size: 100% 100%;}")
+                ACTIVATE WINDOW oMainWnd MAXIMIZED ON INIT (Eval(bInit),oMainWnd:End())
+                FreeObj(@oMainBmp)
+                FreeObj(@oMainPanel)
+                FreeObj(@oMainWnd)
+            else
+                ApMsgAlert("WebAgent is not connected",ProcName())
+            endif
         if (lPrepareEnvironment)
             RPCClearEnv()
         endif
@@ -113,7 +117,11 @@ static method Execute(bExecute,cTitle,lPrepareEnvironment,lChangeCompanyAndBranc
         lRedefineBottom:=(FWIsInCallStack("u_FWWebExExample_000"))
         cEmp:=cEmpAnt
         cFil:=cFilAnt
-        Eval(bInit)
+        if (WebApp():WebAgentIsConnected())
+            Eval(bInit)
+        else
+            ApMsgAlert("WebAgent is not connected",ProcName())
+        endif
     endif
 
 return
