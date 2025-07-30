@@ -31,34 +31,40 @@ method New() class WebExBody
 
     WITH WEBEXOBJECT self
         WITH WEBEXOBJECT CLASS WebExDiv
-            .:SetFixedID("fwwebex-connection-status")
-            .:SetAttr("style","display: none; font-weight: bold; color: orange; margin-top: 10px;")
-            .:SetContent("Tentando conectar ao Protheus")
-            WITH WEBEXOBJECT CLASS WebExSpan
-                .:SetFixedID("fwwebex_connection_status_dot1")
-                .:SetContent(".")
+            .:SetAttr("style", "position: fixed; top: 0; left: 0; width: 100%; z-index: 9999; background-color: #212529;")
+            // Barra de status de conexao
+            WITH WEBEXOBJECT CLASS WebExDiv
+                .:SetFixedID("fwwebex-connection-status")
+                .:SetAttr("style", "display: none; color: #d4a437; font-weight: 500; font-size: 0.8rem; padding: 0.5rem 0.75rem; text-align: center;")
+                .:SetContent("Tentando conectar ao Protheus")
+                // Pinguinhos animados
+                WITH WEBEXOBJECT CLASS WebExSpan
+                    .:SetFixedID("fwwebex_connection_status_dot1")
+                    .:SetContent(".")
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExSpan
+                    .:SetFixedID("fwwebex_connection_status_dot2")
+                    .:SetContent(".")
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT CLASS WebExSpan
+                    .:SetFixedID("fwwebex_connection_status_dot3")
+                    .:SetContent(".")
+                END WEBEXOBJECT
             END WEBEXOBJECT
-            WITH WEBEXOBJECT CLASS WebExSpan
-                .:SetFixedID("fwwebex_connection_status_dot2")
-                .:SetContent(".")
-            END WEBEXOBJECT
-            WITH WEBEXOBJECT CLASS WebExSpan
-                .:SetFixedID("fwwebex_connection_status_dot3")
-                .:SetContent(".")
-            END WEBEXOBJECT
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExControl TYPE div
-            .:SetAttr("id","fwwebex-datatable-custom-loader")
-            .:SetAttr("style","display:none; width: 100%; margin: 1rem 0;")
+            // Loader para DataTables
             WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                .:AddClass("progress")
+                .:SetAttr("id","fwwebex-datatable-custom-loader")
+                .:SetAttr("style", "display: none; width: 100%; padding: 1rem;")
                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                    .:AddClass("progress-bar")
-                    .:AddClass("progress-bar-striped")
-                    .:AddClass("progress-bar-animated")
-                    .:AddClass("bg-primary")
-                    .:SetAttr("style","width: 100%")
-                    .:SetContent("Carregando...")
+                    .:AddClass("progress")
+                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                        .:AddClass("progress-bar")
+                        .:AddClass("progress-bar-striped")
+                        .:AddClass("progress-bar-animated")
+                        .:AddClass("bg-primary")
+                        .:SetAttr("style","width: 100%")
+                        .:SetContent("Carregando...")
+                    END WEBEXOBJECT
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT

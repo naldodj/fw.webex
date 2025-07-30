@@ -5,6 +5,9 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-07-30 22:02 UTC naldodj (status bar)
+  * src/fw.webex/web/page/fw.webex.body.tlpp
+
 2025-07-30 16:49 UTC naldodj (fw.webex.sbadmin :: SBAdmin)
   + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.tlpp
   + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.footer.tlpp
