@@ -1,0 +1,61 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
++-----> WebExPage
+        +
+        |
+        +-----> WebExSideBar (com WebExNavSide ou WebExNavTop)
+        |
+        +-----> WebExMain
+                +
+                |
+                +-----> WebExContainer
+                        +
+                        |
+                        +-----> Conteudo
+
+Released to Public DoBodyMain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class SBAdminPage from WebExPage
+
+    public method New(cPageTitle as character) as object
+
+endclass
+
+method New(cPageTitle) class SBAdminPage
+
+    local cSBAdminPath as character
+
+    _Super:New("div")
+    _Super:DisableFooter(.T.)
+    _Super:DisableDarkTheme(.T.)
+
+    WITH WEBEXOBJECT ::oPageHeader
+        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+            .:SetContent("https://use.fontawesome.com/releases/v6.3.0/js/all.js")
+            .:SetAttr("crossorigin","anonymous")
+            .:AddInHeader(.this)
+        END WEBEXOBJECT NOADDCHILD
+        if (FWSBAdminTools():SBAdminCheck(@cSBAdminPath))
+            WITH WEBEXOBJECT CLASS WebExLink()
+                .:SetAttr("href",cSBAdminPath+"css/styles.css")
+                .:SetAttr("rel","stylesheet")
+                .:AddInHeader(.this)
+            END WEBEXOBJECT NOADDCHILD
+            WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                .:SetAttr("src",cSBAdminPath+"js/scripts.js")
+            END WEBEXOBJECT
+        endif
+    END WEBEXOBJECT NOADDCHILD
+
+return(self)

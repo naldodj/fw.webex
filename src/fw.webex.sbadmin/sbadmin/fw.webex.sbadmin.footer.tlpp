@@ -1,0 +1,120 @@
+/*
+
+  __                            _                          _                 _             _
+ / _|__      ____      __  ___ | |__    ___ __  __    ___ | |__    __ _   __| | _ __ ___  (_) _ __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /   / __|| '_ \  / _` | / _` || '_ ` _ \ | || '_ \
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <  _ \__ \| |_) || (_| || (_| || | | | | || || | | |
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\(_)|___/|_.__/  \__,_| \__,_||_| |_| |_||_||_| |_|
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class SBAdminFooter from WebExControl
+
+    protected data cCopyrightText as character
+
+    protected data cPrivacyPolicyHRef as character
+    protected data cPrivacyPolicyText as character
+
+    protected data cTermsAndConditionsHRef as character
+    protected data cTermsAndConditionsText as character
+
+    protected data oFooter as object
+    protected data oContainer as object
+    protected data oContentWrapper as object
+    protected data oLinksContainer as object
+
+    protected data oCopyrightText as object
+    protected data oPrivacyPolicyLink as object
+    protected data oTermsAndConditionsLink as object
+
+    public method New(cCopyrightText as character,cPrivacyPolicyHRef as character,cPrivacyPolicyText as character,cTermsAndConditionsHRef as character,cTermsAndConditionsText as character) as object
+
+    public method SetCopyrightText(cCopyrightText as character) as object
+    public method SetPrivacyPolicyHRef(cPrivacyPolicyHRef as character) as object
+    public method SetPrivacyPolicyText(cPrivacyPolicyText as character) as object
+    public method SetTermsAndConditionsHRef(cTermsAndConditionsHRef as character) as object
+    public method SetTermsAndConditionsText(cTermsAndConditionsText as character) as object
+
+endclass
+
+method New(cCopyrightText,cPrivacyPolicyHRef,cPrivacyPolicyText,cTermsAndConditionsHRef,cTermsAndConditionsText) class SBAdminFooter
+
+    paramtype 1 var cCopyrightText as character optional default ""
+    paramtype 2 var cPrivacyPolicyHRef as character optional default "#"
+    paramtype 3 var cPrivacyPolicyText as character optional default ""
+    paramtype 4 var cTermsAndConditionsHRef as character optional default "#"
+    paramtype 5 var cTermsAndConditionsText as character optional default ""
+
+    ::cCopyrightText:=cCopyrightText
+    ::cPrivacyPolicyHRef:=cPrivacyPolicyHRef
+    ::cPrivacyPolicyText:=cPrivacyPolicyText
+    ::cTermsAndConditionsHRef:=cTermsAndConditionsHRef
+    ::cTermsAndConditionsText:=cTermsAndConditionsText
+
+    _Super:New("footer")
+
+    ::oFooter:=self
+    WITH WEBEXOBJECT ::oFooter
+        .:AddClass("py-4 bg-light mt-auto")
+        .:AddClass("mt-auto") // margin-top: auto
+        WITH WEBEXOBJECT ::oContainer CLASS WebExContainer ARGS .T.
+            .:AddClass("px-4")
+            WITH WEBEXOBJECT ::oContentWrapper CLASS WebExDiv
+                .:AddClass("d-flex align-items-center justify-content-between small")
+                WITH WEBEXOBJECT ::oCopyrightText CLASS WebExDiv
+                    .:AddClass("text-muted")
+                    ::SetCopyrightText()
+                END WEBEXOBJECT
+                WITH WEBEXOBJECT ::oLinksContainer CLASS WebExDiv
+                    WITH WEBEXOBJECT ::oPrivacyPolicyLink CLASS WebExAnchor
+                        ::SetPrivacyPolicyHRef()
+                        ::SetPrivacyPolicyText()
+                    END WEBEXOBJECT
+                    .:SetContent("&middot;",::oPrivacyPolicyLink:GetID())
+                    WITH WEBEXOBJECT ::oTermsAndConditionsLink CLASS WebExAnchor
+                        ::SetTermsAndConditionsHRef()
+                        ::SetTermsAndConditionsText()
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
+
+return(self)
+
+method SetCopyrightText(cCopyrightText) class SBAdminFooter
+    paramtype cCopyrightText as character optional default ::cCopyrightText
+    ::cCopyrightText:=cCopyrightText
+    ::oCopyrightText:SetContent(::cCopyrightText)
+return(self)
+
+method SetPrivacyPolicyHRef(cPrivacyPolicyHRef) class SBAdminFooter
+    paramtype cPrivacyPolicyHRef as character optional default ::cPrivacyPolicyHRef
+    ::cPrivacyPolicyHRef:=cPrivacyPolicyHRef
+    ::oPrivacyPolicyLink:SetAttr("href",::cPrivacyPolicyHRef)
+    ::oPrivacyPolicyLink:SetAttr("target","_blank")
+return(self)
+
+method SetPrivacyPolicyText(cPrivacyPolicyText) class SBAdminFooter
+    paramtype cPrivacyPolicyText as character optional default ::cPrivacyPolicyText
+    ::cPrivacyPolicyText:=cPrivacyPolicyText
+    ::oPrivacyPolicyLink:SetContent(::cPrivacyPolicyText)
+return(self)
+
+method SetTermsAndConditionsHRef(cTermsAndConditionsHRef) class SBAdminFooter
+    paramtype cTermsAndConditionsHRef as character optional default ::cTermsAndConditionsHRef
+    ::cTermsAndConditionsHRef:=cTermsAndConditionsHRef
+    ::oTermsAndConditionsLink:SetAttr("href",::cTermsAndConditionsHRef)
+    ::oTermsAndConditionsLink:SetAttr("target","_blank")
+return(self)
+
+method SetTermsAndConditionsText(cTermsAndConditionsText) class SBAdminFooter
+    paramtype cTermsAndConditionsText as character optional default ::cTermsAndConditionsText
+    ::cTermsAndConditionsText:=cTermsAndConditionsText
+    ::oTermsAndConditionsLink:SetContent(::cTermsAndConditionsText)
+return(self)

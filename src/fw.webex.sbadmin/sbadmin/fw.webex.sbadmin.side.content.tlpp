@@ -13,9 +13,15 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class SBAdminFooter from WebExControl
+class SBAdminSideContent from WebExControl
     public method New() as object
 endclass
 
-method New() class SBAdminFooter
+method New() class SBAdminSideContent
+
+    oDiv24:=WebExControl():New("div")
+    oDiv24:SetFixedID("layoutSidenav_content")
+    oDiv24:AddChild(oMain1)
+    oDiv24:AddChild(oFooter1)
+
 return(self)

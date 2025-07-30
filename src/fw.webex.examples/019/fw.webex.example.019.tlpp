@@ -43,16 +43,6 @@ static procedure FWWebExExample_019(cHTML as character) as character
         return("")
     endif
 
-    oLinkInHeader:=WebExLink():New()
-    oLinkInHeader:SetAttr("href",cSBAdminPath+"css/styles.css")
-    oLinkInHeader:SetAttr("rel","stylesheet")
-    oLinkInHeader:AddInHeader(oLinkInHeader)
-
-    oScriptINHeader:=WebExScript():New(.F.)
-    oScriptINHeader:SetContent("https://use.fontawesome.com/releases/v6.3.0/js/all.js")
-    oScriptINHeader:SetAttr("crossorigin","anonymous")
-    oScriptINHeader:AddInHeader(oScriptINHeader)
-
     oFWWebExBody:=WebExBody():New()
     oFWWebExBody:AddClass("sb-nav-fixed")
         oNav1:=WebExControl():New("nav")
@@ -1740,17 +1730,19 @@ static procedure FWWebExExample_019(cHTML as character) as character
                         oDiv60:AddClass("d-flex align-items-center justify-content-between small")
                             oDiv61:=WebExControl():New("div")
                             oDiv61:AddClass("text-muted")
-                            oDiv61:SetContent("Copyright &copy; Your Website 2023")
+                            oDiv61:SetContent("&copy; "+StrZero(Year(Date()),4)+" DNATech ")
                         oDiv60:AddChild(oDiv61)
                             oDiv62:=WebExControl():New("div")
                                 oA25:=WebExControl():New("a")
-                                oA25:SetAttr("href","#")
-                                oA25:SetContent("Privacy Policy")
+                                oA25:SetAttr("href","https://github.com/DNATechByNaldoDJ/fw.webex")
+                                oA25:SetAttr("target","_blank")
+                                oA25:SetContent("FWWebEx")
                             oDiv62:AddChild(oA25)
                             oDiv62:SetContent("&middot;",oA25:GetID())
                                 oA26:=WebExControl():New("a")
-                                oA26:SetAttr("href","#")
-                                oA26:SetContent("Terms &amp; Conditions")
+                                oA26:SetAttr("href","https://mit-license.org/")
+                                oA26:SetAttr("target","_blank")
+                                oA26:SetContent("Licensed under MIT")
                             oDiv62:AddChild(oA26)
                         oDiv60:AddChild(oDiv62)
                     oDiv59:AddChild(oDiv60)
@@ -1761,10 +1753,10 @@ static procedure FWWebExExample_019(cHTML as character) as character
         /*oScript1:=WebExControl():New("script")
         oScript1:SetAttr("src","https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
         oScript1:SetAttr("crossorigin","anonymous")
-    oFWWebExBody:AddChild(oScript1)*/
+    oFWWebExBody:AddChild(oScript1)
         oScript2:=WebExControl():New("script")
         oScript2:SetAttr("src",cSBAdminPath+"js/scripts.js")
-    oFWWebExBody:AddChild(oScript2)
+    oFWWebExBody:AddChild(oScript2)*/
         oScript3:=WebExControl():New("script")
         oScript3:SetAttr("src","https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js")
         oScript3:SetAttr("crossorigin","anonymous")
@@ -1782,10 +1774,11 @@ static procedure FWWebExExample_019(cHTML as character) as character
         oScript7:=WebExControl():New("script")
         oScript7:SetAttr("src",cSBAdminPath+"js/datatables-simple-demo.js")
     oFWWebExBody:AddChild(oScript7)
-    oFWWebExPage:=WebExPage():New("fw.webex.example.019.tlpp :: FWWEbEx :: SBADMIN")
+    oFWWebExPage:=SBAdminPage():New("fw.webex.example.019.tlpp :: FWWEbEx :: SBADMIN")
     oFWWebExPage:AddChild(oFWWebExBody)
 
     oFWWebExPage:SetEnableDataTable()
+    oFWWebExPage:DisableFooter(.T.)
 
     WebFileTools():HTMLFromControl(oFWWebExPage,oFWWebExPage:GetFWWebExTmpPath(),@cHTMLFile,@cHTML,.T.)
 

@@ -124,7 +124,7 @@ def main():
     lines, top_var = process_element(body)
 
     # Finalização
-    lines.append(f"oFWWebExPage:=WebExPage():New(\"{args.output_file} :: FWWEbEx :: SBADMIN\")")
+    lines.append(f"oFWWebExPage:=SBAdminPage():New(\"{args.output_file} :: FWWEbEx :: SBADMIN\")")
     lines.append(f"oFWWebExPage:AddChild({top_var})")
 
     # Salvar como arquivo TLPP

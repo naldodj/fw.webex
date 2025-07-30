@@ -32,7 +32,6 @@ return
 
 static procedure FWWebExExample_020(cHTML as character) as character
 
-    local cScript as character
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
     local cSBAdminPath as character
@@ -44,43 +43,37 @@ static procedure FWWebExExample_020(cHTML as character) as character
         return("")
     endif
 
-    oLinkInHeader:=WebExLink():New()
-    oLinkInHeader:SetAttr("href",cSBAdminPath+"css/styles.css")
-    oLinkInHeader:SetAttr("rel","stylesheet")
-    oLinkInHeader:AddInHeader(oLinkInHeader)
-
-    oScriptINHeader:=WebExScript():New(.F.)
-    oScriptINHeader:SetContent("https://use.fontawesome.com/releases/v6.3.0/js/all.js")
-    oScriptINHeader:SetAttr("crossorigin","anonymous")
-    oScriptINHeader:AddInHeader(oScriptINHeader)
-
     oFWWebExBody:=WebExBody():New()
     oFWWebExBody:SetAttr("class","sb-nav-fixed")
     WITH WEBEXOBJECT oFWWebExBody
         WITH WEBEXOBJECT CLASS SBAdminNav
             .:NavRightLoadJSONMenu(SBAdminGetRightMenu())
         END WEBEXOBJECT
+        //TODO: SBAdminSideContent
+        WITH WEBEXOBJECT CLASS WebExDiv
+            .:SetFixedID("layoutSidenav")
+            //TODO: SBAdminSideContent
+            WITH WEBEXOBJECT CLASS WebExDiv
+                .:SetFixedID("layoutSidenav_content")
+                //TODO: Main
+                    WITH WEBEXOBJECT CLASS WebExControl ARGS "main"
+                    END WEBEXOBJECT
+                //Main
+                //Footer
+                    WITH WEBEXOBJECT CLASS SBAdminFooter
+                        .:SetCopyrightText("&copy; "+StrZero(Year(Date()),4)+" DNATech ")
+                        .:SetPrivacyPolicyHRef("https://github.com/DNATechByNaldoDJ/fw.webex")
+                        .:SetPrivacyPolicyText("FWWebEx")
+                        .:SetTermsAndConditionsHRef("https://mit-license.org/")
+                        .:SetTermsAndConditionsText("Licensed under MIT")
+                    END WEBEXOBJECT
+                //Footer
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+        //SBAdminSideContent
     END WEBEXOBJECT NOADDCHILD
 
-    oFWWebExPage:=WebExPage():New("fw.webex.example.020.tlpp :: FWWEbEx :: SBADMIN :: SBAdminNav")
-    WITH WEBEXOBJECT oFWWebExPage
-        beginContent var cScript
-            function decodeHTMLEntities(text) {
-                const txt = document.createElement("textarea");
-                txt.innerHTML = text;
-                return txt.value;
-            }
-            function showComingSoon(route) {
-                alert(decodeHTMLEntities('Rota ' + route + ' ainda n&atilde;o implementada!'));
-            }
-        endContent
-        WITH WEBEXOBJECT CLASS WebExScript
-            .:SetContent(cScript)
-        END WEBEXOBJECT
-    END WEBEXOBJECT NOADDCHILD
-    oScript:=WebExControl():New("script")
-    oScript:SetAttr("src",cSBAdminPath+"js/scripts.js")
-    oFWWebExPage:AddChild(oScript)
+    oFWWebExPage:=SBAdminPage():New("fw.webex.example.020.tlpp :: FWWEbEx :: SBADMIN :: SBAdminNav")
     oFWWebExPage:AddChild(oFWWebExBody)
 
     WebFileTools():HTMLFromControl(oFWWebExPage,oFWWebExPage:GetFWWebExTmpPath(),@cHTMLFile,@cHTML,.T.)

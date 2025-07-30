@@ -130,7 +130,7 @@ return(xRet)
 static function ParamSave(cLoad as character,aParametros as array,cBloq as character) as logical
 
     local cWrite:=(cBloq+"Arquivo de configuracao - Parambox Protheus "+CRLF) as character
-    local cBarra:=If(issrvunix(), "/", "\") as character
+    local cBarra:=if(IsSrvUnix(), "/", "\") as character
 
     local lSave as logical
 
@@ -143,7 +143,7 @@ static function ParamSave(cLoad as character,aParametros as array,cBloq as chara
             case ValType(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))=="N"
                 cWrite+= "N"+Str(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))+CRLF
             case ValType(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))=="L"
-                cWrite+= "L"+If(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))),"T","F")+CRLF
+                cWrite+= "L"+if(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))),"T","F")+CRLF
             case ValType(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))=="D"
                 cWrite+= "D"+DTOC(&("MV_PAR"+AllTrim(STRZERO(nX,2,0))))+CRLF
             otherwise
@@ -162,7 +162,7 @@ return(lSave)
 static Function ParamLoad(cLoad as character,aParametros as array,nX as numeric,xDefault as variant,lDefault as logical)
 
     local cLinha as character
-    local cBarra:=If(issrvunix(), "/", "\") as character
+    local cBarra:=if(IsSrvUnix(), "/", "\") as character
     local cTypeData as character
 
     local nY as numeric
@@ -185,7 +185,7 @@ static Function ParamLoad(cLoad as character,aParametros as array,nX as numeric,
                 cTypeData:=ValType(xDefault)
                 do case
                     case ((Substr(cLinha,1,1)=="L").and.(cTypeData=="L"))
-                        xRet:=If(Substr(cLinha,2,1)=="F",.F.,.T.)
+                        xRet:=if(Substr(cLinha,2,1)=="F",.F.,.T.)
                     case (Substr(cLinha,1,1)=="D").and.(cTypeData=="D")
                         xRet:=CToD(Substr(cLinha,2,10))
                     case ((Substr(cLinha,1,1)=="C").and.(cTypeData=="C"))

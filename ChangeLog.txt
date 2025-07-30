@@ -5,6 +5,34 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-07-30 16:49 UTC naldodj (fw.webex.sbadmin :: SBAdmin)
+  + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.tlpp
+  + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.footer.tlpp
+  + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.main.content.tlpp
+  + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.page.tlpp
+  + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.side.nav.tlpp
+  + src/fw.webex.sbadmin/tools/fw.webex.sbadmin.tools.tlpp
+  - src/fw.webex.sbadmin/fw.webex.sbadmin.card.tlpp
+  - src/fw.webex.sbadmin/fw.webex.sbadmin.footer.tlpp
+  - src/fw.webex.sbadmin/fw.webex.sbadmin.main.content.tlpp
+  - src/fw.webex.sbadmin/fw.webex.sbadmin.side.nav.tlpp
+  * py/html2fwwebex.py
+  * src/fw.webex/web/page/fw.webex.body.tlpp
+  * src/fw.webex/web/page/fw.webex.footer.tlpp
+  * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
+  * src/fw.webex.examples/000/fw.webex.parambox.tools.tlpp
+  * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+  * src/fw.webex.examples/015/fw.webex.example.015.tlpp
+  * src/fw.webex.examples/019/fw.webex.example.019.tlpp
+  * src/fw.webex.examples/020/fw.webex.example.020.tlpp
+  * src/fw.webex/web/layout/fw.webex.page.tlpp
+  * src/fw.webex.examples/018/fw.webex.example.018.tlpp
+  * src/fw.webex.sbadmin/fw.webex.sbadmin.card.container.tlpp -> src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.container.tlpp
+  * src/fw.webex.sbadmin/fw.webex.sbadmin.modal.tlpp -> src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.modal.tlpp
+  * src/fw.webex.sbadmin/fw.webex.sbadmin.nav.tlpp -> src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.nav.tlpp
+  * src/fw.webex.sbadmin/fw.webex.sbadmin.side.content.tlpp -> src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.side.content.tlpp
+
 2025-07-28 21:19 UTC naldodj (Fix)
   ! Remove unnecessary code
     * src/fw.webex.examples/020/fw.webex.example.020.tlpp

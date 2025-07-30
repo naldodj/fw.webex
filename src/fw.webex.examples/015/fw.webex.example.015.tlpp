@@ -118,7 +118,7 @@
       +---> footer [id=webexfooter_0000000054] [attr=(class=text-center text-muted mt-auto small p-3)]
          +---> div [id=webexcontrol_0000000055]
             +---> hr [id=webexhr_0000000056] [attr=(class=my-4)]
-            +---> span [id=webexcontrol_0000000057] [content=(c) 2025 FWWebEx (DNATech). Licensed under MIT.
+            +---> span [id=webexcontrol_0000000057] [content=(c) 2025 FWWebEx (DNATech). Licensed under MIT
 ]
    +---> script [id=webexscript_0000000048] [content=    document.addEventListener("DOMContentLoaded",()=>{
         document.querySelectorAll("[data-toggle-kpi]").forEach(el=>{

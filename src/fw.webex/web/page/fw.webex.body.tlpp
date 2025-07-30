@@ -19,11 +19,71 @@ class WebExBody from WebExControl
 end class
 
 method New() class WebExBody
+
+    local cTableStyle as character
+
     _Super:New("body")
+
     ::AddClass("p-4")
     ::AddClass("d-flex")
     ::AddClass("flex-column")
     ::AddClass("min-vh-100")
+
+    WITH WEBEXOBJECT self
+        WITH WEBEXOBJECT CLASS WebExDiv
+            .:SetFixedID("fwwebex-connection-status")
+            .:SetAttr("style","display: none; font-weight: bold; color: orange; margin-top: 10px;")
+            .:SetContent("Tentando conectar ao Protheus")
+            WITH WEBEXOBJECT CLASS WebExSpan
+                .:SetFixedID("fwwebex_connection_status_dot1")
+                .:SetContent(".")
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExSpan
+                .:SetFixedID("fwwebex_connection_status_dot2")
+                .:SetContent(".")
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS WebExSpan
+                .:SetFixedID("fwwebex_connection_status_dot3")
+                .:SetContent(".")
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExControl TYPE div
+            .:SetAttr("id","fwwebex-datatable-custom-loader")
+            .:SetAttr("style","display:none; width: 100%; margin: 1rem 0;")
+            WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                .:AddClass("progress")
+                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                    .:AddClass("progress-bar")
+                    .:AddClass("progress-bar-striped")
+                    .:AddClass("progress-bar-animated")
+                    .:AddClass("bg-primary")
+                    .:SetAttr("style","width: 100%")
+                    .:SetContent("Carregando...")
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExControl TYPE style
+            beginContent var cTableStyle
+                table.dataTable.compact tbody td {
+                    padding: 4px 8px !important;
+                }
+                #fwwebex-datatable-custom-loader {
+                    position: absolute !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    height: 4px !important;
+                    background: linear-gradient(270deg, #0dcaf0, #0d6efd) !important;
+                    animation: progressbar-stripes 1s linear infinite !important;
+                }
+                @keyframes progressbar-stripes {
+                0% { background-position: 1rem 0; }
+                100% { background-position: 0 0; }
+                }
+            endContent
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
+
 return(self)
 
 method AddChild(oBodyChild) class WebExBody

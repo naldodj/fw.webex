@@ -11,7 +11,7 @@
       |
       +---> <div id="tableResult">
       |     |
-      |     +---> <div id="custom-loader"> (barra de progresso animada)
+      |     +---> <div id="fwwebex-datatable-custom-loader"> (barra de progresso animada)
       |     |
       |     +---> <table id="example" class="table table-striped table-hover display compact nowrap">
       |           |
@@ -94,7 +94,6 @@ static procedure FWWebExExample_007(cHTML as character) as character
     local lUseOAuth2:=.F. as logical
 
     local oDivTable as object
-    local oTableStyle as object
 
     local oFWWebExPage as object
     local oFWWebExMain as object
@@ -116,28 +115,6 @@ static procedure FWWebExExample_007(cHTML as character) as character
         endif
         cAutorization:=WebExHelper():ConvertHeaderToJSObject(cAutorization)
     endif
-
-    oTableStyle:=WebExStyle():New()
-
-    beginContent var cTableStyle
-        table.dataTable.compact tbody td {
-            padding: 4px 8px !important;
-        }
-        #custom-loader {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            height: 4px !important;
-            background: linear-gradient(270deg, #0dcaf0, #0d6efd) !important;
-            animation: progressbar-stripes 1s linear infinite !important;
-        }
-        @keyframes progressbar-stripes {
-        0% { background-position: 1rem 0; }
-        100% { background-position: 0 0; }
-        }
-    endContent
-    oTableStyle:SetContent(cTableStyle)
 
     oFWWebExScript:=WebExScript():New()
 
@@ -162,13 +139,6 @@ static procedure FWWebExExample_007(cHTML as character) as character
     beginContent var cScript
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('tableResult').innerHTML = `
-                <div id="custom-loader" style="display:none; width: 100%;">
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 100%">
-                            Carregando...
-                        </div>
-                    </div>
-                </div>
                 <table id="example" class="table table-striped table-hover display compact nowrap">
                     <thead>
                         <tr>
@@ -215,7 +185,7 @@ static procedure FWWebExExample_007(cHTML as character) as character
                     }
                 },
                 "preDrawCallback": function(settings) {
-                    $('#custom-loader').show();
+                    $('#fwwebex-datatable-custom-loader').show();
                 },
                 "drawCallback": function(settings) {
                     // This drawCallback ensures consistent table height across pages.
@@ -228,7 +198,7 @@ static procedure FWWebExExample_007(cHTML as character) as character
                     for (let i = 0; i < emptyRows; i++) {
                         $('#example tbody').append('<tr class="empty-row"><td colspan="999">&nbsp;</td></tr>');
                     }
-                    $('#custom-loader').hide();
+                    $('#fwwebex-datatable-custom-loader').hide();
                 },
                 ajax: function (data, callback) {
                     const pageNumber = Math.floor(data.start / data.length) + 1;
@@ -293,9 +263,9 @@ static procedure FWWebExExample_007(cHTML as character) as character
              //captura do evento de processamento
             table.on('processing.dt', function (e, settings, processing) {
                 if (processing) {
-                    $('#custom-loader').show();
+                    $('#fwwebex-datatable-custom-loader').show();
                 } else {
-                    $('#custom-loader').hide();
+                    $('#fwwebex-datatable-custom-loader').hide();
                 }
             });
         });
@@ -345,7 +315,6 @@ static procedure FWWebExExample_007(cHTML as character) as character
     FreeObj(@oFWWebExBody)
     FreeObj(@oFWWebExScript)
     FreeObj(@oDivTable)
-    FreeObj(@oTableStyle)
 
 return(cHTMLFile)
 

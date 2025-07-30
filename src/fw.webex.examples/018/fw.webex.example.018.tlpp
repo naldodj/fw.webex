@@ -11,7 +11,7 @@
       |
       +---> <div id="tableResult">
       |     |
-      |     +---> <div id="custom-loader"> (barra de progresso animada)
+      |     +---> <div id="fwwebex-datatable-custom-loader"> (barra de progresso animada)
       |     |
       |     +---> <table id="example" class="table table-striped table-hover display compact nowrap">
       |           |
@@ -87,6 +87,7 @@ static procedure FWWebExExample_018(cHTML as character) as character
     local cScript as character
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
+    local cTableStyle as character
 
     local oDivTable as object
     local oTableStyle as object
@@ -96,29 +97,47 @@ static procedure FWWebExExample_018(cHTML as character) as character
     local oFWWebExBody as object
     local oFWWebExScript as object
 
-    oTableStyle:=WebExStyle():New()
-
     beginContent var cTableStyle
-        table.dataTable.compact tbody td {
-            padding: 4px 8px !important;
-        }
-        #custom-loader {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            height: 4px !important;
-            background: linear-gradient(270deg, #0dcaf0, #0d6efd) !important;
-            animation: progressbar-stripes 1s linear infinite !important;
-        }
-        @keyframes progressbar-stripes {
-        0% { background-position: 1rem 0; }
-        100% { background-position: 0 0; }
-        }
-    endContent
-    oTableStyle:SetContent(cTableStyle)
 
-    oFWWebExScript:=WebExScript():New()
+        /* Compactar linhas do DataTables */
+        table.dataTable.compact tbody tr {
+            height: 28px; /* Altura reduzida para linhas */
+            line-height: 28px; /* Alinhar texto verticalmente */
+        }
+
+        table.dataTable.compact tbody td,
+        table.dataTable.compact thead th {
+            padding: 4px 8px; /* Reduzir padding (vertical, horizontal) */
+            font-size: 12px; /* Tamanho de fonte menor */
+            margin: 0; /* Remover margens */
+        }
+
+        table.dataTable.compact thead th {
+            font-weight: bold; /* Manter destaque nos cabecalhos */
+        }
+
+        /* Garantir que a tabela nao tenha espacamentos extras */
+        table.dataTable.compact {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        /* Ajustar linhas vazias adicionadas pelo drawCallback */
+        table.dataTable.compact tr.empty-row td {
+            padding: 0;
+            height: 20px; /* Menor altura para linhas vazias */
+        }
+
+        /* Evitar quebras de linha e overflow */
+        table.dataTable.compact td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    endContent
+    oTableStyle:=WebExStyle():New()
+    oTableStyle:SetContent(cTableStyle)
 
     // Adiciona container de tabela
     oDivTable:=WebExDiv():New()
@@ -141,17 +160,8 @@ static procedure FWWebExExample_018(cHTML as character) as character
     beginContent var cScript
 
         document.addEventListener('DOMContentLoaded', function () {
+            FWWebEx.RequestHandler.debug(true);
             document.getElementById('tableResult').innerHTML = `
-                <div id="custom-loader" style="display:none; width: 100%;">
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 100%">
-                            Carregando...
-                        </div>
-                    </div>
-                </div>
-                <div id="connection-status" style="display: none; font-weight: bold; color: orange; margin-top: 10px;">
-                    Tentando conectar ao Protheus<span id="dot1">.</span><span id="dot2">.</span><span id="dot3">.</span>
-                </div>
                 <table id="example" class="table table-striped table-hover display compact nowrap">
                     <thead>
                         <tr>
@@ -168,69 +178,39 @@ static procedure FWWebExExample_018(cHTML as character) as character
                     </thead>
                 </table>`;
 
-            // Loader de "tentando conectar"
-            function startConnectingAnimation() {
-                const status = document.getElementById('connection-status');
-                const dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
-                let step = 0;
-                status.style.display = 'inline';
-                const interval = setInterval(() => {
-                    dots.forEach((dot, i) => dot.style.visibility = i <= step ? 'visible' : 'hidden');
-                    step = (step + 1) % 3;
-                }, 400);
-                return () => {
-                    clearInterval(interval);
-                    status.style.display = 'none';
-                };
-            }
-
-            // Espera conexao ativa
-            function waitForConnection(maxRetries = 5, interval = 1000) {
-                return new Promise((resolve, reject) => {
-                    let attempts = 0;
-                    const check = () => {
-                        if (twebchannel && twebchannel.gotConnection) resolve(true);
-                        else if (++attempts >= maxRetries) reject(new Error("WebSocket/MessageChannel not connected."));
-                        else setTimeout(check, interval);
-                    };
-                    check();
-                });
-            }
-
             const table = new DataTable('#example', {
                 serverSide: true,
                 processing: false,
                 dom: 'Blfrtip',
                 lengthMenu: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 100, -1],
                 pageLength: 10,
-                buttons: ['copy', 'csv', 'print',
-                    {
-                        extend: 'excelHtml5',
-                        title: 'u_FWWebExExample_018',
-                        filename: 'u_FWWebExExample_018_relatorio_excel',
-                        autoFilter: true
-                    },
-                    {
-                        extend: 'pdf',
-                        title: 'u_FWWebExExample_018',
-                        filename: 'u_FWWebExExample_018_relatorio_pdf'
-                    }
-                ],
-                responsive: true,
-                className: 'compact',
+                buttons: ['copy', 'csv', 'print', {
+                    extend: 'excelHtml5',
+                    title: 'u_FWWebExExample_018',
+                    filename: 'u_FWWebExExample_018_relatorio_excel',
+                    autoFilter: true
+                }, {
+                    extend: 'pdf',
+                    title: 'u_FWWebExExample_018',
+                    filename: 'u_FWWebExExample_018_relatorio_pdf'
+                }],
+                responsive: false, // Desativar responsividade para reduzir espaco (se nao for essencial)
+                className: 'compact', // Ja presente, mantido para reforcar
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/pt-BR.json',
                     lengthLabels: { '-1': 'Todos' }
                 },
-                preDrawCallback: () => $('#custom-loader').show(),
+                preDrawCallback: () => $('#fwwebex-datatable-custom-loader').show(),
                 drawCallback: function () {
                     const api = this.api();
                     const rows = api.rows({ page: 'current' }).count();
                     const pageSize = api.page.len();
+                    // Adicionar apenas linhas vazias necessarias, com altura minima
+                    $('#example tbody tr.empty-row').remove(); // Remover linhas vazias anteriores
                     for (let i = 0; i < pageSize - rows; i++) {
-                        $('#example tbody').append('<tr class="empty-row"><td colspan="999">&nbsp;</td></tr>');
+                        $('#example tbody').append('<tr class="empty-row"><td colspan="9" style="height: 20px; padding: 0;"></td></tr>');
                     }
-                    $('#custom-loader').hide();
+                    $('#fwwebex-datatable-custom-loader').hide();
                 },
                 ajax: function (data, callback) {
                     const pageNumber = Math.floor(data.start / data.length) + 1;
@@ -253,78 +233,66 @@ static procedure FWWebExExample_018(cHTML as character) as character
                         lHTTPCTType: true
                     };
 
-                    const requestId = `request_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-                    let responseHandled = false;
-
-                    const handleResponse = (event) => {
-                        if (!event.protheusResponse) return;
-                            responseHandled = true;
-                        try {
-                            const json = event.protheusResponse;
-                            if (!json || !json.table || !json.table.items) throw new Error('Dados incompletos');
-
-                            const rows = json.table.items.map(row => {
-                                const i = row.detail?.items || {};
-                                return [
-                                    i.RA_FILIAL || '', i.RA_MAT || '', i.RA_APELIDO || '',
-                                    i.RA_CC || '', i.RA_SALARIO || '', i.RA_ADTPOSE || '',
-                                    i.RA_CATFUNC || '', i.RA_DEPIR || '', i.RA_SEXO || ''
-                                ];
-                            });
-
-                            callback({
-                                data: rows,
-                                recordsTotal: json.TotalRows || rows.length,
-                                recordsFiltered: json.TotalRows || rows.length
-                            });
-                        } catch (err) {
-                            console.error('Erro ao processar resposta:', err);
+                    FWWebEx.RequestHandler.execute({
+                        requestData: request,
+                        callbackEvent: 'CALLBACK_DATA_RESPONSE',
+                        execEvent: 'CALLBACK_EXEC',
+                        onResponse: (json) => {
+                            console.log('[FWWebEx] Resposta recebida:', JSON.stringify(json, null, 2));
+                            try {
+                                if (!json || !json.table || !json.table.items) throw new Error('Resposta incompleta');
+                                const rows = json.table.items.map(row => {
+                                    const i = row.detail?.items || {};
+                                    return [
+                                        i.RA_FILIAL || '', i.RA_MAT || '', i.RA_APELIDO || '',
+                                        i.RA_CC || '', i.RA_SALARIO || '', i.RA_ADTPOSE || '',
+                                        i.RA_CATFUNC || '', i.RA_DEPIR || '', i.RA_SEXO || ''
+                                    ];
+                                });
+                                callback({
+                                    data: rows,
+                                    recordsTotal: json.TotalRows || rows.length,
+                                    recordsFiltered: json.TotalRows || rows.length
+                                });
+                            } catch (err) {
+                                console.error('Erro ao processar dados:', err);
+                                callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
+                            } finally {
+                                $('#fwwebex-datatable-custom-loader').hide();
+                            }
+                        },
+                        onError: (err) => {
+                            console.warn('Erro ao executar request:', err.message);
                             callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
-                        } finally {
-                            $('#custom-loader').hide();
-                            twebchannel.eventTarget.removeEventListener('CALLBACK_DATA_RESPONSE', handleResponse);
                         }
-                    };
-
-                    // Tentativa de conexao com animacao
-                    const stopAnimation = startConnectingAnimation();
-
-                    waitForConnection(5, 1000)
-                        .then(() => {
-                            stopAnimation();
-                            twebchannel.eventTarget.addEventListener('CALLBACK_DATA_RESPONSE', handleResponse);
-                            twebchannel.jsToAdvpl('CALLBACK_EXEC', JSON.stringify({ ...request, requestId }));
-                        })
-                        .catch((err) => {
-                            stopAnimation();
-                            console.error(err.message);
-                            callback({ data: [], recordsTotal: 0, recordsFiltered: 0 });
-                        });
+                    });
                 }
             });
 
-            // Comunicacao ADVPL -> JS
+            table.on('processing.dt', function (e, settings, processing) {
+                $('#fwwebex-datatable-custom-loader').toggle(processing);
+            });
+
+            // Definir advplToJs dentro do DOMContentLoaded, mas fora do ajax
+            twebchannel = window.twebchannel || {};
             twebchannel.advplToJs = function (codeType, codeContent, objectName) {
                 if (codeType === 'CALLBACK_RESPONSE') {
                     try {
                         const response = JSON.parse(codeContent);
-                        twebchannel.eventTarget.dispatchEvent(new FwEventData('CALLBACK_DATA_RESPONSE', response));
+                        twebchannel.eventTarget.dispatchEvent(new CustomEvent('CALLBACK_DATA_RESPONSE', { detail: response }));
                     } catch (err) {
-                        console.error('Erro ao interpretar resposta:', err);
+                        console.error('[FWWebEx] Erro ao interpretar resposta:', err);
                     }
                 } else {
-                    console.warn('Tipo inesperado:', codeType);
+                    console.warn('[FWWebEx] Tipo inesperado:', codeType);
                 }
             };
 
-            // Mostrar loader no evento do DataTables
-            table.on('processing.dt', function (e, settings, processing) {
-                $('#custom-loader').toggle(processing);
-            });
         });
 
     endContent
 
+    oFWWebExScript:=WebExScript():New()
     oFWWebExScript:SetContent(cScript)
     oFWWebExScript:SetExternalAssets(.F.)
 
@@ -347,7 +315,6 @@ static procedure FWWebExExample_018(cHTML as character) as character
     FreeObj(@oFWWebExBody)
     FreeObj(@oFWWebExScript)
     FreeObj(@oDivTable)
-    FreeObj(@oTableStyle)
 
 return(cHTMLFile)
 

@@ -9,7 +9,7 @@
       |
       +---> <style> (tabela compacta + animacao do loader)
       |
-      +---> <div id="custom-loader" style="display:none">
+      +---> <div id="fwwebex-datatable-custom-loader" style="display:none">
       |     |
       |     +---> <div class="progress">
       |           |
@@ -54,7 +54,7 @@
                   |     +---> responsive, compact
                   |     +---> idioma: pt-BR via CDN
                   |
-                  +---> preDrawCallback: mostra #custom-loader
+                  +---> preDrawCallback: mostra #fwwebex-datatable-custom-loader
                   +---> drawCallback: esconde loader e completa altura com linhas em branco
                   +---> processamento falho: mostra erro no console
 
@@ -121,21 +121,6 @@ static procedure FWWebExExample_008(cHTML as character) as character
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName+" (REST + DataTable)"
         WITH WEBEXOBJECT CLASS WebExBody
             WITH WEBEXOBJECT CLASS WebExMain
-                WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                    .:SetAttr("id","custom-loader")
-                    .:SetAttr("style","display:none; width: 100%;")
-                    WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:AddClass("progress")
-                        WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                            .:AddClass("progress-bar")
-                            .:AddClass("progress-bar-striped")
-                            .:AddClass("progress-bar-animated")
-                            .:AddClass("bg-primary")
-                            .:SetAttr("style","width: 100%")
-                            .:SetContent("Carregando...")
-                        END WEBEXOBJECT
-                    END WEBEXOBJECT
-                END WEBEXOBJECT
                 // Adiciona container de tabela
                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
                     .:SetAttr("class","container rounded shadow p-3")
@@ -185,26 +170,6 @@ static procedure FWWebExExample_008(cHTML as character) as character
                 END WEBEXOBJECT
             END WEBEXOBJECT
         END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExControl TYPE style
-            beginContent var cTableStyle
-                table.dataTable.compact tbody td {
-                    padding: 4px 8px !important;
-                }
-                #custom-loader {
-                    position: absolute !important;
-                    top: 0 !important;
-                    left: 0 !important;
-                    right: 0 !important;
-                    height: 4px !important;
-                    background: linear-gradient(270deg, #0dcaf0, #0d6efd) !important;
-                    animation: progressbar-stripes 1s linear infinite !important;
-                }
-                @keyframes progressbar-stripes {
-                0% { background-position: 1rem 0; }
-                100% { background-position: 0 0; }
-                }
-            endContent
-        END WEBEXOBJECT
         WITH WEBEXOBJECT CLASS WebExScript
             /*
                 Tabela do DOM (so pra referencia)
@@ -253,7 +218,7 @@ static procedure FWWebExExample_008(cHTML as character) as character
                             }
                         },
                         "preDrawCallback": function(settings) {
-                            $('#custom-loader').show();
+                            $('#fwwebex-datatable-custom-loader').show();
                         },
                         "drawCallback": function(settings) {
                             // This drawCallback ensures consistent table height across pages.
@@ -266,7 +231,7 @@ static procedure FWWebExExample_008(cHTML as character) as character
                             for (let i = 0; i < emptyRows; i++) {
                                 $('#example tbody').append('<tr class="empty-row"><td colspan="999">&nbsp;</td></tr>');
                             }
-                            $('#custom-loader').hide();
+                            $('#fwwebex-datatable-custom-loader').hide();
                         },
                         ajax: function (data, callback) {
                             const pageNumber = Math.floor(data.start / data.length) + 1;
@@ -331,9 +296,9 @@ static procedure FWWebExExample_008(cHTML as character) as character
                     //captura do evento de processamento
                     table.on('processing.dt', function (e, settings, processing) {
                         if (processing) {
-                            $('#custom-loader').show();
+                            $('#fwwebex-datatable-custom-loader').show();
                         } else {
-                            $('#custom-loader').hide();
+                            $('#fwwebex-datatable-custom-loader').hide();
                         }
                     });
                 });
