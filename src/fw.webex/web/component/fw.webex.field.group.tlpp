@@ -13,7 +13,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class WebExFieldGroup from WebExControl
+class WebExFieldGroup from WebExDiv
 
     protected data cFieldGroupLabel as character
     protected data cFieldGroupName as character
@@ -55,7 +55,7 @@ method New(cFieldGroupLabel,cFieldGroupName,cFieldGroupType,cFieldGroupPlaceHold
     ::cFieldGroupTitle:=cFieldGroupTitle
     ::nFieldGroupColSize:=nFieldGroupColSize
 
-    _Super:New("div")
+    _Super:New()
     ::AddClass("mb-3")
 
     // Cria o input

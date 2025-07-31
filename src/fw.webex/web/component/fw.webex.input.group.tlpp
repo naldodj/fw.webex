@@ -13,13 +13,13 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class WebExInputGroup from WebExControl
+class WebExInputGroup from WebExDiv
 
     public method New() as object
 
 endclass
 
 method New() class WebExInputGroup
-    _Super:New("div")
+    _Super:New()
     ::AddClass("input-group")
 return(self)

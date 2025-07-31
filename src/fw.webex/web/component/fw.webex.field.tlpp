@@ -13,7 +13,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class WebExField from WebExControl
+class WebExField from WebExDiv
 
     protected data cFieldLabel as character
     protected data cFieldName as character
@@ -45,7 +45,7 @@ method New(cFieldLabel,cFieldName,cFieldType,cFieldPlaceHolder,cFieldTitle) clas
     ::cFieldType:=cFieldType
     ::cFieldPlaceHolder:=cFieldPlaceHolder
     ::cFieldTitle:=cFieldTitle
-    _Super:New("div")
+    _Super:New()
     ::AddClass("mb-3")
     ::oWebExInputField:=WebExInput():New(cFieldName,cFieldType,cFieldPlaceHolder,cFieldTitle)
     ::oWebExLabelField:=WebExLabel():New(::oWebExInputField:GetFixedID(),cFieldLabel)

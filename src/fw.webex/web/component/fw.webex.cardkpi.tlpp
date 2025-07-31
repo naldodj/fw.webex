@@ -13,7 +13,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class WebExCardKPI from WebExControl
+class WebExCardKPI from WebExDiv
 
     protected data cCardKPITitle as character
     protected data cCardKPIValue as character
@@ -46,7 +46,7 @@ method New(cCardKPITitle,cCardKPIValue,cCardKPITheme,oCardKPIIcon) class WebExCa
     ::cCardKPIValue:=cCardKPIValue
     ::cCardKPITheme:=Lower(AllTrim(cCardKPITheme))
 
-    _Super:New("div")
+    _Super:New()
     ::SetEnableIcons()
 
     ::AddClass("card")

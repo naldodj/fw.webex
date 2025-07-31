@@ -17,9 +17,7 @@ namespace FWWebEx
     WebExH1
 ***********************************************************************************************************/
 class WebExH1 from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExH1
@@ -30,9 +28,7 @@ return(self)
     WebExH2
 ***********************************************************************************************************/
 class WebExH2 from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExH2
@@ -43,9 +39,7 @@ return(self)
     WebExH3
 ***********************************************************************************************************/
 class WebExH3 from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExH3
@@ -56,9 +50,7 @@ return(self)
     WebExH4
 ***********************************************************************************************************/
 class WebExH4 from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExH4
@@ -69,9 +61,7 @@ return(self)
     WebExH5
 ***********************************************************************************************************/
 class WebExH5 from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExH5
@@ -82,9 +72,7 @@ return(self)
     WebExH6
 ***********************************************************************************************************/
 class WebExH6 from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExH6

@@ -13,7 +13,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class WebExCard from WebExControl
+class WebExCard from WebExDiv
 
     protected data cCardTextTitle as character
     protected data cCardTextBody as character
@@ -34,7 +34,7 @@ method New(cCardTextTitle,cCardTextBody) class WebExCard
     paramtype 2 var cCardTextBody as character optional default ""
     ::cCardTextTitle:=cCardTextTitle
     ::cCardTextBody:=cCardTextBody
-    _Super:New("div")
+    _Super:New()
     WITH WEBEXOBJECT self
         .:AddClass("card")
         WITH WEBEXOBJECT ::oCardBody CLASS WebExDiv

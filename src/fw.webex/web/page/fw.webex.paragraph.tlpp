@@ -17,9 +17,7 @@ namespace FWWebEx
     WebExParagraph
 ***********************************************************************************************************/
 class WebExParagraph from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExParagraph

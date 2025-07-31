@@ -28,12 +28,12 @@ return(self)
 /***********************************************************************************************************
     WebExVR
 ***********************************************************************************************************/
-class WebExVR from WebExControl
+class WebExVR from WebExDiv
     public method New() as object
 endclass
 
 method New() class WebExVR
-    _Super:New("div")
+    _Super:New()
     ::AddClass("vr")
     ::AddClass("mx-2")
     ::SetAttr("style","height: 100%; border-left: 1px solid #dee2e6;")

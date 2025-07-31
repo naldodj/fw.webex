@@ -13,14 +13,14 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class SBAdminCard from WebExControl
+class SBAdminCard from WebExDiv
     public method New() as object
 endclass
 
 method New() class SBAdminCard
 
-    oDiv26:=WebExControl():New("div")
-    oDiv26:AddClass("row")
+    _Super:New()
+    ::AddClass("row")
         oDiv27:=WebExControl():New("div")
         oDiv27:AddClass("col-xl-3 col-md-6")
             oDiv28:=WebExControl():New("div")
@@ -44,7 +44,7 @@ method New() class SBAdminCard
                 oDiv30:AddChild(oDiv31)
             oDiv28:AddChild(oDiv30)
         oDiv27:AddChild(oDiv28)
-    oDiv26:AddChild(oDiv27)
+    ::AddChild(oDiv27)
         oDiv32:=WebExControl():New("div")
         oDiv32:AddClass("col-xl-3 col-md-6")
             oDiv33:=WebExControl():New("div")
@@ -68,7 +68,7 @@ method New() class SBAdminCard
                 oDiv35:AddChild(oDiv36)
             oDiv33:AddChild(oDiv35)
         oDiv32:AddChild(oDiv33)
-    oDiv26:AddChild(oDiv32)
+    ::AddChild(oDiv32)
         oDiv37:=WebExControl():New("div")
         oDiv37:AddClass("col-xl-3 col-md-6")
             oDiv38:=WebExControl():New("div")
@@ -92,7 +92,7 @@ method New() class SBAdminCard
                 oDiv40:AddChild(oDiv41)
             oDiv38:AddChild(oDiv40)
         oDiv37:AddChild(oDiv38)
-    oDiv26:AddChild(oDiv37)
+    ::AddChild(oDiv37)
         oDiv42:=WebExControl():New("div")
         oDiv42:AddClass("col-xl-3 col-md-6")
             oDiv43:=WebExControl():New("div")
@@ -116,6 +116,6 @@ method New() class SBAdminCard
                 oDiv45:AddChild(oDiv46)
             oDiv43:AddChild(oDiv45)
         oDiv42:AddChild(oDiv43)
-    oDiv26:AddChild(oDiv42)
+    ::AddChild(oDiv42)
 
 return(self)

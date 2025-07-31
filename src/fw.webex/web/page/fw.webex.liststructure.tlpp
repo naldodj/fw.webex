@@ -17,9 +17,7 @@ namespace FWWebEx
     WebExUL
 ***********************************************************************************************************/
 class WebExUL from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExUL
@@ -30,9 +28,7 @@ return(self)
     WebExOL
 ***********************************************************************************************************/
 class WebExOL from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExOL
@@ -43,9 +39,7 @@ return(self)
     WebExLI
 ***********************************************************************************************************/
 class WebExLI from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExLI
@@ -56,9 +50,7 @@ return(self)
     WebExDL
 ***********************************************************************************************************/
 class WebExDL from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExDL
@@ -69,9 +61,7 @@ return(self)
     WebExDT
 ***********************************************************************************************************/
 class WebExDT from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExDT
@@ -82,9 +72,7 @@ return(self)
     WebExDD
 ***********************************************************************************************************/
 class WebExDD from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExDD
@@ -95,9 +83,7 @@ return(self)
     WebExMenu
 ***********************************************************************************************************/
 class WebExMenu from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExMenu

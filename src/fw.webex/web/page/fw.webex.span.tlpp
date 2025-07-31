@@ -17,9 +17,7 @@ namespace FWWebEx
     WebExSpan
 ***********************************************************************************************************/
 class WebExSpan from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExSpan

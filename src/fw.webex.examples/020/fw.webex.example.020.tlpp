@@ -45,18 +45,19 @@ static procedure FWWebExExample_020(cHTML as character) as character
 
     oFWWebExBody:=WebExBody():New()
     oFWWebExBody:SetAttr("class","sb-nav-fixed")
+
     WITH WEBEXOBJECT oFWWebExBody
         WITH WEBEXOBJECT CLASS SBAdminNav
             .:NavRightLoadJSONMenu(SBAdminGetRightMenu())
         END WEBEXOBJECT
-        //TODO: SBAdminSideContent
-        WITH WEBEXOBJECT CLASS WebExDiv
-            .:SetFixedID("layoutSidenav")
-            //TODO: SBAdminSideContent
-            WITH WEBEXOBJECT CLASS WebExDiv
-                .:SetFixedID("layoutSidenav_content")
+        //layoutSidenav
+        WITH WEBEXOBJECT CLASS SBAdminLayoutSideNav
+            WITH WEBEXOBJECT CLASS SBAdminLayoutSideNavNav
+            END WEBEXOBJECT
+            //TODO: SBAdminLayoutSideNavContent
+            WITH WEBEXOBJECT CLASS SBAdminLayoutSideNavContent
                 //TODO: Main
-                    WITH WEBEXOBJECT CLASS WebExControl ARGS "main"
+                    WITH WEBEXOBJECT CLASS SBAdminMainContent
                     END WEBEXOBJECT
                 //Main
                 //Footer
@@ -70,7 +71,23 @@ static procedure FWWebExExample_020(cHTML as character) as character
                 //Footer
             END WEBEXOBJECT
         END WEBEXOBJECT
-        //SBAdminSideContent
+        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+            .:SetContent("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js")
+            .:SetAttr("crossorigin","anonymous")
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+            .:SetContent(cSBAdminPath+"assets/demo/chart-area-demo.js")
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+            .:SetContent(cSBAdminPath+"assets/demo/chart-bar-demo.js")
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+            .:SetContent("https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js")
+            .:SetAttr("crossorigin","anonymous")
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+            .:SetContent(cSBAdminPath+"js/datatables-simple-demo.js")
+        END WEBEXOBJECT
     END WEBEXOBJECT NOADDCHILD
 
     oFWWebExPage:=SBAdminPage():New("fw.webex.example.020.tlpp :: FWWEbEx :: SBADMIN :: SBAdminNav")

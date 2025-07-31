@@ -36,7 +36,7 @@ method New(cPageTitle) class SBAdminPage
 
     local cSBAdminPath as character
 
-    _Super:New("div")
+    _Super:New()
     _Super:DisableFooter(.T.)
     _Super:DisableDarkTheme(.T.)
 

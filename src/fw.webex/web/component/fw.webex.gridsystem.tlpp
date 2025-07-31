@@ -16,7 +16,7 @@ namespace FWWebEx
 /***********************************************************************************************************
     WebExRow
 ***********************************************************************************************************/
-class WebExRow from WebExControl
+class WebExRow from WebExDiv
 
     protected data nGutterSize as numeric
 
@@ -30,7 +30,7 @@ endclass
 method New(nGutterSize) class WebExRow
     paramtype 1 var nGutterSize as numeric optional default 3
     ::nGutterSize:=nGutterSize
-    _Super:New("div")
+    _Super:New()
     ::AddClass("row")
     ::SetGutterSize()
 return(self)
@@ -48,7 +48,7 @@ return(self)
 /***********************************************************************************************************
     WEBExCol
 ***********************************************************************************************************/
-class WebExCol from WebExControl
+class WebExCol from WebExDiv
 
     protected data nColSize as numeric
 
@@ -61,7 +61,7 @@ endclass
 method New(nColSize) class WebExCol
     paramtype 1 var nColSize as numeric optional default 12
     ::nColSize:=nColSize
-    _Super:New("div")
+    _Super:New()
     ::SetColSize()
 return(self)
 

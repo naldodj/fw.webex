@@ -488,6 +488,10 @@ method RenderHTML() class WebExPage
         END WEBEXOBJECT NOADDCHILD
     endif
 
+    //Pre-Renderiza Body para Carregar os Dados: External Assets, etc.
+    ::oPageBody:RenderHTML()
+    ::oPageBody:SetRenderChildren(.F.)
+
     WITH WEBEXOBJECT ::oPage
         if (::lDarkTheme)
             .:SetAttr("data-bs-theme","dark")

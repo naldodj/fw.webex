@@ -13,7 +13,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class WebExAlert from WebExControl
+class WebExAlert from WebExDiv
 
     protected data cAlertText as character
     protected data cAlertType as character
@@ -31,7 +31,7 @@ method New(cAlertText,cAlertType) class WebExAlert
     paramtype 2 var cAlertType as character optional default "info"
     ::cAlertText:=cAlertText
     ::cAlertType:=Lower(cAlertType)
-    _Super:New("div")
+    _Super:New()
     ::SetAlertText()
     ::SetAlertType()
 return(self)

@@ -15,7 +15,7 @@ namespace FWWebEx
 
 #include "dbstruct.ch"
 
-class WebExTemplateBulkActionTable from WebExControl
+class WebExTemplateBulkActionTable from WebExDiv
 
     protected data cTemplateBulkActionTableTitle
 
@@ -34,7 +34,7 @@ method New(cTemplateBulkActionTableTitle) class WebExTemplateBulkActionTable
     ::cTemplateBulkActionTableTitle:=cTemplateBulkActionTableTitle
     ::jTemplateBulkActionTableColumns:=JSONObject():New()
     ::jTemplateBulkActionTableItems:=JSONObject():New()
-    _Super:New("div")
+    _Super:New()
     _Super:SetEnableDataTable()
     ::SetAttr("style","overflow-x:auto")
 return(self)

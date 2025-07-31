@@ -5,6 +5,38 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-07-31 14:37 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
+  + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.layout.side.nav.nav.tlpp
+  + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.layout.side.nav.tlpp
+  - src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.side.nav.tlpp
+  * src/fw.webex/web/component/fw.webex.alert.tlpp
+  * src/fw.webex/web/component/fw.webex.card.tlpp
+  * src/fw.webex/web/component/fw.webex.cardkpi.tlpp
+  * src/fw.webex/web/component/fw.webex.checkbox.tlpp
+  * src/fw.webex/web/component/fw.webex.container.tlpp
+  * src/fw.webex/web/component/fw.webex.field.group.tlpp
+  * src/fw.webex/web/component/fw.webex.field.tlpp
+  * src/fw.webex/web/component/fw.webex.gridsystem.tlpp
+  * src/fw.webex/web/component/fw.webex.input.group.tlpp
+  * src/fw.webex/web/component/fw.webex.rules.tlpp
+  * src/fw.webex/web/layout/fw.webex.page.tlpp
+  * src/fw.webex/web/page/fw.webex.anchor.tlpp
+  * src/fw.webex/web/page/fw.webex.blockquote.tlpp
+  * src/fw.webex/web/page/fw.webex.div.tlpp
+  * src/fw.webex/web/page/fw.webex.hlevel.tlpp
+  * src/fw.webex/web/page/fw.webex.liststructure.tlpp
+  * src/fw.webex/web/page/fw.webex.paragraph.tlpp
+  * src/fw.webex/web/page/fw.webex.preformatted.tlpp
+  * src/fw.webex/web/page/fw.webex.span.tlpp
+  * src/fw.webex/web/page/fw.webex.table.structure.tlpp
+  * src/fw.webex/web/page/fw.webex.title.tlpp
+  * src/fw.webex.examples/000/fw.webex.template.bulk.action.table.tlpp
+  * src/fw.webex.examples/020/fw.webex.example.020.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.main.content.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.page.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.side.content.tlpp -> src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.layout.side.nav.content.tlpp
+
 2025-07-30 22:02 UTC naldodj (status bar)
   * src/fw.webex/web/page/fw.webex.body.tlpp
 

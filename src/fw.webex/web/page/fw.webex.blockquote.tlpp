@@ -17,9 +17,7 @@ namespace FWWebEx
     WebExBlockQuote
 ***********************************************************************************************************/
 class WebExBlockQuote from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExBlockQuote

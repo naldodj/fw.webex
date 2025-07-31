@@ -13,7 +13,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class WebExCheckBox from WebExControl
+class WebExCheckBox from WebExDiv
 
     protected data cCheckBoxLabel as character
     protected data cCheckBoxName as character
@@ -44,7 +44,7 @@ method New(cCheckBoxLabel,cCheckBoxName,cCheckBoxTitle,cCheckBoxValue) class Web
     ::cCheckBoxTitle:=cCheckBoxTitle
     ::cCheckBoxValue:=cCheckBoxValue
 
-    _Super:New("div")
+    _Super:New()
     ::AddClass("form-check")
 
     ::oCheckBoxWebExInput:=WebExInput():New(::cCheckBoxName,"checkbox","",::cCheckBoxTitle)

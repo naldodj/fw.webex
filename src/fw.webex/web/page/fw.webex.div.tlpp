@@ -14,9 +14,7 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class WebExDiv from WebExControl
-
     public method New() as object
-
 endclass
 
 method New() class WebExDiv
