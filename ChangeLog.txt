@@ -5,6 +5,10 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-07-31 15:37 UTC naldodj (TODO)
+  ; Fix me
+    * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.tlpp
+
 2025-07-31 14:37 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx)
   + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.layout.side.nav.nav.tlpp
   + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.layout.side.nav.tlpp
@@ -71,6 +75,8 @@
 2025-07-28 21:19 UTC naldodj (Fix)
   ! Remove unnecessary code
     * src/fw.webex.examples/020/fw.webex.example.020.tlpp
+
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.tlpp
 
 2025-07-28 20:43 UTC naldodj (fw.webex.sbadmin :: SBAdminNav)
   * src/fw.webex.examples/020/fw.webex.example.020.tlpp
