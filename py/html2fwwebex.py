@@ -62,8 +62,43 @@ def process_element(el, level=0, counters=None):
     if tag not in counters:
         counters[tag] = 0
     counters[tag] += 1
+
     var = f"o{tag.capitalize()}{counters[tag]}"
-    lines.append(f"{indent(level)}{var}:=WebExControl():New(\"{tag}\")")
+
+    if tag == "a":
+        lines.append(f"{indent(level)}{var}:=WebExAnchor():New()")
+    elif tag == "body":
+        lines.append(f"{indent(level)}{var}:=WebExBody():New()")
+    elif tag == "blockquote":
+        lines.append(f"{indent(level)}{var}:=WebExBlockQuote():New()")
+    elif tag == "caption":
+        lines.append(f"{indent(level)}{var}:=WebExCaption():New()")
+    elif tag == "colgroup":
+        lines.append(f"{indent(level)}{var}:=WebExColgroup():New()")
+    elif tag == "div":
+        lines.append(f"{indent(level)}{var}:=WebExDiv():New()")
+    elif tag in ["dd", "dl", "dt", "li", "ol", "ul"]:
+        lines.append(f"{indent(level)}{var}:=WebEx{tag.upper()}():New()")
+    elif tag in ["h1", "h2", "h3", "h4", "h5", "h6"]:
+        lines.append(f"{indent(level)}{var}:=WebEx{tag.upper()}():New()")
+    elif tag == "link":
+        lines.append(f"{indent(level)}{var}:=WebExLink():New()")
+    elif tag == "menu":
+        lines.append(f"{indent(level)}{var}:=WebExMenu():New()")
+    elif tag == "meta":
+        lines.append(f"{indent(level)}{var}:=WebExMeta():New()")
+    elif tag == "p":
+        lines.append(f"{indent(level)}{var}:=WebExParagraph():New()")
+    elif tag == "pre":
+        lines.append(f"{indent(level)}{var}:=WebExPre():New()")
+    elif tag == "span":
+        lines.append(f"{indent(level)}{var}:=WebExSpan():New()")
+    elif tag == "style":
+        lines.append(f"{indent(level)}{var}:=WebExStyle():New()")
+    elif tag in ["thead", "tbody", "tfoot", "tr", "th", "td"]:
+        lines.append(f"{indent(level)}{var}:=WebEx{tag.upper()}():New()")
+    else:
+        lines.append(f"{indent(level)}{var}:=WebExControl():New(\"{tag}\")")
 
     # Processa todos os atributos de forma genérica
     for attr, value in el.attrs.items():
