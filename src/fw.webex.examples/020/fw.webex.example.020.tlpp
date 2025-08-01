@@ -59,12 +59,11 @@ static procedure FWWebExExample_020(cHTML as character) as character
                 //TODO: Main
                     WITH WEBEXOBJECT CLASS SBAdminMainContent
                         //TODO: Fix me
-                        oDiv25:=WebExDiv():New()
-                        oDiv25:=SBAdminContainer():New()
-                            oH11:=WebExH1():New()
-                            oH11:AddClass("mt-4")
-                            oH11:SetContent("Dashboard")
-                        oDiv25:AddChild(oH11)
+                        WITH WEBEXOBJECT oDiv25 CLASS SBAdminContainer
+                            WITH WEBEXOBJECT CLASS WebExH1
+                                .:AddClass("mt-4")
+                                .:SetContent("Dashboard")
+                            END WEBEXOBJECT
                             oOl1:=WebExControl():New("ol")
                             oOl1:AddClass("breadcrumb mb-4")
                                 oLi6:=WebExControl():New("li")
@@ -72,7 +71,6 @@ static procedure FWWebExExample_020(cHTML as character) as character
                                 oLi6:SetContent("Dashboard")
                             oOl1:AddChild(oLi6)
                         oDiv25:AddChild(oOl1)
-                        WITH WEBEXOBJECT oDiv25
                             WITH WEBEXOBJECT CLASS WebExRow
                                 WITH WEBEXOBJECT CLASS SBAdminCardContainer
                                     WITH WEBEXOBJECT CLASS SBAdminCard ARGS "Primary Card","#","View Details"
@@ -95,7 +93,6 @@ static procedure FWWebExExample_020(cHTML as character) as character
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
-                        END WEBEXOBJECT
                             oDiv47:=WebExDiv():New()
                             oDiv47:AddClass("row")
                                 oDiv48:=WebExDiv():New()
@@ -1343,8 +1340,7 @@ static procedure FWWebExExample_020(cHTML as character) as character
                                 oDiv58:AddChild(oTable1)
                             oDiv56:AddChild(oDiv58)
                         oDiv25:AddChild(oDiv56)
-                        .:AddChild(oDiv25)
-
+                        END WEBEXOBJECT //oDiv25
                     END WEBEXOBJECT
                 //Main
                 //Footer
