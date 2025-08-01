@@ -81,7 +81,7 @@ method New(cBrandName,cBrandLink,lNavRightMenu) class SBAdminNav
         END WEBEXOBJECT
         WITH WEBEXOBJECT ::oSBAdminNavToggle CLASS WebExButton ARGS "",""
             .:DelAllAttr()
-            .:SetFixedID("id","sidebarToggle")
+            .:SetFixedID("sidebarToggle")
             .:AddClass("btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0")
             .:SetAttr("href","#!")
             WITH WEBEXOBJECT ::oSBAdminNavIconToggle CLASS WebExIcon() ARGS "fas fa-bars","fontawesome"

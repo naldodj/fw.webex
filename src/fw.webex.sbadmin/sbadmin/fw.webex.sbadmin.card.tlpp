@@ -14,109 +14,78 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class SBAdminCard from WebExDiv
-    public method New() as object
+
+    protected data cCardBody as character
+    protected data cCardFooterLink as character
+    protected data cCardFooterText as character
+
+    protected data oCard as object
+    protected data oCardBody as object
+    protected data oCardFooter as object
+    protected data oCardContainer as object
+    protected data oCardFooterLink as object
+    protected data oCardFooterIcon as object
+    protected data oCardFooterContainerIcon as object
+
+    public method New(cCardBody as character,cCardFooterLink as character,cCardFooterText as character) as object
+
+    public method SetCardBody(cCardBody as character) as object
+    public method SetCardFooterLink(cCardFooterLink  as character) as object
+    public method SetCardFooterText(cCardFooterText as character) as object
+
 endclass
 
-method New() class SBAdminCard
+method New(cCardBody,cCardFooterLink,cCardFooterText) class SBAdminCard
+
+    paramtype 1 var cCardBody as character optional default ""
+    paramtype 2 var cCardFooterLink as character optional default "#"
+    paramtype 3 var cCardFooterText as character optional default "View Details"
+
+    ::cCardBody:=cCardBody
+    ::cCardFooterLink:=cCardFooterLink
+    ::cCardFooterText:=cCardFooterText
 
     _Super:New()
-    ::AddClass("row")
-        //TODO: Fix me
-        oDiv27:=WebExControl():New("div")
-        oDiv27:AddClass("col-xl-3 col-md-6")
-            oDiv28:=WebExControl():New("div")
-            oDiv28:AddClass("card bg-primary text-white mb-4")
-                oDiv29:=WebExControl():New("div")
-                oDiv29:AddClass("card-body")
-                oDiv29:SetContent("Primary Card")
-            oDiv28:AddChild(oDiv29)
-                oDiv30:=WebExControl():New("div")
-                oDiv30:AddClass("card-footer d-flex align-items-center justify-content-between")
-                    oA21:=WebExControl():New("a")
-                    oA21:AddClass("small text-white stretched-link")
-                    oA21:SetAttr("href","#")
-                    oA21:SetContent("View Details")
-                oDiv30:AddChild(oA21)
-                    oDiv31:=WebExControl():New("div")
-                    oDiv31:AddClass("small text-white")
-                        oI13:=WebExControl():New("i")
-                        oI13:AddClass("fas fa-angle-right")
-                    oDiv31:AddChild(oI13)
-                oDiv30:AddChild(oDiv31)
-            oDiv28:AddChild(oDiv30)
-        oDiv27:AddChild(oDiv28)
-    ::AddChild(oDiv27)
-        oDiv32:=WebExControl():New("div")
-        oDiv32:AddClass("col-xl-3 col-md-6")
-            oDiv33:=WebExControl():New("div")
-            oDiv33:AddClass("card bg-warning text-white mb-4")
-                oDiv34:=WebExControl():New("div")
-                oDiv34:AddClass("card-body")
-                oDiv34:SetContent("Warning Card")
-            oDiv33:AddChild(oDiv34)
-                oDiv35:=WebExControl():New("div")
-                oDiv35:AddClass("card-footer d-flex align-items-center justify-content-between")
-                    oA22:=WebExControl():New("a")
-                    oA22:AddClass("small text-white stretched-link")
-                    oA22:SetAttr("href","#")
-                    oA22:SetContent("View Details")
-                oDiv35:AddChild(oA22)
-                    oDiv36:=WebExControl():New("div")
-                    oDiv36:AddClass("small text-white")
-                        oI14:=WebExControl():New("i")
-                        oI14:AddClass("fas fa-angle-right")
-                    oDiv36:AddChild(oI14)
-                oDiv35:AddChild(oDiv36)
-            oDiv33:AddChild(oDiv35)
-        oDiv32:AddChild(oDiv33)
-    ::AddChild(oDiv32)
-        oDiv37:=WebExControl():New("div")
-        oDiv37:AddClass("col-xl-3 col-md-6")
-            oDiv38:=WebExControl():New("div")
-            oDiv38:AddClass("card bg-success text-white mb-4")
-                oDiv39:=WebExControl():New("div")
-                oDiv39:AddClass("card-body")
-                oDiv39:SetContent("Success Card")
-            oDiv38:AddChild(oDiv39)
-                oDiv40:=WebExControl():New("div")
-                oDiv40:AddClass("card-footer d-flex align-items-center justify-content-between")
-                    oA23:=WebExControl():New("a")
-                    oA23:AddClass("small text-white stretched-link")
-                    oA23:SetAttr("href","#")
-                    oA23:SetContent("View Details")
-                oDiv40:AddChild(oA23)
-                    oDiv41:=WebExControl():New("div")
-                    oDiv41:AddClass("small text-white")
-                        oI15:=WebExControl():New("i")
-                        oI15:AddClass("fas fa-angle-right")
-                    oDiv41:AddChild(oI15)
-                oDiv40:AddChild(oDiv41)
-            oDiv38:AddChild(oDiv40)
-        oDiv37:AddChild(oDiv38)
-    ::AddChild(oDiv37)
-        oDiv42:=WebExControl():New("div")
-        oDiv42:AddClass("col-xl-3 col-md-6")
-            oDiv43:=WebExControl():New("div")
-            oDiv43:AddClass("card bg-danger text-white mb-4")
-                oDiv44:=WebExControl():New("div")
-                oDiv44:AddClass("card-body")
-                oDiv44:SetContent("Danger Card")
-            oDiv43:AddChild(oDiv44)
-                oDiv45:=WebExControl():New("div")
-                oDiv45:AddClass("card-footer d-flex align-items-center justify-content-between")
-                    oA24:=WebExControl():New("a")
-                    oA24:AddClass("small text-white stretched-link")
-                    oA24:SetAttr("href","#")
-                    oA24:SetContent("View Details")
-                oDiv45:AddChild(oA24)
-                    oDiv46:=WebExControl():New("div")
-                    oDiv46:AddClass("small text-white")
-                        oI16:=WebExControl():New("i")
-                        oI16:AddClass("fas fa-angle-right")
-                    oDiv46:AddChild(oI16)
-                oDiv45:AddChild(oDiv46)
-            oDiv43:AddChild(oDiv45)
-        oDiv42:AddChild(oDiv43)
-    ::AddChild(oDiv42)
 
+    ::oCard:=self
+
+    WITH WEBEXOBJECT ::oCard
+        .:AddClass("card mb-4")
+        WITH WEBEXOBJECT ::oCardBody CLASS WebExDiv
+            .:AddClass("card-body")
+            ::SetCardBody()
+        END WEBEXOBJECT
+        WITH WEBEXOBJECT ::oCardFooter CLASS WebExDiv
+            .:AddClass("card-footer d-flex align-items-center justify-content-between")
+            WITH WEBEXOBJECT ::oCardFooterLink CLASS WebExAnchor
+                .:AddClass("small text-white stretched-link")
+                ::SetCardFooterLink()
+                ::SetCardFooterText()
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT ::oCardFooterContainerIcon CLASS WebExDiv
+                ::AddClass("small text-white")
+                WITH WEBEXOBJECT ::oCardFooterIcon CLASS WebExIcon ARGS "fas fa-angle-right","fontawesome"
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
+
+return(self)
+
+method SetCardBody(cCardBody) class SBAdminCard
+    paramtype 1 var cCardBody as character optional default ::cCardBody
+    ::cCardBody:=cCardBody
+    ::oCardBody:SetContent(::cCardBody)
+return(self)
+
+method SetCardFooterLink(cCardFooterLink) class SBAdminCard
+    paramtype 1 var cCardFooterLink as character optional default ::cCardFooterLink
+    ::cCardFooterLink:=cCardFooterLink
+    ::oCardFooterLink:SetAttr("href",::cCardFooterLink)
+return(self)
+
+method SetCardFooterText(cCardFooterText) class SBAdminCard
+    paramtype 1 var cCardFooterText as character optional default ::cCardFooterText
+    ::cCardFooterText:=cCardFooterText
+    ::oCardFooterLink:SetContent(::cCardFooterText)
 return(self)

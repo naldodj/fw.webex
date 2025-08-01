@@ -5,6 +5,16 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-08-01 16:31 UTC naldodj (fw.webex.sbadmin :: SBAdmin)
+  + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.container.tlpp
+  * src/fw.webex.examples/020/fw.webex.example.020.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.container.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.footer.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.main.content.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.nav.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.page.tlpp
+
 2025-07-31 16:27 UTC naldodj (fw.webex.sbadmin :: SBAdmin)
   * py/html2fwwebex.py
   * src/fw.webex.examples/019/fw.webex.example.019.tlpp

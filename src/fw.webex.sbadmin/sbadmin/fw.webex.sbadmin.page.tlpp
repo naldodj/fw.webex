@@ -27,9 +27,7 @@ namespace FWWebEx
 #include "fw.webex.th"
 
 class SBAdminPage from WebExPage
-
     public method New(cPageTitle as character) as object
-
 endclass
 
 method New(cPageTitle) class SBAdminPage

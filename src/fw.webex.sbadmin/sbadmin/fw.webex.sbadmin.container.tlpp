@@ -13,10 +13,12 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class SBAdminMainContent from WebExMain
-    public method New() as object
+class SBAdminContainer from WebExContainer
+    public method New(lContainerFluid as logical) as object
 endclass
 
-method New() class SBAdminMainContent
-    _Super:New()
+method New(lContainerFluid) class SBAdminContainer
+    paramtype 1 var lContainerFluid as logical optional default .T.
+    _Super:New(lContainerFluid)
+    ::AddClass("px-4")
 return(self)

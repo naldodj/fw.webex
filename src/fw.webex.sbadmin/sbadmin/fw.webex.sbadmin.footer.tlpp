@@ -62,8 +62,7 @@ method New(cCopyrightText,cPrivacyPolicyHRef,cPrivacyPolicyText,cTermsAndConditi
     WITH WEBEXOBJECT ::oFooter
         .:AddClass("py-4 bg-light mt-auto")
         .:AddClass("mt-auto") // margin-top: auto
-        WITH WEBEXOBJECT ::oContainer CLASS WebExContainer ARGS .T.
-            .:AddClass("px-4")
+        WITH WEBEXOBJECT ::oContainer CLASS SBAdminContainer ARGS .T.
             WITH WEBEXOBJECT ::oContentWrapper CLASS WebExDiv
                 .:AddClass("d-flex align-items-center justify-content-between small")
                 WITH WEBEXOBJECT ::oCopyrightText CLASS WebExDiv
