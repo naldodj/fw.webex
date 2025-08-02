@@ -13,7 +13,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class SBAdminCardTableHeader from WebExDiv
+class SBAdminCardHeader from WebExDiv
 
     protected data cCardHeader as character
     protected data cCardHeaderIcon as character
@@ -30,10 +30,10 @@ class SBAdminCardTableHeader from WebExDiv
 
 endclass
 
-method New(cCardHeader,cCardHeaderIcon,cCardHeaderIconType) class SBAdminCardTableHeader
+method New(cCardHeader,cCardHeaderIcon,cCardHeaderIconType) class SBAdminCardHeader
 
     paramtype 1 var cCardHeader as character optional default ""
-    paramtype 2 var cCardHeaderIcon as character optional default "fas fa-table"
+    paramtype 2 var cCardHeaderIcon as character optional default "fas fa-heading"
     paramtype 3 var cCardHeaderIconType as character optional default "fontawesome"
 
     ::cCardHeader:=cCardHeader
@@ -57,13 +57,13 @@ method New(cCardHeader,cCardHeaderIcon,cCardHeaderIconType) class SBAdminCardTab
 
 return(self)
 
-method SetCardHeader(cCardHeader) class SBAdminCardTableHeader
+method SetCardHeader(cCardHeader) class SBAdminCardHeader
     paramtype 1 var cCardHeader as character optional default ::cCardHeader
     ::cCardHeader:=cCardHeader
     ::oCardHeader:SetContent(::cCardHeader,::oCardHeaderIcon:GetID())
 return(self)
 
-method SetCardHeaderIcon(cCardHeaderIcon,cCardHeaderIconType) class SBAdminCardTableHeader
+method SetCardHeaderIcon(cCardHeaderIcon,cCardHeaderIconType) class SBAdminCardHeader
     paramtype 1 var cCardHeaderIcon  as character optional default ::cCardHeaderIcon
     paramtype 2 var cCardHeaderIconType as character optional default ::cCardHeaderIconType
     ::cCardHeaderIcon:=cCardHeaderIcon

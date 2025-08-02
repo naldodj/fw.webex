@@ -186,7 +186,7 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
                         WITH WEBEXOBJECT CLASS WebExSideBar
                             WITH WEBEXOBJECT oWebExNavSide CLASS WebExNavSide
                                 oWebExNavSide:SetType("div")
-                                oWebExNavSide:SetAttr("id","webex-sidebar")
+                                oWebExNavSide:SetFixedID("webex-sidebar")
                                 oWebExNavSide:AddClass("collapse")
                                 oWebExNavSide:AddClass("show")
                                 oWebExNavSide:SetAttr("class","collapse show")
@@ -220,7 +220,7 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
                             //Main
                             WITH WEBEXOBJECT CLASS WebExMain
                                 WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
-                                    .:SetAttr("id","dumpdata")
+                                    .:SetFixedID("dumpdata")
                                     .:SetAttr("style","display:none")
                                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
                                         .:AddClass("embed-responsive")
@@ -231,13 +231,13 @@ static method HTMLDumpDOMFromControl(oFWWebExControl,cHTMLFilePath,cHTMLFileName
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                                 WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
-                                    .:SetAttr("id","dump")
+                                    .:SetFixedID("dump")
                                     .:SetAttr("style","display:none")
                                     WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP",cDumpFWWebExControl,"bg-primary",WebExIcon():New("bi-list-nested")
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                                 WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
-                                    .:SetAttr("id","dumpclone")
+                                    .:SetFixedID("dumpclone")
                                     .:SetAttr("style","display:none")
                                     WITH WEBEXOBJECT CLASS WebExCardKPI ARGS "DUMP CLONE",cDumpFWWebExControlClone,"bg-secondary",WebExIcon():New("bi-list-nested")
                                     END WEBEXOBJECT

@@ -170,7 +170,7 @@ method RenderHTML() class WebExTemplateBulkActionTable
         // Modal + JS
         WITH WEBEXOBJECT CLASS WebExControl TYPE div
             .:SetFixedID(cIDModal)
-            .:SetAttr("id",cIDModal)
+            .:SetFixedID(cIDModal)
             .:SetAttr("class","modal fade")
             .:SetAttr("tabindex","-1")
             WITH WEBEXOBJECT CLASS WebExControl TYPE div

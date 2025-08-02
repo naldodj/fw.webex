@@ -13,22 +13,16 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class SBAdminCardTableBody from WebExDiv
+class SBAdminSimpleDataTable from WebExTable
 
-    protected data oCardBody as object
-
-    public method New() as object
+    public method New(cTableTitle) as object
 
 endclass
 
-method New() class SBAdminCardTableBody
+method New(cTableTitle) class SBAdminSimpleDataTable
 
-    _Super:New()
+    _Super:New(cTableTitle)
 
-    ::oCardBody:=self
-
-    WITH WEBEXOBJECT ::oCardBody CLASS WebExDiv
-        .:AddClass("card-body")
-    END WEBEXOBJECT
+    ::SetFixedID("datatablesSimple")
 
 return(self)

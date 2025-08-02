@@ -5,6 +5,31 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-08-02 16:33 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx and SBAdmin)
+  + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.simple.datatables.tlpp
+  * README.md
+  * src/fw.webex/tools/fw.webex.file.tools.tlpp
+  * src/fw.webex/web/component/fw.webex.cardkpi.tlpp
+  * src/fw.webex/web/component/fw.webex.navside.tlpp
+  * src/fw.webex/web/component/fw.webex.navtop.tlpp
+  * src/fw.webex/web/control/fw.webex.control.tlpp
+  * src/fw.webex/web/page/fw.webex.body.tlpp
+  * src/fw.webex.examples/000/fw.webex.template.bulk.action.table.tlpp
+  * src/fw.webex.examples/003/fw.webex.example.003.tlpp
+  * src/fw.webex.examples/005/fw.webex.example.005.tlpp
+  * src/fw.webex.examples/006/fw.webex.example.006.tlpp
+  * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+  * src/fw.webex.examples/012/fw.webex.example.012.tlpp
+  * src/fw.webex.examples/013/fw.webex.example.013.tlpp
+  * src/fw.webex.examples/015/fw.webex.example.015.tlpp
+  * src/fw.webex.examples/016/fw.webex.example.016.tlpp
+  * src/fw.webex.examples/017/fw.webex.example.017.tlpp
+  * src/fw.webex.examples/018/fw.webex.example.018.tlpp
+  * src/fw.webex.examples/020/fw.webex.example.020.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.table.body.tlpp -> src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.body.tlpp
+  * src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.table.header.tlpp -> src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.header.tlpp
+
 2025-08-02 13:11 UTC naldodj (fw.webex.sbadmin :: SBAdmin)
   + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.table.body.tlpp
   + src/fw.webex.sbadmin/sbadmin/fw.webex.sbadmin.card.table.header.tlpp

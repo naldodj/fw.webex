@@ -162,7 +162,7 @@ static procedure FWWebExExample_007(cHTML as character) as character
 
     // Adiciona container de tabela
     oDivTable:=WebExDiv():New()
-    oDivTable:SetAttr("id","tableResult")
+    oDivTable:SetFixedID("tableResult")
 
     /*
         Tabela do DOM (so pra referencia)

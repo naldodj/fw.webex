@@ -164,7 +164,7 @@ method RenderHTML() class WebExNavTop
         // Menu colapsavel da barra superior
         oCollapse:=WebExDiv():New()
         oCollapse:SetAttr("class","collapse navbar-collapse p-0 m-0")
-        oCollapse:SetAttr("id",::GetFixedID()+"_menu")
+        oCollapse:SetFixedID(::GetFixedID()+"_menu")
         oCollapse:AddChild(oUl)
         ::oNavTopContainer:AddChild(oCollapse)
     endif

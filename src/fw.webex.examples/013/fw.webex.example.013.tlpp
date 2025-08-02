@@ -123,7 +123,7 @@ static procedure FWWebExExample_013(cHTML as character) as character
     // Menu lateral com data-toggle-kpi
     oFWWebExNavSide:=WebExNavSide():New()
     oFWWebExNavSide:SetType("div")
-    oFWWebExNavSide:SetAttr("id","webex-sidebar")
+    oFWWebExNavSide:SetFixedID("webex-sidebar")
     oFWWebExNavSide:AddClass("collapse")
     oFWWebExNavSide:AddClass("show")
     oFWWebExNavSide:SetAttr("class","collapse show")
@@ -139,14 +139,14 @@ static procedure FWWebExExample_013(cHTML as character) as character
 
     // KPI 1
     oFWWebExCardKPI1:=WebExContainer():New(.T.)
-    oFWWebExCardKPI1:SetAttr("id","kpi")
+    oFWWebExCardKPI1:SetFixedID("kpi")
     oFWWebExCardKPI1:SetAttr("style","display:none")
     oFWWebExCardKPI1:AddChild(WebExCardKPI():New("Faturamento","$10.000","bg-primary",WebExIcon():New("bi-cash")))
     oFWWebExCardKPI1:AddChild(WebExCardKPI():New("Clientes Ativos","152","bg-success",WebExIcon():New("bi-people")))
 
     // KPI 2
     oFWWebExCardKPI2:=WebExContainer():New(.T.)
-    oFWWebExCardKPI2:SetAttr("id","kpi2")
+    oFWWebExCardKPI2:SetFixedID("kpi2")
     oFWWebExCardKPI2:SetAttr("style","display:none")
     oFWWebExCardKPI2:AddChild(WebExCardKPI():New("Despesas","$4.000","bg-danger",WebExIcon():New("bi-cart")))
     oFWWebExCardKPI2:AddChild(WebExCardKPI():New("Lucro L&iacute;quido","$6.000","bg-warning",WebExIcon():New("bi-currency-dollar")))

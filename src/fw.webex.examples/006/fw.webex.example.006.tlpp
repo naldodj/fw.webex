@@ -135,7 +135,7 @@ static procedure FWWebExExample_006(cHTML as character) as character
 
     // Tabela que sera preenchida
     oDivTable:=WebExDiv():New()
-    oDivTable:SetAttr("id","tableResult")
+    oDivTable:SetFixedID("tableResult")
 
     // Script para requisitar ViaCEP e preencher a tabela com DataTables
     //Portuguese-Brasil translation

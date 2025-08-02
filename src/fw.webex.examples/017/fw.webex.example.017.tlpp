@@ -94,7 +94,7 @@ static function FWWebExExample_017(cHTML as character) as character
 
     //Div com o Resultado das mensagens
     oDiv:=WebExDiv():New()
-    oDiv:SetAttr("id","resultadoCEP")
+    oDiv:SetFixedID("resultadoCEP")
     oFWWebExRow1:AddChild(oDiv)
 
     // Campos que serao atualizados via Ajax (ja definidos)

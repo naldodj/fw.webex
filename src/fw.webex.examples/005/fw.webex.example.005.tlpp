@@ -77,7 +77,7 @@ static function FWWebExExample_005(cHTML as character) as character
 
     //Div com o Resultado das mensagens
     oDiv:=WebExDiv():New()
-    oDiv:SetAttr("id","resultadoCEP")
+    oDiv:SetFixedID("resultadoCEP")
 
     // Campo de busca
     oFWWebExForm:AddField("CEP","cepsearch","text","Digite o CEP"):AddChild(WebExHR():New()):AddChild(oDiv)

@@ -171,7 +171,7 @@ static procedure FWWebExExample_008(cHTML as character) as character
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
                         .:SetAttr("class","table-responsive")
                         WITH WEBEXOBJECT CLASS WebExControl TYPE table
-                            .:SetAttr("id","example")
+                            .:SetFixedID("example")
                             .:AddClass("table")
                             .:AddClass("table-striped")
                             .:AddClass("table-hover")

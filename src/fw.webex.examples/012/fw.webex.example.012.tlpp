@@ -131,7 +131,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
     // Menu lateral com data-toggle-kpi
     oFWWebExNavSide:=WebExNavSide():New()
     oFWWebExNavSide:SetType("div")
-    oFWWebExNavSide:SetAttr("id","webex-sidebar")
+    oFWWebExNavSide:SetFixedID("webex-sidebar")
     oFWWebExNavSide:AddClass("collapse")
     oFWWebExNavSide:AddClass("show")
     oFWWebExNavSide:SetAttr("class","collapse show")
@@ -147,7 +147,7 @@ static procedure FWWebExExample_012(cHTML as character) as character
 
     // KPI 1
     oFWWebExCardKPI1:=WebExContainer():New(.T.)
-    oFWWebExCardKPI1:SetAttr("id","kpi")
+    oFWWebExCardKPI1:SetFixedID("kpi")
     oFWWebExCardKPI1:SetAttr("style","display:none")
     oFWWebExCardKPI1:AddChild(WebExCardKPI():New("Faturamento","$10.000","bg-primary",WebExIcon():New("bi-cash")))
     oFWWebExCardKPI1:AddChild(WebExCardKPI():New("Clientes Ativos","152","bg-success",WebExIcon():New("bi-people")))
@@ -277,7 +277,7 @@ static function BuildKPI2Content()
     oFWWebExRow2:AddChild(oFWWebExCol5)
 
     oFWWebExContainer=WebExContainer():New()
-    oFWWebExContainer:SetAttr("id","kpi2")
+    oFWWebExContainer:SetFixedID("kpi2")
     oFWWebExContainer:SetAttr("style","display:none")
     oFWWebExContainer:AddChild(oFWWebExRow1)
     oFWWebExContainer:AddChild(WebExHR():New())

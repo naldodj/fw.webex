@@ -105,7 +105,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                     WITH WEBEXOBJECT CLASS WebExSideBar
                         WITH WEBEXOBJECT oWebExNavSide CLASS WebExNavSide
                             oWebExNavSide:SetType("div")
-                            oWebExNavSide:SetAttr("id","webex-sidebar")
+                            oWebExNavSide:SetFixedID("webex-sidebar")
                             oWebExNavSide:AddClass("collapse")
                             oWebExNavSide:AddClass("show")
                             oWebExNavSide:SetAttr("class","collapse show")
@@ -149,7 +149,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                         WITH WEBEXOBJECT CLASS WebExMain
                             //Local
                             WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
-                                .:SetAttr("id","alarmclock")
+                                .:SetFixedID("alarmclock")
                                 .:SetAttr("style","display:none")
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
                                     .:AddClass("embed-responsive")
@@ -160,7 +160,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
                             WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
-                                .:SetAttr("id","realtimeclock")
+                                .:SetFixedID("realtimeclock")
                                 .:SetAttr("style","display:none")
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
                                     .:AddClass("embed-responsive")
@@ -171,7 +171,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
                             WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
-                                .:SetAttr("id","zodiacsigns")
+                                .:SetFixedID("zodiacsigns")
                                 .:SetAttr("style","display:none")
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
                                     .:AddClass("embed-responsive")
@@ -183,7 +183,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                             END WEBEXOBJECT
                             //BlackTDN
                             WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
-                                .:SetAttr("id","btdn_alarmclock")
+                                .:SetFixedID("btdn_alarmclock")
                                 .:SetAttr("style","display:none")
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
                                     .:AddClass("embed-responsive")
@@ -194,7 +194,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
                             WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
-                                .:SetAttr("id","btdn_realtimeclock")
+                                .:SetFixedID("btdn_realtimeclock")
                                 .:SetAttr("style","display:none")
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
                                     .:AddClass("embed-responsive")
@@ -205,7 +205,7 @@ static procedure FWWebExExample_016(cHTML as character) as character
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
                             WITH WEBEXOBJECT CLASS WebExContainer ARGS .T.
-                                .:SetAttr("id","btdn_zodiacsigns")
+                                .:SetFixedID("btdn_zodiacsigns")
                                 .:SetAttr("style","display:none")
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
                                     .:AddClass("embed-responsive")
@@ -481,11 +481,11 @@ static function AlarmClockPage()
                         .:SetContent(cTitle)
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("id","clock")
+                        .:SetFixedID("clock")
                         .:SetContent("--:--:--")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE form
-                        .:SetAttr("id","alarmForm")
+                        .:SetFixedID("alarmForm")
                         WITH WEBEXOBJECT CLASS WebExControl TYPE div
                             WITH WEBEXOBJECT CLASS WebExControl TYPE label
                                 .:SetAttr("for","alarmTime")
@@ -495,7 +495,7 @@ static function AlarmClockPage()
                             END WEBEXOBJECT
                             WITH WEBEXOBJECT CLASS WebExControl TYPE input
                                 .:SetAttr("type","text")
-                                .:SetAttr("id","alarmTime")
+                                .:SetFixedID("alarmTime")
                                 .:SetAttr("placeholder","Ex: 15:12:00")
                                 .:SetAttr("required","required")
                                 .:SetAttr("onchange","stopAlarm()")
@@ -509,7 +509,7 @@ static function AlarmClockPage()
                             WITH WEBEXOBJECT CLASS WebExControl TYPE br
                             END WEBEXOBJECT
                             WITH WEBEXOBJECT CLASS WebExControl TYPE select
-                                .:SetAttr("id","sound")
+                                .:SetFixedID("sound")
                                 .:SetAttr("onchange","stopAlarm()")
                                 WITH WEBEXOBJECT CLASS WebExControl TYPE option
                                     .:SetAttr("value","alarm_clock")
@@ -548,14 +548,14 @@ static function AlarmClockPage()
                         END WEBEXOBJECT
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("id","alarmStatus")
+                        .:SetFixedID("alarmStatus")
                         .:SetContent("Nenhum alarme definido.")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("id","alerta")
+                        .:SetFixedID("alerta")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE button
-                        .:SetAttr("id","stopButton")
+                        .:SetFixedID("stopButton")
                         .:SetContent("Desligar Alarme")
                     END WEBEXOBJECT
                 END WEBEXOBJECT
@@ -647,9 +647,9 @@ static function RealTimeClockPage()
             // Data por extenso
             const dias = ['Domingo','Segunda-feira','Ter&ccedil;a-feira','Quarta-feira','Quinta-feira','Sexta-feira','S&aacute;bado'];
             const meses = ['janeiro','fevereiro','mar&ccedil;o','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-            const dia = dias[now.getDay()];
+            const dia = decodeHTMLEntities(dias[now.getDay()]);
             const numero = now.getDate();
-            const mes = meses[now.getMonth()];
+            const mes = decodeHTMLEntities(meses[now.getMonth()]);
             const ano = now.getFullYear();
             document.getElementById('date').textContent = `${dia}, ${numero} de ${mes} de ${ano}`;
         }
@@ -681,15 +681,15 @@ static function RealTimeClockPage()
                         .:SetContent(cTitle)
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("id","date")
+                        .:SetFixedID("date")
                         .:SetContent("--")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("id","clock")
+                        .:SetFixedID("clock")
                         .:SetContent("--:--:--")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("id","counter")
+                        .:SetFixedID("counter")
                         .:SetContent("Visitantes: --")
                     END WEBEXOBJECT
                 END WEBEXOBJECT
@@ -1066,19 +1066,19 @@ static function ZodiacSignsPage()
                         .:SetAttr("onclick","verificarSigno()")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("id","resultado")
+                        .:SetFixedID("resultado")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("id","descricao")
+                        .:SetFixedID("descricao")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("id","extra")
+                        .:SetFixedID("extra")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                        .:SetAttr("id","horoscopo-daily")
+                        .:SetFixedID("horoscopo-daily")
                     END WEBEXOBJECT
                     WITH WEBEXOBJECT CLASS WebExControl TYPE audio
-                        .:SetAttr("id","mysticSound")
+                        .:SetFixedID("mysticSound")
                         .:SetAttr("src","https://www.soundjay.com/misc/magic-chime-02.mp3")
                         .:SetAttr("preload","auto")
                     END WEBEXOBJECT

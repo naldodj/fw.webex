@@ -53,7 +53,7 @@ method New() class WebExBody
             END WEBEXOBJECT
             // Loader para DataTables
             WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                .:SetAttr("id","fwwebex-datatable-custom-loader")
+                .:SetFixedID("fwwebex-datatable-custom-loader")
                 .:SetAttr("style", "display: none; width: 100%; padding: 1rem;")
                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
                     .:AddClass("progress")

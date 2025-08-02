@@ -121,7 +121,7 @@ static function FWWebExExample_003(cHTML as character) as character
                     .:SetContent(cScript)
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
-                    .:SetAttr("id","resultadoCEP")
+                    .:SetFixedID("resultadoCEP")
                     .:SetAttr("class","mt-4")
                 END WEBEXOBJECT
             END WEBEXOBJECT

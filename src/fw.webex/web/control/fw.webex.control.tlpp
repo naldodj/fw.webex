@@ -926,12 +926,31 @@ method SetEnableChart(lChartEnabled) class WebExControl
         ::lChartEnabled:=.T.
         __jFeatures["lChartEnabled"]:=::lChartEnabled
         //Chart
+            //https://www.chartjs.org/docs/latest/
             WITH WEBEXOBJECT CLASS WebExControl TYPE !--
                 .:SetContent("Chart")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
             WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
                 .:SetContent("https://cdn.jsdelivr.net/npm/chart.js")
+                .:AddInHeader(.this)
+            END WEBEXOBJECT NOADDCHILD
+            //https://date-fns.org/
+            WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                .:SetContent("date-fns")
+                .:AddInHeader(.this)
+            END WEBEXOBJECT NOADDCHILD
+            WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                .:SetContent("https://cdn.jsdelivr.net/npm/date-fns")
+                .:AddInHeader(.this)
+            END WEBEXOBJECT NOADDCHILD
+            //https://github.com/chartjs/chartjs-adapter-date-fns
+            WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                .:SetContent("chartjs-adapter-date-fns")
+                .:AddInHeader(.this)
+            END WEBEXOBJECT NOADDCHILD
+            WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                .:SetContent("https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
         //Chart
