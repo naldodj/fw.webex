@@ -1,0 +1,285 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+using namespace FWWebEx
+
+#include "fw.webex.th"
+
+class ClassBase
+
+    public method New() as object
+
+    public method ClassName() as character
+    public method ClassFullName() as character
+    public method ClassNameSpace() as character
+
+    public method SetFromObject(oSource as object) as object
+
+    public method GetMemberData(cMember as character,xDefault as variant,lSuperClass as logical) as variant
+    public method SetMemberData(cMember as character,xValue as variant,lSuperClass as logical) as variant
+
+    public method Clone() as object
+    protected method __CloneNewInstance() as object
+    protected method __CloneCompexData(xComplex as variant) as variant
+
+    public method IsKindOf(cClass as character,lParentTree as logical) as logical
+
+endclass
+
+method New() class ClassBase
+return(self)
+
+method ClassName() class ClassBase
+    local aClassName as array
+    local cClassName:=::ClassFullName()
+    aClassName:=StrTokArr2(cClassName,".")
+    cClassName:=aClassName[Len(aClassName)]
+return(cClassName)
+
+method ClassFullName() class ClassBase
+return(GetClassName(self))
+
+method ClassNameSpace() class ClassBase
+    local aClassName as array
+    local cClassName:=::ClassFullName()
+    local cClassNameSpace:="" as character
+    local i as numeric
+    local j as numeric
+    if ("."$cClassName)
+        aClassName:=StrTokArr2(cClassName,".")
+        j:=Len(aClassName)
+        aDel(aClassName,j)
+        aSize(aClassName,--j)
+        for i:=1 To j
+            cClassNameSpace+=aClassName[i]
+            if (i<j)
+                cClassNameSpace+="."
+            endif
+        next i
+    endif
+return(cClassNameSpace)
+
+method SetFromObject(oSource) class ClassBase
+
+    local aMemberData as array
+
+    local cKey as character
+    local cData as character
+
+    local cSourceClass as character
+    local cTargetClass as character
+
+    local i as numeric
+
+    local xValue as variant
+
+    paramtype 1 var oSource as object
+
+    cSourceClass:=GetClassName(oSource)
+    cTargetClass:=GetClassName(self)
+
+    if (cTargetClass==cSourceClass)
+        private pFromObjSelf:=oSource as object
+        aMemberData:=aClone(ClassDataArr(oSource,.T.))
+        for i:=1 to Len(aMemberData)
+            cKey:=aMemberData[i][1]
+            cData:="pFromObjSelf"
+            cData+=":"
+            cData+=cKey
+            xValue:=&(cData)
+            self:SetMemberData(cKey,xValue,.T.)
+        next i
+        FWFreeArray(@aMemberData)
+    endif
+
+return(self)
+
+method GetMemberData(cMember,xDefault,lSuperClass) class ClassBase
+
+    local aClassDataArr as array
+
+    local nAT as numeric
+
+    local xValue as variant
+
+    paramtype 1 var cMember as character optional default ""
+    if (xDefault!=nil)
+        paramtype 2 var xDefault as array,block,character,json,logical,numeric,object
+    endif
+    paramtype 3 var lSuperClass as logical optional default .T.
+
+    if (!Empty(cMember))
+        if (AttIsMemberOf(self,cMember,lSuperClass))
+            aClassDataArr:=ClassDataArr(self,lSuperClass)
+            cMember:=Upper(AllTrim(cMember))
+            nAT:=aScan(aClassDataArr,{|x|(x[1]==cMember)})
+            if (nAT>0)
+                xValue:=aClassDataArr[nAT][2]
+            else
+                xValue:=xDefault
+            endif
+        else
+            xValue:=xDefault
+        endif
+    else
+        xValue:=aClone(ClassDataArr(self,lSuperClass))
+    endif
+
+return(xValue)
+
+method SetMemberData(cMember,xValue,lSuperClass) class ClassBase
+    local cType as character
+    local cData as character
+    local lSetMemberData as logical
+    paramtype 1 var cMember as character
+    if (xValue!=nil)
+        paramtype 2 var xValue as array,block,character,json,logical,numeric,object
+    endif
+    paramtype 3 var lSuperClass as logical optional default .T.
+    lSetMemberData:=AttIsMemberOf(self,cMember,lSuperClass)
+    if (lSetMemberData)
+        private pSetMemberDataSelf:=self as object
+        cData:="pSetMemberDataSelf"
+        cData+=":"
+        cData+=cMember
+        cType:=ValType(xValue)
+        if ((cType$"A|J|O").and.(FWIsInCallStack("CLONE")))
+            xValue:=self:__CloneCompexData(xValue)
+        endif
+        &(cData):=xValue
+    endif
+return(lSetMemberData)
+
+method Clone() class ClassBase
+    local oClone as object
+    // Cria nova instancia do mesmo tipo
+    oClone:=self:__CloneNewInstance()
+    // Copia dados da classe
+    oClone:SetFromObject(self)
+return(oClone)
+
+method __CloneNewInstance() class ClassBase
+
+    local aClassMethArr as array
+
+    local cParam as character
+    local cClassName as character
+    local cNewInstanceMethod as character
+
+    local nATParam as numeric
+    local nATMethod as numeric
+
+    local nParam as numeric
+    local nParams as numeric
+
+    local oClone as object
+
+    aClassMethArr:=ClassMethArr(self,.F.)
+    nATMethod:=aScan(aClassMethArr,{|aMethod|aMethod[1]=="NEW"})
+
+    if (nATMethod>0)
+        cClassName:=GetClassName(self)
+        private __aClassDataArrValue__:=ClassDataArr(self,.T.)
+        nParams:=Len(aClassMethArr[nATMethod][2])
+        cNewInstanceMethod:=cClassName+"():New("
+        if (nParams>0)
+            for nParam:=1 to nParams
+                cParam:=aClassMethArr[nATMethod][2][nParam]
+                nATParam:=aScan(__aClassDataArrValue__,{|aParam|aParam[1]==cParam})
+                cNewInstanceMethod+=if(nATParam>0,"__aClassDataArrValue__["+LTrim(Str(nATParam))+"][2]","nil")
+                if (nParam<nParams)
+                    cNewInstanceMethod+=","
+                endif
+            next nParam
+        endif
+        cNewInstanceMethod+=")"
+        oClone:=&(cNewInstanceMethod)
+        FWFreeArray(@__aClassDataArrValue__)
+    endif
+
+    FWFreeArray(@aClassMethArr)
+
+return(oClone)
+
+method __CloneCompexData(xComplex) class ClassBase
+    local aNames as array
+    local cKey as character
+    local cType as character
+    local i as numeric
+    local j as numeric
+    local xClone as variant
+    cType:=ValType(xComplex)
+    do case
+    case (cType=="A")
+        j:=Len(xComplex)
+        xClone:=Array(j)
+        for i:=1 to Len(xComplex)
+            xClone[i]:=self:__CloneCompexData(xComplex[i])
+        next i
+    case (cType=="J")
+        xClone:=JSONObject():New()
+        aNames:=xComplex:GetNames()
+        j:=Len(aNames)
+        for i:=1 to j
+            cKey:=aNames[i]
+            xClone[cKey]:=self:__CloneCompexData(xComplex[cKey])
+        next i
+    case (cType=="O")
+        cClassName:=GetClassName(xComplex)
+        if(;
+            (!MethIsMemberOf(xComplex,"CLONE",.T.));
+            .or.;
+            (!MethIsMemberOf(xComplex,"ISKINDOF",.T.));
+            .or.;
+            (!xComplex:IsKindOf("CLASSBASE",.T.));
+        )
+            xClone:=xComplex
+        else
+            xClone:=xComplex:Clone()
+        endif
+    otherwise
+        xClone:=xComplex
+    end case
+return(xClone)
+
+method IsKindOf(cClass,lParentTree) class ClassBase
+
+    local aParents as array
+
+    local cThisClass as character
+    local cTargetClass as character
+    local cClassNameSpace as character
+
+    local lIsKindOf as logical
+
+    local nParent as numeric
+
+    paramtype 1 var cClass as character
+    paramtype 2 var lParentTree as logical optional default .F.
+
+    cThisClass:=self:ClassFullName()
+    cTargetClass:=Upper(AllTrim(cClass))
+    cClassNameSpace:=::ClassNameSpace()
+    if (!Left(cTargetClass,Len(cClassNameSpace))==cClassNameSpace+".")
+        cTargetClass:=(cClassNameSpace+"."+cTargetClass)
+    endif
+
+    lIsKindOf:=(cThisClass==cTargetClass)
+
+    if ((!lIsKindOf).and.(lParentTree))
+        aParents:=GetParentTree(self)
+        nParent:=aScan(aParents,{|cClassName|(cClassName==cTargetClass)})
+        FWFreeArray(@aParents)
+        lIsKindOf:=(nParent>0)
+    endif
+
+return(lIsKindOf)
