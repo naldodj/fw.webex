@@ -19,6 +19,7 @@ class WebExCardKPI from WebExDiv
     protected data cCardKPIValue as character
     protected data cCardKPITheme as character
 
+    protected data oCardKPI as object
     protected data oCardKPIIcon as object
     protected data oCardKPIBody as object
     protected data oCardKPITitle as object
@@ -47,12 +48,15 @@ method New(cCardKPITitle,cCardKPIValue,cCardKPITheme,oCardKPIIcon) class WebExCa
     ::cCardKPITheme:=Lower(AllTrim(cCardKPITheme))
 
     _Super:New()
-    ::SetEnableIcons()
 
-    ::AddClass("card")
-    ::AddClass("mb-3")
-    ::AddClass("border-secondary")
-    ::SetCardKPITheme(::cCardKPITheme)
+    ::oCardKPI:=self
+
+    ::oCardKPI:SetEnableIcons()
+
+    ::oCardKPI:AddClass("card")
+    ::oCardKPI:AddClass("mb-3")
+    ::oCardKPI:AddClass("border-secondary")
+    ::oCardKPI:SetCardKPITheme(::cCardKPITheme)
 
     ::oCardKPITitle:=WebExH5():New()
     ::oCardKPITitle:AddClass("card-title")
@@ -87,7 +91,7 @@ method New(cCardKPITitle,cCardKPIValue,cCardKPITheme,oCardKPIIcon) class WebExCa
     ::oCardKPIBody:AddChild(::oCardKPITitle)
     ::oCardKPIBody:AddChild(::oCardKPIText)
 
-    ::AddChild(::oCardKPIBody)
+    ::oCardKPI:AddChild(::oCardKPIBody)
 
 return(self)
 

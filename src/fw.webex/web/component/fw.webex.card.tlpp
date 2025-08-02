@@ -18,6 +18,7 @@ class WebExCard from WebExDiv
     protected data cCardTextTitle as character
     protected data cCardTextBody as character
 
+    protected data oCard as object
     protected data oCardBody as object
     protected data oCardTextTitle as object
     protected data oCardTextBody as object
@@ -30,23 +31,22 @@ class WebExCard from WebExDiv
 endclass
 
 method New(cCardTextTitle,cCardTextBody) class WebExCard
-    paramtype 1 var cCardTextTitle as character
+    paramtype 1 var cCardTextTitle as character optional default ""
     paramtype 2 var cCardTextBody as character optional default ""
     ::cCardTextTitle:=cCardTextTitle
     ::cCardTextBody:=cCardTextBody
     _Super:New()
-    WITH WEBEXOBJECT self
+    ::oCard:=self
+    WITH WEBEXOBJECT ::oCard
         .:AddClass("card")
         WITH WEBEXOBJECT ::oCardBody CLASS WebExDiv
             .:AddClass("card-body")
             WITH WEBEXOBJECT ::oCardTextTitle CLASS WebExH5
                 ::SetCardTextTitle(::cCardTextTitle)
             END WEBEXOBJECT
-            if (!Empty(::cCardTextBody))
-                WITH WEBEXOBJECT ::oCardTextBody CLASS WebExParagraph
-                    ::SetCardTextBody(::cCardTextBody)
-                END WEBEXOBJECT
-            endif
+            WITH WEBEXOBJECT ::oCardTextBody CLASS WebExParagraph
+                ::SetCardTextBody(::cCardTextBody)
+            END WEBEXOBJECT
         END WEBEXOBJECT
     END WEBEXOBJECT NOADDCHILD
 return(self)
@@ -54,13 +54,13 @@ return(self)
 method SetCardTextTitle(cCardTextTitle) class WebExCard
     paramtype 1 var cCardTextTitle as character optional default ::cCardTextTitle
     ::SetMemberData("cCardTextTitle",cCardTextTitle)
-    ::AddClass("card-title")
-    ::SetContent(::cCardTextTitle)
+    ::oCardTextTitle:AddClass("card-title")
+    ::oCardTextTitle:SetContent(::cCardTextTitle)
 return(self)
 
 method SetCardTextBody(cCardTextBody) class WebExCard
     paramtype 1 var cCardTextBody as character optional default ::cCardTextBody
     ::SetMemberData("cCardTextBody",cCardTextBody)
-    ::AddClass("card-text")
-    ::SetContent(::cCardTextBody)
+    ::oCardTextBody:AddClass("card-text")
+    ::oCardTextBody:SetContent(::cCardTextBody)
 return(self)

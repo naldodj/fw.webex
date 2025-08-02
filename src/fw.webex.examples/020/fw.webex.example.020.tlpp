@@ -59,7 +59,7 @@ static procedure FWWebExExample_020(cHTML as character) as character
                 //TODO: Main
                     WITH WEBEXOBJECT CLASS SBAdminMainContent
                         //TODO: Fix me
-                        WITH WEBEXOBJECT oDiv25 CLASS SBAdminContainer
+                        WITH WEBEXOBJECT oSBAdminContainer CLASS SBAdminContainer
                             WITH WEBEXOBJECT CLASS WebExH1
                                 .:AddClass("mt-4")
                                 .:SetContent("Dashboard")
@@ -70,25 +70,25 @@ static procedure FWWebExExample_020(cHTML as character) as character
                                 oLi6:AddClass("breadcrumb-item active")
                                 oLi6:SetContent("Dashboard")
                             oOl1:AddChild(oLi6)
-                        oDiv25:AddChild(oOl1)
+                        oSBAdminContainer:AddChild(oOl1)
                             WITH WEBEXOBJECT CLASS WebExRow
                                 WITH WEBEXOBJECT CLASS SBAdminCardContainer
-                                    WITH WEBEXOBJECT CLASS SBAdminCard ARGS "Primary Card","#","View Details"
+                                    WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Primary Card","#","View Details"
                                         .:AddClass("bg-primary text-white")
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                                 WITH WEBEXOBJECT CLASS SBAdminCardContainer
-                                    WITH WEBEXOBJECT CLASS SBAdminCard ARGS "Warning Card","#","View Details"
+                                    WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Warning Card","#","View Details"
                                         .:AddClass("bg-warning text-white")
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                                 WITH WEBEXOBJECT CLASS SBAdminCardContainer
-                                    WITH WEBEXOBJECT CLASS SBAdminCard ARGS "Success Card","#","View Details"
+                                    WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Success Card","#","View Details"
                                         .:AddClass("bg-success text-white")
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
                                 WITH WEBEXOBJECT CLASS SBAdminCardContainer
-                                    WITH WEBEXOBJECT CLASS SBAdminCard ARGS "Danger Card","#","View Details"
+                                    WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Danger Card","#","View Details"
                                         .:AddClass("bg-danger text-white")
                                     END WEBEXOBJECT
                                 END WEBEXOBJECT
@@ -137,18 +137,9 @@ static procedure FWWebExExample_020(cHTML as character) as character
                                     oDiv53:AddChild(oDiv55)
                                 oDiv52:AddChild(oDiv53)
                             oDiv47:AddChild(oDiv52)
-                        oDiv25:AddChild(oDiv47)
-                            oDiv56:=WebExDiv():New()
-                            oDiv56:AddClass("card mb-4")
-                                oDiv57:=WebExDiv():New()
-                                oDiv57:AddClass("card-header")
-                                    oI19:=WebExControl():New("i")
-                                    oI19:AddClass("fas fa-table me-1")
-                                oDiv57:AddChild(oI19)
-                                oDiv57:SetContent("DataTable Example",oI19:GetID())
-                            oDiv56:AddChild(oDiv57)
-                                oDiv58:=WebExDiv():New()
-                                oDiv58:AddClass("card-body")
+                        oSBAdminContainer:AddChild(oDiv47)
+                            WITH WEBEXOBJECT oSBAdminCardTableHeader CLASS SBAdminCardTableHeader ARGS "Data Table"
+                                WITH WEBEXOBJECT oSBAdminCardTableBody CLASS SBAdminCardTableBody
                                     oTable1:=WebExControl():New("table")
                                     oTable1:SetFixedID("datatablesSimple")
                                         oThead1:=WebExControl():New("thead")
@@ -1337,10 +1328,10 @@ static procedure FWWebExExample_020(cHTML as character) as character
                                             oTr59:AddChild(oTd342)
                                         oTbody1:AddChild(oTr59)
                                     oTable1:AddChild(oTbody1)
-                                oDiv58:AddChild(oTable1)
-                            oDiv56:AddChild(oDiv58)
-                        oDiv25:AddChild(oDiv56)
-                        END WEBEXOBJECT //oDiv25
+                                oSBAdminCardTableBody:AddChild(oTable1)
+                                END WEBEXOBJECT //oSBAdminCardTableBody
+                            END WEBEXOBJECT //oSBAdminCardTableHeader
+                        END WEBEXOBJECT //oSBAdminContainer
                     END WEBEXOBJECT
                 //Main
                 //Footer

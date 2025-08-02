@@ -13,7 +13,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class SBAdminCard from WebExDiv
+class SBAdminCardWithLink from WebExDiv
 
     protected data cCardBody as character
     protected data cCardFooterLink as character
@@ -35,7 +35,7 @@ class SBAdminCard from WebExDiv
 
 endclass
 
-method New(cCardBody,cCardFooterLink,cCardFooterText) class SBAdminCard
+method New(cCardBody,cCardFooterLink,cCardFooterText) class SBAdminCardWithLink
 
     paramtype 1 var cCardBody as character optional default ""
     paramtype 2 var cCardFooterLink as character optional default "#"
@@ -72,19 +72,19 @@ method New(cCardBody,cCardFooterLink,cCardFooterText) class SBAdminCard
 
 return(self)
 
-method SetCardBody(cCardBody) class SBAdminCard
+method SetCardBody(cCardBody) class SBAdminCardWithLink
     paramtype 1 var cCardBody as character optional default ::cCardBody
     ::cCardBody:=cCardBody
     ::oCardBody:SetContent(::cCardBody)
 return(self)
 
-method SetCardFooterLink(cCardFooterLink) class SBAdminCard
+method SetCardFooterLink(cCardFooterLink) class SBAdminCardWithLink
     paramtype 1 var cCardFooterLink as character optional default ::cCardFooterLink
     ::cCardFooterLink:=cCardFooterLink
     ::oCardFooterLink:SetAttr("href",::cCardFooterLink)
 return(self)
 
-method SetCardFooterText(cCardFooterText) class SBAdminCard
+method SetCardFooterText(cCardFooterText) class SBAdminCardWithLink
     paramtype 1 var cCardFooterText as character optional default ::cCardFooterText
     ::cCardFooterText:=cCardFooterText
     ::oCardFooterLink:SetContent(::cCardFooterText)

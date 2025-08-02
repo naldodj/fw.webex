@@ -1,0 +1,72 @@
+/*
+
+  __                            _                          _                 _             _
+ / _|__      ____      __  ___ | |__    ___ __  __    ___ | |__    __ _   __| | _ __ ___  (_) _ __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /   / __|| '_ \  / _` | / _` || '_ ` _ \ | || '_ \
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <  _ \__ \| |_) || (_| || (_| || | | | | || || | | |
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\(_)|___/|_.__/  \__,_| \__,_||_| |_| |_||_||_| |_|
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class SBAdminCardTableHeader from WebExDiv
+
+    protected data cCardHeader as character
+    protected data cCardHeaderIcon as character
+    protected data cCardHeaderIconType as character
+
+    protected data oCard as object
+    protected data oCardHeader as object
+    protected data oCardHeaderIcon as object
+
+    public method New(cCardHeader as character,cCardHeaderIcon as character,cCardHeaderIconType as character) as object
+
+    public method SetCardHeader(cCardHeader as character) as object
+    public method SetCardHeaderIcon(cCardHeaderIcon  as character,cCardHeaderIconType as character) as object
+
+endclass
+
+method New(cCardHeader,cCardHeaderIcon,cCardHeaderIconType) class SBAdminCardTableHeader
+
+    paramtype 1 var cCardHeader as character optional default ""
+    paramtype 2 var cCardHeaderIcon as character optional default "fas fa-table"
+    paramtype 3 var cCardHeaderIconType as character optional default "fontawesome"
+
+    ::cCardHeader:=cCardHeader
+    ::cCardHeaderIcon:=cCardHeaderIcon
+    ::cCardHeaderIconType:=cCardHeaderIconType
+
+    _Super:New()
+
+    ::oCard:=self
+
+    WITH WEBEXOBJECT ::oCard
+        .:AddClass("card mb-4")
+        WITH WEBEXOBJECT ::oCardHeader CLASS WebExDiv
+            .:AddClass("card-header")
+            WITH WEBEXOBJECT ::oCardHeaderIcon CLASS WebExIcon ARGS ::cCardHeaderIcon,::cCardHeaderIconType
+                .:AddClass("me-1")
+            END WEBEXOBJECT
+            ::SetCardHeader()
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
+
+return(self)
+
+method SetCardHeader(cCardHeader) class SBAdminCardTableHeader
+    paramtype 1 var cCardHeader as character optional default ::cCardHeader
+    ::cCardHeader:=cCardHeader
+    ::oCardHeader:SetContent(::cCardHeader,::oCardHeaderIcon:GetID())
+return(self)
+
+method SetCardHeaderIcon(cCardHeaderIcon,cCardHeaderIconType) class SBAdminCardTableHeader
+    paramtype 1 var cCardHeaderIcon  as character optional default ::cCardHeaderIcon
+    paramtype 2 var cCardHeaderIconType as character optional default ::cCardHeaderIconType
+    ::cCardHeaderIcon:=cCardHeaderIcon
+    ::cCardHeaderIconType:=cCardHeaderIconType
+    ::oCardHeaderIcon:SetIconName(::cCardHeaderIcon,::cCardHeaderIconType)
+return(self)
