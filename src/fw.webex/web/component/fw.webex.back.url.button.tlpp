@@ -1,0 +1,62 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExBackURLButton from WebExDiv
+
+    protected data cBackURL
+
+    protected data oBackURL
+
+    public method New(cBackURL) as object
+
+    public method SetBackURL(cBackURL) as object
+
+endclass
+
+method New(cBackURL) class WebExBackURLButton
+
+    paramtype 1 var cBackURL as character optional default "./"
+
+    ::cBackURL:=cBackURL
+
+    _Super:New()
+
+    WITH WEBEXOBJECT self
+        WITH WEBEXOBJECT ::oBackURL CLASS WebExAnchor
+            .:AddClass("btn-floating btn-large")
+            .:SetAttr("data-toggle","tooltip")
+            .:SetAttr("data-bs-toggle","button")
+            ::SetBackURL(::cBackURL)
+            WITH WEBEXOBJECT CLASS WebExDiv
+                .:AddClass("position-fixed bottom-0 end-0 m-3")
+                WITH WEBEXOBJECT CLASS WebExButton ARGS "","button"
+                    .:AddClass("btn btn-primary btn-lg rounded-circle shadow")
+                    .:SetAttr("style","width: 50px; height: 50px;")
+                    WITH WEBEXOBJECT CLASS WebExIcon ARGS "bi-arrow-left","bootstrap"
+                        .:SetFixedID("fwwebex-fixed-action-btn-i-arrow_back_icon")
+                        .:SetAttr("style","user-select: none;")
+                    END WEBEXOBJECT
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
+
+return(self)
+
+method SetBackURL(cBackURL) class WebExBackURLButton
+    paramtype 1 var cBackURL as character optional default ::cBackURL
+    ::cBackURL:=cBackURL
+    ::oBackURL:SetAttr("onclick","window.open('"+::cBackURL+"','_top');")
+return(self)

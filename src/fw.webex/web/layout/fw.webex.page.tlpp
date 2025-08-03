@@ -118,18 +118,24 @@ method New(cPageTitle) class WebExPage
                 WITH WEBEXOBJECT CLASS WebExComment
                     .:SetContent("jQuery first, then Popper.js, then Bootstrap JS")
                 END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent("https://releases.jquery.com/git/jquery-git.slim.min.js")
-                END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent("https://releases.jquery.com/git/jquery-git.min.js")
-                END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent("https://cdn.jsdelivr.net/npm/@popperjs/core/dist/umd/popper.min.js")
-                END WEBEXOBJECT
-                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent("https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js")
-                END WEBEXOBJECT
+                //JQuery
+                    WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                        .:SetAttr("src","https://releases.jquery.com/git/jquery-git.slim.min.js")
+                    END WEBEXOBJECT
+                    WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                            .:SetAttr("src","https://releases.jquery.com/git/jquery-git.min.js")
+                    END WEBEXOBJECT
+                //JQuery
+                //popperjs
+                    WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                        .:SetContent("https://cdn.jsdelivr.net/npm/@popperjs/core/dist/umd/popper.min.js")
+                    END WEBEXOBJECT
+                //popperjs
+                //bootstrap
+                    WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                        .:SetContent("https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js")
+                    END WEBEXOBJECT
+                //bootstrap
             //Bootstrap Optional JavaScript
             ***************************************************************************************************************************
         END WEBEXOBJECT
@@ -217,21 +223,31 @@ method New(cPageTitle) class WebExPage
                 return { execute, waitForConnection, startConnectingAnimation, debug };
             })();
 
-
         endContent
         WITH WEBEXOBJECT CLASS WebExScript
             .:SetContent(cPageScript)
         END WEBEXOBJECT
         ***************************************************************************************************************************
-        //Scripts decodeHTMLEntities
+        //Scripts Tools
         beginContent var cPageScript
+            /*decodeHTMLEntities*/
             function decodeHTMLEntities(text) {
                 const txt = document.createElement("textarea");
                 txt.innerHTML = text;
                 return txt.value;
             }
+            /*showComingSoon*/
             function showComingSoon(route) {
                 alert(decodeHTMLEntities('Rota '+route+' ainda n&atilde;o implementada!'));
+            }
+            /*FWWebExWaitForElementID*/
+            function FWWebExWaitForElementID(id, callback) {
+                const element = document.getElementById(id);
+                if (element) {
+                    callback(element);
+                } else {
+                    setTimeout(() => FWWebExWaitForElementID(id, callback), 100);
+                }
             }
         endContent
         WITH WEBEXOBJECT CLASS WebExScript
@@ -490,6 +506,7 @@ method RenderHTML() class WebExPage
 
     //Pre-Renderiza Body para Carregar os Dados: External Assets, etc.
     ::oPageBody:RenderHTML()
+    //Desabilita a Renderizacao, de forma a Obter apenas o resultado da Renderizacao Anterior
     ::oPageBody:SetRenderChildren(.F.)
 
     WITH WEBEXOBJECT ::oPage
@@ -497,20 +514,33 @@ method RenderHTML() class WebExPage
             .:SetAttr("data-bs-theme","dark")
         endif
         WITH WEBEXOBJECT ::oPageHeader
+            ***************************************************************************************************************************
             //Custom Header
+            WITH WEBEXOBJECT CLASS WebExComment
+                .:SetContent("Custom Header")
+            END WEBEXOBJECT
             jHeader:=::oPageHeader:GetHeader()
             aEval(jHeader:GetNames(),{|cName|::GetMemberData("oPageHeader"):AddChild(jHeader[cName])})
             ***************************************************************************************************************************
-            //Styles
+            //Custom Styles
+            WITH WEBEXOBJECT CLASS WebExComment
+                .:SetContent("Custom Styles")
+            END WEBEXOBJECT
             aEval(::jPageStyle:GetNames(),{|cName|::GetMemberData("oPageHeader"):AddChild(::jPageStyle[cName])})
             ***************************************************************************************************************************
-            //Scripts Head
+            //Custom Scripts Head
+            WITH WEBEXOBJECT CLASS WebExComment
+                .:SetContent("Custom Scripts Head")
+            END WEBEXOBJECT
             jHeadScripts:=::oPageHeader:GetHeadScripts()
             aEval(jHeadScripts:GetNames(),{|cName|::GetMemberData("oPageHeader"):AddChild(jHeadScripts[cName])})
             ***************************************************************************************************************************
-            //TOTVS Script
+            //TOTVS Scripts
                 cEnvServer:=Alltrim(Lower(GetEnvServer()))
                 cAPPRootURI:=WebApp():GetAPPRoot()
+                WITH WEBEXOBJECT CLASS WebExComment
+                    .:SetContent("TOTVS Scripts")
+                END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
                     .:SetContent(cAPPRootURI+"preindex_env_"+cEnvServer+"/twebchannel.js")
                 END WEBEXOBJECT
@@ -522,12 +552,24 @@ method RenderHTML() class WebExPage
                 END WEBEXOBJECT
             //TOTVS Script
             ***************************************************************************************************************************
+            //Normalize CSS
+                //(Do Not Use WebExComment Here)
+                WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                    .:SetContent("Normalize CSS")
+                END WEBEXOBJECT
+                //(Do Not Use WebExLink Here)
+                WITH WEBEXOBJECT CLASS WebExControl TYPE link
+                    .:SetAttr("href","https://csstools.github.io/normalize.css/latest/normalize.css")
+                    .:SetAttr("rel","stylesheet")
+                END WEBEXOBJECT
+            //Normalize CSS
+            ***************************************************************************************************************************
         END WEBEXOBJECT NOADDCHILD
         ***************************************************************************************************************************
         WITH WEBEXOBJECT ::oPageBody
         END WEBEXOBJECT
         ***************************************************************************************************************************
-        //Scripts
+        //ScriptBundle
         jPageScripts:=::oPage:GetPageScriptBundle()
         aEval(jPageScripts:GetNames(),{|cName|if(!lExternalAssets,lExternalAssets:=jPageScripts[cName]:GetExternalAssets(),nil),::GetMemberData("oPage"):AddChild(jPageScripts[cName])})
         ::lExternalAssets:=lExternalAssets

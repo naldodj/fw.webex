@@ -172,7 +172,7 @@ static procedure FWWebExExample_006(cHTML as character) as character
                 document.getElementById('tableResult').innerHTML = html;
 
                 new DataTable('#example', {
-                    dom: 'Blfrtip',
+                    dom: 'lfrtip',
                     lengthMenu: [1,2,3,4,5,6,7,8,9,10,25,50,100,-1],
                     pageLength: 4,
                     buttons: ['copy', 'csv', 'print', {

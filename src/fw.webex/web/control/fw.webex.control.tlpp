@@ -23,7 +23,9 @@ static __jScripts:=JSONObject():New() as json
 static __jFeatures:={;
     "lChartEnabled":.F.;
    ,"lIconsEnabled":.F.;
+   ,"lApexChartEnabled":.F.;
    ,"lDataTableEnabled":.F.;
+   ,"lMaterialDesignEnabled":.F.;
 } as json
 
 namespace FWWebEx
@@ -49,7 +51,9 @@ class WebExControl from FWWebEx.ClassBase
     protected data lIconsEnabled as logical
     protected data lExternalAssets as logical
     protected data lRenderChildren as logical
+    protected data lApexChartEnabled as logical
     protected data lDataTableEnabled as logical
+    protected data lMaterialDesignEnabled as logical
 
     public method New(cType as character) as object
 
@@ -132,17 +136,25 @@ class WebExControl from FWWebEx.ClassBase
     public method GetEnableChart() as logical
     public method SetEnableChart(lChartEnabled as logical) as object
 
+    public method GetEnableApexChart() as logical
+    public method SetEnableApexChart(lApexChartEnabled as logical) as object
+
     public method GetEnableIcons() as logical
     public method SetEnableIcons(lIconsEnabled as logical) as object
 
     public method GetEnableDataTable() as logical
     public method SetEnableDataTable(lDataTableEnabled as logical) as object
 
+    public method GetEnableMaterialDesign() as logical
+    public method SetEnableMaterialDesign(lMaterialDesignEnabled as logical) as object
+
     public method Clean() as variant
     public method CleanChildren() as variant
 
     public method RemoveScripts() as variant
+
     public method DisableFeatures() as variant
+    public method HasFeatureEnabled() as logical
 
     public method DumpDOM(nLevel as numeric) as character
 
@@ -160,7 +172,9 @@ method New(cType) class WebExControl
     ::SetFWWebExTmpPath()
     ::lChartEnabled:=__jFeatures["lChartEnabled"]
     ::lIconsEnabled:=__jFeatures["lIconsEnabled"]
+    ::lApexChartEnabled:=__jFeatures["lApexChartEnabled"]
     ::lDataTableEnabled:=__jFeatures["lDataTableEnabled"]
+    ::lMaterialDesignEnabled:=__jFeatures["lMaterialDesignEnabled"]
     ::lRenderChildren:=.T.
     ::lExternalAssets:=.F.
     _Super:New()
@@ -708,8 +722,9 @@ method RenderHTML() class WebExControl
             ::jAttrs["id"]:=::GetFixedID()
         endif
 
-        cContent:=::cContent
         cLowerType:=::cType
+        cContent:=::cContent
+
         lContentLoadAfterID:=(!Empty(::cContentLoadAfterID))
 
         if (;
@@ -957,6 +972,34 @@ method SetEnableChart(lChartEnabled) class WebExControl
     elseif ((!lChartEnabled).and.((__jFeatures["lChartEnabled"]).or.(::lChartEnabled)))
         ::lChartEnabled:=lChartEnabled
         __jFeatures["lChartEnabled"]:=::lChartEnabled
+    endif
+
+return(self)
+
+method GetEnableApexChart() class WebExControl
+return(::lApexChartEnabled)
+
+method SetEnableApexChart(lApexChartEnabled) class WebExControl
+
+    paramtype 1 var lApexChartEnabled as logical optional default .T.
+
+    if ((lApexChartEnabled).and.(!::lApexChartEnabled))
+        ::lApexChartEnabled:=.T.
+        __jFeatures["lApexChartEnabled"]:=::lApexChartEnabled
+        //ApexChart
+            //https://apexcharts.com/
+            WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                .:SetContent("ApexChart")
+                .:AddInHeader(.this)
+            END WEBEXOBJECT NOADDCHILD
+            WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                .:SetContent("https://cdn.jsdelivr.net/npm/apexcharts/dist/apexcharts.min.js")
+                .:AddInHeader(.this)
+            END WEBEXOBJECT NOADDCHILD
+        //ApexChart
+    elseif ((!lApexChartEnabled).and.((__jFeatures["lApexChartEnabled"]).or.(::lApexChartEnabled)))
+        ::lApexChartEnabled:=lApexChartEnabled
+        __jFeatures["lApexChartEnabled"]:=::lApexChartEnabled
     endif
 
 return(self)
@@ -1382,6 +1425,41 @@ method SetEnableDataTable(lDataTableEnabled) class WebExControl
 
 return(self)
 
+method GetEnableMaterialDesign() class WebExControl
+return(::lMaterialDesignEnabled)
+
+method SetEnableMaterialDesign(lMaterialDesignEnabled) class WebExControl
+
+    paramtype 1 var lMaterialDesignEnabled as logical optional default .T.
+
+    if ((lMaterialDesignEnabled).and.(!::lMaterialDesignEnabled))
+        ::lMaterialDesignEnabled:=.T.
+        __jFeatures["lMaterialDesignEnabled"]:=::lMaterialDesignEnabled
+***************************************************************************************************************************
+            //Material Design
+                WITH WEBEXOBJECT CLASS WebExControl TYPE !--
+                    .:SetContent("Material Design :: https://materializecss.com/about.html")
+                    .:AddInHeader(.this)
+                END WEBEXOBJECT NOADDCHILD
+                /*
+                WITH WEBEXOBJECT CLASS WebExControl TYPE link
+                    .:SetAttr("href","https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css")
+                    .:SetAttr("rel","stylesheet")
+                    .:AddInHeader(.this)
+                END WEBEXOBJECT NOADDCHILD*/
+                WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+                    .:SetContent("https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js")
+                    .:AddInHeader(.this)
+                END WEBEXOBJECT NOADDCHILD
+            //Material Design
+***************************************************************************************************************************
+    elseif ((!lMaterialDesignEnabled).and.((__jFeatures["lMaterialDesignEnabled"]).or.(::lMaterialDesignEnabled)))
+        ::lMaterialDesignEnabled:=lMaterialDesignEnabled
+        __jFeatures["lMaterialDesignEnabled"]:=::lMaterialDesignEnabled
+    endif
+
+return(self)
+
 method Clean() class WebExControl
     ::ResetID()
     ::DelAssets()
@@ -1479,6 +1557,11 @@ method DisableFeatures() class WebExControl
     )
     aEval(__jFeatures:GetNames(),{|cFeature as character|__jFeatures[cFeature]:=.F.,self:SetMemberData(cFeature,.T.)})
 return(nil)
+
+method HasFeatureEnabled() class WebExControl
+    local lHasFeatureEnabled:=.F. as logical
+    aEval(__jFeatures:GetNames(),{|cFeature as character|lHasFeatureEnabled:=if(lHasFeatureEnabled,lHasFeatureEnabled,__jFeatures[cFeature])})
+return(lHasFeatureEnabled)
 
 method DumpDOM(nLevel) class WebExControl
 
