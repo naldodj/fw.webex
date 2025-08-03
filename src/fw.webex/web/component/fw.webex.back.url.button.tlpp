@@ -15,48 +15,42 @@ namespace FWWebEx
 
 class WebExBackURLButton from WebExDiv
 
-    protected data cBackURL
-
     protected data oBackURL
 
-    public method New(cBackURL) as object
+    public method New() as object
 
-    public method SetBackURL(cBackURL) as object
+    public method SetBackURL() as object
 
 endclass
 
-method New(cBackURL) class WebExBackURLButton
-
-    paramtype 1 var cBackURL as character optional default "./"
-
-    ::cBackURL:=cBackURL
+method New() class WebExBackURLButton
 
     _Super:New()
 
-    WITH WEBEXOBJECT self
-        WITH WEBEXOBJECT ::oBackURL CLASS WebExAnchor
-            .:AddClass("btn-floating btn-large")
-            .:SetAttr("data-toggle","tooltip")
-            .:SetAttr("data-bs-toggle","button")
-            ::SetBackURL(::cBackURL)
-            WITH WEBEXOBJECT CLASS WebExDiv
-                .:AddClass("position-fixed bottom-0 end-0 m-3")
-                WITH WEBEXOBJECT CLASS WebExButton ARGS "","button"
-                    .:AddClass("btn btn-primary btn-lg rounded-circle shadow")
-                    .:SetAttr("style","width: 50px; height: 50px;")
-                    WITH WEBEXOBJECT CLASS WebExIcon ARGS "bi-arrow-left","bootstrap"
-                        .:SetFixedID("fwwebex-fixed-action-btn-i-arrow_back_icon")
-                        .:SetAttr("style","user-select: none;")
+    if (::GetEnableWebExBackURLButton())
+        WITH WEBEXOBJECT self
+            WITH WEBEXOBJECT ::oBackURL CLASS WebExAnchor
+                .:AddClass("btn-floating btn-large")
+                .:SetAttr("data-toggle","tooltip")
+                .:SetAttr("data-bs-toggle","button")
+                ::SetBackURL()
+                WITH WEBEXOBJECT CLASS WebExDiv
+                    .:AddClass("position-fixed bottom-0 end-0 m-3")
+                    WITH WEBEXOBJECT CLASS WebExButton ARGS "","button"
+                        .:AddClass("btn btn-primary btn-lg rounded-circle shadow")
+                        .:SetAttr("style","width: 50px; height: 50px;")
+                        WITH WEBEXOBJECT CLASS WebExIcon ARGS "bi-arrow-left","bootstrap"
+                            .:SetFixedID("fwwebex-fixed-action-btn-i-arrow_back_icon")
+                            .:SetAttr("style","user-select: none;")
+                        END WEBEXOBJECT
                     END WEBEXOBJECT
                 END WEBEXOBJECT
             END WEBEXOBJECT
-        END WEBEXOBJECT
-    END WEBEXOBJECT NOADDCHILD
+        END WEBEXOBJECT NOADDCHILD
+    endif
 
 return(self)
 
-method SetBackURL(cBackURL) class WebExBackURLButton
-    paramtype 1 var cBackURL as character optional default ::cBackURL
-    ::cBackURL:=cBackURL
-    ::oBackURL:SetAttr("onclick","window.open('"+::cBackURL+"','_top');")
+method SetBackURL() class WebExBackURLButton
+    ::oBackURL:SetAttr("onclick","window.location.href = popFromCustomHistory();")
 return(self)

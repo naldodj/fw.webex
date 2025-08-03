@@ -26,6 +26,7 @@ static __jFeatures:={;
    ,"lApexChartEnabled":.F.;
    ,"lDataTableEnabled":.F.;
    ,"lMaterialDesignEnabled":.F.;
+   ,"lWebExBackURLButtonEnabled":.F.;
 } as json
 
 namespace FWWebEx
@@ -54,6 +55,7 @@ class WebExControl from FWWebEx.ClassBase
     protected data lApexChartEnabled as logical
     protected data lDataTableEnabled as logical
     protected data lMaterialDesignEnabled as logical
+    protected data lWebExBackURLButtonEnabled as logical
 
     public method New(cType as character) as object
 
@@ -148,6 +150,9 @@ class WebExControl from FWWebEx.ClassBase
     public method GetEnableMaterialDesign() as logical
     public method SetEnableMaterialDesign(lMaterialDesignEnabled as logical) as object
 
+    public method GetEnableWebExBackURLButton() as logical
+    public method SetEnableWebExBackURLButton(lWebExBackURLButtonEnabled as logical) as object
+
     public method Clean() as variant
     public method CleanChildren() as variant
 
@@ -175,6 +180,7 @@ method New(cType) class WebExControl
     ::lApexChartEnabled:=__jFeatures["lApexChartEnabled"]
     ::lDataTableEnabled:=__jFeatures["lDataTableEnabled"]
     ::lMaterialDesignEnabled:=__jFeatures["lMaterialDesignEnabled"]
+    ::lWebExBackURLButtonEnabled:=__jFeatures["lWebExBackURLButtonEnabled"]
     ::lRenderChildren:=.T.
     ::lExternalAssets:=.F.
     _Super:New()
@@ -1441,12 +1447,11 @@ method SetEnableMaterialDesign(lMaterialDesignEnabled) class WebExControl
                     .:SetContent("Material Design :: https://materializecss.com/about.html")
                     .:AddInHeader(.this)
                 END WEBEXOBJECT NOADDCHILD
-                /*
                 WITH WEBEXOBJECT CLASS WebExControl TYPE link
                     .:SetAttr("href","https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css")
                     .:SetAttr("rel","stylesheet")
                     .:AddInHeader(.this)
-                END WEBEXOBJECT NOADDCHILD*/
+                END WEBEXOBJECT NOADDCHILD
                 WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
                     .:SetContent("https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js")
                     .:AddInHeader(.this)
@@ -1459,6 +1464,101 @@ method SetEnableMaterialDesign(lMaterialDesignEnabled) class WebExControl
     endif
 
 return(self)
+
+method GetEnableWebExBackURLButton() class WebExControl
+return(::lWebExBackURLButtonEnabled)
+
+method SetEnableWebExBackURLButton(lWebExBackURLButtonEnabled) class WebExControl
+
+    paramtype 1 var lWebExBackURLButtonEnabled as logical optional default .T.
+
+    if ((lWebExBackURLButtonEnabled).and.(!::lWebExBackURLButtonEnabled))
+        ::lWebExBackURLButtonEnabled:=.T.
+        __jFeatures["lWebExBackURLButtonEnabled"]:=::lWebExBackURLButtonEnabled
+***************************************************************************************************************************
+            //WebExBackURLButton
+                WITH WEBEXOBJECT CLASS WebExScript
+                    .:SetContent(GetWebExBackURLButtonScript())
+                END WEBEXOBJECT NOADDCHILD
+            //WebExBackURLButton
+***************************************************************************************************************************
+    elseif ((!lWebExBackURLButtonEnabled).and.((__jFeatures["lWebExBackURLButtonEnabled"]).or.(::lWebExBackURLButtonEnabled)))
+        ::lWebExBackURLButtonEnabled:=lWebExBackURLButtonEnabled
+        __jFeatures["lWebExBackURLButtonEnabled"]:=::lWebExBackURLButtonEnabled
+    endif
+
+return(self)
+
+static function GetWebExBackURLButtonScript()
+
+    local cScript as character
+
+    beginContent var cScript
+
+        /**
+         * FWWebEx Custom History Stack
+         * ----------------------------------------
+         * Sistema de navegacao reversa baseado em sessionStorage.
+         * Evita usar o historico nativo do browser (que o Protheus detona).
+         * Released to Public Domain, por NaldoDJ(TM) vibes.
+         */
+
+        (function(global) {
+            const STORAGE_KEY = "FWWebExHistoryStack";
+
+            const HistoryStack = {
+                push: function(url) {
+                    if (!url) return;
+                    let stack = HistoryStack._getStack();
+                    let current = window.location.href;
+                    if (stack.length === 0 || stack[stack.length - 1] !== current) {
+                        stack.push(current);
+                    }
+                    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stack));
+                    if (url !== current) {
+                        window.location.href = url;
+                    }
+                },
+
+                pop: function() {
+                    let stack = HistoryStack._getStack();
+                    let current = stack.pop(); // tira o atual
+                    let back = stack.pop();    // pega o anterior
+                    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stack));
+                    return back || "#"; // fallback
+                },
+
+                clear: function() {
+                    sessionStorage.removeItem(STORAGE_KEY);
+                },
+
+                _getStack: function() {
+                    try {
+                        return JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || [];
+                    } catch (e) {
+                        return [];
+                    }
+                }
+            };
+
+            // Expoe globalmente
+            global.FWWebExHistory = HistoryStack;
+
+            // Atalho para uso direto no botao back
+            global.popFromCustomHistory = function() {
+                return HistoryStack.pop();
+            };
+
+            // Atalho de navegacao com empilhamento
+            global.navigateTo = function(url) {
+                HistoryStack.push(url);
+            };
+
+        })(window);
+
+    endContent
+
+return(cScript)
 
 method Clean() class WebExControl
     ::ResetID()

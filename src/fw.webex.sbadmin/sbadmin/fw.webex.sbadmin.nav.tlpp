@@ -127,7 +127,12 @@ return(self)
 method SetBrandLink(cBrandLInk) class SBAdminNav
     paramtype cBrandLInk as character optional default ::cBrandLInk
     ::cBrandLInk:=cBrandLInk
-    ::oSBAdminNavBrand:SetAttr("href",::cBrandLInk)
+    if ((::GetEnableWebExBackURLButton()).and.(!("#"$::cBrandLInk)))
+        .:SetAttr("href","#")
+        .:SetAttr("onclick","navigateTo('"+::cBrandLInk+"');")
+    else
+        ::oSBAdminNavBrand:SetAttr("href",::cBrandLInk)
+    endif
 return(self)
 
 method NavRightMenuAdd(oSBAdminNav,cSBAdminNavHRef) class SBAdminNav
@@ -147,7 +152,12 @@ method NavRightMenuAdd(oSBAdminNav,cSBAdminNavHRef) class SBAdminNav
                     WITH WEBEXOBJECT CLASS WebExAnchor
                         .:SetAttr("class","nav-link dropdown-toggle")
                         .:SetFixedID("navbarDropdown")
-                        .:SetAttr("href",::cSBAdminNavHRef)
+                        if ((::GetEnableWebExBackURLButton()).and.(!("#"$::cSBAdminNavHRef)))
+                            .:SetAttr("href","#")
+                            .:SetAttr("onclick","navigateTo('"+::cSBAdminNavHRef+"');")
+                        else
+                            .:SetAttr("href",::cSBAdminNavHRef)
+                        endif
                         .:SetAttr("role","button" )
                         .:SetAttr("data-bs-toggle","dropdown")
                         .:SetAttr("aria-expanded","false")
@@ -238,6 +248,8 @@ method RenderDropdownMenu(aMenuItems,cClass,cAriaLabelledBy) CLASS SBAdminNav
 
     local aRolesUser as array
 
+    local cHRef as character
+
     local nMenuItem as numeric
     local nMenuItems:=Len(aMenuItems) as numeric
 
@@ -277,7 +289,13 @@ method RenderDropdownMenu(aMenuItems,cClass,cAriaLabelledBy) CLASS SBAdminNav
                             .:SetAttr("data-wsurl",if(jMenuItem:HasProperty("url"),jMenuItem["url"],"#"))
                             .:SetAttr("data-wsaction",Encode64(jMenuItem["wsAction"]:ToJSON()))
                         else
-                            .:SetAttr("href",if(jMenuItem:HasProperty("url"),jMenuItem["url"],"#"))
+                            cHRef:=if(jMenuItem:HasProperty("url"),jMenuItem["url"],"#")
+                            if ((::GetEnableWebExBackURLButton()).and.(!("#"$cHRef)))
+                                .:SetAttr("href","#")
+                                .:SetAttr("onclick","navigateTo('"+cHRef+"');")
+                            else
+                                .:SetAttr("href",cHRef)
+                            endif
                         endif
                         if ((jMenuItem:HasProperty("icon").and.(!Empty(jMenuItem["icon"]))))
                             WITH WEBEXOBJECT CLASS WebExIcon ARGS jMenuItem["icon"],"fontawesome"

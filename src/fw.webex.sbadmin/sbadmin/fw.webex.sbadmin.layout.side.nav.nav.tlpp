@@ -117,6 +117,7 @@ return(self)
 
 method RenderItem(jMenuItem,cParentID,nDepth,aRolesUser) class SBAdminLayoutSideNavNav
 
+    local cHRef as character
     local cCollapseID as character
 
     local lHasSubMenu as logical
@@ -172,7 +173,13 @@ method RenderItem(jMenuItem,cParentID,nDepth,aRolesUser) class SBAdminLayoutSide
         oWebExAnchor:SetAttr("data-wsurl",if(jMenuItem:HasProperty("url"),jMenuItem["url"],"#"))
         oWebExAnchor:SetAttr("data-wsaction",Encode64(jMenuItem["wsAction"]:ToJSON()))
     else
-        oWebExAnchor:SetAttr("href",if(jMenuItem:HasProperty("url"),jMenuItem["url"],"#"))
+        cHRef:=if(jMenuItem:HasProperty("url"),jMenuItem["url"],"#")
+        if ((::GetEnableWebExBackURLButton()).and.(!("#"$cHRef)))
+            oWebExAnchor:SetAttr("href","#")
+            oWebExAnchor:SetAttr("onclick","navigateTo('"+cHRef+"');")
+        else
+            oWebExAnchor:SetAttr("href",cHRef)
+        endif
     endif
 
     // Icone

@@ -141,6 +141,8 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile,oTWebChannel,bJSToAdvPL,bCallB
     local cSPPFile as character
     local cSPPExt as character
 
+    local cButton as character
+
     local jButtons as json
 
     local lAbrir as logical
@@ -152,6 +154,12 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile,oTWebChannel,bJSToAdvPL,bCallB
     local nLeft as numeric
     local nBottom as numeric
     local nRight as numeric
+
+    local nBtnCol as numeric
+    local nButton as numeric
+    local nButtons as numeric
+    local nButtonCol as numeric
+    local nButtonSize as numeric
 
     local oDlg as object
     local oGrp as object
@@ -223,6 +231,9 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile,oTWebChannel,bJSToAdvPL,bCallB
                 cHTMLFileTmpFile+=cSPPFile
                 cHTMLFileTmpFile+=cSPPExt
                 __CopyFile(cHTMLFile,cHTMLFileTmpFile)
+                aAdd(aButtons,{"Go&Forward",{||oTWebEngine:GoForward()},OemToAnsi("Go Forward"),OemtoAnsi("Go Forward")})
+                aAdd(aButtons,{"Go&Home",{||oTWebEngine:GoHome()},OemToAnsi("Go Home"),OemtoAnsi("Go Home")})
+                aAdd(aButtons,{"Go&Back",{||oTWebEngine:GoBack()},OemToAnsi("Go Back"),OemtoAnsi("Go Back")})
                 aAdd(aButtons,{"&Abrir",{||ShellExecute("open",cHTMLFileTmpFile,"","",SW_SHOWMAXIMIZED)},OemToAnsi("Abir"),OemtoAnsi("Abir")})
             endif
         endif
@@ -328,24 +339,20 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile,oTWebChannel,bJSToAdvPL,bCallB
             endtry
 
             //Botoes (da direita pra a esquerda)
-            @ nTop,(nRight)-((50*1)+06) BUTTON jButtons["1"] PROMPT aButtons[1][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[1][2]) PIXEL
-            if (lHasTheme)
-                jButtons["1"]:SetCSS(oTheme:getPrimaryButtonCSS())
-            endif
-            @ nTop,(nRight)-((50*2)+09) BUTTON jButtons["2"] PROMPT aButtons[2][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[2][2]) PIXEL
-            if (lHasTheme)
-                jButtons["2"]:SetCSS(oTheme:getPrimaryButtonCSS())
-            endif
-            @ nTop,(nRight)-((50*3)+12) BUTTON jButtons["3"] PROMPT aButtons[3][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[3][2]) PIXEL
-            if (lHasTheme)
-                jButtons["3"]:SetCSS(oTheme:getPrimaryButtonCSS())
-            endif
-            if (lAbrir)
-                @ nTop,(nRight)-((50*4)+15) BUTTON jButtons["4"] PROMPT aButtons[4][1] SIZE 50,08 OF oGrp ACTION Eval(aButtons[4][2]) PIXEL
+            nBtnCol:=3
+            nButtonCol:=6
+            nButtonSize:=50
+            nButtons:=Len(aButtons)
+            for nButton:=1 to nButtons
+                cButton:=LTrim(Str(nButton))
+                nButtonCol+=nBtnCol
+                @ nTop,(nRight)-((nButtonSize*nButton)+nButtonCol) BUTTON jButtons[cButton] PROMPT aButtons[nButton][1] SIZE nButtonSize,08 OF oGrp PIXEL
+                bButtonAction:=&("{||Eval(aButtons["+cButton+"][2])}")
+                jButtons[cButton]:bAction:=bButtonAction
                 if (lHasTheme)
-                    jButtons["4"]:SetCSS(oTheme:getPrimaryButtonCSS())
+                    jButtons[cButton]:SetCSS(oTheme:getPrimaryButtonCSS())
                 endif
-            endif
+            next nButton
 
             oDlg:lEscClose:=.F.
 
