@@ -20,6 +20,7 @@ Released to Public Domain.
     #xcommand WEBEXOBJECT CLEAN => WebExContext():ObjClean()
 
     #xtranslate .this => (__oWebExContextObj__:=WebExContext():ObjGet())
+    #xtranslate .:this => (__oWebExContextObj__:=WebExContext():ObjGet())
     #xtranslate .:<property_method> => (__oWebExContextObj__:=WebExContext():ObjGet(),__oWebExContextObj__:<property_method>)
 
     #define FWWEBEX_ID_MAX_SIZE 10

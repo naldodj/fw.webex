@@ -33,6 +33,8 @@ class WebExHelper
 
     static method StrReplace(cTemplate as character,vSubstitutions as variant) as character
 
+
+
 end class
 
 static method EscapeAll(cValue) class WebExHelper

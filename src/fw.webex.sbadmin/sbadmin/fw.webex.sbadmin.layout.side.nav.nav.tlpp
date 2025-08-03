@@ -9,235 +9,245 @@
 Released to Public Domain.
 --------------------------------------------------------------------------------------
 */
+
 namespace FWWebEx
 
 #include "fw.webex.th"
 
-class SBAdminLayoutSideNavNav from WebExDiv
+class SBAdminLayoutSideNavNav from WebExControl
+
+    protected data jSBAdminNavMenu as json
+
+    protected data oNav as object
+    protected data oNavDiv as object
+    protected data oNavFooter as object
+    protected data oMenuContainer as object
+
+    protected data oSideNavFooter as object
+    protected data oSideNavFooterDiv as object
+
     public method New() as object
+
+    public method NavLoadJSONMenu(jSBAdminNavMenu as json) as object
+
+    protected method BuildSideNav() as object
+    protected method BuildSideNavFooder() as object
+    protected method RenderMenuItems(aMenu as array) as object
+    protected method RenderItem(jMenuItem as json,cParentID as character,nDepth as numeric,aRolesUser as array) as object
+
+    protected method NavMenuAddBadge(oSBAdminMenuItem) as object
+    protected method NavMenuAddDivider(oSBAdminMenuItem) as object
+
 endclass
 
 method New() class SBAdminLayoutSideNavNav
-
-    local cSBAdminPath as character
-
-    _Super:New()
+    _Super:New("div")
     ::SetFixedID("layoutSidenav_nav")
+    ::AddChild(::BuildSideNav())
+return(self)
 
-    //TODO: Fix me
-    if (FWSBAdminTools():SBAdminCheck(@cSBAdminPath))
-        oNav2:=WebExControl():New("nav")
-        oNav2:AddClass("sb-sidenav accordion sb-sidenav-dark")
-        oNav2:SetFixedID("sidenavAccordion")
-            oDiv4:=WebExDiv():New()
-            oDiv4:AddClass("sb-sidenav-menu")
-                oDiv5:=WebExDiv():New()
-                oDiv5:AddClass("nav")
-                    oDiv6:=WebExDiv():New()
-                    oDiv6:AddClass("sb-sidenav-menu-heading")
-                    oDiv6:SetContent("Core")
-                oDiv5:AddChild(oDiv6)
-                    oA6:=WebExControl():New("a")
-                    oA6:AddClass("nav-link")
-                    oA6:SetAttr("href",cSBAdminPath+"index.html")
-                        oDiv7:=WebExDiv():New()
-                        oDiv7:AddClass("sb-nav-link-icon")
-                            oI4:=WebExControl():New("i")
-                            oI4:AddClass("fas fa-tachometer-alt")
-                        oDiv7:AddChild(oI4)
-                    oA6:AddChild(oDiv7)
-                    oA6:SetContent("Dashboard",oDiv7:GetID())
-                oDiv5:AddChild(oA6)
-                    oDiv8:=WebExDiv():New()
-                    oDiv8:AddClass("sb-sidenav-menu-heading")
-                    oDiv8:SetContent("Interface")
-                oDiv5:AddChild(oDiv8)
-                    oA7:=WebExControl():New("a")
-                    oA7:AddClass("nav-link collapsed")
-                    oA7:SetAttr("href","#")
-                    oA7:SetAttr("data-bs-toggle","collapse")
-                    oA7:SetAttr("data-bs-target","#collapseLayouts")
-                    oA7:SetAttr("aria-expanded","false")
-                    oA7:SetAttr("aria-controls","collapseLayouts")
-                        oDiv9:=WebExDiv():New()
-                        oDiv9:AddClass("sb-nav-link-icon")
-                            oI5:=WebExControl():New("i")
-                            oI5:AddClass("fas fa-columns")
-                        oDiv9:AddChild(oI5)
-                    oA7:AddChild(oDiv9)
-                    oA7:SetContent("Layouts",oDiv9:GetID())
-                        oDiv10:=WebExDiv():New()
-                        oDiv10:AddClass("sb-sidenav-collapse-arrow")
-                            oI6:=WebExControl():New("i")
-                            oI6:AddClass("fas fa-angle-down")
-                        oDiv10:AddChild(oI6)
-                    oA7:AddChild(oDiv10)
-                oDiv5:AddChild(oA7)
-                    oDiv11:=WebExDiv():New()
-                    oDiv11:AddClass("collapse")
-                    oDiv11:SetFixedID("collapseLayouts")
-                    oDiv11:SetAttr("aria-labelledby","headingOne")
-                    oDiv11:SetAttr("data-bs-parent","#sidenavAccordion")
-                        oNav3:=WebExControl():New("nav")
-                        oNav3:AddClass("sb-sidenav-menu-nested nav")
-                            oA8:=WebExControl():New("a")
-                            oA8:AddClass("nav-link")
-                            oA8:SetAttr("href",cSBAdminPath+"layout-static.html")
-                            oA8:SetContent("Static Navigation")
-                        oNav3:AddChild(oA8)
-                            oA9:=WebExControl():New("a")
-                            oA9:AddClass("nav-link")
-                            oA9:SetAttr("href",cSBAdminPath+"layout-sidenav-light.html")
-                            oA9:SetContent("Light Sidenav")
-                        oNav3:AddChild(oA9)
-                    oDiv11:AddChild(oNav3)
-                oDiv5:AddChild(oDiv11)
-                    oA10:=WebExControl():New("a")
-                    oA10:AddClass("nav-link collapsed")
-                    oA10:SetAttr("href","#")
-                    oA10:SetAttr("data-bs-toggle","collapse")
-                    oA10:SetAttr("data-bs-target","#collapsePages")
-                    oA10:SetAttr("aria-expanded","false")
-                    oA10:SetAttr("aria-controls","collapsePages")
-                        oDiv12:=WebExDiv():New()
-                        oDiv12:AddClass("sb-nav-link-icon")
-                            oI7:=WebExControl():New("i")
-                            oI7:AddClass("fas fa-book-open")
-                        oDiv12:AddChild(oI7)
-                    oA10:AddChild(oDiv12)
-                    oA10:SetContent("Pages",oDiv12:GetID())
-                        oDiv13:=WebExDiv():New()
-                        oDiv13:AddClass("sb-sidenav-collapse-arrow")
-                            oI8:=WebExControl():New("i")
-                            oI8:AddClass("fas fa-angle-down")
-                        oDiv13:AddChild(oI8)
-                    oA10:AddChild(oDiv13)
-                oDiv5:AddChild(oA10)
-                    oDiv14:=WebExDiv():New()
-                    oDiv14:AddClass("collapse")
-                    oDiv14:SetFixedID("collapsePages")
-                    oDiv14:SetAttr("aria-labelledby","headingTwo")
-                    oDiv14:SetAttr("data-bs-parent","#sidenavAccordion")
-                        oNav4:=WebExControl():New("nav")
-                        oNav4:AddClass("sb-sidenav-menu-nested nav accordion")
-                        oNav4:SetFixedID("sidenavAccordionPages")
-                            oA11:=WebExControl():New("a")
-                            oA11:AddClass("nav-link collapsed")
-                            oA11:SetAttr("href","#")
-                            oA11:SetAttr("data-bs-toggle","collapse")
-                            oA11:SetAttr("data-bs-target","#pagesCollapseAuth")
-                            oA11:SetAttr("aria-expanded","false")
-                            oA11:SetAttr("aria-controls","pagesCollapseAuth")
-                            oA11:SetContent("Authentication")
-                                oDiv15:=WebExDiv():New()
-                                oDiv15:AddClass("sb-sidenav-collapse-arrow")
-                                    oI9:=WebExControl():New("i")
-                                    oI9:AddClass("fas fa-angle-down")
-                                oDiv15:AddChild(oI9)
-                            oA11:AddChild(oDiv15)
-                        oNav4:AddChild(oA11)
-                            oDiv16:=WebExDiv():New()
-                            oDiv16:AddClass("collapse")
-                            oDiv16:SetFixedID("pagesCollapseAuth")
-                            oDiv16:SetAttr("aria-labelledby","headingOne")
-                            oDiv16:SetAttr("data-bs-parent","#sidenavAccordionPages")
-                                oNav5:=WebExControl():New("nav")
-                                oNav5:AddClass("sb-sidenav-menu-nested nav")
-                                    oA12:=WebExControl():New("a")
-                                    oA12:AddClass("nav-link")
-                                    oA12:SetAttr("href",cSBAdminPath+"login.html")
-                                    oA12:SetContent("Login")
-                                oNav5:AddChild(oA12)
-                                    oA13:=WebExControl():New("a")
-                                    oA13:AddClass("nav-link")
-                                    oA13:SetAttr("href",cSBAdminPath+"register.html")
-                                    oA13:SetContent("Register")
-                                oNav5:AddChild(oA13)
-                                    oA14:=WebExControl():New("a")
-                                    oA14:AddClass("nav-link")
-                                    oA14:SetAttr("href",cSBAdminPath+"password.html")
-                                    oA14:SetContent("Forgot Password")
-                                oNav5:AddChild(oA14)
-                            oDiv16:AddChild(oNav5)
-                        oNav4:AddChild(oDiv16)
-                            oA15:=WebExControl():New("a")
-                            oA15:AddClass("nav-link collapsed")
-                            oA15:SetAttr("href","#")
-                            oA15:SetAttr("data-bs-toggle","collapse")
-                            oA15:SetAttr("data-bs-target","#pagesCollapseError")
-                            oA15:SetAttr("aria-expanded","false")
-                            oA15:SetAttr("aria-controls","pagesCollapseError")
-                            oA15:SetContent("Error")
-                                oDiv17:=WebExDiv():New()
-                                oDiv17:AddClass("sb-sidenav-collapse-arrow")
-                                    oI10:=WebExControl():New("i")
-                                    oI10:AddClass("fas fa-angle-down")
-                                oDiv17:AddChild(oI10)
-                            oA15:AddChild(oDiv17)
-                        oNav4:AddChild(oA15)
-                            oDiv18:=WebExDiv():New()
-                            oDiv18:AddClass("collapse")
-                            oDiv18:SetFixedID("pagesCollapseError")
-                            oDiv18:SetAttr("aria-labelledby","headingOne")
-                            oDiv18:SetAttr("data-bs-parent","#sidenavAccordionPages")
-                                oNav6:=WebExControl():New("nav")
-                                oNav6:AddClass("sb-sidenav-menu-nested nav")
-                                    oA16:=WebExControl():New("a")
-                                    oA16:AddClass("nav-link")
-                                    oA16:SetAttr("href",cSBAdminPath+"401.html")
-                                    oA16:SetContent("401 Page")
-                                oNav6:AddChild(oA16)
-                                    oA17:=WebExControl():New("a")
-                                    oA17:AddClass("nav-link")
-                                    oA17:SetAttr("href",cSBAdminPath+"404.html")
-                                    oA17:SetContent("404 Page")
-                                oNav6:AddChild(oA17)
-                                    oA18:=WebExControl():New("a")
-                                    oA18:AddClass("nav-link")
-                                    oA18:SetAttr("href",cSBAdminPath+"500.html")
-                                    oA18:SetContent("500 Page")
-                                oNav6:AddChild(oA18)
-                            oDiv18:AddChild(oNav6)
-                        oNav4:AddChild(oDiv18)
-                    oDiv14:AddChild(oNav4)
-                oDiv5:AddChild(oDiv14)
-                    oDiv19:=WebExDiv():New()
-                    oDiv19:AddClass("sb-sidenav-menu-heading")
-                    oDiv19:SetContent("Addons")
-                oDiv5:AddChild(oDiv19)
-                    oA19:=WebExControl():New("a")
-                    oA19:AddClass("nav-link")
-                    oA19:SetAttr("href",cSBAdminPath+"charts.html")
-                        oDiv20:=WebExDiv():New()
-                        oDiv20:AddClass("sb-nav-link-icon")
-                            oI11:=WebExControl():New("i")
-                            oI11:AddClass("fas fa-chart-area")
-                        oDiv20:AddChild(oI11)
-                    oA19:AddChild(oDiv20)
-                    oA19:SetContent("Charts",oDiv20:GetID())
-                oDiv5:AddChild(oA19)
-                    oA20:=WebExControl():New("a")
-                    oA20:AddClass("nav-link")
-                    oA20:SetAttr("href",cSBAdminPath+"tables.html")
-                        oDiv21:=WebExDiv():New()
-                        oDiv21:AddClass("sb-nav-link-icon")
-                            oI12:=WebExControl():New("i")
-                            oI12:AddClass("fas fa-table")
-                        oDiv21:AddChild(oI12)
-                    oA20:AddChild(oDiv21)
-                    oA20:SetContent("Tables",oDiv21:GetID())
-                oDiv5:AddChild(oA20)
-            oDiv4:AddChild(oDiv5)
-        oNav2:AddChild(oDiv4)
-            oDiv22:=WebExDiv():New()
-            oDiv22:AddClass("sb-sidenav-footer")
-                oDiv23:=WebExDiv():New()
-                oDiv23:AddClass("small")
-                oDiv23:SetContent("Logged in as:")
-            oDiv22:AddChild(oDiv23)
-            oDiv22:SetContent("Start Bootstrap",oDiv23:GetID())
-        oNav2:AddChild(oDiv22)
-        ::AddChild(oNav2)
+method NavLoadJSONMenu(jSBAdminNavMenu) class SBAdminLayoutSideNavNav
+
+    local aMenus as array
+
+    paramtype 1 var jSBAdminNavMenu as json
+
+    ::jSBAdminNavMenu:=jSBAdminNavMenu
+
+    if (jSBAdminNavMenu:HasProperty("menu"))
+        aMenus:=jSBAdminNavMenu["menu"]
+        if (Len(aMenus)>0)
+            WITH WEBEXOBJECT ::oNavDiv
+                ::RenderMenuItems(aMenus)
+            END WEBEXOBJECT NOADDCHILD
+        endif
     endif
 
+return(self)
+
+method BuildSideNav() class SBAdminLayoutSideNavNav
+
+    ::oNav:=WebExNav():New()
+    ::oNav:AddClass("sb-sidenav accordion sb-sidenav-dark")
+    ::oNav:SetFixedID("sidenavAccordion")
+
+    ::oMenuContainer:=WebExDiv():New()
+    ::oMenuContainer:AddClass("sb-sidenav-menu")
+
+    ::oNavDiv:=WebExDiv():New()
+    ::oNavDiv:AddClass("nav")
+
+    ::oMenuContainer:AddChild(::oNavDiv)
+    ::oNav:AddChild(::oMenuContainer)
+
+    ::BuildSideNavFooder()
+
+return(::oNav)
+
+method BuildSideNavFooder() class SBAdminLayoutSideNavNav
+
+    WITH WEBEXOBJECT ::oNav
+        WITH WEBEXOBJECT ::oSideNavFooter CLASS WebExDiv
+            .:AddClass("sb-sidenav-footer")
+            WITH WEBEXOBJECT ::oSideNavFooterDiv CLASS WebExDiv
+                .:AddClass("small")
+                .:SetContent("")
+            END WEBEXOBJECT
+            .:SetContent("FWWebEx",::oSideNavFooterDiv:GetID())
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
+
+return(self)
+
+method RenderMenuItems(aMenu) class SBAdminLayoutSideNavNav
+    local aRolesUser as array
+    local i as numeric
+    local oContainer as object
+    paramtype 1 var aMenu as array
+    oContainer:=WebExDiv():New()
+    for i:=1 to Len(aMenu)
+        if ((aMenu[i]:HasProperty("divider")).and.(aMenu[i]["divider"]))
+            ::NavMenuAddDivider(@oContainer)
+            loop
+        endif
+        oContainer:AddChild(::RenderItem(aMenu[i],"sidenavAccordion",1,@aRolesUser))
+    next i
+    ::oNavDiv:AddChild(oContainer)
+return(self)
+
+method RenderItem(jMenuItem,cParentID,nDepth,aRolesUser) class SBAdminLayoutSideNavNav
+
+    local cCollapseID as character
+
+    local lHasSubMenu as logical
+
+    local i as numeric
+
+    local oWrapper as object
+    local oCollapse as object
+    local oIconWrap as object
+    local oNestedNav as object
+    local oWebExAnchor as object
+    local oWebExAnchorIcon as object
+
+    paramtype jMenuItem as json
+    paramtype cParentID as character
+    paramtype nDepth as numeric
+    paramtype aRolesUser as array optional
+
+    if ((jMenuItem:HasProperty("heading")).and.(jMenuItem["heading"]).and.(jMenuItem:HasProperty("label")))
+        oWrapper:=WebExDiv():New()
+        oWrapper:AddClass("sb-sidenav-menu-heading")
+        oWrapper:SetContent(jMenuItem["label"])
+        if (jMenuItem:HasProperty("badge"))
+            ::NavMenuAddBadge(@oWrapper,jMenuItem)
+        endif
+        return(oWrapper)
+    endif
+
+    if ((jMenuItem:HasProperty("roles")).and.(!WebExUser():ShouldDisplayItem(jMenuItem["roles"],@aRolesUser)))
+        oWrapper:=WebExSpan():New()
+        return(oWrapper)
+    endif
+
+    lHasSubMenu:=jMenuItem:HasProperty("subItems").and.(Len(jMenuItem["subItems"])>0)
+    cCollapseID:="collapse_"+if(jMenuItem:HasProperty("id"),jMenuItem["id"],::NewID())
+
+    oWebExAnchor:=WebExAnchor():New()
+    oWebExAnchor:AddClass("nav-link")
+    if (jMenuItem:HasProperty("id"))
+        oWebExAnchor:SetFixedID(if(Empty(jMenuItem["id"]),cCollapseID,jMenuItem["id"]))
+    else
+        oWebExAnchor:SetFixedID(cCollapseID)
+    endif
+    if (lHasSubMenu)
+        oWebExAnchor:SetAttr("href","#!")
+        oWebExAnchor:AddClass("collapsed")
+        oWebExAnchor:SetAttr("data-bs-toggle","collapse")
+        oWebExAnchor:SetAttr("data-bs-target","#"+cCollapseID)
+        oWebExAnchor:SetAttr("aria-expanded","false")
+        oWebExAnchor:SetAttr("aria-controls",cCollapseID)
+    elseif (jMenuItem:HasProperty("wsAction"))
+        oWebExAnchor:SetAttr("href","#!")
+        oWebExAnchor:SetAttr("data-wsurl",if(jMenuItem:HasProperty("url"),jMenuItem["url"],"#"))
+        oWebExAnchor:SetAttr("data-wsaction",Encode64(jMenuItem["wsAction"]:ToJSON()))
+    else
+        oWebExAnchor:SetAttr("href",if(jMenuItem:HasProperty("url"),jMenuItem["url"],"#"))
+    endif
+
+    // Icone
+    if ((jMenuItem:HasProperty("icon").and.(!Empty(jMenuItem["icon"]))))
+        oIconWrap:=WebExDiv():New()
+        oIconWrap:AddClass("sb-nav-link-icon")
+        oIconWrap:AddChild(WebExIcon():New(jMenuItem["icon"],"fontawesome"))
+        oWebExAnchor:AddChild(oIconWrap)
+        oWebExAnchor:SetContent(jMenuItem["label"],oIconWrap:GetID())
+    else
+        oWebExAnchor:SetContent(jMenuItem["label"])
+    endif
+
+    if (jMenuItem:HasProperty("badge"))
+        ::NavMenuAddBadge(@oWebExAnchor,jMenuItem)
+    endif
+
+    oWrapper:=WebExDiv():New()
+    oWrapper:AddClass("nav-item")
+    oWrapper:AddChild(oWebExAnchor)
+    if (lHasSubMenu)
+
+        WITH WEBEXOBJECT oWebExAnchor
+            WITH WEBEXOBJECT CLASS WebExDiv
+                .:AddClass("sb-sidenav-collapse-arrow")
+                WITH WEBEXOBJECT oWebExAnchorIcon CLASS WebExIcon ARGS "fas fa-angle-down","fontawesome",.F.
+                END WEBEXOBJECT
+            END WEBEXOBJECT
+        END WEBEXOBJECT NOADDCHILD
+
+        oCollapse:=WebExDiv():New()
+        oCollapse:AddClass("collapse")
+        oCollapse:SetFixedID(cCollapseID)
+        oCollapse:SetAttr("data-bs-parent","#"+cParentID)
+
+        oNestedNav:=WebExNav():New()
+        oNestedNav:AddClass("sb-sidenav-menu-nested nav")
+
+        for i:=1 to Len(jMenuItem["subItems"])
+            if ((jMenuItem["subItems"][i]:HasProperty("divider")).and.(jMenuItem["subItems"][i]["divider"]))
+                ::NavMenuAddDivider(@oNestedNav)
+                loop
+            endif
+            oNestedNav:AddChild(::RenderItem(jMenuItem["subItems"][i],cCollapseID,nDepth+1,@aRolesUser))
+        next i
+
+        oCollapse:AddChild(oNestedNav)
+        oWrapper:AddChild(oCollapse)
+
+    endif
+
+return(oWrapper)
+
+method NavMenuAddBadge(oSBAdminMenuItem,jMenuItem) class SBAdminLayoutSideNavNav
+    paramtype 1 var oSBAdminMenuItem as object class WebExDiv,WebExAnchor
+    paramtype 2 var jMenuItem as json
+    WITH WEBEXOBJECT oSBAdminMenuItem
+        if (jMenuItem:HasProperty("badge")).and.(jMenuItem["badge"]:HasProperty("label").and.(!Empty(jMenuItem["badge"]["label"])))
+            WITH WEBEXOBJECT CLASS WebExSpan
+                .:SetContent(jMenuItem["badge"]["label"])
+                .:AddClass("badge rounded-pill ms-1 fw-light border border-secondary text-dark ms-2")
+                if ((jMenuItem["badge"]:HasProperty("class")).and.(!Empty(jMenuItem["badge"]["class"])))
+                    .:AddClass(jMenuItem["badge"]["class"])
+                endif
+            END WEBEXOBJECT
+        endif
+    END WEBEXOBJECT NOADDCHILD
+return(self)
+
+method NavMenuAddDivider(oSBAdminMenuItem) class SBAdminLayoutSideNavNav
+    paramtype 1 var oSBAdminMenuItem as object class WebExDiv,WebExNav
+    WITH WEBEXOBJECT oSBAdminMenuItem
+        WITH WEBEXOBJECT CLASS WebExHR
+            .:DelAllAttr()
+            .:SetAttr("class","dropdown-divider my-2 border-top")
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 return(self)

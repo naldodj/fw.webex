@@ -1,0 +1,55 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+namespace FWWebEx
+
+#include "fw.webex.th"
+
+class WebExUser
+
+    static method ShouldDisplayItem(aRolesItem as array,aRolesUser as array) as logical
+
+end class
+
+static method ShouldDisplayItem(aRolesItem,aRolesUser) class WebExUser
+
+    local lRet:=.T. as logical
+
+    local nItem as numeric
+    local nItems as numeric
+
+    paramtype 1 var aRolesItem as array optional
+    paramtype 2 var aRolesUser as array optional
+
+    begin sequence
+
+        if (empty(aRolesItem))
+            break
+        endif
+
+        if (Empty(aRolesUser))
+            PswOrder(1)
+            if (PswSeek(__cUserID))
+                aRolesUser:=PswRet()[1][10]
+            endif
+        endif
+
+        nItems:=Len(aRolesItem)
+        for nItem:=1 to nItems
+            lRet:=(aScan(aRolesUser,{|cGroup as character|cGroup==aRolesItem[nItem]})>0)
+            if (lRet)
+                exit
+            endif
+        next nItem
+
+    end sequence
+
+return(lRet)

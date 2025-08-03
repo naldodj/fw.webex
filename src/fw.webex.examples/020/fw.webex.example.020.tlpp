@@ -258,6 +258,11 @@ static procedure FWWebExExample_020(cHTML as character) as character
         //layoutSidenav
         WITH WEBEXOBJECT CLASS SBAdminLayoutSideNav
             WITH WEBEXOBJECT CLASS SBAdminLayoutSideNavNav
+                //Menu
+                .:NavLoadJSONMenu(SBAdminGetMenu(cSBAdminPath))
+                //Footer
+                .:GetMemberData("oSideNavFooterDiv"):SetContent("Logged in as:")
+                .:GetMemberData("oSideNavFooter"):SetContent("SBAdmin :: FWWebEx")
             END WEBEXOBJECT
             //TODO: SBAdminLayoutSideNavContent
             WITH WEBEXOBJECT CLASS SBAdminLayoutSideNavContent
@@ -393,6 +398,134 @@ static procedure FWWebExExample_020(cHTML as character) as character
     FreeObj(@oFWWebExPage)
 
 return(cHTMLFile)
+
+static function SBAdminGetMenu(cSBAdminPath)
+
+    local cSBAdminNavMenu as character
+
+    local jSBAdminNavMenu as json
+
+    beginContent var cSBAdminNavMenu
+{
+    "menu": [
+        {
+            "id": "core",
+            "label": "Core",
+            "heading": true,
+            "badge": {
+                "label": "Novo",
+                "class": "bg-success text-white"
+            }
+        },
+        {
+            "id": "dashboard",
+            "label": "Dashboard",
+            "icon": "fas fa-tachometer-alt",
+            "url": "cSBAdminPath+index.html"
+        },
+        {
+            "id": "interface",
+            "label": "Interface",
+            "heading": true
+        },
+        {
+            "id": "layouts",
+            "label": "Layouts",
+            "icon": "fas fa-columns",
+            "url": "#",
+            "subItems": [
+                {
+                    "id": "static_navigation",
+                    "label": "Static Navigation",
+                    "url": "cSBAdminPath+layout-static.html",
+                    "badge": {
+                        "label": "Novo",
+                        "class": "bg-success text-white"
+                    }
+                },
+                {
+                    "id": "light_sidenav",
+                    "label": "Light Sidenav",
+                    "url": "cSBAdminPath+layout-sidenav-light.html"
+                }
+            ]
+        },
+        {
+            "id": "pages",
+            "label": "Pages",
+            "icon": "fas fa-book-open",
+            "url": "#",
+            "subItems": [
+                {
+                    "id": "pages_authentication",
+                    "label": "Authentication",
+                    "subItems": [
+                        {
+                            "id": "pages_authentication_login",
+                            "label": "Login",
+                            "url": "cSBAdminPath+login.html"
+                        },
+                        {
+                            "id": "pages_authentication_register",
+                            "label": "Register",
+                            "url": "cSBAdminPath+register.html"
+                        },
+                        {
+                            "id": "pages_authentication_password",
+                            "label": "Password",
+                            "url": "cSBAdminPath+password.html"
+                        }
+                    ]
+                },
+                {
+                    "id": "pages_error",
+                    "label": "Error",
+                    "subItems": [
+                        {
+                            "id": "pages_error_401",
+                            "label": "401 Page",
+                            "url": "cSBAdminPath+401.html"
+                        },
+                        {
+                            "id": "pages_error_404",
+                            "label": "404 Page",
+                            "url": "cSBAdminPath+404.html"
+                        },
+                        {
+                            "id": "pages_error_500",
+                            "label": "500 Page",
+                            "url": "cSBAdminPath+500.html"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "addons",
+            "label": "ADDONS",
+            "heading": true
+        },
+        {
+            "id": "charts",
+            "label": "Charts",
+            "icon": "fas fa-chart-area",
+            "url": "cSBAdminPath+charts.html"
+        },
+        {
+            "id": "tables",
+            "label": "Tables",
+            "icon": "fas fa-table",
+            "url": "cSBAdminPath+tables.html"
+        }
+    ]
+}
+    endContent
+    cSBAdminNavMenu:=StrTran(cSBAdminNavMenu,"cSBAdminPath+",cSBAdminPath)
+
+    jSBAdminNavMenu:=JSONObject():New()
+    jSBAdminNavMenu:FromJSON(cSBAdminNavMenu)
+
+return(jSBAdminNavMenu)
 
 static function SBAdminGetRightMenu()
 

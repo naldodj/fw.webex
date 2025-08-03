@@ -13,7 +13,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class WebExNavSide from WebExControl
+class WebExNavSide from WebExNav
 
     protected data cNavSideBrand as character
 
@@ -47,7 +47,7 @@ method New(cNavSideBrand) class WebExNavSide
     ::oNavSideList:AddClass("nav nav-pills flex-column mb-auto")
     ::oNavSideWrapper:=WebExDiv():New()
     ::oNavSideWrapper:AddClass("d-flex flex-column flex-shrink-0 p-3")
-    _Super:New("nav")
+    _Super:New()
     ::AddClass("sidebar bg-body border-end")
     ::SetFixedID(::GetFixedID())
     ::SetNavSideBrand()

@@ -13,11 +13,13 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class SBAdminNav from WebExControl
+class SBAdminNav from WebExNav
 
     protected data cBrandName as character
     protected data cBrandLink as character
     protected data cSBAdminNavHRef as character
+
+    protected data jSBAdminNavRightMenu as json
 
     protected data lNavRightMenu as logical
 
@@ -61,7 +63,7 @@ method New(cBrandName,cBrandLink,lNavRightMenu) class SBAdminNav
 
     ::lNavRightMenu:=lNavRightMenu
 
-    _Super:New("nav")
+    _Super:New()
     ::SetFixedID("sb-topnav")
     ::AddClass("sb-topnav navbar navbar-expand navbar-dark bg-dark")
 
@@ -219,6 +221,8 @@ method NavRightLoadJSONMenu(jSBAdminNavRightMenu) class SBAdminNav
 
     paramtype 1 var jSBAdminNavRightMenu as json
 
+    ::jSBAdminNavRightMenu:=jSBAdminNavRightMenu
+
     if (jSBAdminNavRightMenu:HasProperty("menu"))
         aMenus:=jSBAdminNavRightMenu["menu"]
         if (Len(aMenus)>0)
@@ -237,7 +241,7 @@ method RenderDropdownMenu(aMenuItems,cClass,cAriaLabelledBy) CLASS SBAdminNav
     local nMenuItem as numeric
     local nMenuItems:=Len(aMenuItems) as numeric
 
-    local oMenuItem as object
+    local jMenuItem as json
 
     if (::lNavRightMenu)
 
@@ -249,50 +253,50 @@ method RenderDropdownMenu(aMenuItems,cClass,cAriaLabelledBy) CLASS SBAdminNav
                 .:SetAttr("aria-labelledby",cAriaLabelledBy)
             endif
             for nMenuItem:=1 to nMenuItems
-                oMenuItem:=aMenuItems[nMenuItem]
-                if ((oMenuItem:HasProperty("divider")).and.(oMenuItem["divider"]))
+                jMenuItem:=aMenuItems[nMenuItem]
+                if ((jMenuItem:HasProperty("divider")).and.(jMenuItem["divider"]))
                     ::NavRightMenuAddDivider(.this)
                     loop
                 endif
-                if ((!oMenuItem:HasProperty("label")).or.(!oMenuItem:HasProperty("url")))
+                if ((!jMenuItem:HasProperty("label")).or.(!jMenuItem:HasProperty("url")))
                     loop
                 endif
-                if ((!oMenuItem:HasProperty("roles")).and.(!Empty(oMenuItem["roles"])))
-                    if (!(ShouldDisplayItem(oMenuItem["roles"],@aRolesUser)))
+                if ((!jMenuItem:HasProperty("roles")).and.(!Empty(jMenuItem["roles"])))
+                    if (!(WebExUser():ShouldDisplayItem(jMenuItem["roles"],@aRolesUser)))
                         loop
                     endif
                 endif
                 WITH WEBEXOBJECT CLASS WebExLI
                     WITH WEBEXOBJECT CLASS WebExAnchor
                         .:AddClass("dropdown-item d-flex justify-content-between align-items-center gap-2")
-                        if (oMenuItem:HasProperty("id"))
-                            .:SetFixedID(oMenuItem["id"])
+                        if (jMenuItem:HasProperty("id"))
+                            .:SetFixedID(jMenuItem["id"])
                         endif
-                        if (oMenuItem:HasProperty("wsAction"))
+                        if (jMenuItem:HasProperty("wsAction"))
                             .:SetAttr("href","#!")
-                            .:SetAttr("data-wsurl",oMenuItem["url"])
-                            .:SetAttr("data-wsaction",Encode64(oMenuItem["wsAction"]:ToJSON()))
+                            .:SetAttr("data-wsurl",if(jMenuItem:HasProperty("url"),jMenuItem["url"],"#"))
+                            .:SetAttr("data-wsaction",Encode64(jMenuItem["wsAction"]:ToJSON()))
                         else
-                            .:SetAttr("href",oMenuItem["url"])
+                            .:SetAttr("href",if(jMenuItem:HasProperty("url"),jMenuItem["url"],"#"))
                         endif
-                        if (oMenuItem:HasProperty("icon"))
-                            WITH WEBEXOBJECT CLASS WebExIcon ARGS oMenuItem["icon"],"fontawesome"
+                        if ((jMenuItem:HasProperty("icon").and.(!Empty(jMenuItem["icon"]))))
+                            WITH WEBEXOBJECT CLASS WebExIcon ARGS jMenuItem["icon"],"fontawesome"
                             END WEBEXOBJECT
                         endif
-                        WITH WEBEXOBJECT CLASS WebExLabel ARGS oMenuItem["label"],oMenuItem["label"]
+                        WITH WEBEXOBJECT CLASS WebExLabel ARGS jMenuItem["label"],jMenuItem["label"]
                         END WEBEXOBJECT
-                        if (oMenuItem:HasProperty("badge")).and.(oMenuItem["badge"]:HasProperty("label"))
+                        if (jMenuItem:HasProperty("badge")).and.(jMenuItem["badge"]:HasProperty("label").and.(!Empty(jMenuItem["badge"]["label"])))
                             WITH WEBEXOBJECT CLASS WebExSpan
-                                .:SetContent(oMenuItem["badge"]["label"])
+                                .:SetContent(jMenuItem["badge"]["label"])
                                 .:AddClass("badge rounded-pill")
-                                if (oMenuItem["badge"]:HasProperty("class"))
-                                    .:AddClass(oMenuItem["badge"]["class"])
+                                if ((jMenuItem["badge"]:HasProperty("class")).and.(!Empty(jMenuItem["badge"]["class"])))
+                                    .:AddClass(jMenuItem["badge"]["class"])
                                 endif
                             END WEBEXOBJECT
                         endif
                     END WEBEXOBJECT
-                    if ((oMenuItem:HasProperty("subItems")).and.(Len(oMenuItem["subItems"])>0))
-                        ::RenderDropdownMenu(oMenuItem["subItems"],"submenu dropdown-submenu",NIL)
+                    if ((jMenuItem:HasProperty("subItems")).and.(Len(jMenuItem["subItems"])>0))
+                        ::RenderDropdownMenu(jMenuItem["subItems"],"submenu dropdown-submenu",NIL)
                     endif
                 END WEBEXOBJECT
             next nMenuItem
@@ -303,38 +307,6 @@ method RenderDropdownMenu(aMenuItems,cClass,cAriaLabelledBy) CLASS SBAdminNav
     FWFreeArray(@aRolesUser)
 
 return(self)
-
-static function ShouldDisplayItem(aRolesItem as array,aRolesUser as array) as logical
-
-    local lRet:=.T. as logical
-
-    local nItem as numeric
-    local nItems as numeric
-
-    begin sequence
-
-        if (empty(aRolesItem))
-            break
-        endif
-
-        if (Empty(aRolesUser))
-            PswOrder(1)
-            if (PswSeek(__cUserID))
-                aRolesUser:=PswRet()[1][10]
-            endif
-        endif
-
-        nItems:=Len(aRolesItem)
-        for nItem:=1 to nItems
-            lRet:=(aScan(aRolesUser,{|cGroup as character|cGroup==aRolesItem[nItem]})>0)
-            if (lRet)
-                exit
-            endif
-        next nItem
-
-    end sequence
-
-return(lRet)
 
 method NavRightMenuAddDivider(oSBAdminNavRightMenu) class SBAdminNav
     paramtype 1 var oSBAdminNavRightMenu as object class WebExUL optional

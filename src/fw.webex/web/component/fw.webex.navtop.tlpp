@@ -25,7 +25,7 @@ namespace FWWebEx
 
 #include "fw.webex.th"
 
-class WebExNavTop from WebExControl
+class WebExNavTop from WebExNav
 
     protected data cNavTopBrand as character
 
@@ -62,7 +62,7 @@ method New(cNavTopBrand) class WebExNavTop
     ::jNavTopLinks:=JSONObject():New()
     ::jNavTopDropDowns:=JSONObject():New()
 
-    _Super:New("nav")
+    _Super:New()
     ::AddClass("navbar mb-4")
 
     // Botao para abrir/recolher o menu lateral (sidebar)

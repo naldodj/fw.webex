@@ -146,7 +146,7 @@ static function FWWebExExample_014(cHTML as character) as character
     oH1:AddClass("h4")
     oH1:SetContent("Dashboard")
 
-    oTopBar:=WebExControl():New("nav")
+    oTopBar:=WebExNav():New()
     oTopBar:AddClass("navbar shadow mb-3")
     oTopBar:AddChild(oH1)
 

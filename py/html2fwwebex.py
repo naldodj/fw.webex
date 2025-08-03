@@ -87,6 +87,8 @@ def process_element(el, level=0, counters=None):
         lines.append(f"{indent(level)}{var}:=WebExMenu():New()")
     elif tag == "meta":
         lines.append(f"{indent(level)}{var}:=WebExMeta():New()")
+    elif tag == "nav":
+        lines.append(f"{indent(level)}{var}:=WebExNav():New()")
     elif tag == "p":
         lines.append(f"{indent(level)}{var}:=WebExParagraph():New()")
     elif tag == "pre":
