@@ -131,6 +131,7 @@ static method HtmlFileShow(cHTML,cTitle,cHTMLFile,oTWebChannel,bJSToAdvPL,bCallB
     local aButtons as array
 
     local bErrorBlock as codeblock
+    local bButtonAction as codeblock
 
     local cHTMLFileTmpFile as character
     local cHTMLFileServer as character
