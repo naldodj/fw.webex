@@ -952,8 +952,13 @@ method SetEnableChart(lChartEnabled) class WebExControl
                 .:SetContent("Chart")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
+                WITH WEBEXOBJECT CLASS WebExControl TYPE link
+                    .:SetAttr("href","https://cdn.jsdelivr.net/npm/charts.css/dist/charts.min.css")
+                    .:SetAttr("rel","stylesheet")
+                    .:AddInHeader(.this)
+                END WEBEXOBJECT NOADDCHILD
             WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                .:SetContent("https://cdn.jsdelivr.net/npm/chart.js")
+                .:SetContent("https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
             //https://date-fns.org/
@@ -962,7 +967,7 @@ method SetEnableChart(lChartEnabled) class WebExControl
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
             WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                .:SetContent("https://cdn.jsdelivr.net/npm/date-fns")
+                .:SetContent("https://cdn.jsdelivr.net/npm/date-fns/cdn.min.js")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
             //https://github.com/chartjs/chartjs-adapter-date-fns
@@ -971,7 +976,7 @@ method SetEnableChart(lChartEnabled) class WebExControl
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
             WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                .:SetContent("https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns")
+                .:SetContent("https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js")
                 .:AddInHeader(.this)
             END WEBEXOBJECT NOADDCHILD
         //Chart

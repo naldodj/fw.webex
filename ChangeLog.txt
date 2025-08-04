@@ -5,6 +5,10 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-08-04 12:13 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx and SBAdmin)
+  * src/fw.webex/web/control/fw.webex.control.tlpp
+  * src/fw.webex.examples/020/fw.webex.example.020.tlpp
+
 2025-08-04 10:15 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx and SBAdmin)
   * src/fw.webex.examples/000/fw.webex.example.tools.tlpp
 

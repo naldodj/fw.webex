@@ -42,6 +42,7 @@ static procedure FWWebExExample_020(cHTML as character) as character
     local cHTMLFile:=cProcName as character
     local cSBAdminPath as character
 
+    local cUserID:=if((Type("__cUserID")=="C").and.(!Empty(__cUserID)),__cUserID,"000000")
     local cScript as character
     local cTableStyle as character
 
@@ -309,107 +310,130 @@ static procedure FWWebExExample_020(cHTML as character) as character
             WITH WEBEXOBJECT CLASS SBAdminLayoutSideNavNav
                 //Menu
                 .:NavLoadJSONMenu(SBAdminGetMenu(cSBAdminPath))
-                //Footer
-                .:GetMemberData("oSideNavFooterDiv"):SetContent("Logged in as:")
+                //Menu Footer
+                .:GetMemberData("oSideNavFooterDiv"):SetContent("Logged in as: "+FWGetUserName(cUserID))
                 .:GetMemberData("oSideNavFooter"):SetContent("SBAdmin :: FWWebEx")
             END WEBEXOBJECT
-            //TODO: SBAdminLayoutSideNavContent
             WITH WEBEXOBJECT CLASS SBAdminLayoutSideNavContent
-                //TODO: Main
-                    WITH WEBEXOBJECT CLASS SBAdminMainContent
-                        //TODO: Fix me
-                        WITH WEBEXOBJECT oSBAdminContainer CLASS SBAdminContainer
-                            WITH WEBEXOBJECT CLASS WebExH1
-                                .:AddClass("mt-4")
+                WITH WEBEXOBJECT CLASS SBAdminMainContent
+                    WITH WEBEXOBJECT oSBAdminContainer CLASS SBAdminContainer
+                        WITH WEBEXOBJECT CLASS WebExH1
+                            .:AddClass("mt-4")
+                            .:SetContent("Dashboard")
+                        END WEBEXOBJECT
+                        WITH WEBEXOBJECT CLASS WebExOL
+                            .:AddClass("breadcrumb mb-4")
+                            WITH WEBEXOBJECT CLASS WebExLI
+                                .:AddClass("breadcrumb-item active")
                                 .:SetContent("Dashboard")
                             END WEBEXOBJECT
-                            oOl1:=WebExControl():New("ol")
-                            oOl1:AddClass("breadcrumb mb-4")
-                                oLi6:=WebExControl():New("li")
-                                oLi6:AddClass("breadcrumb-item active")
-                                oLi6:SetContent("Dashboard")
-                            oOl1:AddChild(oLi6)
-                        oSBAdminContainer:AddChild(oOl1)
-                            WITH WEBEXOBJECT oWebExRow1 CLASS WebExRow
-                                WITH WEBEXOBJECT CLASS SBAdminCardContainer
-                                    WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Primary Card","#","View Details"
-                                        .:AddClass("bg-primary text-white")
-                                    END WEBEXOBJECT
-                                END WEBEXOBJECT
-                                WITH WEBEXOBJECT CLASS SBAdminCardContainer
-                                    WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Warning Card","#","View Details"
-                                        .:AddClass("bg-warning text-white")
-                                    END WEBEXOBJECT
-                                END WEBEXOBJECT
-                                WITH WEBEXOBJECT CLASS SBAdminCardContainer
-                                    WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Success Card","#","View Details"
-                                        .:AddClass("bg-success text-white")
-                                    END WEBEXOBJECT
-                                END WEBEXOBJECT
-                                WITH WEBEXOBJECT CLASS SBAdminCardContainer
-                                    WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Danger Card","#","View Details"
-                                        .:AddClass("bg-danger text-white")
-                                    END WEBEXOBJECT
+                        END WEBEXOBJECT
+                        WITH WEBEXOBJECT oWebExRow1 CLASS WebExRow
+                            WITH WEBEXOBJECT CLASS SBAdminCardContainer
+                                WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Primary Card","#","View Details"
+                                    .:AddClass("bg-primary text-white")
                                 END WEBEXOBJECT
                             END WEBEXOBJECT
-                            WITH WEBEXOBJECT oWebExRow2 CLASS WebExRow
-                                WITH WEBEXOBJECT oSBAdminChart1 CLASS WebExDiv
-                                    .:AddClass("col-xl-6")
-                                    WITH WEBEXOBJECT oSBAdminCardHeaderChart1 CLASS SBAdminCardHeader ARGS "Area Chart.js Example","fas fa-chart-area"
-                                        WITH WEBEXOBJECT oSBAdminCardBodyChart1 CLASS SBAdminCardBody
-                                            WITH WEBEXOBJECT oCanvasChart1 CLASS WebExControl ARGS "canvas"
-                                                .:SetFixedID("myAreaChart")
-                                                .:SetAttr("width","100%")
-                                                .:SetAttr("height","40")
-                                            END WEBEXOBJECT //oCanvasChart1
-                                        END WEBEXOBJECT //oSBAdminCardBodyChart1
-                                    END WEBEXOBJECT //oSBAdminCardHeaderChart1
+                            WITH WEBEXOBJECT CLASS SBAdminCardContainer
+                                WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Warning Card","#","View Details"
+                                    .:AddClass("bg-warning text-white")
                                 END WEBEXOBJECT
-                                WITH WEBEXOBJECT oSBAdminChart2 CLASS WebExDiv
-                                    .:AddClass("col-xl-6")
-                                    WITH WEBEXOBJECT oSBAdminCardHeaderChart2 CLASS SBAdminCardHeader ARGS "Bar Chart.js Example","fas fa-chart-bar"
-                                        WITH WEBEXOBJECT oSBAdminCardBodyChart2 CLASS SBAdminCardBody
-                                            WITH WEBEXOBJECT oCanvasChart2 CLASS WebExControl ARGS "canvas"
-                                                .:SetFixedID("myBarChart")
-                                                .:SetAttr("width","100%")
-                                                .:SetAttr("height","40")
-                                            END WEBEXOBJECT //oCanvasChart2
-                                        END WEBEXOBJECT //oSBAdminCardBodyChart2
-                                    END WEBEXOBJECT //oSBAdminCardHeaderChart2
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS SBAdminCardContainer
+                                WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Success Card","#","View Details"
+                                    .:AddClass("bg-success text-white")
                                 END WEBEXOBJECT
-                            END WEBEXOBJECT //oWebExRow2
-                            WITH WEBEXOBJECT oWebExRow3 CLASS WebExRow
-                                WITH WEBEXOBJECT oSBAdminApexChart1 CLASS WebExDiv
-                                    .:AddClass("col-xl-6")
-                                    WITH WEBEXOBJECT oSBAdminCardHeaderApexChart1 CLASS SBAdminCardHeader ARGS "Area ApexChart.js Example","fas fa-chart-area"
-                                        WITH WEBEXOBJECT oSBAdminCardBodyApexChart1 CLASS SBAdminCardBody
-                                            WITH WEBEXOBJECT oDivApexChart2 CLASS WebExDiv
-                                                .:SetFixedID("myAreaApexChart")
-                                            END WEBEXOBJECT //oDivApexChart2
-                                        END WEBEXOBJECT //oSBAdminCardBodyApexChart1
-                                    END WEBEXOBJECT //oSBAdminCardHeaderApexChart1
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS SBAdminCardContainer
+                                WITH WEBEXOBJECT CLASS SBAdminCardWithLink ARGS "Danger Card","#","View Details"
+                                    .:AddClass("bg-danger text-white")
                                 END WEBEXOBJECT
-                                WITH WEBEXOBJECT oSBAdminApexChart2 CLASS WebExDiv
-                                    .:AddClass("col-xl-6")
-                                    WITH WEBEXOBJECT oSBAdminCardHeaderApexChart2 CLASS SBAdminCardHeader ARGS "Bar ApexChart.js Example","fas fa-chart-bar"
-                                        WITH WEBEXOBJECT oSBAdminCardBodyApexChart2 CLASS SBAdminCardBody
-                                            WITH WEBEXOBJECT oDivApexChart2 CLASS WebExDiv
-                                                .:SetFixedID("myBarApexChart")
-                                            END WEBEXOBJECT //oDivApexChart2
-                                        END WEBEXOBJECT //oSBAdminCardBodyApexChart2
-                                    END WEBEXOBJECT //oSBAdminCardHeaderApexChart2
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                        WITH WEBEXOBJECT oWebExRow2 CLASS WebExRow
+                            WITH WEBEXOBJECT oSBAdminChartArea CLASS WebExDiv
+                                .:AddClass("col-xl-6")
+                                WITH WEBEXOBJECT oSBAdminCardHeaderChartArea CLASS SBAdminCardHeader ARGS "Area Chart.js Example","fas fa-chart-area"
+                                    WITH WEBEXOBJECT oSBAdminCardBodyChartArea CLASS SBAdminCardBody
+                                        WITH WEBEXOBJECT oCanvasChartArea CLASS WebExControl ARGS "canvas"
+                                            .:SetFixedID("myAreaChart")
+                                            .:SetAttr("width","100%")
+                                            .:SetAttr("height","40")
+                                        END WEBEXOBJECT //oCanvasChartArea
+                                    END WEBEXOBJECT //oSBAdminCardBodyChartArea
+                                END WEBEXOBJECT //oSBAdminCardHeaderChartArea
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT oSBAdminChartBar CLASS WebExDiv
+                                .:AddClass("col-xl-6")
+                                WITH WEBEXOBJECT oSBAdminCardHeaderChartBar CLASS SBAdminCardHeader ARGS "Bar Chart.js Example","fas fa-chart-bar"
+                                    WITH WEBEXOBJECT oSBAdminCardBodyChartBar CLASS SBAdminCardBody
+                                        WITH WEBEXOBJECT oCanvasChartBar CLASS WebExControl ARGS "canvas"
+                                            .:SetFixedID("myBarChart")
+                                            .:SetAttr("width","100%")
+                                            .:SetAttr("height","40")
+                                        END WEBEXOBJECT //oCanvasChartBar
+                                    END WEBEXOBJECT //oSBAdminCardBodyChartBar
+                                END WEBEXOBJECT //oSBAdminCardHeaderChartBar
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT //oWebExRow2
+                        WITH WEBEXOBJECT oWebExRow3 CLASS WebExRow
+                            WITH WEBEXOBJECT oSBAdminChartPie CLASS WebExDiv
+                                .:AddClass("col-xl-12")
+                                WITH WEBEXOBJECT oSBAdminCardHeaderChartPie CLASS SBAdminCardHeader ARGS "Pie Chart.js Example","fas fa-chart-pie"
+                                    WITH WEBEXOBJECT oSBAdminCardBodyChartPie CLASS SBAdminCardBody
+                                        WITH WEBEXOBJECT oCanvasChartPie CLASS WebExControl ARGS "canvas"
+                                            .:SetFixedID("myPieChart")
+                                            .:SetAttr("width","100%")
+                                            .:SetAttr("height","40")
+                                        END WEBEXOBJECT //oCanvasChartPie
+                                    END WEBEXOBJECT //oSBAdminCardBodyChartPie
+                                END WEBEXOBJECT //oSBAdminCardHeaderChartPie
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT //oWebExRow3
+                        WITH WEBEXOBJECT oWebExRow4 CLASS WebExRow
+                            WITH WEBEXOBJECT oSBAdminApexChartArea CLASS WebExDiv
+                                .:AddClass("col-xl-6")
+                                WITH WEBEXOBJECT oSBAdminCardHeaderApexChartArea CLASS SBAdminCardHeader ARGS "Area ApexChart.js Example","fas fa-chart-area"
+                                    WITH WEBEXOBJECT oSBAdminCardBodyApexChartArea CLASS SBAdminCardBody
+                                        WITH WEBEXOBJECT oDivApexChartArea CLASS WebExDiv
+                                            .:SetFixedID("myAreaApexChart")
+                                        END WEBEXOBJECT //oDivApexChartArea
+                                    END WEBEXOBJECT //oSBAdminCardBodyApexChartArea
+                                END WEBEXOBJECT //oSBAdminCardHeaderApexChartArea
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT oSBAdminApexChartBar CLASS WebExDiv
+                                .:AddClass("col-xl-6")
+                                WITH WEBEXOBJECT oSBAdminCardHeaderApexChartBar CLASS SBAdminCardHeader ARGS "Bar ApexChart.js Example","fas fa-chart-bar"
+                                    WITH WEBEXOBJECT oSBAdminCardBodyApexChartBar CLASS SBAdminCardBody
+                                        WITH WEBEXOBJECT oDivApexChartBar CLASS WebExDiv
+                                            .:SetFixedID("myBarApexChart")
+                                        END WEBEXOBJECT //oDivApexChartBar
+                                    END WEBEXOBJECT //oSBAdminCardBodyApexChartBar
+                                END WEBEXOBJECT //oSBAdminCardHeaderApexChartBar
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT //oWebExRow4
+                        WITH WEBEXOBJECT oWebExRow5 CLASS WebExRow
+                            WITH WEBEXOBJECT oSBAdminApexChartPie CLASS WebExDiv
+                                .:AddClass("col-xl-12")
+                                WITH WEBEXOBJECT oSBAdminCardHeaderApexChartPie CLASS SBAdminCardHeader ARGS "Pie ApexChart.js Example","fas fa-chart-pie"
+                                    WITH WEBEXOBJECT oSBAdminCardBodyApexChartPie CLASS SBAdminCardBody
+                                        WITH WEBEXOBJECT oDivApexChartPie CLASS WebExDiv
+                                            .:SetFixedID("myPieApexChart")
+                                        END WEBEXOBJECT //oDivApexChartPie
+                                    END WEBEXOBJECT //oSBAdminCardBodyApexChartPie
+                                END WEBEXOBJECT //oSBAdminCardHeaderApexChartPie
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT //oWebExRow5
+                        WITH WEBEXOBJECT oSBAdminCardHeaderTable CLASS SBAdminCardHeader ARGS "Data Table","fa-table"
+                            WITH WEBEXOBJECT oSBAdminCardBodyTable CLASS SBAdminCardBody
+                                // Adiciona container de tabela
+                                WITH WEBEXOBJECT CLASS WebExDiv
+                                    .:SetFixedID("tableResult")
                                 END WEBEXOBJECT
-                            END WEBEXOBJECT //oWebExRow3
-                            WITH WEBEXOBJECT oSBAdminCardHeaderTable CLASS SBAdminCardHeader ARGS "Data Table","fa-table"
-                                WITH WEBEXOBJECT oSBAdminCardBodyTable CLASS SBAdminCardBody
-                                    // Adiciona container de tabela
-                                    WITH WEBEXOBJECT CLASS WebExDiv
-                                        .:SetFixedID("tableResult")
-                                    END WEBEXOBJECT
-                                END WEBEXOBJECT //oSBAdminCardBodyTable
-                            END WEBEXOBJECT //oSBAdminCardHeaderTable
-                        END WEBEXOBJECT //oSBAdminContainer
-                    END WEBEXOBJECT
+                            END WEBEXOBJECT //oSBAdminCardBodyTable
+                        END WEBEXOBJECT //oSBAdminCardHeaderTable
+                    END WEBEXOBJECT //oSBAdminContainer
+                END WEBEXOBJECT
                 //Main
                 //Footer
                     WITH WEBEXOBJECT CLASS SBAdminFooter
@@ -422,6 +446,7 @@ static procedure FWWebExExample_020(cHTML as character) as character
                 //Footer
             END WEBEXOBJECT
         END WEBEXOBJECT
+        //TODO: Verificar pq nao consigo habilitar Chart.js via oFWWebExPage:SetEnableChart(.T.). Versao?
         WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
             .:SetContent("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js")
             .:SetAttr("crossorigin","anonymous")
@@ -432,11 +457,14 @@ static procedure FWWebExExample_020(cHTML as character) as character
         WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
             .:SetContent(cSBAdminPath+"assets/demo/chart-bar-demo.js")
         END WEBEXOBJECT
+        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
+            .:SetContent(cSBAdminPath+"assets/demo/chart-pie-demo.js")
+        END WEBEXOBJECT
     END WEBEXOBJECT NOADDCHILD
 
     oFWWebExPage:=SBAdminPage():New("fw.webex.example.020.tlpp :: FWWEbEx :: SBADMIN :: SBAdminNav")
     oFWWebExPage:AddChild(oFWWebExBody)
-    oFWWebExPage:SetEnableDataTable()
+    oFWWebExPage:SetEnableDataTable(.T.)
     oFWWebExPage:SetEnableChart(.F.)
     oFWWebExPage:SetEnableApexChart(.T.)
 
@@ -822,6 +850,47 @@ static function ApexChartScripts() as character
             var chart = new ApexCharts(element, options);
                 chart.render();
             });
+
+            FWWebExWaitForElementID('myPieApexChart', function (element) {
+                var options = {
+                    chart: {
+                    type: 'pie',
+                    fontFamily: '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif',
+                    foreColor: '#292b2c',
+                        toolbar: {
+                            show: false
+                        }
+                    },
+                    series: [12.21, 15.58, 11.25, 8.32],
+                    labels: ['Blue', 'Red', 'Yellow', 'Green'],
+                    colors: ['#007bff', '#dc3545', '#ffc107', '#28a745'],
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val) {
+                            return val.toFixed(2) + '%';
+                        }
+                    },
+                    legend: {
+                        show: true,
+                        position: 'bottom'
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                            width: 200
+                            },
+                            legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            };
+
+            var chart = new ApexCharts(element, options);
+                chart.render();
+            });
+
         });
 
     endContent
