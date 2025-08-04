@@ -166,18 +166,16 @@ static procedure FWWebExExample_018(cHTML as character) as character
     // Script com server-side pagination ativado
     beginContent var cScript
 
-
-
         document.addEventListener('DOMContentLoaded', function () {
             FWWebEx.RequestHandler.debug(true);
             document.getElementById('tableResult').innerHTML = `
                 <!-- fora da tabela, sera movido via JS -->
                 <div id="meuFiltroCustom" class="datatable-filter-wrapper mb-2">
-                <div class="input-group input-group-sm">
-                    <select id="searchField" class="form-select form-select-sm"></select>
-                    <input id="searchValue" type="text" class="form-control" placeholder="Digite o valor..." />
-                    <button id="btnSearch" class="btn btn-primary" type="button">Pesquisar</button>
-                </div>
+                    <div class="input-group input-group-sm">
+                        <select id="searchField" class="form-select form-select-sm"></select>
+                        <input id="searchValue" type="text" class="form-control" placeholder="Digite o valor..." />
+                        <button id="btnSearch" class="btn btn-primary" type="button">Pesquisar</button>
+                    </div>
                 </div>
                 <table id="example" class="table table-striped table-hover display compact nowrap">
                     <thead>
