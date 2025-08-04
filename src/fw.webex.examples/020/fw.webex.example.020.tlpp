@@ -61,6 +61,13 @@ static procedure FWWebExExample_020(cHTML as character) as character
             height: 200px;
         }
 
+        /* Filtro Customizado */
+        .datatable-filter-wrapper {
+            display: inline-block;
+            width: 100%;
+            text-align: right; /* ou left */
+        }
+
         /* Compactar linhas do DataTables */
         table.dataTable.compact tbody tr {
             height: 28px; /* Altura reduzida para linhas */
@@ -120,6 +127,14 @@ static procedure FWWebExExample_020(cHTML as character) as character
         document.addEventListener('DOMContentLoaded', function () {
             FWWebEx.RequestHandler.debug(true);
             document.getElementById('tableResult').innerHTML = `
+                <!-- fora da tabela, sera movido via JS -->
+                <div id="meuFiltroCustom" class="datatable-filter-wrapper mb-2">
+                    <div class="input-group input-group-sm">
+                        <select id="searchField" class="form-select form-select-sm"></select>
+                        <input id="searchValue" type="text" class="form-control" placeholder="Digite o valor..." />
+                        <button id="btnSearch" class="btn btn-primary" type="button">Pesquisar</button>
+                    </div>
+                </div>
                 <table id="example" class="table table-striped table-hover display compact nowrap">
                     <thead>
                         <tr>
@@ -136,10 +151,33 @@ static procedure FWWebExExample_020(cHTML as character) as character
                     </thead>
                 </table>`;
 
+                const yesFields = 'RA_FILIAL,RA_MAT,RA_APELIDO,RA_CC,RA_SALARIO,RA_ADTPOSE,RA_CATFUNC,RA_DEPIR,RA_SEXO';
+
+                function montarCampoSelect() {
+                    const fields = yesFields.split(',');
+                    const select = document.getElementById("searchField");
+                    fields.forEach(field => {
+                        const opt = document.createElement("option");
+                        opt.value = field.trim();
+                        opt.textContent = field.trim();
+                        select.appendChild(opt);
+                    });
+                }
+
+                montarCampoSelect(); // monta o select com base no yesFields
+
+                // Adiciona o filtro customizado no lugar da search bar padrao
+                const filtroEl = document.getElementById("meuFiltroCustom");
+                const containerFiltro = document.querySelector("div.topFiltro");
+                if (containerFiltro && filtroEl) {
+                    containerFiltro.appendChild(filtroEl);
+                    filtroEl.style.display = 'block'; // caso esteja oculto
+                }
+
             const table = new DataTable('#example', {
                 serverSide: true,
                 processing: false,
-                dom: 'Blfrtip'.replace('B', ''),
+                dom: '<"topFiltro">Blfrtip'.replace('f',' '), // cria um placeholder "topFiltro" no lugar do search
                 lengthMenu: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 100, -1],
                 pageLength: 10,
                 responsive: false, // Desativar responsividade para reduzir espaco (se nao for essencial)
@@ -169,7 +207,9 @@ static procedure FWWebExExample_020(cHTML as character) as character
                         FunctionName: 'dna.tech.codAliasPost',
                         codAlias: 'SRA',
                         yesFields: 'RA_FILIAL,RA_MAT,RA_APELIDO,RA_CC,RA_SALARIO,RA_ADTPOSE,RA_CATFUNC,RA_DEPIR,RA_SEXO',
-                        Filter: { RA_SEXO: 'M' },
+                        Filter: Object.assign({
+                            RA_SEXO: 'M'
+                        }, filtroCampo && filtroValor ? { [filtroCampo]: filtroValor } : {}),
                         PageNumber: pageNumber,
                         RowspPage: rowsPerPage,
                         cEmp: '99',
@@ -215,6 +255,15 @@ static procedure FWWebExExample_020(cHTML as character) as character
                         }
                     });
                 }
+            });
+
+            let filtroCampo = "";
+            let filtroValor = "";
+
+            document.getElementById("btnSearch").addEventListener("click", function () {
+                filtroCampo = document.getElementById("searchField").value;
+                filtroValor = document.getElementById("searchValue").value.trim();
+                table.ajax.reload(); // recarrega o DataTable usando o novo filtro
             });
 
             table.on('processing.dt', function (e, settings, processing) {
