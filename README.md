@@ -1,4 +1,4 @@
-# FW.WebEX — Framework Web Extensível para Protheus (ADVPL/TLPP) 🌟
+# FWWebEX — Framework Web Extensível para Protheus (ADVPL/TLPP) 🌟
 
 ## ⭐Gostou do projeto? Deixa uma estrelinha(⭐) aí no topo! Isso ajuda muito!
 
@@ -8,17 +8,17 @@
 ![fwwebex_banner](https://github.com/user-attachments/assets/64a542a9-97f3-47b0-81f9-1655374a1a90)
 
 --
-**FW.WebEX** é um microframework escrito em ADVPL/TLPP que permite criar interfaces web responsivas, modernas e funcionais **diretamente do seu código no Protheus**, sem precisar de Angular, React ou qualquer outra parafernália.
+**FWWebEX** é um microframework escrito em ADVPL/TLPP que permite criar interfaces web responsivas, modernas e funcionais **diretamente do seu código no Protheus**, sem precisar de Angular, React ou qualquer outra parafernália.
 
 > **Do Protheus para o browser. Simples. Direto. Web.**
 
 ---
 
-## 🚀 Por que FW.WebEX?
+## 🚀 Por que FWWebEX?
 
 A TOTVS está indo para o web. Mas o desenvolvedor ADVPL n&atilde;o precisa (re)aprender Angular ou TypeScript só pra fazer uma tela de cadastro ou uma tabela com ação.
 
-**FW.WebEX** nasceu da ideia de manter o espírito do desenvolvimento no Protheus:
+**FWWebEX** nasceu da ideia de manter o espírito do desenvolvimento no Protheus:
 
 - Rápido
 - Sem burocracia
@@ -268,7 +268,7 @@ Utilizamos padrão Harbour: [How to Participate](https://github.com/naldodj/nald
 ## ✨ Visão
 
 > Acreditamos que dá pra evoluir mantendo o que o Protheus tem de melhor: a produtividade.
-> FW\.WebEX é o passo que faltava pra quem quer ir pro web **sem perder a alma ADVPL**.
+> FWWebEX é o passo que faltava pra quem quer ir pro web **sem perder a alma ADVPL**.
 
 ---
 
