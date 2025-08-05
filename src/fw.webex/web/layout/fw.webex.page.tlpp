@@ -535,20 +535,25 @@ method RenderHTML() class WebExPage
             jHeadScripts:=::oPageHeader:GetHeadScripts()
             aEval(jHeadScripts:GetNames(),{|cName|::GetMemberData("oPageHeader"):AddChild(jHeadScripts[cName])})
             ***************************************************************************************************************************
-            //TOTVS Scripts
-                cEnvServer:=Alltrim(Lower(GetEnvServer()))
+            //TotvsTec Scripts
+                if (lIsDir("\http-root\app-root\fwwebex\totvstec\"))
+                    cEnvServer:="fwwebex/totvstec/"
+                else
+                    cEnvServer:=Alltrim(Lower(GetEnvServer()))
+                    cEnvServer:="preindex_env_"+cEnvServer+"/"
+                endif
                 cAPPRootURI:=WebApp():GetAPPRoot()
                 WITH WEBEXOBJECT CLASS WebExComment
                     .:SetContent("TOTVS Scripts")
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent(cAPPRootURI+"preindex_env_"+cEnvServer+"/twebchannel.js")
+                    .:SetContent(cAPPRootURI+cEnvServer+"twebchannel.js")
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent(cAPPRootURI+"preindex_env_"+cEnvServer+"/totvstec.js")
+                    .:SetContent(cAPPRootURI+cEnvServer+"totvstec.js")
                 END WEBEXOBJECT
                 WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-                    .:SetContent(cAPPRootURI+"preindex_env_"+cEnvServer+"/fwprotheus.js")
+                    .:SetContent(cAPPRootURI+cEnvServer+"fwprotheus.js")
                 END WEBEXOBJECT
             //TOTVS Script
             ***************************************************************************************************************************
