@@ -5,6 +5,10 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-08-05 10:48 UTC (feat: implement dynamic column-based filtering in DataTable)
+  * src/fw.webex.examples/007/fw.webex.example.007.tlpp
+  * src/fw.webex.examples/008/fw.webex.example.008.tlpp
+
 2025-08-04 12:13 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx and SBAdmin)
   * src/fw.webex/web/control/fw.webex.control.tlpp
   * src/fw.webex.examples/020/fw.webex.example.020.tlpp

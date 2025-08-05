@@ -122,6 +122,13 @@ static procedure FWWebExExample_008(cHTML as character) as character
 
     beginContent var cTableStyle
 
+        /* Filtro Customizado */
+        .datatable-filter-wrapper {
+            display: inline-block;
+            width: 100%;
+            text-align: right; /* ou left */
+        }
+
         /* Compactar linhas do DataTables */
         table.dataTable.compact tbody tr {
             height: 28px; /* Altura reduzida para linhas */
@@ -165,6 +172,10 @@ static procedure FWWebExExample_008(cHTML as character) as character
     WITH WEBEXOBJECT oFWWebExPage CLASS WebExPage ARGS cProcName+" (REST + DataTable)"
         WITH WEBEXOBJECT CLASS WebExBody
             WITH WEBEXOBJECT CLASS WebExMain
+                // Adiciona Filtro da Tabela
+                WITH WEBEXOBJECT CLASS WebExControl TYPE div
+                    .:SetFixedID("meuFiltroCustomDiv")
+                END WEBEXOBJECT
                 // Adiciona container de tabela
                 WITH WEBEXOBJECT CLASS WebExControl TYPE div
                     .:SetAttr("class","container rounded shadow p-3")
@@ -230,11 +241,46 @@ static procedure FWWebExExample_008(cHTML as character) as character
             */
             // Script com server-side pagination ativado
             beginContent var cScript
+
                 document.addEventListener('DOMContentLoaded', function() {
+
+                    document.getElementById('meuFiltroCustomDiv').innerHTML = `
+                        <!-- fora da tabela, sera movido via JS -->
+                        <div id="meuFiltroCustom" class="datatable-filter-wrapper mb-2">
+                            <div class="input-group input-group-sm">
+                                <select id="searchField" class="form-select form-select-sm"></select>
+                                <input id="searchValue" type="text" class="form-control" placeholder="Digite o valor..." />
+                                <button id="btnSearch" class="btn btn-primary" type="button">Pesquisar</button>
+                            </div>
+                        </div>`;
+
+                    const yesFields = 'RA_FILIAL,RA_MAT,RA_APELIDO,RA_CC,RA_SALARIO,RA_ADTPOSE,RA_CATFUNC,RA_DEPIR,RA_SEXO';
+
+                    function montarCampoSelect() {
+                        const fields = yesFields.split(',');
+                        const select = document.getElementById("searchField");
+                        fields.forEach(field => {
+                            const opt = document.createElement("option");
+                            opt.value = field.trim();
+                            opt.textContent = field.trim();
+                            select.appendChild(opt);
+                        });
+                    }
+
+                    montarCampoSelect(); // monta o select com base no yesFields
+
+                    // Adiciona o filtro customizado no lugar da search bar padrao
+                    const filtroEl = document.getElementById("meuFiltroCustom");
+                    const containerFiltro = document.querySelector("div.topFiltro");
+                    if (containerFiltro && filtroEl) {
+                        containerFiltro.appendChild(filtroEl);
+                        filtroEl.style.display = 'block'; // caso esteja oculto
+                    }
+
                     const table = new DataTable('#example', {
                         serverSide: true,
                         processing: false,
-                        dom: 'Blfrtip',
+                        dom: '<"topFiltro">Blfrtip'.replace('f',' '), // cria um placeholder "topFiltro" no lugar do search
                         lengthMenu: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,30,35,40,45,50,100,-1],
                         pageLength: 8,//DEFAULT
                         buttons: [
@@ -293,9 +339,9 @@ static procedure FWWebExExample_008(cHTML as character) as character
                                     FunctionName: 'dna.tech.codAliasPost',
                                     codAlias: 'SRA',
                                     yesFields: 'RA_FILIAL,RA_MAT,RA_APELIDO,RA_CC,RA_SALARIO,RA_ADTPOSE,RA_CATFUNC,RA_DEPIR,RA_SEXO',
-                                    Filter: {
+                                    Filter: Object.assign({
                                         RA_SEXO: 'M'
-                                    },
+                                    }, filtroCampo && filtroValor ? { [filtroCampo]: filtroValor } : {}),
                                     PageNumber: pageNumber,
                                     RowspPage: rowsPerPage,
                                     cEmp: '99',
@@ -338,7 +384,16 @@ static procedure FWWebExExample_008(cHTML as character) as character
                             .catch(err => console.error('Erro ao carregar dados:', err));
                         }
                     });
-                    //captura do evento de processamento
+
+                    let filtroCampo = "";
+                    let filtroValor = "";
+
+                    document.getElementById("btnSearch").addEventListener("click", function () {
+                        filtroCampo = document.getElementById("searchField").value;
+                        filtroValor = document.getElementById("searchValue").value.trim();
+                        table.ajax.reload(); // recarrega o DataTable usando o novo filtro
+                    });
+
                     table.on('processing.dt', function (e, settings, processing) {
                         if (processing) {
                             $('#fwwebex-datatable-custom-loader').show();
@@ -346,7 +401,9 @@ static procedure FWWebExExample_008(cHTML as character) as character
                             $('#fwwebex-datatable-custom-loader').hide();
                         }
                     });
+
                 });
+
             endContent
             if (!FindClass("DNA.TECH.USERRESTCRUDTLPP"))
                 //Considerando que callProcRestCrudTLPP depende de DNA.TECH.USERRESTCRUDTLPP
