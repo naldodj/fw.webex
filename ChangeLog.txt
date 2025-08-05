@@ -5,6 +5,9 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-08-05 21:38 UTC (Adjust ApexChart pie chart dimensions)
+  * src/fw.webex.examples/020/fw.webex.example.020.tlpp
+
 2025-08-05 17:20 UTC (totvstec or preindex_env_ folder)
   * src/fw.webex/web/layout/fw.webex.page.tlpp
 

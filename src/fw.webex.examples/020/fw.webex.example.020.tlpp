@@ -44,9 +44,8 @@ static procedure FWWebExExample_020(cHTML as character) as character
 
     local cUserID:=if((Type("__cUserID")=="C").and.(!Empty(__cUserID)),__cUserID,"000000")
     local cScript as character
-    local cTableStyle as character
+    local cPageStyle as character
 
-    local oTableStyle as object
     local oFWWebExPage as object
     local oFWWebExBody as object
 
@@ -54,12 +53,19 @@ static procedure FWWebExExample_020(cHTML as character) as character
         return("")
     endif
 
-    beginContent var cTableStyle
+    beginContent var cPageStyle
 
         /* ApexChart Area */
         #myBarApexChart, #myAreaApexChart {
             width: 100%;
             height: 200px;
+        }
+
+        #myPieApexChart {
+            width: 100%;
+            height: 480px; /* ou a altura que quiser pra ficar proporcional ao Chart.js */
+            max-height: 520px; /* opcional, evita explodir se o conteudo for denso */
+            margin: 0 auto; /* centraliza se precisar */
         }
 
         /* Filtro Customizado */
@@ -106,8 +112,6 @@ static procedure FWWebExExample_020(cHTML as character) as character
         }
 
     endContent
-    oTableStyle:=WebExStyle():New()
-    oTableStyle:SetContent(cTableStyle)
 
     /*
         Tabela do DOM (so pra referencia)
@@ -419,6 +423,7 @@ static procedure FWWebExExample_020(cHTML as character) as character
                                     WITH WEBEXOBJECT oSBAdminCardBodyApexChartPie CLASS SBAdminCardBody
                                         WITH WEBEXOBJECT oDivApexChartPie CLASS WebExDiv
                                             .:SetFixedID("myPieApexChart")
+                                            .:SetAttr("style","width: 100%; height: 200px;")
                                         END WEBEXOBJECT //oDivApexChartPie
                                     END WEBEXOBJECT //oSBAdminCardBodyApexChartPie
                                 END WEBEXOBJECT //oSBAdminCardHeaderApexChartPie
@@ -467,6 +472,12 @@ static procedure FWWebExExample_020(cHTML as character) as character
     oFWWebExPage:SetEnableDataTable(.T.)
     oFWWebExPage:SetEnableChart(.F.)
     oFWWebExPage:SetEnableApexChart(.T.)
+
+    WITH WEBEXOBJECT oFWWebExPage
+        WITH WEBEXOBJECT CLASS WebExStyle
+            .:SetContent(cPageStyle)
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
 
     WebFileTools():HTMLFromControl(oFWWebExPage,oFWWebExPage:GetFWWebExTmpPath(),@cHTMLFile,@cHTML,.T.)
 
@@ -854,6 +865,8 @@ static function ApexChartScripts() as character
             FWWebExWaitForElementID('myPieApexChart', function (element) {
                 var options = {
                     chart: {
+                    width: '100%', // Define a largura como 100% para se ajustar ao conteiner
+                    height: 480,   // Define a altura fixa como 200px
                     type: 'pie',
                     fontFamily: '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif',
                     foreColor: '#292b2c',
@@ -878,7 +891,8 @@ static function ApexChartScripts() as character
                         breakpoint: 480,
                         options: {
                             chart: {
-                            width: 200
+                                width: '100%', // Mantem 100% para dispositivos menores
+                                height: 280    // Ajusta a altura para telas menores, se necessario
                             },
                             legend: {
                             position: 'bottom'
