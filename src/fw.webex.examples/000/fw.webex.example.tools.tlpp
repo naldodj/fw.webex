@@ -37,7 +37,10 @@ class FWExampleTools
 
     static method Execute(bExecute as codeblock,cTitle as character,lPrepareEnvironment as logical,lChangeCompanyAndBranch as logical) as variant
     static method HtmlFileShow(cHTML as character,cTitle as character,cHTMLFile as character,bJSToAdvPL as codeblock,bCallBack as codeblock,cCallBackActRet as character) as variant
+
     static method GetRESTCredential(cUSR as character,cPDW as character,cRESTURL as character,lUseOAuth2 as logical) as logical
+    static method EnableRESTCredentialParameters() as logical
+
     static method ChangeCompanyAndBranch(cCompany as character,cBranch as character,lFirstAccess as logical,cStack as character)
 
     static method NoCheckUri() as array
@@ -49,6 +52,7 @@ class FWExampleTools
     static method GetUserName(cUserName as character) as character
     static method GetUserPassWord(cUserPassWord as character) as character
     static method GetAuthorization(cUSR as character,cPDW as character,cRESTURLOAuth2 as character) as json
+
 
     //https://startbootstrap.com/template/sb-admin
     static method SBAdminCheck() as logical
@@ -460,15 +464,15 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
 
         SaveInter()
             MV_PAR06:=.F.
-            aAdd(aParamBox,{1,"ClientID",cClientID,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-            aAdd(aParamBox,{1,"ClientSecret",cClientSecret,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-            aAdd(aParamBox,{1,"UserName",cUSR,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-            aAdd(aParamBox,{1,"Password",cPDW,"@","NaoVazio()","","AllWaysTrue()",100,.T.})
-            aAdd(aParamBox,{1,"URL REST",cRESTURL,"@","NaoVazio()","","AllWaysTrue()",200,.T.})
-            aAdd(aParamBox,{4,"OAuth2",MV_PAR06,"",100,"AllWaysTrue()",.F.})
-            aAdd(aParamBox,{1,"URL REST OAuth2",cRESTURLOAuth2,"@","IF(MV_PAR06,NaoVazio(),AllWaysTrue())","","MV_PAR06",200,.T.})
-            aAdd(aParamBox,{1,"APPRoot URI",cAppRootURI,"@","NaoVazio()","","AllWaysTrue()",200,.T.})
-            lGetRESTCredential:=ParamBox(@aParamBox,"Selecione os Parametros",@aParamRet,nil,nil,.T.,nil,nil,nil,nil,.T.,.T.)
+            aAdd(aParamBox,{1,"ClientID",cClientID,"@","NaoVazio()","","FWWebEx.FWExampleTools():EnableRESTCredentialParameters()",100,.T.})
+            aAdd(aParamBox,{1,"ClientSecret",cClientSecret,"@","NaoVazio()","","FWWebEx.FWExampleTools():EnableRESTCredentialParameters()",100,.T.})
+            aAdd(aParamBox,{1,"UserName",cUSR,"@","NaoVazio()","","FWWebEx.FWExampleTools():EnableRESTCredentialParameters()",100,.T.})
+            aAdd(aParamBox,{1,"Password",cPDW,"@","NaoVazio()","","FWWebEx.FWExampleTools():EnableRESTCredentialParameters()",100,.T.})
+            aAdd(aParamBox,{1,"URL REST",cRESTURL,"@","NaoVazio()","","FWWebEx.FWExampleTools():EnableRESTCredentialParameters()",200,.T.})
+            aAdd(aParamBox,{4,"OAuth2",MV_PAR06,"",100,"FWWebEx.FWExampleTools():EnableRESTCredentialParameters()",.F.})
+            aAdd(aParamBox,{1,"URL REST OAuth2",cRESTURLOAuth2,"@","IF(MV_PAR06,NaoVazio(),FWWebEx.FWExampleTools():EnableRESTCredentialParameters())","","MV_PAR06",200,.T.})
+            aAdd(aParamBox,{1,"APPRoot URI",cAppRootURI,"@","NaoVazio()","","FWWebEx.FWExampleTools():EnableRESTCredentialParameters()",200,.T.})
+            lGetRESTCredential:=ParamBox(@aParamBox,"Selecione os Parametros",@aParamRet,nil,nil,.T.,nil,nil,nil,nil,FWExampleTools():EnableRESTCredentialParameters(),FWExampleTools():EnableRESTCredentialParameters())
         RestInter()
 
         if (!lGetRESTCredential)
@@ -543,6 +547,12 @@ static method GetRESTCredential(cUSR,cPDW,cRESTURL,cRESTURLOAuth2,jGetAuthorizat
     FWFreeArray(@aParamRet)
 
 return(lGetRESTCredential)
+
+static method EnableRESTCredentialParameters() class FWExampleTools
+    local lChangeParameters as logical
+    //So permite alterar as configuracoes no servidor
+    lChangeParameters:=(Upper(AllTrim(GetComputerName()))==Upper(AllTrim(GetSrvInfo()[1])))
+return(lChangeParameters)
 
 //https://tdn.totvs.com/display/tec/onAuthNoCheckUri
 static method NoCheckUri() class FWExampleTools
