@@ -195,7 +195,7 @@ static function LoadMenu(oTDlg as object,jExamples as json) as object
             ENDMENU
         MENU
         MENU
-            MENUITEM oTMenuItem PROMPT "Exit" ACTION if(ApMsgNoYes("Deseja sair?"),oTDlg:End(),.F.)
+            MENUITEM oTMenuItem PROMPT "Exit" ACTION if(ApMsgNoYes("Deseja sair?","FWWebEx"),oTDlg:End(),.F.)
         ENDMENU
     ENDMENU
 
