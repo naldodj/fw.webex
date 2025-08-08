@@ -316,7 +316,7 @@ static procedure FWWebExExample_020(cHTML as character) as character
                 .:NavLoadJSONMenu(SBAdminGetMenu(cSBAdminPath))
                 //Menu Footer
                 .:GetMemberData("oSideNavFooterDiv"):SetContent("Logged in as: "+FWGetUserName(cUserID))
-                .:GetMemberData("oSideNavFooter"):SetContent("SBAdmin :: FWWebEx")
+                .:GetMemberData("oSideNavFooter"):SetContent("SBAdmin :: FWWebEx",.:GetMemberData("oSideNavFooterDiv"):GetID())
             END WEBEXOBJECT
             WITH WEBEXOBJECT CLASS SBAdminLayoutSideNavContent
                 WITH WEBEXOBJECT CLASS SBAdminMainContent

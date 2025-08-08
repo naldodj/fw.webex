@@ -108,9 +108,9 @@ method AddLink(cNavTopLabel,cNavTopHRef,oNavTopLinkIcon) class WebExNavTop
     if (oNavTopLinkIcon!=nil)
         ::oNavTopLinkIcon:=oNavTopLinkIcon
         ::oNavTopLink:AddChild(::oNavTopLinkIcon)
-        ::oNavTopLink:AddContent(" ")
+        ::oNavTopLink:SetContent(" ")
     endif
-    ::oNavTopLink:AddContent(cNavTopLabel)
+    ::oNavTopLink:SetContent(cNavTopLabel)
     ::jNavTopLinks[::oNavTopLink:GetID()]:=::oNavTopLink
 return(self)
 

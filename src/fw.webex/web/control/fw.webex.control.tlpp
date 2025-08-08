@@ -36,9 +36,7 @@ class WebExControl from FWWebEx.ClassBase
     protected data cID as character
     protected data cHTML as character
     protected data cType as character
-    protected data cContent as character
     protected data cFixedID as character
-    protected data cContentLoadAfterID as character
 
     protected data cFWWebExTmpPath as character
 
@@ -47,6 +45,7 @@ class WebExControl from FWWebEx.ClassBase
 
     protected data jAttrs as json
     protected data jChildren as json
+    protected data jContents as json
 
     protected data lChartEnabled as logical
     protected data lIconsEnabled as logical
@@ -83,9 +82,12 @@ class WebExControl from FWWebEx.ClassBase
     public method DelAttrValue(cAttr as character,cAttrValue as character,/*@*/aAttr as array,lDelAttrValue as logical) as object
     public method DelAttrValueRegex(cAttr as character,cAttrValueRegex as character,/*@*/aAttr as array,lDelAttrValue as logical) as object
 
-    public method GetContent() as character
+    public method GetContent(cID as character) as character
+    public method GetContents() as json
+
     public method SetContent(cContent as character,cContentLoadAfterID as character) as object
-    public method ContentIsNull() as logical
+
+    public method ContentIsNull(cContent as character) as logical
 
     public method GetFWWebExTmpPath() as character
     public method SetFWWebExTmpPath(cFWWebExTmpPath as character) as object
@@ -171,6 +173,7 @@ method New(cType) class WebExControl
     paramtype 1 var cType as character optional default "div"
     ::jAttrs:=JSONObject():New()
     ::jChildren:=JSONObject():New()
+    ::jContents:=JSONObject():New()
     ::SetID(::NewID())
     ::SetType(cType)
     ::SetContent(FWWEBEX_WEB_NULL_CONTENT)
@@ -401,19 +404,29 @@ method DelAttrValueRegex(cAttr,cAttrValueRegex,/*@*/aAttr,lDelAttrValue) class W
 
 return(self)
 
-method GetContent() class WebExControl
-return(::cContent)
+method GetContent(cID) class WebExControl
+    local cContent as character
+    paramtype 1 var cID as character optional default ::cID
+    if (::jContents:HasProperty(cID))
+        cContent:=::jContents[cID]
+    else
+        cContent:=FWWEBEX_WEB_NULL_CONTENT
+    endif
+return(cContent)
+
+method GetContents() class WebExControl
+return(::jContents)
 
 method SetContent(cContent,cContentLoadAfterID) class WebExControl
-   paramtype 1 var cContent as character
-   paramtype 2 var cContentLoadAfterID as character optional default ""
-   ::cContent:=cContent
-   ::cContentLoadAfterID:=cContentLoadAfterID
+    paramtype 1 var cContent as character
+    paramtype 2 var cContentLoadAfterID as character optional default ::cID
+    ::jContents[cContentLoadAfterID]:=cContent
 return(self)
 
-method ContentIsNull() class WebExControl
+method ContentIsNull(cContent) class WebExControl
     local lContentIsNull as logical
-    lContentIsNull:=((::cContent==FWWEBEX_WEB_NULL_CONTENT).or.(Empty(::cContent)))
+    paramtype cContent as character optional default ::GetContent(::cID)
+    lContentIsNull:=((cContent==FWWEBEX_WEB_NULL_CONTENT).or.(Empty(cContent)))
 return(lContentIsNull)
 
 method GetFWWebExTmpPath() class WebExControl
@@ -617,7 +630,7 @@ method GetPageScriptBundle() class WebExControl
                 cID:=aScripts[nScript]
                 oWebExScript:=__jScripts["page"][cID]
                 cContent:=if(ValType(oWebExScript)=="O",oWebExScript:GetContent(),FWWEBEX_WEB_NULL_CONTENT)
-                if (cContent==FWWEBEX_WEB_NULL_CONTENT)
+                if (oWebExScript:ContentIsNull(cContent))
                     loop
                 endif
                 if (::ExternalAssetsIsEnabled())
@@ -709,7 +722,6 @@ method RenderHTML() class WebExControl
     local cLowerType as character
 
     local lHTMLAssetsToFile:=.F. as logical
-    local lContentLoadAfterID as logical
 
     local nAttr as numeric
     local nAttrs as numeric
@@ -729,9 +741,7 @@ method RenderHTML() class WebExControl
         endif
 
         cLowerType:=::cType
-        cContent:=::cContent
-
-        lContentLoadAfterID:=(!Empty(::cContentLoadAfterID))
+        cContent:=::GetContent(::cID)
 
         if (;
                 (::ExternalAssetsIsEnabled());
@@ -740,12 +750,12 @@ method RenderHTML() class WebExControl
                 .and.;
                 (cLowerType$"script|style");
                 .and.;
-                (!::ContentIsNull());
+                (!::ContentIsNull(cContent));
             )
             lHTMLAssetsToFile:=WebFileTools():HTMLAssetsToFile(;
                 ::GetID();
                 ,cLowerType;
-                ,::cContent;
+                ,cContent;
                 ,::cFWWebExTmpPath;
                 ,@::cExternalAssetsFilePath;
                 ,@::cLocalAssetsFilePath;
@@ -793,7 +803,7 @@ method RenderHTML() class WebExControl
                     cHTML+=">"
                 endif
 
-                if ((cContent!=FWWEBEX_WEB_NULL_CONTENT).and.(!lContentLoadAfterID))
+                if (!::ContentIsNull(cContent))
                     cHTML+=cContent
                 endif
 
@@ -807,8 +817,9 @@ method RenderHTML() class WebExControl
                             if (valType(oChild)=="O")
                                 ::SetRenderChildren(::lRenderChildren)
                                 cHTML+=oChild:RenderHTML()
-                                if ((lContentLoadAfterID).and.(oChild:GetID()==::cContentLoadAfterID))
-                                    if ((cContent!=FWWEBEX_WEB_NULL_CONTENT))
+                                if (::jContents:HasProperty(oChild:GetID()))
+                                    cContent:=::GetContent(oChild:GetID())
+                                    if (!::ContentIsNull(cContent))
                                         cHTML+=cContent
                                     endif
                                 endif
@@ -1724,7 +1735,7 @@ method DumpDOM(nLevel) class WebExControl
 
     // Content
     cContent:=::GetContent()
-    if (!Empty(cContent).and.(cContent!=FWWEBEX_WEB_NULL_CONTENT))
+    if (::ContentIsNull(cContent))
         cDOM+=" [content="+cContent+"]"
     endif
 

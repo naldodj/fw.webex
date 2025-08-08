@@ -71,6 +71,8 @@ def process_element(el, level=0, counters=None):
         lines.append(f"{indent(level)}{var}:=WebExBody():New()")
     elif tag == "blockquote":
         lines.append(f"{indent(level)}{var}:=WebExBlockQuote():New()")
+    elif tag == "code":
+        lines.append(f"{indent(level)}{var}:=WebExCode():New()")
     elif tag == "caption":
         lines.append(f"{indent(level)}{var}:=WebExCaption():New()")
     elif tag == "colgroup":

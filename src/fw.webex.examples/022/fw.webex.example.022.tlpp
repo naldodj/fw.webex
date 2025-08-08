@@ -1,0 +1,341 @@
+/*
+  __                            _
+ / _|__      ____      __  ___ | |__    ___ __  __
+| |_ \ \ /\ / /\ \ /\ / / / _ \| '_ \  / _ \\ \/ /
+|  _| \ V  V /  \ V  V / |  __/| |_) ||  __/ >  <
+|_|    \_/\_/    \_/\_/   \___||_.__/  \___|/_/\_\
+
+https://startbootstrap.com/template/sb-admin
+
+Released to Public Domain.
+--------------------------------------------------------------------------------------
+*/
+
+#include "fw.webex.th"
+
+using namespace FWWebEx
+
+procedure u_FWWebExExample_022()
+    local bExecute as codeblock
+    local bCallBack as codeblock
+    local bJSToAdvPL as codeblock
+    local cHTML as character
+    local cHTMLFile as character
+    local cProcName:=ProcName() as character
+    local cCallBackActRet as character
+    local oTWebChannel:=WebApp():GetTWebChannel() as object
+    bExecute:={||FWMsgRun(nil,{||cHTMLFile:=FWWebExExample_022(@cHTML)},"Aguarde",cProcName)}
+    FWExampleTools():Execute(bExecute,cProcName,.T.,.F.)
+    if (!Empty(cHTMLFile).and.File(cHTMLFile))
+        bCallBack:={|oTWebChannel as object,cCodeType as character,cCodeContent as character,aCallBackAct as array,oTWebEngine as object|u_callProcTLPPEx018(oTWebChannel,cCodeType,cCodeContent,aCallBackAct,oTWebEngine)}
+        bJSToAdvPL:={|oTWebChannel as object,cCodeType as character,cCodeContent as character|FWWebEx.WebApp():JSToAdvPL(oTWebChannel,cCodeType,cCodeContent)}
+        cCallBackActRet:="CALLBACK_EXEC:CALLBACK_RESPONSE"
+        FWExampleTools():htmlFileShow(cHTML,cProcName,cHTMLFile,oTWebChannel,bJSToAdvPL,bCallBack,cCallBackActRet)
+        fErase(cHTMLFile)
+    endif
+    WebFileTools():ObliterateFWWebExTmpFiles(.T.)
+return
+
+static procedure FWWebExExample_022(cHTML as character) as character
+
+    local cProcName:=ProcName() as character
+    local cHTMLFile:=cProcName as character
+    local cSBAdminPath as character
+
+    local cID as character
+    local cUserID:=if((Type("__cUserID")=="C").and.(!Empty(__cUserID)),__cUserID,"000000")
+
+    local oFWWebExPage as object
+    local oFWWebExBody as object
+
+    if (!FWExampleTools():SBAdminCheck(@cSBAdminPath))
+        return("")
+    endif
+
+    oFWWebExBody:=WebExBody():New()
+    oFWWebExBody:SetAttr("class","sb-nav-fixed")
+
+    WITH WEBEXOBJECT oFWWebExBody
+        WITH WEBEXOBJECT CLASS SBAdminNav
+            .:NavRightLoadJSONMenu(SBAdminGetRightMenu())
+        END WEBEXOBJECT
+        //layoutSidenav
+        WITH WEBEXOBJECT CLASS SBAdminLayoutSideNav
+            WITH WEBEXOBJECT CLASS SBAdminLayoutSideNavNav
+                //Remove remove dark e adiciona light
+                .:GetMemberData("oNav"):DelClass("sb-sidenav-dark"):AddClass("sb-sidenav-light")
+                //Menu
+                .:NavLoadJSONMenu(SBAdminGetMenu(cSBAdminPath))
+                //Menu Footer
+                .:GetMemberData("oSideNavFooterDiv"):SetContent("Logged in as: "+FWGetUserName(cUserID))
+                .:GetMemberData("oSideNavFooter"):SetContent("SBAdmin :: FWWebEx",.:GetMemberData("oSideNavFooterDiv"):GetID())
+            END WEBEXOBJECT
+            WITH WEBEXOBJECT CLASS SBAdminLayoutSideNavContent
+                WITH WEBEXOBJECT CLASS SBAdminMainContent
+                    WITH WEBEXOBJECT oSBAdminContainer CLASS SBAdminContainer
+                        WITH WEBEXOBJECT CLASS WebExH1
+                            .:AddClass("mt-4")
+                            .:SetContent("Sidenav Light")
+                        END WEBEXOBJECT
+                        WITH WEBEXOBJECT CLASS WebExOL
+                            .:AddClass("breadcrumb mb-4")
+                            WITH WEBEXOBJECT CLASS WebExLI
+                                .:AddClass("breadcrumb-item")
+                                WITH WEBEXOBJECT CLASS WebExAnchor
+                                    .:SetAttr("href",cSBAdminPath+"index.html")
+                                    .:SetContent("Dashboard")
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                            WITH WEBEXOBJECT CLASS WebExLI
+                                .:AddClass("breadcrumb-item active")
+                                WITH WEBEXOBJECT CLASS WebExAnchor
+                                    .:SetContent("Sidenav Light")
+                                END WEBEXOBJECT
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                        WITH WEBEXOBJECT CLASS WebExDiv
+                            .:AddClass("card mb-4")
+                            WITH WEBEXOBJECT CLASS WebExDiv
+                                .:AddClass("card-body")
+                                .:SetContent("This page is an example of using the light side navigation option. By appending the")
+                                WITH WEBEXOBJECT CLASS WebExCode
+                                    cID:=.:GetID()
+                                    .:SetContent(".sb-sidenav-light")
+                                END WEBEXOBJECT
+                                .:SetContent("class to the",cID)
+                                WITH WEBEXOBJECT CLASS WebExCode
+                                    cID:=.:GetID()
+                                    .:SetContent(".sb-sidenav")
+                                END WEBEXOBJECT
+                                .:SetContent("class, the side navigation will take on a light color scheme. The",cID)
+                                WITH WEBEXOBJECT CLASS WebExCode
+                                    cID:=.:GetID()
+                                    .:SetContent(".sb-sidenav-dark")
+                                END WEBEXOBJECT
+                                .:SetContent("is also available for a darker option.",cID)
+                            END WEBEXOBJECT
+                        END WEBEXOBJECT
+                    END WEBEXOBJECT //oSBAdminContainer
+                END WEBEXOBJECT
+                //Main
+                //Footer
+                    WITH WEBEXOBJECT CLASS SBAdminFooter
+                        .:SetCopyrightText("&copy; "+StrZero(Year(Date()),4)+" DNATech ")
+                        .:SetPrivacyPolicyHRef("https://github.com/DNATechByNaldoDJ/fw.webex")
+                        .:SetPrivacyPolicyText("FWWebEx")
+                        .:SetTermsAndConditionsHRef("https://mit-license.org/")
+                        .:SetTermsAndConditionsText("Licensed under MIT")
+                    END WEBEXOBJECT
+                //Footer
+            END WEBEXOBJECT
+        END WEBEXOBJECT
+    END WEBEXOBJECT NOADDCHILD
+
+    oFWWebExPage:=SBAdminPage():New("fw.webex.example.020.tlpp :: FWWEbEx :: SBADMIN :: SBAdminNav")
+    oFWWebExPage:AddChild(oFWWebExBody)
+    oFWWebExPage:SetEnableDataTable(.T.)
+    oFWWebExPage:SetEnableChart(.F.)
+    oFWWebExPage:SetEnableApexChart(.T.)
+
+    WebFileTools():HTMLFromControl(oFWWebExPage,oFWWebExPage:GetFWWebExTmpPath(),@cHTMLFile,@cHTML,.T.)
+
+    oFWWebExPage:Clean()
+
+    FreeObj(@oFWWebExPage)
+
+return(cHTMLFile)
+
+static function SBAdminGetMenu(cSBAdminPath)
+
+    local cSBAdminNavMenu as character
+
+    local jSBAdminNavMenu as json
+
+    beginContent var cSBAdminNavMenu
+{
+    "menu": [
+        {
+            "id": "core",
+            "label": "Core",
+            "heading": true,
+            "badge": {
+                "label": "Novo",
+                "class": "bg-success text-white"
+            }
+        },
+        {
+            "id": "dashboard",
+            "label": "Dashboard",
+            "icon": "fas fa-tachometer-alt",
+            "url": "cSBAdminPath+index.html"
+        },
+        {
+            "id": "interface",
+            "label": "Interface",
+            "heading": true
+        },
+        {
+            "id": "layouts",
+            "label": "Layouts",
+            "icon": "fas fa-columns",
+            "url": "#",
+            "subItems": [
+                {
+                    "id": "static_navigation",
+                    "label": "Static Navigation",
+                    "url": "cSBAdminPath+layout-static.html",
+                    "badge": {
+                        "label": "Novo",
+                        "class": "bg-success text-white"
+                    }
+                },
+                {
+                    "id": "light_sidenav",
+                    "label": "Light Sidenav",
+                    "url": "cSBAdminPath+layout-sidenav-light.html"
+                }
+            ]
+        },
+        {
+            "id": "pages",
+            "label": "Pages",
+            "icon": "fas fa-book-open",
+            "url": "#",
+            "subItems": [
+                {
+                    "id": "pages_authentication",
+                    "label": "Authentication",
+                    "subItems": [
+                        {
+                            "id": "pages_authentication_login",
+                            "label": "Login",
+                            "url": "cSBAdminPath+login.html"
+                        },
+                        {
+                            "id": "pages_authentication_register",
+                            "label": "Register",
+                            "url": "cSBAdminPath+register.html"
+                        },
+                        {
+                            "id": "pages_authentication_password",
+                            "label": "Password",
+                            "url": "cSBAdminPath+password.html"
+                        }
+                    ]
+                },
+                {
+                    "id": "pages_error",
+                    "label": "Error",
+                    "subItems": [
+                        {
+                            "id": "pages_error_401",
+                            "label": "401 Page",
+                            "url": "cSBAdminPath+401.html"
+                        },
+                        {
+                            "id": "pages_error_404",
+                            "label": "404 Page",
+                            "url": "cSBAdminPath+404.html"
+                        },
+                        {
+                            "id": "pages_error_500",
+                            "label": "500 Page",
+                            "url": "cSBAdminPath+500.html"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "addons",
+            "label": "ADDONS",
+            "heading": true
+        },
+        {
+            "id": "charts",
+            "label": "Charts",
+            "icon": "fas fa-chart-area",
+            "url": "cSBAdminPath+charts.html"
+        },
+        {
+            "id": "tables",
+            "label": "Tables",
+            "icon": "fas fa-table",
+            "url": "cSBAdminPath+tables.html"
+        }
+    ]
+}
+    endContent
+    cSBAdminNavMenu:=StrTran(cSBAdminNavMenu,"cSBAdminPath+",cSBAdminPath)
+
+    jSBAdminNavMenu:=JSONObject():New()
+    jSBAdminNavMenu:FromJSON(cSBAdminNavMenu)
+
+return(jSBAdminNavMenu)
+
+static function SBAdminGetRightMenu()
+
+    local cSBAdminNavRightMenu as character
+
+    local jSBAdminNavRightMenu as json
+
+    beginContent var cSBAdminNavRightMenu
+{
+  "menu": [
+    {
+      "id": "dashboard",
+      "label": "Dashboard",
+      "icon": "fas fa-tachometer-alt",
+      "url": "javascript:showComingSoon('/dashboard');",
+      "badge": {
+        "label": "Novo",
+        "class": "bg-success text-white"
+      },
+      "subItems": [
+        {
+          "id": "generalview",
+          "label": "Vis&atilde;o Geral",
+          "icon": "fas fa-chart-pie",
+          "url": "javascript:showComingSoon('/dashboard/overview');",
+          "badge": {
+            "label": "Novo",
+            "class": "bg-success text-white"
+          },
+          "roles": ["000000"],
+          "subItems": []
+        }
+      ]
+    },
+    {
+      "divider": true
+    },
+    {
+      "id": "indicators",
+      "label": "Indicadores",
+      "icon": "fas fa-chart-line",
+      "url": "ws:KPIS_REQUEST:KPIS_RESPONSE",
+      "badge": {
+        "label": "Novo",
+        "class": "bg-success text-white"
+      },
+      "wsAction": {
+        "class": "userRestCrudTLPPCoreFunction",
+        "method": "dna.tech.codAliasPost",
+        "params": {
+          "codAlias": "SRA",
+          "filter": {
+            "RA_SEXO": "M"
+          },
+          "yesFields": "RA_FILIAL,RA_MAT,RA_APELIDO"
+        }
+      },
+      "subItems": []
+    }
+  ]
+}
+    endContent
+
+    jSBAdminNavRightMenu:=JSONObject():New()
+    jSBAdminNavRightMenu:FromJSON(cSBAdminNavRightMenu)
+
+return(jSBAdminNavRightMenu)
