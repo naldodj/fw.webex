@@ -62,7 +62,7 @@ static procedure FWWebExExample_022(cHTML as character) as character
         //layoutSidenav
         WITH WEBEXOBJECT CLASS SBAdminLayoutSideNav
             WITH WEBEXOBJECT CLASS SBAdminLayoutSideNavNav
-                //Remove remove dark e adiciona light
+                //Remove dark e adiciona light
                 .:GetMemberData("oNav"):DelClass("sb-sidenav-dark"):AddClass("sb-sidenav-light")
                 //Menu
                 .:NavLoadJSONMenu(SBAdminGetMenu(cSBAdminPath))
