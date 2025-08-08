@@ -5,6 +5,13 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-08-08 16:21 UTC naldodj (__rpo-legacy-cleanup)
+  - src/__rpo-legacy-cleanup/fw-webex.context.tlpp
+  - src/__rpo-legacy-cleanup/fw-webex.control.tlpp
+  - src/__rpo-legacy-cleanup/fw-webex.page.tlpp
+  - src/__rpo-legacy-cleanup/fw-webex.template.bulk.action.table.tlpp
+  - src/__rpo-legacy-cleanup/fw-webex.webapp.tools.tlpp
+
 2025-08-08 15:16 UTC naldodj (refactor: multiple structural and layout improvements across FWWebEx and SBAdmin)
   + src/fw.webex/web/page/fw.webex.code.tlpp
   + src/fw.webex.examples/022/fw.webex.example.022.tlpp
