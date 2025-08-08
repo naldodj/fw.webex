@@ -5,6 +5,10 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-08-08 22:33 UTC naldodj (Update Chart.js)
+  * src/fw.webex.examples/020/fw.webex.example.020.tlpp
+  * src/fw.webex.examples/022/fw.webex.example.022.tlpp
+
 2025-08-08 21:18 UTC naldodj (Fix comment)
   * src/fw.webex.examples/022/fw.webex.example.022.tlpp
 

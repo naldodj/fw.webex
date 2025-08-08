@@ -52,10 +52,8 @@ static procedure FWWebExExample_022(cHTML as character) as character
         return("")
     endif
 
-    oFWWebExBody:=WebExBody():New()
-    oFWWebExBody:SetAttr("class","sb-nav-fixed")
-
-    WITH WEBEXOBJECT oFWWebExBody
+    WITH WEBEXOBJECT oFWWebExBody CLASS WebExBody
+        .:SetAttr("class","sb-nav-fixed")
         WITH WEBEXOBJECT CLASS SBAdminNav
             .:NavRightLoadJSONMenu(SBAdminGetRightMenu())
         END WEBEXOBJECT

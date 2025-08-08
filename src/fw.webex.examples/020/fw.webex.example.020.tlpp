@@ -61,7 +61,7 @@ static procedure FWWebExExample_020(cHTML as character) as character
             height: 200px;
         }
 
-        #myPieApexChart {
+        #myPieChart, #myPieApexChart {
             width: 100%;
             height: 480px; /* ou a altura que quiser pra ficar proporcional ao Chart.js */
             max-height: 520px; /* opcional, evita explodir se o conteudo for denso */
@@ -295,6 +295,8 @@ static procedure FWWebExExample_020(cHTML as character) as character
     endContent
 
     cScript+=CRLF
+    //ChartSpripts
+    cScript+=ChartScripts()
     //ApexChartSpripts
     cScript+=ApexChartScripts()
 
@@ -302,10 +304,8 @@ static procedure FWWebExExample_020(cHTML as character) as character
     oFWWebExScript:SetExternalAssets(.F.)
     oFWWebExScript:SetContent(cScript)
 
-    oFWWebExBody:=WebExBody():New()
-    oFWWebExBody:SetAttr("class","sb-nav-fixed")
-
-    WITH WEBEXOBJECT oFWWebExBody
+    WITH WEBEXOBJECT oFWWebExBody CLASS WebExBody
+        .:SetAttr("class","sb-nav-fixed")
         WITH WEBEXOBJECT CLASS SBAdminNav
             .:NavRightLoadJSONMenu(SBAdminGetRightMenu())
         END WEBEXOBJECT
@@ -451,26 +451,12 @@ static procedure FWWebExExample_020(cHTML as character) as character
                 //Footer
             END WEBEXOBJECT
         END WEBEXOBJECT
-        //TODO: Verificar pq nao consigo habilitar Chart.js via oFWWebExPage:SetEnableChart(.T.). Versao?
-        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-            .:SetContent("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js")
-            .:SetAttr("crossorigin","anonymous")
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-            .:SetContent(cSBAdminPath+"assets/demo/chart-area-demo.js")
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-            .:SetContent(cSBAdminPath+"assets/demo/chart-bar-demo.js")
-        END WEBEXOBJECT
-        WITH WEBEXOBJECT CLASS WebExScript ARGS .F.
-            .:SetContent(cSBAdminPath+"assets/demo/chart-pie-demo.js")
-        END WEBEXOBJECT
     END WEBEXOBJECT NOADDCHILD
 
     oFWWebExPage:=SBAdminPage():New("fw.webex.example.020.tlpp :: FWWEbEx :: SBADMIN :: SBAdminNav")
     oFWWebExPage:AddChild(oFWWebExBody)
     oFWWebExPage:SetEnableDataTable(.T.)
-    oFWWebExPage:SetEnableChart(.F.)
+    oFWWebExPage:SetEnableChart(.T.)
     oFWWebExPage:SetEnableApexChart(.T.)
 
     WITH WEBEXOBJECT oFWWebExPage
@@ -682,6 +668,125 @@ static function SBAdminGetRightMenu()
 
 return(jSBAdminNavRightMenu)
 
+static function ChartScripts() as character
+
+    local cScript as character
+
+    beginContent var cScript
+
+        /* ChartScripts */
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Area Chart
+            FWWebExWaitForElementID('myAreaChart', function (element) {
+                Chart.defaults.font.family = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+                Chart.defaults.color = '#292b2c';
+
+                const ctxArea = document.getElementById("myAreaChart");
+                new Chart(ctxArea, {
+                    type: 'line',
+                    data: {
+                        labels: ["Mar 1", "Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 7", "Mar 8", "Mar 9", "Mar 10", "Mar 11", "Mar 12", "Mar 13"],
+                        datasets: [{
+                            label: "Sessions",
+                            tension: 0.3,
+                            fill: true, // <<< PREENCHE A AREA
+                            backgroundColor: "rgba(2,117,216,0.2)",
+                            borderColor: "rgba(2,117,216,1)",
+                            pointRadius: 5,
+                            pointBackgroundColor: "rgba(2,117,216,1)",
+                            pointBorderColor: "rgba(255,255,255,0.8)",
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                            pointHitRadius: 50,
+                            pointBorderWidth: 2,
+                            data: [10000, 30162, 26263, 18394, 18287, 28682, 31274, 33259, 25849, 24159, 32651, 31984, 38451],
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { maxTicksLimit: 7 }
+                            },
+                            y: {
+                                min: 0,
+                                max: 40000,
+                                ticks: { maxTicksLimit: 5 },
+                                grid: { color: "rgba(0, 0, 0, .125)" }
+                            }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            });
+
+            // Barra Chart
+            FWWebExWaitForElementID('myBarChart', function (element) {
+                Chart.defaults.font.family = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+                Chart.defaults.color = '#292b2c';
+
+                const ctxBar = document.getElementById("myBarChart");
+                new Chart(ctxBar, {
+                    type: 'bar',
+                    data: {
+                        labels: ["January", "February", "March", "April", "May", "June"],
+                        datasets: [{
+                            label: "Revenue",
+                            backgroundColor: "rgba(2,117,216,1)",
+                            borderColor: "rgba(2,117,216,1)",
+                            data: [4215, 5312, 6251, 7841, 9821, 14984],
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { maxTicksLimit: 6 }
+                            },
+                            y: {
+                                min: 0,
+                                max: 15000,
+                                ticks: { maxTicksLimit: 5 },
+                                grid: { display: true }
+                            }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            });
+
+            // Pizza Chart
+            FWWebExWaitForElementID('myPieChart', function (element) {
+                Chart.defaults.font.family = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+                Chart.defaults.color = '#292b2c';
+
+                const ctxPie = document.getElementById("myPieChart");
+                new Chart(ctxPie, {
+                    type: 'pie',
+                    data: {
+                        labels: ["Blue", "Red", "Yellow", "Green"],
+                        datasets: [{
+                            data: [12.21, 15.58, 11.25, 8.32],
+                            backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745'],
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // <<< RESPEITA O TAMANHO DEFINIDO
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
+                    }
+                });
+            });
+
+        });
+
+    endContent
+
+return(cScript)
+
 static function ApexChartScripts() as character
 
     local cScript as character
@@ -693,73 +798,74 @@ static function ApexChartScripts() as character
         document.addEventListener('DOMContentLoaded', function () {
 
             FWWebExWaitForElementID('myBarApexChart', function (element) {
-            var options = {
-                chart: {
-                    type: 'bar',
-                    fontFamily: '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif',
-                    foreColor: '#292b2c',
-                    toolbar: {
-                        show: false
-                    }
-                    },
-                    series: [{
-                        name: 'Revenue',
-                        data: [4215, 5312, 6251, 7841, 9821, 14984]
-                    }],
-                    xaxis: {
-                        categories: ['January', 'February', 'March', 'April', 'May', 'June'],
-                        labels: {
-                            maxItems: 6
-                        },
-                        axisBorder: {
-                            show: true
-                        },
-                        axisTicks: {
-                            show: true
-                        },
-                        grid: {
+                var options = {
+                    chart: {
+                        type: 'bar',
+                        fontFamily: '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif',
+                        foreColor: '#292b2c',
+                        toolbar: {
                             show: false
                         }
+                        },
+                        series: [{
+                            name: 'Revenue',
+                            data: [4215, 5312, 6251, 7841, 9821, 14984]
+                        }],
+                        xaxis: {
+                            categories: ['January', 'February', 'March', 'April', 'May', 'June'],
+                            labels: {
+                                maxItems: 6
+                            },
+                            axisBorder: {
+                                show: true
+                            },
+                            axisTicks: {
+                                show: true
+                            },
+                            grid: {
+                                show: false
+                            }
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 15000,
+                            tickAmount: 5,
+                            labels: {
+                                formatter: function (value) {
+                                    return Math.round(value);
+                                }
+                            }
+                        },
+                        colors: ['rgba(2,117,216,1)'],
+                        dataLabels: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            bar: {
+                                columnWidth: '70%'
+                            }
+                        },
+                    legend: {
+                        show: false
                     },
-                    yaxis: {
-                        min: 0,
-                        max: 15000,
-                        tickAmount: 5,
-                        labels: {
-                            formatter: function (value) {
-                                return Math.round(value);
+                    grid: {
+                        show: true,
+                        xaxis: {
+                            lines: {
+                            show: false
+                            }
+                        },
+                        yaxis: {
+                            lines: {
+                            show: true
                             }
                         }
-                    },
-                    colors: ['rgba(2,117,216,1)'],
-                    dataLabels: {
-                        enabled: false
-                    },
-                    plotOptions: {
-                        bar: {
-                            columnWidth: '70%'
-                        }
-                    },
-                legend: {
-                    show: false
-                },
-                grid: {
-                    show: true,
-                    xaxis: {
-                        lines: {
-                        show: false
-                        }
-                    },
-                    yaxis: {
-                        lines: {
-                        show: true
-                        }
                     }
-                }
-            };
+                };
 
-            var chart = new ApexCharts(element, options);
+                var chart = new ApexCharts(element, options);
                 chart.render();
+
             });
 
             FWWebExWaitForElementID('myAreaApexChart', function (element) {
@@ -846,20 +952,21 @@ static function ApexChartScripts() as character
                         show: true,
                         xaxis: {
                             lines: {
-                            show: false
-                        }
-                    },
-                    yaxis: {
-                        lines: {
-                            show: true,
-                            strokeColor: 'rgba(0, 0, 0, 0.125)'
+                                show: false
+                            }
+                        },
+                        yaxis: {
+                            lines: {
+                                show: true,
+                                strokeColor: 'rgba(0, 0, 0, 0.125)'
+                            }
                         }
                     }
-                }
-            };
+                };
 
-            var chart = new ApexCharts(element, options);
+                var chart = new ApexCharts(element, options);
                 chart.render();
+
             });
 
             FWWebExWaitForElementID('myPieApexChart', function (element) {
@@ -897,12 +1004,13 @@ static function ApexChartScripts() as character
                             legend: {
                             position: 'bottom'
                         }
-                    }
-                }]
-            };
+                        }
+                    }]
+                };
 
-            var chart = new ApexCharts(element, options);
+                var chart = new ApexCharts(element, options);
                 chart.render();
+
             });
 
         });
