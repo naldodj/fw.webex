@@ -5,6 +5,9 @@
    (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm")
 */
 
+2025-08-11 19:24 UTC naldodj (TODO – Implementar FWWebExExecute nos menus e links)
+  * src/fw.webex/web/layout/fw.webex.page.tlpp
+
 2025-08-09 16:13 UTC naldodj (fix)
   ! Remove unnecessary code
     * src/fw.webex.examples/022/fw.webex.example.022.tlpp

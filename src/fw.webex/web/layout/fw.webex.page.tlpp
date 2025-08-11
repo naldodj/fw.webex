@@ -140,6 +140,24 @@ method New(cPageTitle) class WebExPage
             ***************************************************************************************************************************
         END WEBEXOBJECT
         ***************************************************************************************************************************
+        //Scripts FWWebExWaitForElementID
+        beginContent var cPageScript
+
+            /*FWWebExWaitForElementID*/
+            function FWWebExWaitForElementID(id, callback) {
+                const element = document.getElementById(id);
+                if (element) {
+                    callback(element);
+                } else {
+                    setTimeout(() => FWWebExWaitForElementID(id, callback), 100);
+                }
+            }
+
+        endContent
+        WITH WEBEXOBJECT CLASS WebExScript
+            .:SetContent(cPageScript)
+        END WEBEXOBJECT
+        ***************************************************************************************************************************
         //Scripts FWWebEx.RequestHandler
         beginContent var cPageScript
             /***********************************************************************
@@ -228,6 +246,122 @@ method New(cPageTitle) class WebExPage
             .:SetContent(cPageScript)
         END WEBEXOBJECT
         ***************************************************************************************************************************
+        //Scripts FWWebExExecute
+        beginContent var cPageScript
+
+            /**
+            * Executor generico FWWebEx para WS, REST Basic, REST OAuth2 e Link Direto
+            * Executa acao a partir de um link/menu/card
+            * @param {Object} options
+            *   type: 'ws' | 'rest-basic' | 'rest-oauth2' | 'link'
+            *   url: endpoint ou rota
+            *   data: payload (objeto)
+            *   target: seletor do elemento para renderizar ou 'overlay'
+            *   auth: { user, pass } para basic ou { token } para oauth2
+            *   ws: { action, callbackEvent, execEvent }
+            */
+            function FWWebExExecute(options) {
+                const { type, url, data, target, auth, ws } = options;
+
+                if (type === 'ws') {
+                    FWWebEx.RequestHandler.execute({
+                        requestData: { ...data },
+                        callbackEvent: ws?.callbackEvent || 'CALLBACK_DATA_RESPONSE',
+                        execEvent: ws?.execEvent || 'CALLBACK_EXEC',
+                        onResponse: (response) => FWWebExRenderResponse(response, target),
+                        onError: (err) => console.error('Erro WS:', err)
+                    });
+                }
+                else if (type === 'rest-basic') {
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Basic ' + btoa(`${auth.user}:${auth.pass}`),
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data || {})
+                    })
+                    .then(r => r.text())
+                    .then(content => FWWebExRenderResponse(content, target))
+                    .catch(err => console.error('Erro REST Basic:', err));
+                }
+                else if (type === 'rest-oauth2') {
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${auth.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data || {})
+                    })
+                    .then(r => r.text())
+                    .then(content => FWWebExRenderResponse(content, target))
+                    .catch(err => console.error('Erro REST OAuth2:', err));
+                }
+                else if (type === 'link') {
+                    fetch(url)
+                        .then(r => r.text())
+                        .then(content => FWWebExRenderResponse(content, target))
+                        .catch(err => console.error('Erro Link Direto:', err));
+                }
+            }
+
+            /**
+            * Renderiza resposta no destino ou overlay
+            */
+            function FWWebExRenderResponse(content, target) {
+                if (target === 'overlay') {
+                    FWWebExShowOverlay(content);
+                } else if (target && document.querySelector(target)) {
+                    document.querySelector(target).innerHTML = content;
+                } else {
+                    console.warn('Destino nao encontrado:', target);
+                }
+            }
+
+            /**
+            * Mostra sobreposicao
+            */
+            function FWWebExShowOverlay(html) {
+                let overlay = document.getElementById('fwwebex-overlay');
+                if (!overlay) {
+                    overlay = document.createElement('div');
+                    overlay.id = 'fwwebex-overlay';
+                    overlay.style.cssText = `
+                        position: fixed; top:0; left:0; width:100%; height:100%;
+                        background: rgba(0,0,0,0.7); z-index: 99999; padding:2rem; overflow:auto;
+                    `;
+                    document.body.appendChild(overlay);
+                    overlay.addEventListener('click', e => {
+                        if (e.target.id === 'fwwebex-overlay') overlay.remove();
+                    });
+                }
+                overlay.innerHTML = `<div style="background:white;padding:1rem;border-radius:8px;">${html}</div>`;
+            }
+
+            /**
+            * Captura cliques em qualquer elemento com data-fwwebex-action-type
+            */
+            document.addEventListener('click', function (e) {
+                const el = e.target.closest('[data-fwwebex-action-type]');
+                if (el) {
+                    e.preventDefault();
+                    FWWebExExecute({
+                        type: el.dataset.fwwebexActionType,
+                        url: el.dataset.fwwebexUrl,
+                        target: el.dataset.fwwebexTarget || 'overlay',
+                        data: el.dataset.fwwebexPayload ? JSON.parse(el.dataset.fwwebexPayload) : {},
+                        auth: el.dataset.fwwebexAuth ? JSON.parse(el.dataset.fwwebexAuth) : {},
+                        ws: el.dataset.fwwebexWs ? JSON.parse(el.dataset.fwwebexWs) : {}
+                    });
+                }
+            });
+
+        endContent
+        WITH WEBEXOBJECT CLASS WebExScript
+            .:SetContent(cPageScript)
+        END WEBEXOBJECT
+        ***************************************************************************************************************************
         //Scripts Tools
         beginContent var cPageScript
             /*decodeHTMLEntities*/
@@ -239,15 +373,6 @@ method New(cPageTitle) class WebExPage
             /*showComingSoon*/
             function showComingSoon(route) {
                 alert(decodeHTMLEntities('Rota '+route+' ainda n&atilde;o implementada!'));
-            }
-            /*FWWebExWaitForElementID*/
-            function FWWebExWaitForElementID(id, callback) {
-                const element = document.getElementById(id);
-                if (element) {
-                    callback(element);
-                } else {
-                    setTimeout(() => FWWebExWaitForElementID(id, callback), 100);
-                }
             }
         endContent
         WITH WEBEXOBJECT CLASS WebExScript
