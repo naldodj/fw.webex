@@ -286,10 +286,29 @@ method New(cPageTitle) class WebExPage
                     .catch(err => console.error('Erro REST Basic:', err));
                 }
                 else if (type === 'rest-oauth2') {
+                    let token = auth?.token;
+
+                    // Busca automaticamente do ERPTOKEN se nao foi informado no menu/link
+                    if (!token) {
+                        try {
+                            const erpTokenData = JSON.parse(sessionStorage.getItem('ERPTOKEN') || '{}');
+                            if (erpTokenData?.access_token) {
+                                token = erpTokenData.access_token;
+                            }
+                        } catch (e) {
+                            console.warn('Nao foi possivel ler o ERPTOKEN:', e);
+                        }
+                    }
+
+                    if (!token) {
+                        console.error('Token OAuth2 nao encontrado! Verifique login ou configuracao.');
+                        return;
+                    }
+
                     fetch(url, {
                         method: 'POST',
                         headers: {
-                            'Authorization': `Bearer ${auth.token}`,
+                            'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(data || {})
