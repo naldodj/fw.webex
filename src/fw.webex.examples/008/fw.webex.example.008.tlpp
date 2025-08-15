@@ -93,6 +93,7 @@ static procedure FWWebExExample_008(cHTML as character) as character
     local cProcName:=ProcName() as character
     local cHTMLFile:=cProcName as character
     local cTableStyle as character
+    local cCredential:="" as character
     local cDNATechAuth as character
     local cAutorization as character
     local cRESTURLOAuth2 as character
@@ -100,24 +101,30 @@ static procedure FWWebExExample_008(cHTML as character) as character
     local jGetAuthorization as json
 
     local lUseOAuth2:=.F. as logical
-
+    local lUseCredential as logical
     local oTableStyle as object
     local oFWWebExPage as object
+
+    lUseCredential:=(Type("__cCredential")=="C")
+    lUseCredential:=((lUseCredential).and.(!Empty("__cCredential")))
+    lUseCredential:=((lUseCredential).and.(Len(StrTokArr2(__cCredential,";"))>=4))
 
     if (!FWExampleTools():GetRESTCredential(@cUSR,@cPDW,@cRESTURL,@cRESTURLOAuth2,@jGetAuthorization,@lUseOAuth2))
         return
     endif
 
-    if (valType(jGetAuthorization)=="J")
-        if ((lUseOAuth2).and.(jGetAuthorization:HasProperty("Bearer")))
-            cAutorization:=jGetAuthorization["Bearer"]
-        elseif (jGetAuthorization:HasProperty("Basic"))
-            cAutorization:=jGetAuthorization["Basic"]
+    if (!lUseCredential)
+        if (valType(jGetAuthorization)=="J")
+            if ((lUseOAuth2).and.(jGetAuthorization:HasProperty("Bearer")))
+                cAutorization:=jGetAuthorization["Bearer"]
+            elseif (jGetAuthorization:HasProperty("Basic"))
+                cAutorization:=jGetAuthorization["Basic"]
+            endif
+            if (empty(cAutorization))
+                return
+            endif
+            cAutorization:=WebExHelper():ConvertHeaderToJSObject(cAutorization)
         endif
-        if (empty(cAutorization))
-            return
-        endif
-        cAutorization:=WebExHelper():ConvertHeaderToJSObject(cAutorization)
     endif
 
     beginContent var cTableStyle
@@ -325,8 +332,12 @@ static procedure FWWebExExample_008(cHTML as character) as character
                             $('#fwwebex-datatable-custom-loader').hide();
                         },
                         ajax: function (data, callback) {
+
                             const pageNumber = Math.floor(data.start / data.length) + 1;
                             const rowsPerPage = data.length === -1 ? 999999 : data.length;
+
+                            __GET_CREDENTIAL__
+
                             fetch('https://localhost:9898/rest/callProcRestCrudTLPP/post/', {
                                 method: 'POST',
                                 headers: {
@@ -394,6 +405,7 @@ static procedure FWWebExExample_008(cHTML as character) as character
                         table.ajax.reload(); // recarrega o DataTable usando o novo filtro
                     });
 
+                    //captura do evento de processamento
                     table.on('processing.dt', function (e, settings, processing) {
                         if (processing) {
                             $('#fwwebex-datatable-custom-loader').show();
@@ -405,6 +417,30 @@ static procedure FWWebExExample_008(cHTML as character) as character
                 });
 
             endContent
+
+            if (lUseCredential)
+
+                beginContent var cCredential
+
+                    // Recupera o ERPTOKEN do sessionStorage
+
+                        let token = null;
+                        try {
+                            const erpTokenData = JSON.parse(sessionStorage.getItem('ERPTOKEN') || '{}');
+                            token = erpTokenData?.access_token || null;
+                        } catch (e) {
+                            console.warn('Nao foi possivel ler o ERPTOKEN:', e);
+                        }
+
+                        if (!token) {
+                            console.error('Token OAuth2 nao encontrado! Faca login no Protheus antes.');
+                            return;
+                        }
+
+                endContent
+
+            endif
+
             if (!FindClass("DNA.TECH.USERRESTCRUDTLPP"))
                 //Considerando que callProcRestCrudTLPP depende de DNA.TECH.USERRESTCRUDTLPP
                 //u_callProcRestCrudTLPPEx008 atuara como um mock da callProcRestCrudTLPP.
@@ -419,13 +455,25 @@ static procedure FWWebExExample_008(cHTML as character) as character
                 cDNATechAuth:=WebExHelper():ConvertHeaderToJSObject(cDNATechAuth)
                 cScript:=WebExHelper():StrReplace(cScript,{{"<DNATechAuth>",cDNATechAuth}})
             endif
-            cScript:=WebExHelper():StrReplace(;
-                cScript;
-                ,{;
-                     {"<Autorization>",cAutorization};
-                    ,{"https://localhost:9898/rest/",cRESTURL};
-                };
-            )
+            if (lUseCredential)
+                cScript:=WebExHelper():StrReplace(;
+                    cScript;
+                    ,{;
+                         {"<Autorization>","'Authorization': `Bearer ${token}`"};
+                        ,{"https://localhost:9898/rest/",cRESTURL};
+                        ,{"__GET_CREDENTIAL__",cCredential};
+                    };
+                )
+            else
+                cScript:=WebExHelper():StrReplace(;
+                    cScript;
+                    ,{;
+                         {"<Autorization>",cAutorization};
+                        ,{"https://localhost:9898/rest/",cRESTURL};
+                        ,{"__GET_CREDENTIAL__",cCredential};
+                    };
+                )
+            endif
             .:SetContent(cScript)
         END WEBEXOBJECT
         oFWWebExPage:SetEnableDataTable()

@@ -672,7 +672,7 @@ function u_callProcRestCrudTLPPEx007()
 }
     endContent
 
-    if (type("oRest")=="O")
+    if (Type("oRest")=="O")
         jHeader:=JSONObject():New()
         jHeader["Content-Type"]:="application/json; charset=utf-8"
         jHeader["Cache-Control"]:="no-cache"
